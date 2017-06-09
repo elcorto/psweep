@@ -1,5 +1,5 @@
-psweep -- simple parameter studies
-==================================
+psweep -- loop like a pro, make parameter studies fun
+=====================================================
 
 Getting started
 ---------------
@@ -161,3 +161,29 @@ running any workload, i.e. we assemble the parameter grid to be sampled before
 the actual calculations. This has proven to be vey practical as it helps
 detecting errors early.
 
+Install
+-------
+
+via pip
+```````
+
+::
+
+    $ pip3 install psweep
+
+dev install
+```````````
+
+::
+    
+    $ cd ~/soft/git
+    $ git clone https://github.com/elcorto/psweep
+
+and then::
+
+    $ export PYTHONPATH=~/soft/git/psweep:$PYTHONPATH
+
+or::
+
+    $ cd ~/soft/git/psweep
+    $ pip3 install -e .
