@@ -1,0 +1,9 @@
+   _run  a  b  const    timing
+0     0  1  1  const  0.107512
+1     0  1  2  const  0.057455
+2     0  2  1  const  0.207071
+3     0  2  2  const  0.107232
+4     0  3  1  const  0.307298
+5     0  3  2  const  0.156925
+6     0  4  1  const  0.407406
+7     0  4  2  const  0.207322
