@@ -24,11 +24,30 @@ The most simple example one can think of: loop over a single variable::
         print(df.to_json(orient='split'))
 
 
+prints::
+
+       _run  a    timing
+    0     0  1  0.034164
+       _run  a    timing
+    1     0  2  1.685145
+       _run  a    timing
+    2     0  3  1.612341
+       _run  a    timing
+    3     0  4  2.887937
+    {"columns":["_run","a","timing"],"index":[0,1,2,3],"data":[[0,1,0.0341638266],[0,2,1.6851449492],[0,3,1.6123406636],[0,4,2.8879373119]]}
+
+Tests
+-----
+::
+    
+    # apt-get install python3-nose
+    $ nosetests3
+
 Concepts
 --------
 
-The basic data structure for a param study is a list ``params`` of parameter sets
-(``pset`` s).
+The basic data structure for a param study is a list ``params`` of dicts
+(called "parameter sets" or short psets).
 
 ::
 
@@ -40,9 +59,9 @@ The basic data structure for a param study is a list ``params`` of parameter set
 Each pset contains values of parameters ('foo' and 'bar') which are varied
 during the parameter study.
 
-These psets are the basis of a pandas DataFrame (much like an SQL table, 2D array
-w/ named columns and in case of DataFrame also variable data types) with
-columns 'foo' and 'bar'. 
+These psets are the basis of a pandas ``DataFrame`` (much like an SQL table, 2D
+array w/ named columns and in case of ``DataFrame`` also variable data types)
+with columns 'foo' and 'bar'. 
 
 Then we define a callback function ``func``, which takes only one pset
 such as::
@@ -56,15 +75,19 @@ and runs the workload for that pset. ``func`` must return a dict, for example::
 which is the result of the run.
 
 ``func`` is called in a loop on all psets in ``params`` in the ``run`` helper
-function. The result dict (e.g. ``{'timing': ...}`` from each call gets merged
-with the current pset and appended to a DataFrame, thus creating a new column
-called 'timing'. The ``run`` function adds a ``_run`` column, which counts how
+function. The result dict (e.g. ``{'timing': 1.234}`` from each call gets merged
+with the current pset such that we have::
+
+    {'foo': 1, 'bar': 'lala', 'timing': 1.234}
+
+That gets appended to a ``DataFrame``, thus creating a new column called
+'timing'. The ``run`` function adds a ``_run`` column as well, which counts how
 often the study has been performed.
 
-Below we have some helper functions which assist in creating ``params``.
-Basically, we define the to-be-varied parameters as "named sequences" (i.e.
-list of dicts) which are, in fact, the columns of ``params``. Then we use
-something like ``itertools.product`` to loop over them.
+This package offers some very simple helper functions which assist in creating
+``params``. Basically, we define the to-be-varied parameters ('foo' and 'bar')
+as "named sequences" (i.e. list of dicts) which are, in fact, the columns of
+``params``. Then we use something like ``itertools.product`` to loop over them.
 
 ::
 
@@ -145,6 +168,8 @@ the loops:
 ::
 
     >>> c=seq2dicts('c', ['const'])
+    >>> c
+    [{'c': 'const'}]
     >>> loops2params(product(zip(x,y),z,c))
     [{'a': 1, 'c': 'const', 'y': 'xx', 'z': None},
      {'a': 1, 'c': 'const', 'y': 'xx', 'z': 1.2},
@@ -158,8 +183,12 @@ the loops:
 
 So, as you can see, the general idea is that we do all the loops *before*
 running any workload, i.e. we assemble the parameter grid to be sampled before
-the actual calculations. This has proven to be vey practical as it helps
+the actual calculations. This has proven to be very practical as it helps
 detecting errors early.
+
+You may have noticed that the data structures and functions used here are so
+simple that is almost not worth a package at all, but it is helpful to have the
+ideas and the workflow packaged up in a central place.
 
 Install
 -------
