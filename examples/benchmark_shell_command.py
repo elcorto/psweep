@@ -84,8 +84,8 @@ if __name__ == '__main__':
     # converts DataFrame.index int -> str in to_json(), reading back in
     # converts str -> float).
     if os.path.exists(results):
-        df = pd.io.json.read_json(results, orient='split')
+        df = ps.df_json_read(results)
     else:
         df = pd.DataFrame()
     df = ps.run(df, func, params, savefn='save.json')
-    df.to_json(results, orient='split')
+    df_json_write(df, results)

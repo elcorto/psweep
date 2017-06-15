@@ -4,6 +4,14 @@ import os, copy
 import pandas as pd
 
 
+def df_json_write(df, name):
+    df.to_json(name, orient='split')
+
+
+def df_json_read(name):
+    return pd.io.json.read_json(name, orient='split')
+
+
 def seq2dicts(name, seq):
     """
     >>> seq2dicts('a', [1,2,3])
