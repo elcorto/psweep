@@ -41,7 +41,7 @@ print("install_requires: {}".format(install_requires))
 
 setup(
     name='psweep',
-    version='0.0.0',
+    version='0.1.0',
     description='loop like a pro, make parameter studies fun',
     long_description=long_description,
     url='https://github.com/elcorto/psweep',
