@@ -20,17 +20,24 @@ with open(os.path.join(here, 'README.rst')) as fd:
 # installations of the SAME package in the SAME version -- thank you very much.
 # I don't get it, seriously.
 install_requires = []
-req = [('pandas', '>=', '0.19.2')]
-for name,op,ver in req:
-    this_req = name + op + ver
+
+req = [('pandas', 'pandas', '>=', '0.19.2')]
+
+for pipname,pkgname,op,ver in req:
+    print("checking dependency: {}".format(pkgname))
+    req = pipname + op + ver if op and ver else pipname
     try:
-        pkg = importlib.import_module(name)
-        cmd = "Version(pkg.__version__) {op} Version('{ver}')".format(op=op,
-                                                                      ver=ver)
-        if not eval(cmd):
-            install_requires.append(this_req)
+        pkg = importlib.import_module(pkgname)
+        if op and ver:
+            cmd = "Version(pkg.__version__) {op} Version('{ver}')".format(op=op,
+                                                                          ver=ver)
+            if not eval(cmd):
+                install_requires.append(req)
     except ImportError:
-        install_requires.append(this_req)
+        install_requires.append(req)
+
+print("install_requires: {}".format(install_requires))
+
 
 setup(
     name='psweep',

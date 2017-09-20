@@ -1,6 +1,11 @@
 psweep -- loop like a pro, make parameter studies fun
 =====================================================
 
+About
+-----
+
+This is a package with simple helpers to set up parameter studies.
+
 Getting started
 ---------------
 
@@ -215,4 +220,13 @@ and then::
 or::
 
     $ cd ~/soft/git/psweep
-    $ pip3 install -e .
+
+followed by::
+    
+    $ export PYTHONPATH=$HOME/soft/lib/python3.5/site-packages:$PYTHONPATH
+    $ PYTHONUSERBASE=$HOME/soft pip3 install --user -e .
+
+or the same, but more verbose::
+    
+    $ export PYTHONPATH=$HOME/soft/lib/python3.5/site-packages:$PYTHONPATH
+    $ python3 setup.py install --prefix=~/soft
