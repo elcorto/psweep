@@ -47,7 +47,7 @@ setup(
     url='https://github.com/elcorto/psweep',
     author='Steve Schmerler',
     author_email='git@elcorto.com',
-    license='GPLv3',
+    license='BSD 3-Clause',
     keywords='parameter study sweep loop',
     packages=['psweep'],
     install_requires=install_requires,
