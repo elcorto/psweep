@@ -9,7 +9,9 @@ This is a package with simple helpers to set up parameter studies.
 Getting started
 ---------------
 
-The most simple example one can think of: loop over a single variable::
+The most simple example one can think of: loop over a single variable.
+
+.. code-block:: python
 
     #!/usr/bin/env python3
 
@@ -23,6 +25,7 @@ The most simple example one can think of: loop over a single variable::
                 
                     
     if __name__ == '__main__':
+        # params = [{'a': 1}, {'a': 2}, {'a': 3}, {'a': 4}]
         params = ps.seq2dicts('a', [1,2,3,4])
         df = pd.DataFrame()
         df = ps.run(df, func, params)
@@ -43,6 +46,7 @@ prints::
 
 Tests
 -----
+
 ::
     
     # apt-get install python3-nose
@@ -54,7 +58,7 @@ Concepts
 The basic data structure for a param study is a list ``params`` of dicts
 (called "parameter sets" or short psets).
 
-::
+.. code-block:: python
 
     params = [{'foo': 1, 'bar': 'lala'},  # pset 1
               {'foo': 2, 'bar': 'zzz'},   # pset 2
@@ -94,7 +98,7 @@ This package offers some very simple helper functions which assist in creating
 as "named sequences" (i.e. list of dicts) which are, in fact, the columns of
 ``params``. Then we use something like ``itertools.product`` to loop over them.
 
-::
+.. code-block:: python
 
     >>> from itertools import product
     >>> x=seq2dicts('a', [1,2,3])
@@ -128,19 +132,19 @@ as "named sequences" (i.e. list of dicts) which are, in fact, the columns of
 The logic of the param study is entirely contained in the creation of ``params``.
 E.g., if parameters shall be varied together (say x and y), then instead of
 
-::
+.. code-block:: python
 
     >>> product(x,y,z)
 
 use
 
-::
+.. code-block:: python
 
     >>> product(zip(x,y), z)
 
 The nestings from ``zip()`` are flattened in ``loops2params()``.
 
-::
+.. code-block:: python
 
     >>> z=seq2dicts('z', [None, 1.2, 'X'])
     >>> z
@@ -170,7 +174,7 @@ The nestings from ``zip()`` are flattened in ``loops2params()``.
 If you want a parameter which is constant, use a length one list and put it in
 the loops:
 
-::
+.. code-block:: python
 
     >>> c=seq2dicts('c', ['const'])
     >>> c
