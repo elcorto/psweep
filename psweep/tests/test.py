@@ -1,5 +1,5 @@
 import subprocess as sp
-import os, tempfile
+import os, tempfile, io
 from psweep import psweep as ps
 import pandas as pd
 pj = os.path.join
@@ -48,3 +48,14 @@ def test_run():
     print(df2)
     assert ref2.equals(df2)
     assert (df2.index == pd.Int64Index([0,1,2,3], dtype='int64')).all()
+
+
+def test_is_seq():
+    no = [{'a':1}, io.IOBase(), '123']
+    yes = [[1,2], {1,2}, (1,2)]
+    for obj in no:
+        print(obj)
+        assert not ps.is_seq(obj)
+    for obj in yes:
+        print(obj)
+        assert ps.is_seq(obj)
