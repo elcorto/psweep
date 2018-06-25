@@ -13,8 +13,6 @@ The most simple example one can think of: loop over a single variable.
 
 .. code-block:: python
 
-    #!/usr/bin/env python3
-
     import random
     from psweep import psweep as ps
     import pandas as pd
@@ -22,34 +20,72 @@ The most simple example one can think of: loop over a single variable.
 
     def func(pset):
         """pset: dict such as {'a': 1}"""
-        return {'timing': random.random() * pset['a']}
-                
-                    
-    if __name__ == '__main__':
-        # params = [{'a': 1}, {'a': 2}, {'a': 3}, {'a': 4}]
-        params = ps.seq2dicts('a', [1,2,3,4])
-        df = pd.DataFrame()
-        df = ps.run(df, func, params)
-        print(df.to_json(orient='split'))
+        return {'result': random.random() * pset['a']}
 
 
-prints::
+    # params = [{'a': 1}, {'a': 2}, {'a': 3}, {'a': 4}]
+    params = ps.seq2dicts('a', [1,2,3,4])
+    df = pd.DataFrame()
+    df = ps.run(df, func, params)
+    ps.df_json_write(df, 'results.json')
+    print(df)
 
-       _run  a    timing
-    0     0  1  0.034164
-       _run  a    timing
-    1     0  2  1.685145
-       _run  a    timing
-    2     0  3  1.612341
-       _run  a    timing
-    3     0  4  2.887937
-    {"columns":["_run","a","timing"],"index":[0,1,2,3],"data":[[0,1,0.0341638266],[0,2,1.6851449492],[0,3,1.6123406636],[0,4,2.8879373119]]}
+
+``df``::
+
+       _run  a    result
+    0     0  1  0.722918
+    1     0  2  0.462952
+    2     0  3  1.411430
+    3     0  4  1.690443
+
+``results.json``::
+
+    [
+      {
+        "a": 1,
+        "_run": 0,
+        "result": 0.722918
+      },
+      {
+        "a": 2,
+        "_run": 0,
+        "result": 0.462952
+      },
+      {
+        "a": 3,
+        "_run": 0,
+        "result": 1.411430
+      },
+      {
+        "a": 4,
+        "_run": 0,
+        "result": 1.690443
+      }
+    ]
+
+
+Repeat the study (``_run=1``), append to existing ``df``::
+
+    df = ps.run(df, func, params)
+
+::
+
+       _run  a    result
+    0     0  1  0.722918
+    1     0  2  0.462952
+    2     0  3  1.411430
+    3     0  4  1.690443
+    4     1  1  0.512290
+    5     1  2  0.039990
+    6     1  3  0.298793
+    7     1  4  1.564050
 
 Tests
 -----
 
 ::
-    
+
     # apt-get install python3-nose
     $ nosetests3
 
@@ -71,7 +107,7 @@ during the parameter study.
 
 These psets are the basis of a pandas ``DataFrame`` (much like an SQL table, 2D
 array w/ named columns and in case of ``DataFrame`` also variable data types)
-with columns 'foo' and 'bar'. 
+with columns 'foo' and 'bar'.
 
 Then we define a callback function ``func``, which takes only one pset
 such as::
@@ -80,18 +116,18 @@ such as::
 
 and runs the workload for that pset. ``func`` must return a dict, for example::
 
-    {'timing': 1.234}, 
+    {'result': 1.234},
 
 which is the result of the run.
 
 ``func`` is called in a loop on all psets in ``params`` in the ``run`` helper
-function. The result dict (e.g. ``{'timing': 1.234}`` from each call gets merged
+function. The result dict (e.g. ``{'result': 1.234}`` from each call gets merged
 with the current pset such that we have::
 
-    {'foo': 1, 'bar': 'lala', 'timing': 1.234}
+    {'foo': 1, 'bar': 'lala', 'result': 1.234}
 
 That gets appended to a ``DataFrame``, thus creating a new column called
-'timing'. The ``run`` function adds a ``_run`` column as well, which counts how
+'result'. The ``run`` function adds a ``_run`` column as well, which counts how
 often the study has been performed.
 
 This package offers some very simple helper functions which assist in creating
