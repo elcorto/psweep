@@ -21,6 +21,7 @@ The most simple example one can think of: loop over a single variable.
 
 
     def func(pset):
+        """pset: dict such as {'a': 1}"""
         return {'timing': random.random() * pset['a']}
                 
                     
@@ -202,35 +203,13 @@ ideas and the workflow packaged up in a central place.
 Install
 -------
 
-via pip
-```````
-
 ::
 
     $ pip3 install psweep
 
-dev install
-```````````
 
-::
-    
-    $ cd ~/soft/git
-    $ git clone https://github.com/elcorto/psweep
+Dev install of this repo::
 
-and then::
+    $ pip3 install -e .
 
-    $ export PYTHONPATH=~/soft/git/psweep:$PYTHONPATH
-
-or::
-
-    $ cd ~/soft/git/psweep
-
-followed by::
-    
-    $ export PYTHONPATH=$HOME/soft/lib/python3.5/site-packages:$PYTHONPATH
-    $ PYTHONUSERBASE=$HOME/soft pip3 install --user -e .
-
-or the same, but more verbose::
-    
-    $ export PYTHONPATH=$HOME/soft/lib/python3.5/site-packages:$PYTHONPATH
-    $ python3 setup.py install --prefix=~/soft
+See also https://github.com/elcorto/samplepkg.
