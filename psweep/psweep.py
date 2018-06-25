@@ -54,7 +54,7 @@ def loops2params(loops):
     return [merge_dicts(flatten(entry)) for entry in loops]
 
 
-def run(df, func, params, savefn=None, verbose=True):
+def run(df, func, params, savefn=None, verbose=False):
     runkey = '_run'
     lastrun = df[runkey].values[-1] if runkey in df.columns else -1
     run = lastrun + 1
