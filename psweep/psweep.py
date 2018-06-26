@@ -58,14 +58,16 @@ def run(df, func, params, savefn=None, verbose=False):
     runkey = '_run'
     lastrun = df[runkey].values[-1] if runkey in df.columns else -1
     run = lastrun + 1
-    for idx,pset in enumerate(params):
+    for idx,_pset in enumerate(params):
+        pset = copy.deepcopy(_pset)
         row = copy.deepcopy(pset)
         row.update({'_run': run})
+        if isinstance(verbose, bool) and verbose:
+            print(pd.DataFrame([row]))
+        elif is_seq(verbose):
+            print(pd.DataFrame([row])[verbose])
         row.update(func(pset))
-        df_row = pd.DataFrame([row])
-        if verbose:
-            print(df_row)
-        df = df.append(df_row, ignore_index=True)
+        df = df.append(pd.DataFrame([row]), ignore_index=True)
         if savefn:
             _fn = "{savefn}.{run}.{idx}".format(savefn=savefn, run=run, idx=idx)
             df_json_write(_fn)
