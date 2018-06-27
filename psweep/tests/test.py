@@ -1,5 +1,5 @@
 import subprocess as sp
-import os, tempfile, io, string
+import os, tempfile, io, string, json
 
 import pandas as pd
 import numpy as np
@@ -7,9 +7,8 @@ import numpy as np
 from psweep import psweep as ps
 
 pj = os.path.join
-
-
 here = os.path.abspath(os.path.dirname(__file__))
+
 
 def test_json2table():
     with open('{}/files/results.json.json2table'.format(here)) as fd:
@@ -40,17 +39,20 @@ def test_run():
     df1 = ps.run(df, func, params, tmpsave=pj(tmpdir, 'test_run_1'))
     for ii in range(len(params)):
         assert os.path.exists(pj(tmpdir, 'test_run_1.0.{}'.format(ii)))
+    ps.df_json_write(df1, pj(tmpdir, 'df1'))
     columns = ['_run', 'a', 'result']
     ref1 = pd.DataFrame([[0,1,10], 
                          [0,2,20]], 
-                         columns=columns)
+                         columns=columns,
+                         dtype=object)
     assert len(df1.columns) == len(ref1.columns)
     assert ref1.equals(df1.reindex(columns=ref1.columns))
     params = [{'a': 3}, {'a': 4}]
     df2 = ps.run(df1, func, params)
     ref = pd.DataFrame([[1,3,30], 
                         [1,4,40]], 
-                         columns=columns)
+                        columns=columns,
+                        dtype=object)
     ref2 = ref1.append(ref, ignore_index=True)
     assert len(df2.columns) == len(ref2.columns)
     assert ref2.equals(df2.reindex(columns=ref2.columns))
@@ -79,7 +81,9 @@ def test_df_json_io():
         vals = [ri(0,100),
                 rs(5),
                 np.nan,
-##                'NaN', 
+                True,
+                False,
+                None,
                 '"{}"'.format(rs(5)),
                 "'{}'".format(rs(5)),
                 (ri(0,99), rn(), '{}'.format(rs(5))),
@@ -91,23 +95,17 @@ def test_df_json_io():
                 list(rn(5)),
                 {'a':1, 'b':3, 'c': [1,2,3]},
                 ]
-        row = [dict(zip(let, vals))]
+        row = pd.DataFrame([dict(zip(let, vals))], dtype=object)
         df = df.append(row, ignore_index=True)
 
     for orient in [None, 'split', 'records', 'index', 'columns', '_default_']:
         print("orient: ", orient)
+        fn = tempfile.mktemp(prefix='psweep_test_df_json_io_{}_'.format(orient))
         if orient != '_default_':
-            json = df.to_json(orient=orient, double_precision=15)
-            read = pd.io.json.read_json(json, orient=orient, precise_float=True)
-            assert_frame_equal(df, read, check_exact=False, check_less_precise=12)
-        try: 
-            fn = tempfile.mktemp(prefix='psweep_test_df_json_io_{}_'.format(orient))
-            if orient != '_default_':
-                ps.df_json_write(df, fn, orient=orient)
-                read = ps.df_json_read(fn, orient=orient)
-            else:
-                ps.df_json_write(df, fn)
-                read = ps.df_json_read(fn)
-            assert_frame_equal(df, read, check_exact=False, check_less_precise=12)
-        finally:
-            os.remove(fn)
+            ps.df_json_write(df, fn, orient=orient)
+            read = ps.df_json_read(fn, orient=orient)
+        else:
+            ps.df_json_write(df, fn)
+            read = ps.df_json_read(fn)
+        os.remove(fn)
+        assert_frame_equal(df, read, check_exact=False, check_less_precise=12)
