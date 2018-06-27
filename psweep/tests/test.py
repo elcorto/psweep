@@ -34,9 +34,12 @@ def test_examples():
 def test_run():
     def func(pset):
         return {'result': pset['a']*10}
+    tmpdir = tempfile.mkdtemp(prefix='psweep_test_run')
     df = pd.DataFrame()
     params = [{'a': 1}, {'a': 2}]
-    df1 = ps.run(df, func, params)
+    df1 = ps.run(df, func, params, savefn=pj(tmpdir, 'test_run_1'))
+    for ii in range(len(params)):
+        assert os.path.exists(pj(tmpdir, 'test_run_1.0.{}'.format(ii)))
     columns = ['_run', 'a', 'result']
     ref1 = pd.DataFrame([[0,1,10], 
                          [0,2,20]], 

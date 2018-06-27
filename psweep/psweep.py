@@ -74,5 +74,5 @@ def run(df, func, params, savefn=None, verbose=False):
         df = df.append(df_row)
         if savefn:
             _fn = "{savefn}.{run}.{idx}".format(savefn=savefn, run=run, idx=idx)
-            df_json_write(_fn)
+            df_json_write(df, _fn)
     return df
