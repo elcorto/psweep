@@ -4,12 +4,14 @@ import os, copy
 import pandas as pd
 
 
-def df_json_write(df, name):
-    df.to_json(name, orient='split')
+def df_json_write(df, name, **kwds):
+    orient = kwds.pop('orient', 'records')
+    df.to_json(name, double_precision=15, orient=orient, **kwds)
 
 
-def df_json_read(name):
-    return pd.io.json.read_json(name, orient='split')
+def df_json_read(name, **kwds):
+    orient = kwds.pop('orient', 'records')
+    return pd.io.json.read_json(name, precise_float=True, orient=orient, **kwds)
 
 
 def seq2dicts(name, seq):

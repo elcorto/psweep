@@ -1,7 +1,11 @@
 import subprocess as sp
-import os, tempfile, io
-from psweep import psweep as ps
+import os, tempfile, io, string
+
 import pandas as pd
+import numpy as np
+
+from psweep import psweep as ps
+
 pj = os.path.join
 
 
@@ -59,3 +63,48 @@ def test_is_seq():
     for obj in yes:
         print(obj)
         assert ps.is_seq(obj)
+
+
+def test_df_json_io():
+    from pandas.util.testing import assert_frame_equal
+    let = string.ascii_letters
+    ri = np.random.randint
+    rn = np.random.rand
+    rs = lambda n: ''.join(let[ii] for ii in ri(0, len(let), n))
+    df = pd.DataFrame()
+    for _ in range(2):
+        vals = [ri(0,100),
+                rs(5),
+                np.nan,
+##                'NaN', 
+                '"{}"'.format(rs(5)),
+                "'{}'".format(rs(5)),
+                (ri(0,99), rn(), '{}'.format(rs(5))),
+                [ri(0,99), rn(), "{}".format(rs(5))],
+##                set(ri(0,99,10)),
+                rn(),
+                rn(5),
+                rn(5,5),
+                list(rn(5)),
+                {'a':1, 'b':3, 'c': [1,2,3]},
+                ]
+        row = [dict(zip(let, vals))]
+        df = df.append(row, ignore_index=True)
+
+    for orient in [None, 'split', 'records', 'index', 'columns', '_default_']:
+        print("orient: ", orient)
+        if orient != '_default_':
+            json = df.to_json(orient=orient, double_precision=15)
+            read = pd.io.json.read_json(json, orient=orient, precise_float=True)
+            assert_frame_equal(df, read, check_exact=False, check_less_precise=12)
+        try: 
+            fn = tempfile.mktemp(prefix='psweep_test_df_json_io_{}_'.format(orient))
+            if orient != '_default_':
+                ps.df_json_write(df, fn, orient=orient)
+                read = ps.df_json_read(fn, orient=orient)
+            else:
+                ps.df_json_write(df, fn)
+                read = ps.df_json_read(fn)
+            assert_frame_equal(df, read, check_exact=False, check_less_precise=12)
+        finally:
+            os.remove(fn)
