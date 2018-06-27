@@ -56,7 +56,7 @@ def loops2params(loops):
     return [merge_dicts(flatten(entry)) for entry in loops]
 
 
-def run(df, func, params, savefn=None, verbose=False):
+def run(df, func, params, tmpsave=None, verbose=False):
     runkey = '_run'
     lastrun = df[runkey].values[-1] if runkey in df.columns else -1
     lastidx = -1 if  len(df.index) == 0 else df.index[-1]
@@ -72,7 +72,7 @@ def run(df, func, params, savefn=None, verbose=False):
         for kk,vv in func(copy.deepcopy(pset)).items():
             df_row[kk] = vv
         df = df.append(df_row)
-        if savefn:
-            _fn = "{savefn}.{run}.{idx}".format(savefn=savefn, run=run, idx=idx)
+        if tmpsave:
+            _fn = "{tmpsave}.{run}.{idx}".format(tmpsave=tmpsave, run=run, idx=idx)
             df_json_write(df, _fn)
     return df

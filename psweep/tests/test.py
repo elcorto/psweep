@@ -37,7 +37,7 @@ def test_run():
     tmpdir = tempfile.mkdtemp(prefix='psweep_test_run')
     df = pd.DataFrame()
     params = [{'a': 1}, {'a': 2}]
-    df1 = ps.run(df, func, params, savefn=pj(tmpdir, 'test_run_1'))
+    df1 = ps.run(df, func, params, tmpsave=pj(tmpdir, 'test_run_1'))
     for ii in range(len(params)):
         assert os.path.exists(pj(tmpdir, 'test_run_1.0.{}'.format(ii)))
     columns = ['_run', 'a', 'result']

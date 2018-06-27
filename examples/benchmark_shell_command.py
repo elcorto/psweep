@@ -87,5 +87,5 @@ if __name__ == '__main__':
         df = ps.df_json_read(results)
     else:
         df = pd.DataFrame()
-    df = ps.run(df, func, params, savefn='save.json')
+    df = ps.run(df, func, params, tmpsave='save.json')
     df_json_write(df, results)
