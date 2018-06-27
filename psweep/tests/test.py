@@ -37,16 +37,16 @@ def test_run():
     ref1 = pd.DataFrame([[0,1,10], 
                          [0,2,20]], 
                          columns=columns)
-    assert ref1.equals(df1)
+    assert len(df1.columns) == len(ref1.columns)
+    assert ref1.equals(df1.reindex(columns=ref1.columns))
     params = [{'a': 3}, {'a': 4}]
     df2 = ps.run(df1, func, params)
     ref = pd.DataFrame([[1,3,30], 
                         [1,4,40]], 
                          columns=columns)
     ref2 = ref1.append(ref, ignore_index=True)
-    print(ref2)
-    print(df2)
-    assert ref2.equals(df2)
+    assert len(df2.columns) == len(ref2.columns)
+    assert ref2.equals(df2.reindex(columns=ref2.columns))
     assert (df2.index == pd.Int64Index([0,1,2,3], dtype='int64')).all()
 
 

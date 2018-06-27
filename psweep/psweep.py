@@ -57,17 +57,19 @@ def loops2params(loops):
 def run(df, func, params, savefn=None, verbose=False):
     runkey = '_run'
     lastrun = df[runkey].values[-1] if runkey in df.columns else -1
+    lastidx = -1 if  len(df.index) == 0 else df.index[-1]
     run = lastrun + 1
-    for idx,_pset in enumerate(params):
-        pset = copy.deepcopy(_pset)
-        row = copy.deepcopy(pset)
-        row.update({'_run': run})
+    for idx,pset in enumerate(params):
+        df_row = pd.DataFrame(copy.deepcopy(pset), index=[lastidx + idx + 1])
         if isinstance(verbose, bool) and verbose:
-            print(pd.DataFrame([row]))
+            print(df_row)
         elif is_seq(verbose):
-            print(pd.DataFrame([row])[verbose])
-        row.update(func(pset))
-        df = df.append(pd.DataFrame([row]), ignore_index=True)
+            print(df_row[verbose])
+        # update
+        df_row[runkey] = run
+        for kk,vv in func(copy.deepcopy(pset)).items():
+            df_row[kk] = vv
+        df = df.append(df_row)
         if savefn:
             _fn = "{savefn}.{run}.{idx}".format(savefn=savefn, run=run, idx=idx)
             df_json_write(_fn)
