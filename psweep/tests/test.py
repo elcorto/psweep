@@ -21,14 +21,6 @@ def system(cmd):
     return out
 
 
-def test_json2table():
-    with open('{}/files/results.json.json2table'.format(here)) as fd:
-        ref = fd.read().strip()
-    exe = os.path.abspath('{}/../../bin/json2table.py'.format(here))
-    cmd = '{exe} {here}/files/results.json'.format(exe=exe, here=here)
-    assert system(cmd) == ref
-
-
 def test_run_all_examples():
     dr = os.path.abspath('{}/../../examples'.format(here))
     tmpdir = tempfile.mkdtemp(prefix='psweep_test_examples')
