@@ -73,17 +73,16 @@ def run(df, func, params, tmpsave=None, verbose=False):
     run = lastrun + 1
     for idx,pset in enumerate(params):
         index = lastidx + idx + 1
-        df_row = pd.DataFrame(copy.deepcopy(pset), 
-                              index=[index],
-                              dtype=object)
+        rowopts = dict(index=[index], dtype=object)
+        df_row = pd.DataFrame(copy.deepcopy(pset), **rowopts)
         if isinstance(verbose, bool) and verbose:
             print(df_row)
         elif is_seq(verbose):
             print(df_row[verbose])
-        # update
-        df_row[runkey] = pd.Series(run, index=[index], dtype=object)
-        for kk,vv in func(copy.deepcopy(pset)).items():
-            df_row[kk] = pd.Series(vv, index=[index], dtype=object)
+        row_update = {runkey: run}
+        row_update.update(func(copy.deepcopy(pset)))
+        df_row = pd.concat([df_row, 
+                            pd.DataFrame([row_update], **rowopts)], axis=1)
         df = df.append(df_row)
         if tmpsave:
             _fn = "{tmpsave}.{run}.{idx}".format(tmpsave=tmpsave, run=run, idx=idx)
