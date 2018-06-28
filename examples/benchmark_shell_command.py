@@ -17,40 +17,56 @@ params:
 results:
 
 $ jq . results.json                                                                                                                                          
-{
-  "columns": [
-    "_run",
-    "a",
-    "b",
-    "const",
-    "timing"
-  ],
-  "index": [
-    0,
-    1,
-    2,
-    3,
-    4,
-    5,
-    6,
-    7
-  ],
-  "data": [
-    [
-      0,
-      1,
-      1,
-      "const",
-      0.103926325
-    ],
-    [
-      0,
-      1,
-      2,
-      "const",
-      0.055555148
-    ],
-    ....
+[
+  {
+    "a": 1,
+    "b": 1,
+    "_run": 0,
+    "timing": 0.894392793854928
+  },
+  {
+    "a": 1,
+    "b": 2,
+    "_run": 0,
+    "timing": 1.615922232263486
+  },
+  {
+    "a": 2,
+    "b": 1,
+    "_run": 0,
+    "timing": 1.026592040160289
+  },
+  {
+    "a": 2,
+    "b": 2,
+    "_run": 0,
+    "timing": 0.355394254328504
+  },
+  {
+    "a": 3,
+    "b": 1,
+    "_run": 0,
+    "timing": 1.865790378600461
+  },
+  {
+    "a": 3,
+    "b": 2,
+    "_run": 0,
+    "timing": 1.029431201749784
+  },
+  {
+    "a": 4,
+    "b": 1,
+    "_run": 0,
+    "timing": 1.861546694473383
+  },
+  {
+    "a": 4,
+    "b": 2,
+    "_run": 0,
+    "timing": 0.740852334581327
+  }
+]
 """
 
 import timeit, os
@@ -88,4 +104,4 @@ if __name__ == '__main__':
     else:
         df = pd.DataFrame()
     df = ps.run(df, func, params, tmpsave='save.json')
-    df_json_write(df, results)
+    ps.df_json_write(df, results)

@@ -13,4 +13,4 @@ if __name__ == '__main__':
     params = ps.seq2dicts('a', [1,2,3,4])
     df = pd.DataFrame()
     df = ps.run(df, func, params)
-    print(df.to_json(orient='split'))
+    ps.df_json_write(df, 'results.json')

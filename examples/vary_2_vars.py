@@ -17,4 +17,4 @@ if __name__ == '__main__':
             ))
     df = pd.DataFrame()
     df = ps.run(df, func, params)
-    print(df.to_json(orient='split'))
+    ps.df_json_write(df, 'results.json')
