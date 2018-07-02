@@ -72,29 +72,6 @@ def loops2params(loops):
     return [merge_dicts(flatten(entry)) for entry in loops]
 
 
-def run_serial(df, func, params, tmpsave=None, verbose=False):
-    runkey = '_run'
-    lastrun = df[runkey].values[-1] if runkey in df.columns else -1
-    lastidx = -1 if  len(df.index) == 0 else df.index[-1]
-    run = lastrun + 1
-    for idx,pset in enumerate(params):
-        index = lastidx + idx + 1
-        rowopts = dict(index=[index], dtype=object)
-        df_row = pd.DataFrame(copy.deepcopy(pset), **rowopts)
-        if isinstance(verbose, bool) and verbose:
-            print(df_row)
-        elif is_seq(verbose):
-            print(df_row[verbose])
-        row_update = {runkey: run}
-        row_update.update(func(copy.deepcopy(pset)))
-        df_row = pd.concat([df_row, 
-                            pd.DataFrame([row_update], **rowopts)], axis=1)
-        df = df.append(df_row)
-        if tmpsave:
-            _fn = "{tmpsave}.{run}.{idx}".format(tmpsave=tmpsave, run=run, idx=idx)
-            df_json_write(df, _fn)
-    return df
-
 # tmpsave: That's cool, but when running in parallel, we loose the ability to
 # store the whole state of the study calculated thus far. For that we would
 # need an extra thread that periodically checks for or -- even better -- gets
@@ -134,7 +111,6 @@ def run(worker, params, df=None, poolsize=1, tmpsave=False, verbose=False,
     
     if df is None:
         if os.path.exists(results_fn):
-            # TODO: backup .. etc, all the usual boilerplate
             df = df_json_read(results_fn)
         else:
             df = pd.DataFrame()
