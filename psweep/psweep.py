@@ -1,5 +1,4 @@
 from io import IOBase
-from itertools import product
 import multiprocessing as mp
 from functools import partial
 import os, copy, uuid
@@ -38,9 +37,19 @@ def seq2dicts(name, seq):
     return [{name: entry} for entry in seq]
 
 
-def merge_dicts(lst):
+def itr(func):
+    def wrapper(*args):
+        if len(args) == 1:
+            return func(args[0])
+        else:
+            return func(args)
+    return wrapper
+
+
+@itr
+def merge_dicts(args):
     dct = {}
-    for entry in lst:
+    for entry in args:
         dct.update(entry)
     return dct
 
@@ -67,7 +76,7 @@ def flatten(seq):
             for subitem in flatten(item):
                 yield subitem
 
-
+@itr
 def loops2params(loops):
     return [merge_dicts(flatten(entry)) for entry in loops]
 
