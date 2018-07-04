@@ -1,7 +1,7 @@
 from io import IOBase
 import multiprocessing as mp
 from functools import partial
-import os, copy, uuid
+import os, copy, uuid, pickle
 import pandas as pd
 
 pj = os.path.join
@@ -12,7 +12,6 @@ dtype_err_msg = ("reading and writing the json with dtype other than object "
 
 
 def df_json_write(df, name, **kwds):
-    assert (df.dtypes == object).all(), dtype_err_msg
     orient = kwds.pop('orient', 'records')
     df.to_json(name, double_precision=15, orient=orient, **kwds)
 
@@ -27,6 +26,17 @@ def df_json_read(name, **kwds):
                                 orient=orient, 
                                 dtype=dtype,
                                 **kwds)
+
+
+def pickle_read(fn):
+    with open(fn, 'rb') as fd:
+        return pickle.load(fd)
+
+
+def pickle_write(df, fn):
+    os.makedirs(os.path.dirname(fn), exist_ok=True)
+    with open(fn, 'wb') as fd:
+        pickle.dump(df, fd)
 
 
 def seq2dicts(name, seq):
