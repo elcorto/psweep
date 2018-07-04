@@ -13,6 +13,7 @@ dtype_err_msg = ("reading and writing the json with dtype other than object "
 
 def df_json_write(df, name, **kwds):
     orient = kwds.pop('orient', 'records')
+    makedirs(os.path.dirname(name))
     df.to_json(name, double_precision=15, orient=orient, **kwds)
 
 
@@ -34,9 +35,20 @@ def pickle_read(fn):
 
 
 def pickle_write(df, fn):
-    os.makedirs(os.path.dirname(fn), exist_ok=True)
+    makedirs(os.path.dirname(fn))
     with open(fn, 'wb') as fd:
         pickle.dump(df, fd)
+
+
+# https://github.com/elcorto/pwtools
+def makedirs(path):
+    if not path.strip() == '':
+        os.makedirs(path, exist_ok=True)
+
+
+# https://github.com/elcorto/pwtools
+def fullpath(path):
+    return os.path.abspath(os.path.expanduser(path))
 
 
 def seq2dicts(name, seq):
@@ -118,7 +130,6 @@ def worker_wrapper(pset, worker, tmpsave=False, verbose=False, run_id=None,
     df_row = pd.DataFrame([_pset], dtype=object)
     if tmpsave:
         fn = pj(calc_dir, 'tmpsave', run_id, pset_id + '.json')
-        os.makedirs(os.path.dirname(fn), exist_ok=True)
         df_json_write(df_row, fn)
     return df_row
     
@@ -126,7 +137,7 @@ def worker_wrapper(pset, worker, tmpsave=False, verbose=False, run_id=None,
 def run(worker, params, df=None, poolsize=1, tmpsave=False, verbose=False,
         calc_dir='calc'):
     results_fn = pj(calc_dir, 'results.json')
-    os.makedirs(calc_dir, exist_ok=True)
+    makedirs(calc_dir)
     
     if df is None:
         if os.path.exists(results_fn):
