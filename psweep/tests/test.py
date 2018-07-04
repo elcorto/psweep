@@ -1,5 +1,5 @@
 import subprocess as sp
-import os, tempfile, io, string, json
+import os, tempfile, io, string, json, shutil
 
 import pandas as pd
 import numpy as np
@@ -23,43 +23,49 @@ def system(cmd):
 
 def test_run_all_examples():
     dr = os.path.abspath('{}/../../examples'.format(here))
-    tmpdir = tempfile.mkdtemp(prefix='psweep_test_examples')
     for basename in os.listdir(dr):
         if basename.endswith('.py'):
+            tmpdir = tempfile.mkdtemp(prefix='psweep_test_examples_')
             cmd = """
-                cp {fn} {tmpdir}/; cd {tmpdir}; 
+                cp {fn} {tmpdir}/; cd {tmpdir};
                 python3 {fn}
             """.format(tmpdir=tmpdir, fn=pj(dr, basename))
             print(system(cmd))
+            shutil.rmtree(tmpdir)
+
+
+def func(pset):
+    return {'result': pset['a']*10}
 
 
 def test_run():
-    def func(pset):
-        return {'result': pset['a']*10}
-    tmpdir = tempfile.mkdtemp(prefix='psweep_test_run')
-    df = pd.DataFrame()
-    params = [{'a': 1}, {'a': 2}]
-    df1 = ps.run(df, func, params, tmpsave=pj(tmpdir, 'test_run_1'))
-    for ii in range(len(params)):
-        assert os.path.exists(pj(tmpdir, 'test_run_1.0.{}'.format(ii)))
-    ps.df_json_write(df1, pj(tmpdir, 'df1'))
-    columns = ['_run', 'a', 'result']
-    ref1 = pd.DataFrame([[0,1,10], 
-                         [0,2,20]], 
-                         columns=columns,
-                         dtype=object)
-    assert len(df1.columns) == len(ref1.columns)
-    assert ref1.equals(df1.reindex(columns=ref1.columns))
-    params = [{'a': 3}, {'a': 4}]
-    df2 = ps.run(df1, func, params)
-    ref = pd.DataFrame([[1,3,30], 
-                        [1,4,40]], 
-                        columns=columns,
-                        dtype=object)
-    ref2 = ref1.append(ref, ignore_index=True)
-    assert len(df2.columns) == len(ref2.columns)
-    assert ref2.equals(df2.reindex(columns=ref2.columns))
-    assert (df2.index == pd.Int64Index([0,1,2,3], dtype='int64')).all()
+    tmpdir = tempfile.mkdtemp(prefix='psweep_test_run_')
+    params = [{'a': 1}, {'a': 2}, {'a': 3}, {'a': 4}]
+    calc_dir = f"{tmpdir}/calc"
+
+    # run two times, updating the database .../results.json, the second time,
+    # also write tmp results
+    df = ps.run(func, params, calc_dir=calc_dir)
+    assert len(df) == 4
+    assert len(df._run_id.unique()) == 1
+    assert len(df._pset_id.unique()) == 4
+    df = ps.run(func, params, calc_dir=calc_dir, poolsize=2, tmpsave=True)
+    assert len(df) == 8
+    assert len(df._run_id.unique()) == 2
+    assert len(df._pset_id.unique()) == 8
+
+    dbfn = f"{calc_dir}/results.json"
+    assert os.path.exists(dbfn)
+    assert df.equals(ps.df_json_read(dbfn))
+    assert set(df.columns) == \
+        set(['_calc_dir', '_pset_id', '_run_id', 'a', 'result'])
+
+    # tmp results of second run
+    run_id = df._run_id.unique()[-1]
+    for pset_id in df[df._run_id==run_id]._pset_id:
+        tmpsave_fn = f"{calc_dir}/tmpsave/{run_id}/{pset_id}.json"
+        assert os.path.exists(tmpsave_fn)
+    shutil.rmtree(tmpdir)
 
 
 def test_is_seq():
