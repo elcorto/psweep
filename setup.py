@@ -8,7 +8,7 @@ from setuptools import setup
 from distutils.version import StrictVersion as Version
 
 here = os.path.abspath(os.path.dirname(__file__))
-bindir = 'bin'
+##bindir = 'bin'
 with open(os.path.join(here, 'README.rst')) as fd:
     long_description = fd.read()
 
@@ -47,5 +47,5 @@ setup(
     keywords='parameter study sweep loop',
     packages=['psweep'],
     install_requires=install_requires,
-    scripts=['{}/{}'.format(bindir, script) for script in os.listdir(bindir)]
+##    scripts=['{}/{}'.format(bindir, script) for script in os.listdir(bindir)]
 )
