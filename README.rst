@@ -4,82 +4,70 @@ psweep -- loop like a pro, make parameter studies fun
 About
 -----
 
-This is a package with simple helpers to set up parameter studies.
+This is a package with simple helpers to set up and run parameter studies.
 
 Getting started
 ---------------
 
-The most simple example one can think of: loop over a single variable.
+Loop over two parameters 'a' and 'b':
 
 .. code-block:: python
 
+    #!/usr/bin/env python3
+
     import random
+    from itertools import product
     from psweep import psweep as ps
-    import pandas as pd
 
 
     def func(pset):
-        """pset: dict such as {'a': 1}"""
-        return {'result': random.random() * pset['a']}
+        return {'result': random.random() * pset['a'] * pset['b']}
 
 
-    # params = [{'a': 1}, {'a': 2}, {'a': 3}, {'a': 4}]
-    params = ps.seq2dicts('a', [1,2,3,4])
-    df = pd.DataFrame()
-    df = ps.run(df, func, params)
-    ps.df_json_write(df, 'results.json')
-    print(df)
+    if __name__ == '__main__':
+        params = ps.loops2params(product(
+                ps.seq2dicts('a', [1,2,3,4]),
+                ps.seq2dicts('b', [8,9]),
+                ))
+        df = ps.run(func, params)
+        print(df)
+
+produces a list of parameter sets to loop over (``params``)::
+
+    [{'a': 1, 'b': 8},
+     {'a': 1, 'b': 9},
+     {'a': 2, 'b': 8},
+     {'a': 2, 'b': 9},
+     {'a': 3, 'b': 8},
+     {'a': 3, 'b': 9},
+     {'a': 4, 'b': 8},
+     {'a': 4, 'b': 9}]
 
 
-``df``::
+and a database of results (pandas DataFrame ``df``, file ``calc/results.json``
+by default)::
 
-       _run  a    result
-    0     0  1  0.722918
-    1     0  2  0.462952
-    2     0  3  1.411430
-    3     0  4  1.690443
+      _calc_dir                              _pset_id  \
+    0      calc  e5554177-ce31-4944-93ee-786dbaadacb7
+    1      calc  c055661c-fc36-476b-b50a-ae5c101ce638
+    2      calc  9f316933-5d46-42a7-aca8-14ccf3555ccc
+    3      calc  9aff8f32-402b-4f3a-9040-449a8a7e23c6
+    4      calc  0cf2a7f1-a5d6-4a23-8a9c-c14766b5d450
+    5      calc  268ba704-8c32-4bd8-8006-59bc3bd3c234
+    6      calc  c1732939-1668-4654-bb4f-8ad8c8391ef8
+    7      calc  9f79b241-0ef1-408c-a538-dc588a11a0de
 
-``results.json``::
+                                    _run_id  a  b      result
+    0  f467d1f5-3db1-4fcb-8a3c-a9bb5ac18f4c  1  8     5.95035
+    1  f467d1f5-3db1-4fcb-8a3c-a9bb5ac18f4c  1  9     3.74252
+    2  f467d1f5-3db1-4fcb-8a3c-a9bb5ac18f4c  2  8     2.58442
+    3  f467d1f5-3db1-4fcb-8a3c-a9bb5ac18f4c  2  9  0.00564436
+    4  f467d1f5-3db1-4fcb-8a3c-a9bb5ac18f4c  3  8     15.9873
+    5  f467d1f5-3db1-4fcb-8a3c-a9bb5ac18f4c  3  9     19.2371
+    6  f467d1f5-3db1-4fcb-8a3c-a9bb5ac18f4c  4  8     17.0561
+    7  f467d1f5-3db1-4fcb-8a3c-a9bb5ac18f4c  4  9     21.0376
 
-    [
-      {
-        "a": 1,
-        "_run": 0,
-        "result": 0.722918
-      },
-      {
-        "a": 2,
-        "_run": 0,
-        "result": 0.462952
-      },
-      {
-        "a": 3,
-        "_run": 0,
-        "result": 1.411430
-      },
-      {
-        "a": 4,
-        "_run": 0,
-        "result": 1.690443
-      }
-    ]
-
-
-Repeat the study (``_run=1``), append to existing ``df``::
-
-    df = ps.run(df, func, params)
-
-::
-
-       _run  a    result
-    0     0  1  0.722918
-    1     0  2  0.462952
-    2     0  3  1.411430
-    3     0  4  1.690443
-    4     1  1  0.512290
-    5     1  2  0.039990
-    6     1  3  0.298793
-    7     1  4  1.564050
+See the ``examples`` dir for more.
 
 Tests
 -----
@@ -93,55 +81,63 @@ Concepts
 --------
 
 The basic data structure for a param study is a list ``params`` of dicts
-(called "parameter sets" or short psets).
+(called "parameter sets" or short `pset`).
 
 .. code-block:: python
 
-    params = [{'foo': 1, 'bar': 'lala'},  # pset 1
-              {'foo': 2, 'bar': 'zzz'},   # pset 2
+    params = [{'a': 1, 'b': 'lala'},  # pset 1
+              {'a': 2, 'b': 'zzz'},   # pset 2
               ...                         # ...
              ]
 
-Each pset contains values of parameters ('foo' and 'bar') which are varied
+Each `pset` contains values of parameters ('a' and 'b') which are varied
 during the parameter study.
 
-These psets are the basis of a pandas ``DataFrame`` (much like an SQL table, 2D
+These `psets` are the basis of a pandas ``DataFrame`` (much like an SQL table, 2D
 array w/ named columns and in case of ``DataFrame`` also variable data types)
-with columns 'foo' and 'bar'.
+with columns 'a' and 'b'.
 
-Then we define a callback function ``func``, which takes only one pset
+You only need to define a callback function ``func``, which takes exactly one `pset`
 such as::
 
-    {'foo': 1, 'bar': 'lala'},
+    {'a': 1, 'b': 'lala'}
 
-and runs the workload for that pset. ``func`` must return a dict, for example::
+and runs the workload for that `pset`. ``func`` must return a dict, for example::
 
-    {'result': 1.234},
+    {'result': 1.234}
+
+or an updated `pset`::
+    
+    {'a': 1, 'b': 'lala', 'result': 1.234}
 
 which is the result of the run.
 
-``func`` is called in a loop on all psets in ``params`` in the ``run`` helper
+``func`` is called in a loop on all `psets` in ``params`` in the ``ps.run`` helper
 function. The result dict (e.g. ``{'result': 1.234}`` from each call gets merged
-with the current pset such that we have::
+with the current `pset` such that we have::
 
-    {'foo': 1, 'bar': 'lala', 'result': 1.234}
+    {'a': 1, 'b': 'lala', 'result': 1.234}
 
 That gets appended to a ``DataFrame``, thus creating a new column called
-'result'. The ``run`` function adds a ``_run`` column as well, which counts how
-often the study has been performed.
+'result'. The ``ps.run`` function adds some special columns such as ``_run_id``
+(once per ``ps.run`` call) or ``_pset_id`` (once per `pset`). Using ``ps.run(...
+poolsize=...)`` runs ``func`` in parallel on ``params`` using
+``multiprocessing.Pool``.
 
 This package offers some very simple helper functions which assist in creating
-``params``. Basically, we define the to-be-varied parameters ('foo' and 'bar')
-as "named sequences" (i.e. list of dicts) which are, in fact, the columns of
-``params``. Then we use something like ``itertools.product`` to loop over them.
+``params``. Basically, we define the to-be-varied parameters ('a' and 'b')
+and then use something like ``itertools.product`` to loop over them to create
+``params``, which is passed to ``ps.run`` to actually perform the loop over all
+`psets`.
 
 .. code-block:: python
 
     >>> from itertools import product
-    >>> x=seq2dicts('a', [1,2,3])
+    >>> from psweep import psweep as ps
+    >>> x=ps.seq2dicts('a', [1,2,3])
     >>> x
     [{'x': 1}, {'x': 2}, {'x': 3}]
-    >>> y=seq2dicts('y', ['xx','yy','zz'])
+    >>> y=ps.seq2dicts('y', ['xx','yy','zz'])
     >>> y
     [{'y': 'xx'}, {'y': 'yy'}, {'y': 'zz'}]
     >>> list(product(x,y))
@@ -155,7 +151,7 @@ as "named sequences" (i.e. list of dicts) which are, in fact, the columns of
      ({'x': 3}, {'y': 'yy'}),
      ({'x': 3}, {'y': 'zz'})]
 
-    >>> loops2params(product(x,y))
+    >>> ps.loops2params(product(x,y))
     [{'x': 1, 'y': 'xx'},
      {'x': 1, 'y': 'yy'},
      {'x': 1, 'y': 'zz'},
@@ -183,7 +179,7 @@ The nestings from ``zip()`` are flattened in ``loops2params()``.
 
 .. code-block:: python
 
-    >>> z=seq2dicts('z', [None, 1.2, 'X'])
+    >>> z=ps.seq2dicts('z', [None, 1.2, 'X'])
     >>> z
     [{'z': None}, {'z': 1.2}, {'z': 'X'}]
     >>> list(product(zip(x,y),z))
@@ -197,7 +193,7 @@ The nestings from ``zip()`` are flattened in ``loops2params()``.
      (({'x': 3}, {'y': 'zz'}), {'z': 1.2}),
      (({'x': 3}, {'y': 'zz'}), {'z': 'X'})]
 
-    >>> loops2params(product(zip(x,y),z))
+    >>> ps.loops2params(product(zip(x,y),z))
     [{'x': 1, 'y': 'xx', 'z': None},
      {'x': 1, 'y': 'xx', 'z': 1.2},
      {'x': 1, 'y': 'xx', 'z': 'X'},
@@ -213,10 +209,10 @@ the loops:
 
 .. code-block:: python
 
-    >>> c=seq2dicts('c', ['const'])
+    >>> c=ps.seq2dicts('c', ['const'])
     >>> c
     [{'c': 'const'}]
-    >>> loops2params(product(zip(x,y),z,c))
+    >>> ps.loops2params(product(zip(x,y),z,c))
     [{'a': 1, 'c': 'const', 'y': 'xx', 'z': None},
      {'a': 1, 'c': 'const', 'y': 'xx', 'z': 1.2},
      {'a': 1, 'c': 'const', 'y': 'xx', 'z': 'X'},
@@ -232,9 +228,9 @@ running any workload, i.e. we assemble the parameter grid to be sampled before
 the actual calculations. This has proven to be very practical as it helps
 detecting errors early.
 
-You may have noticed that the data structures and functions used here are so
-simple that is almost not worth a package at all, but it is helpful to have the
-ideas and the workflow packaged up in a central place.
+We are aware of the fact that the data structures and functions used here are
+so simple that it is almost not worth a package at all, but it is helpful to
+have the ideas and the workflow packaged up in a central place.
 
 Install
 -------
