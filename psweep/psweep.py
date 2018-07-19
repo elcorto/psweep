@@ -12,6 +12,7 @@ dtype_err_msg = ("reading and writing the json with dtype other than object "
 
 
 def df_json_write(df, name, **kwds):
+    assert (df.dtypes == object).all(), dtype_err_msg
     orient = kwds.pop('orient', 'records')
     makedirs(os.path.dirname(name))
     df.to_json(name, double_precision=15, orient=orient, **kwds)
