@@ -10,30 +10,30 @@ pj = os.path.join
 default_orient = 'records'
 
 
-def df_json_write(df, name, **kwds):
-    orient = kwds.pop('orient', default_orient)
-    makedirs(os.path.dirname(name))
-    df.to_json(name, double_precision=15, orient=orient, **kwds)
-
-
-def df_json_read(name, **kwds):
-    orient = kwds.pop('orient', default_orient)
-    df = pd.io.json.read_json(name,
-                              precise_float=True,
-                              orient=orient,
-                              **kwds)
-    return df
-
-
-def pickle_read(fn):
-    with open(fn, 'rb') as fd:
-        return pickle.load(fd)
-
-
-def pickle_write(df, fn):
+def df_write(df, fn, fmt='pickle', **kwds):
     makedirs(os.path.dirname(fn))
-    with open(fn, 'wb') as fd:
-        pickle.dump(df, fd)
+    if fmt == 'pickle':
+        with open(fn, 'wb') as fd:
+            pickle.dump(df, fd, **kwds)
+    elif fmt == 'json':
+        orient = kwds.pop('orient', default_orient)
+        df.to_json(fn, double_precision=15, orient=orient, **kwds)
+    else:
+        raise Exception("unknown fmt: {}".format(fmt))
+
+
+def df_read(fn, fmt='pickle', **kwds):
+    if fmt == 'pickle':
+        with open(fn, 'rb') as fd:
+            return pickle.load(fd, **kwds)
+    elif fmt == 'json':
+        orient = kwds.pop('orient', default_orient)
+        return pd.io.json.read_json(fn,
+                                    precise_float=True,
+                                    orient=orient,
+                                    **kwds)
+    else:
+        raise Exception("unknown fmt: {}".format(fmt))
 
 
 # https://github.com/elcorto/pwtools
@@ -128,7 +128,7 @@ def worker_wrapper(pset, worker, tmpsave=False, verbose=False, run_id=None,
     df_row = pd.DataFrame([_pset], index=[_time_utc])
     if tmpsave:
         fn = pj(calc_dir, 'tmpsave', run_id, pset_id + '.pk')
-        pickle_write(df_row, fn)
+        df_write(df_row, fn)
     return df_row
 
 
@@ -139,7 +139,7 @@ def run(worker, params, df=None, poolsize=1, tmpsave=False, verbose=False,
 
     if df is None:
         if os.path.exists(results_fn):
-            df = pickle_read(results_fn)
+            df = df_read(results_fn)
         else:
             df = pd.DataFrame()
 
@@ -158,5 +158,5 @@ def run(worker, params, df=None, poolsize=1, tmpsave=False, verbose=False,
     for df_row in results:
         df = df.append(df_row)
 
-    pickle_write(df, results_fn)
+    df_write(df, results_fn)
     return df

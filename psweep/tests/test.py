@@ -58,7 +58,7 @@ def test_run():
 
     dbfn = f"{calc_dir}/results.pk"
     assert os.path.exists(dbfn)
-    assert df.equals(ps.pickle_read(dbfn))
+    assert df.equals(ps.df_read(dbfn))
 
     # tmp results of second run
     run_id = df._run_id.unique()[-1]
@@ -79,45 +79,57 @@ def test_is_seq():
         assert ps.is_seq(obj)
 
 
-def test_df_json_io():
+def test_df_io():
     from pandas.util.testing import assert_frame_equal
     letters = string.ascii_letters
     ri = np.random.randint
     rn = np.random.rand
     # random string
     rs = lambda n: ''.join(letters[ii] for ii in ri(0, len(letters), n))
-    df = pd.DataFrame()
-    for _ in range(2):
-        vals = [ri(0,100),
-                rs(5),
-                np.nan,
-                '"{}"'.format(rs(5)),
-                "'{}'".format(rs(5)),
-                (ri(0,99), rn(), '{}'.format(rs(5))),
-                [ri(0,99), rn(), "{}".format(rs(5))],
-                rn(),
-                rn(5),
-                rn(5,5),
-                list(rn(5)),
-                {'a':1, 'b':3, 'c': [1,2,3]},
-                # builtins that do not survive json IO
-                ##True,
-                ##False,
-                ##None,
-                # TypeError: 'set' object does not support indexing
-                ##set(ri(0,99,10)),
-                ]
-        row = pd.DataFrame([dict(zip(letters, vals))])
-        df = df.append(row, ignore_index=True)
+    
+    for fmt in ['pickle', 'json']:
+        df = pd.DataFrame()
+        for _ in range(2):
+            vals = [ri(0,100),
+                    rs(5),
+                    np.nan,
+                    '"{}"'.format(rs(5)),
+                    "'{}'".format(rs(5)),
+                    (ri(0,99), rn(), '{}'.format(rs(5))),
+                    [ri(0,99), rn(), "{}".format(rs(5))],
+                    rn(),
+                    rn(5),
+                    rn(5,5),
+                    list(rn(5)),
+                    {'a':1, 'b':3, 'c': [1,2,3]},
+                    ]
+            if fmt == 'pickle':
+                vals += [True,
+                         False,
+                         None,
+                         set(ri(0,99,10)),
+                         ]
+            row = pd.DataFrame([dict(zip(letters, vals))])
+            df = df.append(row, ignore_index=True)
 
-    for orient in [None, 'split', 'records', 'index', 'columns', '_default_']:
-        print("orient: ", orient)
-        fn = tempfile.mktemp(prefix='psweep_test_df_json_io_{}_'.format(orient))
-        if orient != '_default_':
-            ps.df_json_write(df, fn, orient=orient)
-            read = ps.df_json_read(fn, orient=orient)
+        if fmt == 'json':
+            for orient in [None, 'split', 'records', 'index', 'columns', '_default_']:
+                print("orient: ", orient)
+                fn = tempfile.mktemp(prefix='psweep_test_df_io_{}_{}_'.format(fmt, orient))
+                if orient != '_default_':
+                    ps.df_write(df, fn, fmt=fmt, orient=orient)
+                    read = ps.df_read(fn, fmt=fmt, orient=orient)
+                else:
+                    ps.df_write(df, fn, fmt=fmt)
+                    read = ps.df_read(fn, fmt=fmt)
+                os.remove(fn)
+                assert_frame_equal(df, read, check_exact=False, check_less_precise=12)
+        elif fmt == 'pickle':
+            fn = tempfile.mktemp(prefix='psweep_test_df_io_{}_'.format(fmt))
+            ps.df_write(df, fn, fmt=fmt)
+            read = ps.df_read(fn, fmt=fmt)
+            os.remove(fn)
+##            assert_frame_equal(df, read, check_exact=True)
+            assert_frame_equal(df, read)
         else:
-            ps.df_json_write(df, fn)
-            read = ps.df_json_read(fn)
-        os.remove(fn)
-        assert_frame_equal(df, read, check_exact=False, check_less_precise=12)
+            raise Exception("unknown fmt")
