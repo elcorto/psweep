@@ -1,33 +1,28 @@
 from io import IOBase
 import multiprocessing as mp
 from functools import partial
-import os, copy, uuid, pickle
+import os, copy, uuid, pickle, time
 import pandas as pd
 
 pj = os.path.join
 
 
-dtype_err_msg = ("reading and writing the json with dtype other than object "
-                 "will allow Pandas typecasting, which we very much dislike")
+default_orient = 'records'
 
 
 def df_json_write(df, name, **kwds):
-    assert (df.dtypes == object).all(), dtype_err_msg
-    orient = kwds.pop('orient', 'records')
+    orient = kwds.pop('orient', default_orient)
     makedirs(os.path.dirname(name))
     df.to_json(name, double_precision=15, orient=orient, **kwds)
 
 
 def df_json_read(name, **kwds):
-    orient = kwds.pop('orient', 'records')
-    dtype = kwds.pop('dtype', object)
-    if dtype is not object:
-        raise ValueError(dtype_err_msg)
-    return pd.io.json.read_json(name, 
-                                precise_float=True, 
-                                orient=orient, 
-                                dtype=dtype,
-                                **kwds)
+    orient = kwds.pop('orient', default_orient)
+    df = pd.io.json.read_json(name,
+                              precise_float=True,
+                              orient=orient,
+                              **kwds)
+    return df
 
 
 def pickle_read(fn):
@@ -116,33 +111,35 @@ def worker_wrapper(pset, worker, tmpsave=False, verbose=False, run_id=None,
     assert calc_dir is not None
     pset_id = str(uuid.uuid4())
     # for printing only
-    df_row = pd.DataFrame([pset], dtype=object)
+    df_row = pd.DataFrame([pset])
     if isinstance(verbose, bool) and verbose:
         print(df_row)
     elif is_seq(verbose):
         print(df_row[verbose])
     _pset = copy.deepcopy(pset)
+    _time_utc = pd.Timestamp(time.time(), unit='s')
     update = {'_run_id': run_id,
               '_pset_id': pset_id,
               '_calc_dir': calc_dir,
+              '_time_utc': _time_utc
               }
     _pset.update(update)
     _pset.update(worker(_pset))
-    df_row = pd.DataFrame([_pset], dtype=object)
+    df_row = pd.DataFrame([_pset], index=[_time_utc])
     if tmpsave:
-        fn = pj(calc_dir, 'tmpsave', run_id, pset_id + '.json')
-        df_json_write(df_row, fn)
+        fn = pj(calc_dir, 'tmpsave', run_id, pset_id + '.pk')
+        pickle_write(df_row, fn)
     return df_row
-    
+
 
 def run(worker, params, df=None, poolsize=1, tmpsave=False, verbose=False,
         calc_dir='calc'):
-    results_fn = pj(calc_dir, 'results.json')
+    results_fn = pj(calc_dir, 'results.pk')
     makedirs(calc_dir)
-    
+
     if df is None:
         if os.path.exists(results_fn):
-            df = df_json_read(results_fn)
+            df = pickle_read(results_fn)
         else:
             df = pd.DataFrame()
 
@@ -154,11 +151,12 @@ def run(worker, params, df=None, poolsize=1, tmpsave=False, verbose=False,
                                      run_id=run_id,
                                      calc_dir=calc_dir,
                                      )
+
     with mp.Pool(poolsize) as pool:
         results = pool.map(worker_wrapper_partial, params)
-    
-    for df_row in results:
-        df = df.append(df_row, ignore_index=True)
 
-    df_json_write(df, results_fn)
+    for df_row in results:
+        df = df.append(df_row)
+
+    pickle_write(df, results_fn)
     return df

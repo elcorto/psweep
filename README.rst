@@ -44,30 +44,49 @@ produces a list of parameter sets to loop over (``params``)::
      {'a': 4, 'b': 9}]
 
 
-and a database of results (pandas DataFrame ``df``, file ``calc/results.json``
+and a database of results (pandas DataFrame ``df``, pickled file ``calc/results.pk``
 by default)::
 
-      _calc_dir                              _pset_id  \
-    0      calc  e5554177-ce31-4944-93ee-786dbaadacb7
-    1      calc  c055661c-fc36-476b-b50a-ae5c101ce638
-    2      calc  9f316933-5d46-42a7-aca8-14ccf3555ccc
-    3      calc  9aff8f32-402b-4f3a-9040-449a8a7e23c6
-    4      calc  0cf2a7f1-a5d6-4a23-8a9c-c14766b5d450
-    5      calc  268ba704-8c32-4bd8-8006-59bc3bd3c234
-    6      calc  c1732939-1668-4654-bb4f-8ad8c8391ef8
-    7      calc  9f79b241-0ef1-408c-a538-dc588a11a0de
+                               _calc_dir                              _pset_id  \
+    2018-07-22 20:06:07.401398      calc  99a0f636-10b3-438c-ab43-c583fda806e8
+    2018-07-22 20:06:07.406902      calc  6ec59d2b-7562-4262-b8d6-8f898a95f521
+    2018-07-22 20:06:07.410227      calc  d3c22d7d-bc6d-4297-afc3-285482e624b5
+    2018-07-22 20:06:07.412210      calc  f2b2269b-86e3-4b15-aeb7-92848ae25f7b
+    2018-07-22 20:06:07.414637      calc  8e1db575-1be2-4561-a835-c88739dc0440
+    2018-07-22 20:06:07.416465      calc  674f8a2c-bc21-40f4-b01f-3702e0338ae8
+    2018-07-22 20:06:07.418866      calc  b4d3d11b-0f22-4c73-a895-7363c635c0c6
+    2018-07-22 20:06:07.420706      calc  a265ca2f-3a9f-4323-b494-4b6763c46929
 
-                                    _run_id  a  b      result
-    0  f467d1f5-3db1-4fcb-8a3c-a9bb5ac18f4c  1  8     5.95035
-    1  f467d1f5-3db1-4fcb-8a3c-a9bb5ac18f4c  1  9     3.74252
-    2  f467d1f5-3db1-4fcb-8a3c-a9bb5ac18f4c  2  8     2.58442
-    3  f467d1f5-3db1-4fcb-8a3c-a9bb5ac18f4c  2  9  0.00564436
-    4  f467d1f5-3db1-4fcb-8a3c-a9bb5ac18f4c  3  8     15.9873
-    5  f467d1f5-3db1-4fcb-8a3c-a9bb5ac18f4c  3  9     19.2371
-    6  f467d1f5-3db1-4fcb-8a3c-a9bb5ac18f4c  4  8     17.0561
-    7  f467d1f5-3db1-4fcb-8a3c-a9bb5ac18f4c  4  9     21.0376
+                                                             _run_id  \
+    2018-07-22 20:06:07.401398  3e09daf8-c3a7-49cb-8aa3-f2c040c70e8f
+    2018-07-22 20:06:07.406902  3e09daf8-c3a7-49cb-8aa3-f2c040c70e8f
+    2018-07-22 20:06:07.410227  3e09daf8-c3a7-49cb-8aa3-f2c040c70e8f
+    2018-07-22 20:06:07.412210  3e09daf8-c3a7-49cb-8aa3-f2c040c70e8f
+    2018-07-22 20:06:07.414637  3e09daf8-c3a7-49cb-8aa3-f2c040c70e8f
+    2018-07-22 20:06:07.416465  3e09daf8-c3a7-49cb-8aa3-f2c040c70e8f
+    2018-07-22 20:06:07.418866  3e09daf8-c3a7-49cb-8aa3-f2c040c70e8f
+    2018-07-22 20:06:07.420706  3e09daf8-c3a7-49cb-8aa3-f2c040c70e8f
 
-See the ``examples`` dir for more.
+                                                _time_utc  a  b     result
+    2018-07-22 20:06:07.401398 2018-07-22 20:06:07.401398  1  8   2.288036
+    2018-07-22 20:06:07.406902 2018-07-22 20:06:07.406902  1  9   7.944922
+    2018-07-22 20:06:07.410227 2018-07-22 20:06:07.410227  2  8  14.480190
+    2018-07-22 20:06:07.412210 2018-07-22 20:06:07.412210  2  9   3.532110
+    2018-07-22 20:06:07.414637 2018-07-22 20:06:07.414637  3  8   9.019944
+    2018-07-22 20:06:07.416465 2018-07-22 20:06:07.416465  3  9   4.382123
+    2018-07-22 20:06:07.418866 2018-07-22 20:06:07.418866  4  8   2.713900
+    2018-07-22 20:06:07.420706 2018-07-22 20:06:07.420706  4  9  27.358240
+
+You see a number of reserved fields for book-keeping such as
+
+::
+
+    _run_id
+    _pset_id
+    _calc_dir
+    _time_utc
+
+and a timestamped index. See the ``examples`` dir for more.
 
 Tests
 -----
@@ -107,7 +126,7 @@ and runs the workload for that `pset`. ``func`` must return a dict, for example:
     {'result': 1.234}
 
 or an updated `pset`::
-    
+
     {'a': 1, 'b': 'lala', 'result': 1.234}
 
 which is the result of the run.

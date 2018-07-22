@@ -43,7 +43,7 @@ def test_run():
     params = [{'a': 1}, {'a': 2}, {'a': 3}, {'a': 4}]
     calc_dir = f"{tmpdir}/calc"
 
-    # run two times, updating the database .../results.json, the second time,
+    # run two times, updating the database, the second time,
     # also write tmp results
     df = ps.run(func, params, calc_dir=calc_dir)
     assert len(df) == 4
@@ -53,17 +53,17 @@ def test_run():
     assert len(df) == 8
     assert len(df._run_id.unique()) == 2
     assert len(df._pset_id.unique()) == 8
-
-    dbfn = f"{calc_dir}/results.json"
-    assert os.path.exists(dbfn)
-    assert df.equals(ps.df_json_read(dbfn))
     assert set(df.columns) == \
-        set(['_calc_dir', '_pset_id', '_run_id', 'a', 'result'])
+        set(['_calc_dir', '_pset_id', '_run_id', '_time_utc', 'a', 'result'])
+
+    dbfn = f"{calc_dir}/results.pk"
+    assert os.path.exists(dbfn)
+    assert df.equals(ps.pickle_read(dbfn))
 
     # tmp results of second run
     run_id = df._run_id.unique()[-1]
     for pset_id in df[df._run_id==run_id]._pset_id:
-        tmpsave_fn = f"{calc_dir}/tmpsave/{run_id}/{pset_id}.json"
+        tmpsave_fn = f"{calc_dir}/tmpsave/{run_id}/{pset_id}.pk"
         assert os.path.exists(tmpsave_fn)
     shutil.rmtree(tmpdir)
 
@@ -81,30 +81,33 @@ def test_is_seq():
 
 def test_df_json_io():
     from pandas.util.testing import assert_frame_equal
-    let = string.ascii_letters
+    letters = string.ascii_letters
     ri = np.random.randint
     rn = np.random.rand
-    rs = lambda n: ''.join(let[ii] for ii in ri(0, len(let), n))
+    # random string
+    rs = lambda n: ''.join(letters[ii] for ii in ri(0, len(letters), n))
     df = pd.DataFrame()
     for _ in range(2):
         vals = [ri(0,100),
                 rs(5),
                 np.nan,
-                True,
-                False,
-                None,
                 '"{}"'.format(rs(5)),
                 "'{}'".format(rs(5)),
                 (ri(0,99), rn(), '{}'.format(rs(5))),
                 [ri(0,99), rn(), "{}".format(rs(5))],
-##                set(ri(0,99,10)),
                 rn(),
                 rn(5),
                 rn(5,5),
                 list(rn(5)),
                 {'a':1, 'b':3, 'c': [1,2,3]},
+                # builtins that do not survive json IO
+                ##True,
+                ##False,
+                ##None,
+                # TypeError: 'set' object does not support indexing
+                ##set(ri(0,99,10)),
                 ]
-        row = pd.DataFrame([dict(zip(let, vals))], dtype=object)
+        row = pd.DataFrame([dict(zip(letters, vals))])
         df = df.append(row, ignore_index=True)
 
     for orient in [None, 'split', 'records', 'index', 'columns', '_default_']:
