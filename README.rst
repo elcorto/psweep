@@ -25,14 +25,13 @@ Loop over two parameters 'a' and 'b':
 
 
     if __name__ == '__main__':
-        params = ps.loops2params(product(
-                ps.seq2dicts('a', [1,2,3,4]),
-                ps.seq2dicts('b', [8,9]),
-                ))
+        a = ps.seq2dicts('a', [1,2,3,4])
+        b = ps.seq2dicts('b', [8,9])
+        params = ps.loops2params(product(a,b))
         df = ps.run(func, params)
         print(df)
 
-produces a list of parameter sets to loop over (``params``)::
+This produces a list of parameter sets to loop over (``params``)::
 
     [{'a': 1, 'b': 8},
      {'a': 1, 'b': 9},
@@ -106,17 +105,13 @@ The basic data structure for a param study is a list ``params`` of dicts
 
     params = [{'a': 1, 'b': 'lala'},  # pset 1
               {'a': 2, 'b': 'zzz'},   # pset 2
-              ...                         # ...
+              ...                     # ...
              ]
 
 Each `pset` contains values of parameters ('a' and 'b') which are varied
 during the parameter study.
 
-These `psets` are the basis of a pandas ``DataFrame`` (much like an SQL table, 2D
-array w/ named columns and in case of ``DataFrame`` also variable data types)
-with columns 'a' and 'b'.
-
-You only need to define a callback function ``func``, which takes exactly one `pset`
+You need to define a callback function ``func``, which takes exactly one `pset`
 such as::
 
     {'a': 1, 'b': 'lala'}
@@ -129,19 +124,17 @@ or an updated `pset`::
 
     {'a': 1, 'b': 'lala', 'result': 1.234}
 
-which is the result of the run.
+We always merge (``dict.update``) the result of ``func`` with the `pset`,
+which gives you flexibility in what to return from ``func``.
 
-``func`` is called in a loop on all `psets` in ``params`` in the ``ps.run`` helper
-function. The result dict (e.g. ``{'result': 1.234}`` from each call gets merged
-with the current `pset` such that we have::
+The `psets` form the rows of a pandas ``DataFrame``, which we use to store
+the `pset` and the result from each run.
 
-    {'a': 1, 'b': 'lala', 'result': 1.234}
-
-That gets appended to a ``DataFrame``, thus creating a new column called
-'result'. The ``ps.run`` function adds some special columns such as ``_run_id``
-(once per ``ps.run`` call) or ``_pset_id`` (once per `pset`). Using ``ps.run(...
-poolsize=...)`` runs ``func`` in parallel on ``params`` using
-``multiprocessing.Pool``.
+The idea is now to run ``func`` in a loop over all `psets` in ``params``. You
+can do this using the ``ps.run`` helper function. The function adds some
+special columns such as ``_run_id`` (once per ``ps.run`` call) or ``_pset_id``
+(once per `pset`). Using ``ps.run(... poolsize=...)`` runs ``func`` in parallel
+on ``params`` using ``multiprocessing.Pool``.
 
 This package offers some very simple helper functions which assist in creating
 ``params``. Basically, we define the to-be-varied parameters ('a' and 'b')
@@ -153,23 +146,12 @@ and then use something like ``itertools.product`` to loop over them to create
 
     >>> from itertools import product
     >>> from psweep import psweep as ps
-    >>> x=ps.seq2dicts('a', [1,2,3])
+    >>> x=ps.seq2dicts('x', [1,2,3])
+    >>> y=ps.seq2dicts('y', ['xx','yy','zz'])
     >>> x
     [{'x': 1}, {'x': 2}, {'x': 3}]
-    >>> y=ps.seq2dicts('y', ['xx','yy','zz'])
     >>> y
     [{'y': 'xx'}, {'y': 'yy'}, {'y': 'zz'}]
-    >>> list(product(x,y))
-    [({'x': 1}, {'y': 'xx'}),
-     ({'x': 1}, {'y': 'yy'}),
-     ({'x': 1}, {'y': 'zz'}),
-     ({'x': 2}, {'y': 'xx'}),
-     ({'x': 2}, {'y': 'yy'}),
-     ({'x': 2}, {'y': 'zz'}),
-     ({'x': 3}, {'y': 'xx'}),
-     ({'x': 3}, {'y': 'yy'}),
-     ({'x': 3}, {'y': 'zz'})]
-
     >>> ps.loops2params(product(x,y))
     [{'x': 1, 'y': 'xx'},
      {'x': 1, 'y': 'yy'},
@@ -199,19 +181,6 @@ The nestings from ``zip()`` are flattened in ``loops2params()``.
 .. code-block:: python
 
     >>> z=ps.seq2dicts('z', [None, 1.2, 'X'])
-    >>> z
-    [{'z': None}, {'z': 1.2}, {'z': 'X'}]
-    >>> list(product(zip(x,y),z))
-    [(({'x': 1}, {'y': 'xx'}), {'z': None}),
-     (({'x': 1}, {'y': 'xx'}), {'z': 1.2}),
-     (({'x': 1}, {'y': 'xx'}), {'z': 'X'}),
-     (({'x': 2}, {'y': 'yy'}), {'z': None}),
-     (({'x': 2}, {'y': 'yy'}), {'z': 1.2}),
-     (({'x': 2}, {'y': 'yy'}), {'z': 'X'}),
-     (({'x': 3}, {'y': 'zz'}), {'z': None}),
-     (({'x': 3}, {'y': 'zz'}), {'z': 1.2}),
-     (({'x': 3}, {'y': 'zz'}), {'z': 'X'})]
-
     >>> ps.loops2params(product(zip(x,y),z))
     [{'x': 1, 'y': 'xx', 'z': None},
      {'x': 1, 'y': 'xx', 'z': 1.2},
@@ -223,14 +192,11 @@ The nestings from ``zip()`` are flattened in ``loops2params()``.
      {'x': 3, 'y': 'zz', 'z': 1.2},
      {'x': 3, 'y': 'zz', 'z': 'X'}]
 
-If you want a parameter which is constant, use a length one list and put it in
-the loops:
+If you want a parameter which is constant, use a list of length one:
 
 .. code-block:: python
 
     >>> c=ps.seq2dicts('c', ['const'])
-    >>> c
-    [{'c': 'const'}]
     >>> ps.loops2params(product(zip(x,y),z,c))
     [{'a': 1, 'c': 'const', 'y': 'xx', 'z': None},
      {'a': 1, 'c': 'const', 'y': 'xx', 'z': 1.2},

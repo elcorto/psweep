@@ -94,6 +94,7 @@ def flatten(seq):
             for subitem in flatten(item):
                 yield subitem
 
+
 @itr
 def loops2params(loops):
     return [merge_dicts(flatten(entry)) for entry in loops]

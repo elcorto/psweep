@@ -1,5 +1,5 @@
 import subprocess as sp
-import os, tempfile, io, string, json, shutil
+import os, tempfile, io, string, shutil
 
 import pandas as pd
 import numpy as np
@@ -86,7 +86,7 @@ def test_df_io():
     rn = np.random.rand
     # random string
     rs = lambda n: ''.join(letters[ii] for ii in ri(0, len(letters), n))
-    
+
     for fmt in ['pickle', 'json']:
         df = pd.DataFrame()
         for _ in range(2):
