@@ -133,3 +133,19 @@ def test_df_io():
             assert_frame_equal(df, read)
         else:
             raise Exception("unknown fmt")
+
+
+def test_save():
+    tmpdir = tempfile.mkdtemp(prefix='psweep_test_run_')
+    params = [{'a': 1}, {'a': 2}, {'a': 3}, {'a': 4}]
+    calc_dir = f"{tmpdir}/calc"
+    dbfn = f"{calc_dir}/results.pk"
+
+    df = ps.run(func, params, calc_dir=calc_dir, save=False)
+    assert not os.path.exists(dbfn)
+    assert os.listdir(tmpdir) == []
+    
+    df = ps.run(func, params, calc_dir=calc_dir, save=True)
+    assert os.path.exists(dbfn)
+    assert os.listdir(tmpdir) != []
+    shutil.rmtree(tmpdir)

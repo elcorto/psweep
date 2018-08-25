@@ -133,10 +133,10 @@ def worker_wrapper(pset, worker, tmpsave=False, verbose=False, run_id=None,
     return df_row
 
 
-def run(worker, params, df=None, poolsize=1, tmpsave=False, verbose=False,
-        calc_dir='calc'):
+def run(worker, params, df=None, poolsize=None, save=True, tmpsave=False, 
+        verbose=False, calc_dir='calc'):
+
     results_fn = pj(calc_dir, 'results.pk')
-    makedirs(calc_dir)
 
     if df is None:
         if os.path.exists(results_fn):
@@ -153,11 +153,15 @@ def run(worker, params, df=None, poolsize=1, tmpsave=False, verbose=False,
                                      calc_dir=calc_dir,
                                      )
 
-    with mp.Pool(poolsize) as pool:
-        results = pool.map(worker_wrapper_partial, params)
+    if poolsize is None:
+        results = [worker_wrapper_partial(x) for x in params]
+    else:
+        with mp.Pool(poolsize) as pool:
+            results = pool.map(worker_wrapper_partial, params)
 
     for df_row in results:
         df = df.append(df_row)
 
-    df_write(df, results_fn)
+    if save:
+        df_write(df, results_fn)
     return df
