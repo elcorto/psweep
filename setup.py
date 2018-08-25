@@ -1,7 +1,8 @@
 # publish on pypi
 # ---------------
-#   $ python3 setup.py sdist
-#   $ twine upload dist/psweep-x.y.z.tar.gz 
+#   $ rm -rf dist
+#   $ python3 setup.py sdist bdist_wheel
+#   $ twine upload dist/*
 
 import os, importlib
 from setuptools import setup
@@ -37,7 +38,7 @@ print("install_requires: {}".format(install_requires))
 
 setup(
     name='psweep',
-    version='0.2.0',
+    version='0.2.1',
     description='loop like a pro, make parameter studies fun',
     long_description=long_description,
     url='https://github.com/elcorto/psweep',
