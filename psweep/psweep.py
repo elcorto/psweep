@@ -56,6 +56,21 @@ def seq2dicts(name, seq):
 
 
 def itr(func):
+    """Decorator which makes functions take a sequence of args or individual
+    args.
+
+    ::
+
+        @itr
+        def func(seq):
+            for arg in seq:
+                ...
+        @itr
+        def func(*args):
+            for arg in args:
+                ...
+    """
+
     def wrapper(*args):
         if len(args) == 1:
             return func(args[0])
@@ -66,6 +81,8 @@ def itr(func):
 
 @itr
 def merge_dicts(args):
+    """Start with an empty dict and update which each arg dict
+    left-to-right."""
     dct = {}
     for entry in args:
         dct.update(entry)
@@ -133,7 +150,7 @@ def worker_wrapper(pset, worker, tmpsave=False, verbose=False, run_id=None,
     return df_row
 
 
-def run(worker, params, df=None, poolsize=None, save=True, tmpsave=False, 
+def run(worker, params, df=None, poolsize=None, save=True, tmpsave=False,
         verbose=False, calc_dir='calc'):
 
     results_fn = pj(calc_dir, 'results.pk')
