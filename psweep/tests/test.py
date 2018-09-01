@@ -150,3 +150,28 @@ def test_save():
     assert os.path.exists(dbfn)
     assert os.listdir(tmpdir) != []
     shutil.rmtree(tmpdir)
+
+
+def test_merge_dicts():
+    a = {'a': 1}
+    b = {'b': 2}
+    c = {'c': 3}
+
+    # API
+    m1 = ps.merge_dicts(a, b, c)
+    m2 = ps.merge_dicts([a, b, c])
+
+    # correct merge
+    assert set(m1.keys()) == set(m2.keys())
+    assert set(m1.values()) == set(m2.values())
+    assert set(m1.keys()) == set(('a', 'b', 'c'))
+    assert set(m1.values()) == set((1, 2, 3))
+
+    # left-to-right
+    a = {'a': 1}
+    b = {'a': 2}
+    c = {'a': 3}
+    m = ps.merge_dicts(a, b)
+    assert m == {'a': 2}
+    m = ps.merge_dicts(a, b, c)
+    assert m == {'a': 3}
