@@ -41,7 +41,7 @@ def func(pset):
 def test_run():
     tmpdir = tempfile.mkdtemp(prefix='psweep_test_run_')
     params = [{'a': 1}, {'a': 2}, {'a': 3}, {'a': 4}]
-    calc_dir = f"{tmpdir}/calc"
+    calc_dir = "{}/calc".format(tmpdir)
 
     # run two times, updating the database, the second time,
     # also write tmp results
@@ -56,14 +56,15 @@ def test_run():
     assert set(df.columns) == \
         set(['_calc_dir', '_pset_id', '_run_id', '_time_utc', 'a', 'result'])
 
-    dbfn = f"{calc_dir}/results.pk"
+    dbfn = "{}/results.pk".format(calc_dir)
     assert os.path.exists(dbfn)
     assert df.equals(ps.df_read(dbfn))
 
     # tmp results of second run
     run_id = df._run_id.unique()[-1]
     for pset_id in df[df._run_id==run_id]._pset_id:
-        tmpsave_fn = f"{calc_dir}/tmpsave/{run_id}/{pset_id}.pk"
+        tmpsave_fn = "{calc_dir}/tmpsave/{run_id}/{pset_id}.pk".format(
+            calc_dir=calc_dir, run_id=run_id, pset_id=pset_id)
         assert os.path.exists(tmpsave_fn)
     shutil.rmtree(tmpdir)
 
@@ -138,8 +139,8 @@ def test_df_io():
 def test_save():
     tmpdir = tempfile.mkdtemp(prefix='psweep_test_run_')
     params = [{'a': 1}, {'a': 2}, {'a': 3}, {'a': 4}]
-    calc_dir = f"{tmpdir}/calc"
-    dbfn = f"{calc_dir}/results.pk"
+    calc_dir = "{}/calc".format(tmpdir)
+    dbfn = "{}/results.pk".format(calc_dir)
 
     df = ps.run(func, params, calc_dir=calc_dir, save=False)
     assert not os.path.exists(dbfn)
