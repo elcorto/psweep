@@ -151,15 +151,25 @@ def worker_wrapper(pset, worker, tmpsave=False, verbose=False, run_id=None,
 
 
 def run(worker, params, df=None, poolsize=None, save=True, tmpsave=False,
-        verbose=False, calc_dir='calc', backup_script=None):
+        verbose=False, calc_dir='calc', backup_script=None,
+        backup_calc_dir=False):
 
     results_fn = pj(calc_dir, 'results.pk')
-
+    
     if df is None:
         if os.path.exists(results_fn):
             df = df_read(results_fn)
         else:
             df = pd.DataFrame()
+
+    if backup_calc_dir and len(df.index) > 0:
+        last = df.index.max().strftime('%Y-%m-%dT%H:%M:%S.%fZ')
+        dst = calc_dir + '_' + last
+        assert not os.path.exists(dst), \
+            ("backup destination {dst} exists, seems like there has been no new "
+             "data in {calc_dir} since the last backup".format(dst=dst,
+                                                               calc_dir=calc_dir))
+        shutil.copytree(calc_dir, dst)
 
     run_id = str(uuid.uuid4())
     if backup_script is not None:
