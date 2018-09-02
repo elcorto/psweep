@@ -81,7 +81,7 @@ def itr(func):
 
 @itr
 def merge_dicts(args):
-    """Start with an empty dict and update which each arg dict
+    """Start with an empty dict and update with each arg dict
     left-to-right."""
     dct = {}
     for entry in args:
@@ -128,12 +128,6 @@ def worker_wrapper(pset, worker, tmpsave=False, verbose=False, run_id=None,
     assert run_id is not None
     assert calc_dir is not None
     pset_id = str(uuid.uuid4())
-    # for printing only
-    df_row = pd.DataFrame([pset])
-    if isinstance(verbose, bool) and verbose:
-        print(df_row)
-    elif is_seq(verbose):
-        print(df_row[verbose])
     _pset = copy.deepcopy(pset)
     _time_utc = pd.Timestamp(time.time(), unit='s')
     update = {'_run_id': run_id,
@@ -142,6 +136,12 @@ def worker_wrapper(pset, worker, tmpsave=False, verbose=False, run_id=None,
               '_time_utc': _time_utc
               }
     _pset.update(update)
+    # for printing only
+    df_row = pd.DataFrame([_pset])
+    if isinstance(verbose, bool) and verbose:
+        print(df_row)
+    elif is_seq(verbose):
+        print(df_row[verbose])
     _pset.update(worker(_pset))
     df_row = pd.DataFrame([_pset], index=[_time_utc])
     if tmpsave:
