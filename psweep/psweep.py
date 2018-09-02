@@ -1,7 +1,7 @@
 from io import IOBase
 import multiprocessing as mp
 from functools import partial
-import os, copy, uuid, pickle, time
+import os, copy, uuid, pickle, time, shutil
 import pandas as pd
 
 pj = os.path.join
@@ -151,7 +151,7 @@ def worker_wrapper(pset, worker, tmpsave=False, verbose=False, run_id=None,
 
 
 def run(worker, params, df=None, poolsize=None, save=True, tmpsave=False,
-        verbose=False, calc_dir='calc'):
+        verbose=False, calc_dir='calc', backup_script=None):
 
     results_fn = pj(calc_dir, 'results.pk')
 
@@ -162,6 +162,14 @@ def run(worker, params, df=None, poolsize=None, save=True, tmpsave=False,
             df = pd.DataFrame()
 
     run_id = str(uuid.uuid4())
+    if backup_script is not None:
+        assert os.path.exists(backup_script), \
+            "{} does not exist".format(backup_script)
+
+        path = pj(calc_dir, 'backup_script')
+        makedirs(path)
+        shutil.copy(backup_script , pj(path, run_id + '.py'))
+
     worker_wrapper_partial = partial(worker_wrapper,
                                      worker=worker,
                                      tmpsave=tmpsave,
