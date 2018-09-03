@@ -8,6 +8,22 @@ pj = os.path.join
 
 
 default_orient = 'records'
+pd_time_unit = 's'
+
+
+def df_to_json(df, **kwds):
+    """Like df.to_json() but with defaults for orient, date_unit, date_format,
+    double_precision.
+    """
+    defaults = dict(
+        orient=default_orient,
+        date_unit=pd_time_unit,
+        date_format='iso',
+        double_precision=15)
+    for key,val in defaults.items():
+        if not key in kwds.keys():
+            kwds[key] = val
+    return df.to_json(**kwds)
 
 
 def df_write(df, fn, fmt='pickle', **kwds):
@@ -16,8 +32,7 @@ def df_write(df, fn, fmt='pickle', **kwds):
         with open(fn, 'wb') as fd:
             pickle.dump(df, fd, **kwds)
     elif fmt == 'json':
-        orient = kwds.pop('orient', default_orient)
-        df.to_json(fn, double_precision=15, orient=orient, **kwds)
+        df_to_json(df, path_or_buf=fn, **kwds)
     else:
         raise Exception("unknown fmt: {}".format(fmt))
 
@@ -129,7 +144,7 @@ def worker_wrapper(pset, worker, tmpsave=False, verbose=False, run_id=None,
     assert calc_dir is not None
     pset_id = str(uuid.uuid4())
     _pset = copy.deepcopy(pset)
-    _time_utc = pd.Timestamp(time.time(), unit='s')
+    _time_utc = pd.Timestamp(time.time(), unit=pd_time_unit)
     update = {'_run_id': run_id,
               '_pset_id': pset_id,
               '_calc_dir': calc_dir,
