@@ -87,14 +87,6 @@ You see a number of reserved fields for book-keeping such as
 
 and a timestamped index. See the ``examples`` dir for more.
 
-Tests
------
-
-::
-
-    # apt-get install python3-nose
-    $ nosetests3
-
 Concepts
 --------
 
@@ -217,6 +209,74 @@ We are aware of the fact that the data structures and functions used here are
 so simple that it is almost not worth a package at all, but it is helpful to
 have the ideas and the workflow packaged up in a central place.
 
+Iterative extension of a parameter study
+----------------------------------------
+
+See ``examples/{10,20}multiple_1d_scans_with_backup.py``.
+
+For any non-trivial work, you won't use an interactive session as shown above.
+Instead, you will have a driver script which defines ``params`` and starts
+``ps.run()``. Also in a common workflow, you won't define ``params`` and run a
+study once. Instead you will first have an idea about which parameter values to
+scan. You will start with a coarse grid of parameters and then inspect the
+results and identify regions where you need more data (e.g. more dense
+sampling). Then you will modify ``params`` and run the study again. You will
+modify the driver script multiple times, as you refine your study. We have some
+useful features in place to assist with this kind of workflow -- simple
+backups! We recommend to always use something like
+
+.. code-block:: python
+
+    df = ps.run(func, params, calc_dir='calc', 
+                backup_script=__file__, backup_calc_dir=True)
+
+`backup_script` will save a copy the script which you use to drive your study
+to ``calc/<_run_id>.py``. Since each ``ps.run()`` will create a new
+``_run_id``, you will have a backup of the code which produced your results for
+this ``_run_id`` (without putting everything in a git repo, which may be
+unpleasant if your study produces large amounts of data).
+
+`backup_calc_dir` will save a copy of the old
+`calc_dir` to ``calc_<last_date_in_old_database>``, i.e. something like
+``calc_2018-09-06T20:22:27.845008Z`` before doing anything else. That way, you
+can track old states of the overall study along with a backup of each script
+which was used to create each ``_run_id``'s data.
+
+Note that in an interactive session, you want to skip `backup_script` (since
+there is no script) but still use `backup_calc_dir`. However, you then lose the
+code which you used to produce your results. We therefore strongly advise you
+to use a driver script, except for quick experiments.
+
+It is also a good idea to add a constant parameter named e.g. "study" to name
+the runs in which you vary the *same* parameters multiple times when refining
+the study. If you, for instance, have 5 runs where you scan values for
+parameter 'a', while keeping parameters 'b' and 'c' constant, you'll have 5
+``_run_id`` values. When querying the database later, you can limit by constant
+values of the other parameters such as 
+
+.. code-block:: python
+    
+    >>> df = df[(df.b==10) & (df.c=='foo')]
+
+but it is much easier to say
+
+.. code-block:: python
+    
+    >>> df = df[df.study=='a']
+
+You can do more powerful things with this approach. For instance, say you vary
+parameters 'a' and 'b', then you could name the "study" field 'fine_scan=a:b'
+and encode which parameters (thus column names) you have varied. Later in the
+evaluation
+
+.. code-block:: python
+
+    >>> study = 'fine_scan=a:b'
+    # cols = ['a', 'b']
+    >>> cols = study.split('=')[1].split(':')
+    >>> values = df[cols].values
+
+
 Install
 -------
 
@@ -230,3 +290,11 @@ Dev install of this repo::
     $ pip3 install -e .
 
 See also https://github.com/elcorto/samplepkg.
+
+Tests
+-----
+
+::
+
+    # apt-get install python3-nose
+    $ nosetests3
