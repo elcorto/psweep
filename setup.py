@@ -9,7 +9,7 @@ from setuptools import setup
 from distutils.version import StrictVersion as Version
 
 here = os.path.abspath(os.path.dirname(__file__))
-##bindir = 'bin'
+bindir = 'bin'
 with open(os.path.join(here, 'README.rst')) as fd:
     long_description = fd.read()
 
@@ -18,7 +18,8 @@ install_requires = []
 
 # (pip name, import name, operator, version)
 # ('numpy', 'numpy', '>', '1.0')
-reqs = [('pandas', 'pandas', '>=', '0.19.2')]
+reqs = [('pandas', 'pandas', '>=', '0.19.2'),
+        ('docopt', 'docopt', None, None)]
 
 for pip_name,import_name,op,ver in reqs:
     print("checking dependency: {}".format(import_name))
@@ -48,5 +49,5 @@ setup(
     keywords='parameter study sweep loop',
     packages=['psweep'],
     install_requires=install_requires,
-##    scripts=['{}/{}'.format(bindir, script) for script in os.listdir(bindir)]
+    scripts=['{}/{}'.format(bindir, script) for script in os.listdir(bindir)]
 )
