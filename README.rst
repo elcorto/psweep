@@ -231,7 +231,7 @@ backups! We recommend to always use something like
                 backup_script=__file__, backup_calc_dir=True)
 
 `backup_script` will save a copy the script which you use to drive your study
-to ``calc/<_run_id>.py``. Since each ``ps.run()`` will create a new
+to ``calc/backup_script/<_run_id>.py``. Since each ``ps.run()`` will create a new
 ``_run_id``, you will have a backup of the code which produced your results for
 this ``_run_id`` (without putting everything in a git repo, which may be
 unpleasant if your study produces large amounts of data).

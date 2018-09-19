@@ -72,6 +72,36 @@ def test_run():
     shutil.rmtree(tmpdir)
 
 
+def test_simulate():
+    tmpdir = tempfile.mkdtemp(prefix='psweep_test_run_')
+    params = [{'a': 1}, {'a': 2}, {'a': 3}, {'a': 4}]
+    params_sim = [{'a': 88}, {'a': 99}]
+    calc_dir = "{}/calc".format(tmpdir)
+    calc_dir_sim = calc_dir + '.simulate'
+
+    df = ps.run(func, params, calc_dir=calc_dir)
+    df_sim = ps.run(func, params_sim, calc_dir=calc_dir, simulate=True)
+    dbfn = "{}/results.pk".format(calc_dir)
+    dbfn_sim = "{}/results.pk".format(calc_dir_sim)
+
+    assert len(df_sim) == 6
+    assert len(df) == 4
+    assert os.path.exists(dbfn)
+    assert os.path.exists(dbfn_sim)
+    assert df.equals(ps.df_read(dbfn))
+    assert df_sim.equals(ps.df_read(dbfn_sim))
+
+    assert df.iloc[:4].equals(df_sim.iloc[:4])
+    assert np.isnan(df_sim.result.values[-2:]).all()
+
+    df2 = ps.run(func, params_sim, calc_dir=calc_dir)
+    assert len(df2) == 6
+    assert df.iloc[:4].equals(df2.iloc[:4])
+    assert (df2.result.values[-2:] == np.array([880.0, 990.0])).all()
+
+    shutil.rmtree(tmpdir)
+
+
 def test_is_seq():
     no = [{'a':1}, io.IOBase(), '123']
     yes = [[1,2], {1,2}, (1,2)]
@@ -148,7 +178,7 @@ def test_save():
     df = ps.run(func, params, calc_dir=calc_dir, save=False)
     assert not os.path.exists(dbfn)
     assert os.listdir(tmpdir) == []
-    
+
     df = ps.run(func, params, calc_dir=calc_dir, save=True)
     assert os.path.exists(dbfn)
     assert os.listdir(tmpdir) != []
@@ -193,7 +223,7 @@ def test_backup():
     tmpdir = tempfile.mkdtemp(prefix='psweep_test_run_')
     params = [{'a': 1}, {'a': 2}, {'a': 3}, {'a': 4}]
     calc_dir = "{}/calc".format(tmpdir)
-    
+
     # First run. backup_calc_dir does nothing yet. Test backup_script.
     df = ps.run(func, params, calc_dir=calc_dir, backup_script=__file__,
                 backup_calc_dir=True)
@@ -202,7 +232,7 @@ def test_backup():
     assert os.path.exists(script_fn)
     with open(script_fn) as fd1, open(__file__) as fd2:
         assert fd1.read() == fd2.read()
-    df1 = df.copy()  
+    df1 = df.copy()
 
     # Second run. This time, test backup_calc_dir.
     df = ps.run(func, params, calc_dir=calc_dir, backup_calc_dir=True)

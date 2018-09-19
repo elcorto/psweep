@@ -139,7 +139,7 @@ def loops2params(loops):
 # results into a global df -- maybe useful for monitoring progress.
 
 def worker_wrapper(pset, worker, tmpsave=False, verbose=False, run_id=None,
-                   calc_dir=None):
+                   calc_dir=None, simulate=False):
     assert run_id is not None
     assert calc_dir is not None
     pset_id = str(uuid.uuid4())
@@ -157,7 +157,8 @@ def worker_wrapper(pset, worker, tmpsave=False, verbose=False, run_id=None,
         print(df_row)
     elif is_seq(verbose):
         print(df_row[verbose])
-    _pset.update(worker(_pset))
+    if not simulate:
+        _pset.update(worker(_pset))
     df_row = pd.DataFrame([_pset], index=[_time_utc])
     if tmpsave:
         fn = pj(calc_dir, 'tmpsave', run_id, pset_id + '.pk')
@@ -167,10 +168,22 @@ def worker_wrapper(pset, worker, tmpsave=False, verbose=False, run_id=None,
 
 def run(worker, params, df=None, poolsize=None, save=True, tmpsave=False,
         verbose=False, calc_dir='calc', backup_script=None,
-        backup_calc_dir=False):
+        backup_calc_dir=False, simulate=False):
 
-    results_fn = pj(calc_dir, 'results.pk')
-    
+    results_fn_base = 'results.pk'
+
+    if simulate:
+        calc_dir_sim = calc_dir + '.simulate'
+        if os.path.exists(calc_dir_sim):
+            shutil.rmtree(calc_dir_sim)
+        makedirs(calc_dir_sim)
+        old_db = pj(calc_dir, results_fn_base)
+        if os.path.exists(old_db):
+            shutil.copy(old_db, pj(calc_dir_sim, results_fn_base))
+        calc_dir = calc_dir_sim
+
+    results_fn = pj(calc_dir, results_fn_base)
+
     if df is None:
         if os.path.exists(results_fn):
             df = df_read(results_fn)
@@ -201,6 +214,7 @@ def run(worker, params, df=None, poolsize=None, save=True, tmpsave=False,
                                      verbose=verbose,
                                      run_id=run_id,
                                      calc_dir=calc_dir,
+                                     simulate=simulate,
                                      )
 
     if poolsize is None:
