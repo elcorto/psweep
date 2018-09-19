@@ -35,7 +35,10 @@ def test_run_all_examples():
 
 
 def func(pset):
-    return {'result': pset['a']*10}
+    # We need to multiply by a float here to make sure the 'result' column has
+    # float dtype. Else the column will be cast to float once we add NaNs,
+    # which breaks df.equals(other_df) .
+    return {'result': pset['a']*10.0}
 
 
 def test_run():
