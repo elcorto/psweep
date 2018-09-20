@@ -3,7 +3,6 @@
 import os
 
 import docopt
-import pandas as pd
 from psweep import psweep as ps
 
 __doc__ = r"""

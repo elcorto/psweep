@@ -1,0 +1,54 @@
+#!/usr/bin/env python3
+
+import os
+
+import docopt
+from tabulate import tabulate
+from psweep import psweep as ps
+
+__doc__ = r"""
+Convert psweep database pickle file to table. Use this for quick queries of the
+databse.
+
+usage:
+    {this} [-f <tablefmt> -a -i] <file> [<column>...]
+
+options:
+    -f <tablefmt>  tabulate package's table formats [default: simple]
+                   allowed: plain, simple, grid, fancy_grid, pipe, orgtbl, jira,
+                            presto, psql, rst, mediawiki, moinmoin, youtrack,
+                            html, latex, latex_raw, latex_booktabs, textile
+    -a             print all columns, default is to skip special cols such as
+                   _run_id
+    -i             print index
+
+example:
+    View table with many columns w/o line wrapping
+        {this} {db} | vim -c "set nowrap" -
+
+    Select some columns
+        {this} {db} _run_id study param_a
+
+note:
+    For serious queries, use ipython and pandas:
+
+        $ ipython
+        >>> from psweep import psweep as ps
+        >>> df=ps.df_read('{db}')
+""".format(this=os.path.basename(__file__),
+           db='results.pk')
+
+if __name__ == '__main__':
+    args = docopt.docopt(__doc__)
+    df = ps.df_read(args['<file>'])
+
+    if args['-a']:
+        df_disp = df
+    else:
+        cols = args['<column>']
+        if len(cols) == 0:
+            cols = [x for x in df.columns if not x.startswith('_')]
+        df_disp = df[cols]
+
+    print(tabulate(df_disp, headers='keys', tablefmt=args['-f'],
+                   showindex=args['-i']))

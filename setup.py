@@ -13,13 +13,15 @@ bindir = 'bin'
 with open(os.path.join(here, 'README.rst')) as fd:
     long_description = fd.read()
 
-# Hack to make pip respect system packages. 
+# Hack to make pip respect system packages.
 install_requires = []
 
 # (pip name, import name, operator, version)
 # ('numpy', 'numpy', '>', '1.0')
 reqs = [('pandas', 'pandas', '>=', '0.19.2'),
-        ('docopt', 'docopt', None, None)]
+        ('docopt', 'docopt', None, None),
+        ('tabulate', 'tabulate', '>=', '0.8.2'),
+        ]
 
 for pip_name,import_name,op,ver in reqs:
     print("checking dependency: {}".format(import_name))
