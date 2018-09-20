@@ -7,34 +7,45 @@ import pandas as pd
 from psweep import psweep as ps
 
 __doc__ = r"""
-Convert psweep databse pickle file to json. Use this for quick queries of the
+Convert psweep database pickle file to json. Use this for quick queries of the
 databse, e.g. using jq in the shell.
 
 usage:
     {this} [-o <orient>] <file>
 
 options:
-    -o <orient>  "DataFrame.to_json(orient=<orient>)" [default: records]
+    -o <orient>  "DataFrame.to_json(orient=<orient>)" [default: records],
+                 allowed: split,records,index,columns,values
 
 example:
     Nice formatting using jq
-        $ {this} results.pk | jq . -C | less -R
-    
-    Find all _run_id
-        $ {this} results.pk | jq -r '.[]|._run_id' | sort -u
+        $ {this} {db} | jq . -C | less -R
+
+    Find all _run_ids
+        $ {this} {db} | jq -r '.[]|._run_id' | sort -u
         02ca9694-696e-4fdd-ac08-8c343080bb63
         0a1fb364-8681-4178-869e-1126f3719da4
         97058ee2-2e81-426f-b674-04b7ec718c43
 
-    Complex example: show the start time of each run.
-        $ {this} results.pk > /tmp/json
+    Print a table of some columns
+        $ {this} {db} | jq -r '.[]|[._time_utc,.study,._run_id]|@tsv' | column -t
+
+    Show which _run_ids have which study
+        $ {this} {db} | jq -r '.[]|[.study,._run_id]|@tsv' | uniq | column -t | sort -k1
+        foo           02ca9694-696e-4fdd-ac08-8c343080bb63
+        bar           0a1fb364-8681-4178-869e-1126f3719da4
+        prod=foo:bar  97058ee2-2e81-426f-b674-04b7ec718c43
+
+    Complex example: show the start time of each run
+        $ {this} {db} > /tmp/json
         $ for x in $(jq -r '.[]|._run_id' /tmp/json | sort -u); do \
         ... echo $x $(jq -r "[.[]|select(._run_id==\"$x\")|._time_utc]|min" /tmp/json)
         ... done
         02ca9694-696e-4fdd-ac08-8c343080bb63 2018-09-03T00:00:24Z
         0a1fb364-8681-4178-869e-1126f3719da4 2018-09-02T22:23:47Z
         97058ee2-2e81-426f-b674-04b7ec718c43 2018-09-02T22:09:44Z
-""".format(this=os.path.basename(__file__))
+""".format(this=os.path.basename(__file__),
+           db='results.pk')
 
 if __name__ == '__main__':
     args = docopt.docopt(__doc__)
