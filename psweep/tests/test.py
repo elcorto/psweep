@@ -73,7 +73,7 @@ def test_run():
 
 
 def test_simulate():
-    tmpdir = tempfile.mkdtemp(prefix='psweep_test_run_')
+    tmpdir = tempfile.mkdtemp(prefix='psweep_test_simulate_')
     params = [{'a': 1}, {'a': 2}, {'a': 3}, {'a': 4}]
     params_sim = [{'a': 88}, {'a': 99}]
     calc_dir = "{}/calc".format(tmpdir)
@@ -250,3 +250,16 @@ def test_backup():
         assert os.path.exists(tgt)
     assert os.path.exists(pj(backup_dir, 'results.pk'))
     assert os.path.exists("{}/backup_script/{}.py".format(backup_dir, run_id))
+
+
+def test_scripts():
+    tmpdir = tempfile.mkdtemp(prefix='psweep_test_bin_')
+    params = [{'a': 1}, {'a': 2}, {'a': 3}, {'a': 4}]
+    calc_dir = "{}/calc".format(tmpdir)
+    df = ps.run(func, params, calc_dir=calc_dir)
+
+    bindir = ps.fullpath(pj(os.path.dirname(__file__), '../../bin'))
+    db = pj(calc_dir, 'results.pk')
+    print(system("{}/psweepdb2json.py -o columns {}".format(bindir, db)))
+    print(system("{}/psweepdb2table.py -i -a -f simple {}".format(bindir, db)))
+    shutil.rmtree(tmpdir)
