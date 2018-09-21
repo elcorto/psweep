@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
-# run 10multiple*.py first.
+# second run: extend study with more 'b' values
+#
+# run 10multiple_1d_scans_with_backup.py first
 
 import random
 from itertools import product
@@ -12,7 +14,7 @@ def func(pset):
 
 
 if __name__ == '__main__':
-    
+
     print("second run")
 
     const = {'a': 11111,
@@ -20,13 +22,17 @@ if __name__ == '__main__':
 
     params = []
     disp_cols = []
-    
-    # second run: extend study with more 'b' values
-    study = 'b'
-    vary = ps.seq2dicts('b', [88,99])
-    this_params = ps.loops2params(product(vary, [{'study': study}]))
-    this_params = [ps.merge_dicts(const, dct) for dct in this_params]
-    params += this_params
 
-    df = ps.run(func, params, backup_script=__file__, backup_calc_dir=True)
-    print(df[['a', 'b', 'result', '_run_id']])
+    values = dict(b=[88,99])
+
+    for study,seq in values.items():
+        params_1d = ps.seq2dicts(study, seq)
+        this_params = ps.loops2params(product(params_1d, [{'study': study}]))
+        this_params = [ps.merge_dicts(const, dct) for dct in this_params]
+        params += this_params
+        disp_cols.append(study)
+
+    disp_cols += ['_run_id']
+    df = ps.run(func, params, backup_script=__file__, backup_calc_dir=True,
+                verbose=disp_cols)
+    print(df[disp_cols + ['result']])
