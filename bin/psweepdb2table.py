@@ -29,6 +29,9 @@ example:
     Select some columns
         {this} {db} _run_id study param_a
 
+    Print column names (for all use {this} -a)
+        {this} {db} | head -n1 | tr -s ' '
+
 note:
     For serious queries, use ipython and pandas:
 
@@ -50,5 +53,8 @@ if __name__ == '__main__':
             cols = [x for x in df.columns if not x.startswith('_')]
         df_disp = df[cols]
 
-    print(tabulate(df_disp, headers='keys', tablefmt=args['-f'],
-                   showindex=args['-i']))
+    try:
+        print(tabulate(df_disp, headers='keys', tablefmt=args['-f'],
+                       showindex=args['-i']))
+    except BrokenPipeError:
+        pass
