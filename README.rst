@@ -1,15 +1,35 @@
+=====================================================
 psweep -- loop like a pro, make parameter studies fun
 =====================================================
 
 About
------
+=====
 
-This is a package with simple helpers to set up and run parameter studies.
+This package helps you to set up and run parameter studies.
+
+Mostly, you'll start with a script and a for-loop and ask "why do I need a
+package for that"? Well, soon you'll want housekeeping tools and a database for
+your runs and results. This package exists because sooner or later, everyone
+doing parameter scans arrives at roughly the same workflow and tools.
+
+This package deals with commonly encountered boilerplate tasks:
+
+* write a database of parameters and results automatically
+* make a backup of the database and all results when you repeat or extend the
+  study
+* append new rows to the database when extending the study
+* simulate a parameter scan
+
+Otherwise, the main goal is to not constrain your flexibility by building a
+complicated framework -- we provide only very basic building blocks. All data
+structures are really simple (dicts), as are the provided functions. The
+database is a normal pandas DataFrame.
+
 
 Getting started
----------------
+===============
 
-Loop over two parameters 'a' and 'b':
+A trivial example: Loop over two parameters 'a' and 'b':
 
 .. code-block:: python
 
@@ -31,7 +51,8 @@ Loop over two parameters 'a' and 'b':
         df = ps.run(func, params)
         print(df)
 
-This produces a list of parameter sets to loop over (``params``)::
+This produces a list ``params`` of parameter sets (dicts ``{'a': ..., 'b': ...}``) to loop
+over::
 
     [{'a': 1, 'b': 8},
      {'a': 1, 'b': 9},
@@ -76,7 +97,8 @@ by default)::
     2018-07-22 20:06:07.418866 2018-07-22 20:06:07.418866  4  8   2.713900
     2018-07-22 20:06:07.420706 2018-07-22 20:06:07.420706  4  9  27.358240
 
-You see a number of reserved fields for book-keeping such as
+You see the columns 'a' and 'b', the column 'result' (returned by ``func``) and
+a number of reserved fields for book-keeping such as
 
 ::
 
@@ -85,10 +107,14 @@ You see a number of reserved fields for book-keeping such as
     _calc_dir
     _time_utc
 
-and a timestamped index. See the ``examples`` dir for more.
+and a timestamped index.
+
+Observe that one call ``ps.run(func, params)`` creates one ``_run_id`` -- a
+UUID identifying this run. Inside that, each call ``func(pset)`` creates a
+unique ``_pset_id``, a timestamp and a new row in the DataFrame (the database).
 
 Concepts
---------
+========
 
 The basic data structure for a param study is a list ``params`` of dicts
 (called "parameter sets" or short `pset`).
@@ -120,13 +146,13 @@ We always merge (``dict.update``) the result of ``func`` with the `pset`,
 which gives you flexibility in what to return from ``func``.
 
 The `psets` form the rows of a pandas ``DataFrame``, which we use to store
-the `pset` and the result from each run.
+the `pset` and the result from each ``func(pset)``.
 
 The idea is now to run ``func`` in a loop over all `psets` in ``params``. You
-can do this using the ``ps.run`` helper function. The function adds some
-special columns such as ``_run_id`` (once per ``ps.run`` call) or ``_pset_id``
-(once per `pset`). Using ``ps.run(... poolsize=...)`` runs ``func`` in parallel
-on ``params`` using ``multiprocessing.Pool``.
+do this using the ``ps.run`` helper function. The function adds some special
+columns such as ``_run_id`` (once per ``ps.run`` call) or ``_pset_id`` (once
+per `pset`). Using ``ps.run(... poolsize=...)`` runs ``func`` in parallel on
+``params`` using ``multiprocessing.Pool``.
 
 This package offers some very simple helper functions which assist in creating
 ``params``. Basically, we define the to-be-varied parameters ('a' and 'b')
@@ -168,7 +194,7 @@ use
 
     >>> product(zip(x,y), z)
 
-The nestings from ``zip()`` are flattened in ``loops2params()``.
+The nesting from ``zip()`` is flattened in ``loops2params()``.
 
 .. code-block:: python
 
@@ -205,69 +231,259 @@ running any workload, i.e. we assemble the parameter grid to be sampled before
 the actual calculations. This has proven to be very practical as it helps
 detecting errors early.
 
-We are aware of the fact that the data structures and functions used here are
-so simple that it is almost not worth a package at all, but it is helpful to
-have the ideas and the workflow packaged up in a central place.
+You are, by the way, of course not restricted to use ``itertools.product``. You
+can use any complicated manual loop you can come up with. The point is: you
+generate ``params``, we run the study.
+
+
+_pset_id, _run_id and repeated runs
+-----------------------------------
+
+See ``examples/vary_2_params_repeat.py``.
+
+It is important to get the difference between the two special fields
+``_run_id`` and ``_pset_id``, the most important one being ``_pset_id``.
+
+Both are random UUIDs. They are used to uniquely identify things.
+
+By default, ``ps.run()`` writes a database ``calc/results.pk`` (a pickled
+DataFrame) with the default ``calc_dir='calc'``. If you run ``ps.run()``
+again
+
+.. code-block:: python
+
+    df = ps.run(func, params)
+    df = ps.run(func, other_params)
+
+it will read and append to that file. The same happens in an interactive
+session when you pass in ``df`` again:
+
+.. code-block:: python
+
+    df = ps.run(func, params) # default is df=None -> create empty df
+    df = ps.run(func, other_params, df=df)
+
+
+Once per ``ps.run`` call, a ``_run_id`` is created. Which means that when you
+call ``ps.run`` multiple times *using the same database* as just shown, you
+will see multiple (in this case two) ``_run_id`` values.
+
+::
+
+    _run_id                               _pset_id
+    afa03dab-071e-472d-a396-37096580bfee  21d2185d-b900-44b3-a98d-4b8866776a77
+    afa03dab-071e-472d-a396-37096580bfee  3f63742b-6457-46c2-8ed3-9513fe166562
+    afa03dab-071e-472d-a396-37096580bfee  1a812d67-0ffc-4ab1-b4bb-ad9454f91050
+    afa03dab-071e-472d-a396-37096580bfee  995f5b0b-f9a6-45ee-b4d1-5784a25be4c6
+    e813db52-7fb9-4777-a4c8-2ce0dddc283c  7b5d8f76-926c-44e2-a0e3-2e68deb86abb
+    e813db52-7fb9-4777-a4c8-2ce0dddc283c  f46bb714-4677-4a11-b371-dd2d41a83d19
+    e813db52-7fb9-4777-a4c8-2ce0dddc283c  5fdcc88b-d467-4117-aa03-fd256656299b
+    e813db52-7fb9-4777-a4c8-2ce0dddc283c  8c5c07ca-3862-4726-a7d0-15d60e281407
+
+Each ``ps.run`` call in turn calls ``func(pset)`` for each `pset` in
+``params``. Each ``func`` invocation created a unique ``_pset_id``. Thus, we
+have a very simple, yet powerful one-to-one mapping and a way to refer to a
+specific `pset`.
+
+
+Best practices
+==============
+
+The following workflows and practices come from experience. They are, if you
+will, the "framework" for how to do things. However, we decided to not codify
+any of these ideas but to only provide tools to make them happen easily,
+because you will probably have quite different requirements and workflows.
+
+Please also have a look at the ``examples/`` dir where we document these and
+more common workflows.
+
+Save data on disk, use UUIDs
+----------------------------
+
+See ``examples/save_data_on_disk.py``.
+
+Assume that you need to save results from a run not only in the returned dict
+from ``func`` (or even not at all!) but on disk, for instance when you call an
+external program which saves data on disk. Consider this example:
+
+.. code-block:: python
+
+    import os
+    import subprocess
+    from psweep import psweep as ps
+
+
+    def func(pset):
+        fn = os.path.join(pset['_calc_dir'],
+                          pset['_pset_id'],
+                          'output.txt')
+        cmd = "mkdir -p $(dirname {fn}); echo {a} > {fn}".format(a=pset['a'],
+                                                                 fn=fn)
+        pset['cmd'] = cmd
+        subprocess.run(cmd, shell=True)
+        return pset
+
+
+In this case, you call an external program (here a dummy shell command) which
+saves its output on disk. Note that we don't return any output from the
+external command from ``func``. We only update ``pset`` with the shell ``cmd``
+we call to have that in the database.
+
+Also note how we use the special fields ``_pset_id`` and ``_calc_dir``, which
+are added in ``ps.run`` to ``pset`` *before* ``func`` is called.
+
+After the run, we have four dirs for each `pset`, each simply named with
+``_pset_id``::
+
+    calc
+    ├── 63b5daae-1b37-47e9-a11c-463fb4934d14
+    │   └── output.txt
+    ├── 657cb9f9-8720-4d4c-8ff1-d7ddc7897700
+    │   └── output.txt
+    ├── d7849792-622d-4479-aec6-329ed8bedd9b
+    │   └── output.txt
+    ├── de8ac159-b5d0-4df6-9e4b-22ebf78bf9b0
+    │   └── output.txt
+    └── results.pk
+
+This is a useful pattern. History has shown that in the end, most naming
+conventions start simple but turn out to be inflexible and hard to adapt later
+on. I have seen people write scripts which create things
+like::
+
+    calc/param_a=1.2_param_b=66.77
+    calc/param_a=3.4_param_b=88.99
+
+i.e. encode the parameter values in path names, because they don't have a
+database. Good luck parsing that. I don't say this cannot be done -- sure it
+can (in fact the example above easy to parse). It is just not fun -- and there
+is no need to. What if you need to add a "column" for parameter 'c' later?
+Impossible (well, painful at least). This approach makes sense for very quick
+throw-away test runs, but gets out of hand quickly.
+
+Since we have a database, we can simply drop all data in ``calc/<_pset_id>``
+and be done with it. Each parameter set is identified by a UUID that will never
+change. This is the only kind of naming convention which makes sense in the
+long run.
+
 
 Iterative extension of a parameter study
 ----------------------------------------
 
 See ``examples/{10,20}multiple_1d_scans_with_backup.py``.
 
-For any non-trivial work, you won't use an interactive session as shown above.
+We recommend to always use `backup_calc_dir`:
+
+.. code-block:: python
+
+    df = ps.run(func, params, backup_calc_dir=True)
+
+`backup_calc_dir` will save a copy of the old
+`calc_dir` to ``calc_<last_date_in_old_database>``, i.e. something like
+``calc_2018-09-06T20:22:27.845008Z`` before doing anything else. That way, you
+can track old states of the overall study, and recover from mistakes.
+
+For any non-trivial work, you won't use an interactive session.
 Instead, you will have a driver script which defines ``params`` and starts
 ``ps.run()``. Also in a common workflow, you won't define ``params`` and run a
 study once. Instead you will first have an idea about which parameter values to
 scan. You will start with a coarse grid of parameters and then inspect the
 results and identify regions where you need more data (e.g. more dense
 sampling). Then you will modify ``params`` and run the study again. You will
-modify the driver script multiple times, as you refine your study. We have some
-useful features in place to assist with this kind of workflow -- simple
-backups! We recommend to always use something like
+modify the driver script multiple times, as you refine your study. To save the
+old states of that script, use `backup_script`:
 
 .. code-block:: python
 
-    df = ps.run(func, params, calc_dir='calc', 
-                backup_script=__file__, backup_calc_dir=True)
+    df = ps.run(func, params, backup_calc_dir=True, backup_script=__file__)
 
-`backup_script` will save a copy the script which you use to drive your study
+`backup_script` will save a copy of the script which you use to drive your study
 to ``calc/backup_script/<_run_id>.py``. Since each ``ps.run()`` will create a new
 ``_run_id``, you will have a backup of the code which produced your results for
 this ``_run_id`` (without putting everything in a git repo, which may be
 unpleasant if your study produces large amounts of data).
 
-`backup_calc_dir` will save a copy of the old
-`calc_dir` to ``calc_<last_date_in_old_database>``, i.e. something like
-``calc_2018-09-06T20:22:27.845008Z`` before doing anything else. That way, you
-can track old states of the overall study along with a backup of each script
-which was used to create each ``_run_id``'s data.
+Simulate / Dry-Run: look before you leap
+----------------------------------------
 
-Note that in an interactive session, you want to skip `backup_script` (since
-there is no script) but still use `backup_calc_dir`. However, you then lose the
-code which you used to produce your results. We therefore strongly advise you
-to use a driver script, except for quick experiments.
+See ``examples/vary_1_param_simulate.py``.
 
-It is also a good idea to add a constant parameter named e.g. "study" to name
-the runs in which you vary the *same* parameters multiple times when refining
-the study. If you, for instance, have 5 runs where you scan values for
-parameter 'a', while keeping parameters 'b' and 'c' constant, you'll have 5
-``_run_id`` values. When querying the database later, you can limit by constant
-values of the other parameters such as 
+When you fiddle with finding the next good ``params`` and even when using
+`backup_calc_dir`, appending to the old database might be a hassle if you find
+that you made a mistake when setting up ``params``. You need to abort the
+current run, delete
+`calc_dir` and copy the last backup back:
+
+.. code-block:: sh
+
+   $ rm -r calc
+   $ mv calc_2018-09-06T20:22:27.845008Z calc
+
+Instead, while you tinker with ``params``, use another `calc_dir`, e.g.
 
 .. code-block:: python
-    
+
+    df = ps.run(func, params, calc_dir='calc_test')
+
+But what's even better: keep everything as it is and just set ``simulate=True``
+
+.. code-block:: python
+
+    df = ps.run(func, params, backup_calc_dir=True, backup_script=__file__,
+                simulate=True)
+
+This will copy only the database, not all the (possible large) data in
+``calc/`` to ``calc.simulate/`` and run the study there, but w/o actually
+calling ``func()``. So you still append to your old database as in a real run,
+but in a safe separate dir which you can delete later.
+
+
+Give runs names for easy post-processing
+----------------------------------------
+
+See ``examples/vary_1_param_study_column.py``.
+
+Post-processing is not the scope of the package. The database is a DataFrame
+and that's it. You can query it and use your full pandas Ninja skills here
+(e.g. "give me all psets where parameter 'a' was between 10 and 100, while 'b'
+was constant, which were run last week and the result was not < 0" ... you get
+the idea.
+
+To ease post-processing, it is useful practice to add a constant parameter
+named e.g. "study" or "scan" to label a certain range of runs. If you, for
+instance, have 5 runs where you scan values for parameter 'a' while keeping
+parameters 'b' and 'c' constant, you'll have 5 ``_run_id`` values. When
+querying the database later, you could limit by ``_run_id`` if you know the
+values:
+
+.. code-block:: python
+
+    >>> df = df[(df._run_id=='afa03dab-071e-472d-a396-37096580bfee') |
+                (df._run_id=='e813db52-7fb9-4777-a4c8-2ce0dddc283c') |
+                ...
+                ]
+
+This doesn't look like fun. It shows that the UUIDs (``_run_id`` and
+``_pset_id``) are rarely ment to be used directly. Instead, you should (in this
+example) limit by the constant values of the other parameters:
+
+.. code-block:: python
+
     >>> df = df[(df.b==10) & (df.c=='foo')]
 
-but it is much easier to say
+Much better! This is what most post-processing scripts will do.
+
+But when you have a column "study" which has the value ``'a'`` all the time, it
+is just
 
 .. code-block:: python
-    
+
     >>> df = df[df.study=='a']
 
 You can do more powerful things with this approach. For instance, say you vary
 parameters 'a' and 'b', then you could name the "study" field 'fine_scan=a:b'
 and encode which parameters (thus column names) you have varied. Later in the
-evaluation
+post-processing
 
 .. code-block:: python
 
@@ -276,9 +492,18 @@ evaluation
     >>> cols = study.split('=')[1].split(':')
     >>> values = df[cols].values
 
+So in this case, a naming convention *is* useful in order to bypass possibly
+complex database queries. But it is still flexible -- you can change the
+"study" column at any time, or delete it again.
+
+Pro tip: You can manipulate the database at any later point and add the "study"
+column after all runs have been done.
+
+Super Pro tip: Make a backup of the database first!
+
 
 Install
--------
+=======
 
 ::
 
@@ -292,7 +517,7 @@ Dev install of this repo::
 See also https://github.com/elcorto/samplepkg.
 
 Tests
------
+=====
 
 ::
 

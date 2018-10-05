@@ -14,6 +14,12 @@ pd_time_unit = 's'
 def df_to_json(df, **kwds):
     """Like df.to_json() but with defaults for orient, date_unit, date_format,
     double_precision.
+
+    Parameters
+    ----------
+    df : pandas.DataFrame
+    **kwds :
+        passed to df.to_json()
     """
     defaults = dict(
         orient=default_orient,
@@ -27,6 +33,18 @@ def df_to_json(df, **kwds):
 
 
 def df_write(df, fn, fmt='pickle', **kwds):
+    """Write DataFrame to disk.
+
+    Parameters
+    ----------
+    df : pandas.DataFrame
+    fn : str
+        filename
+    fmt : str
+        {'pickle', 'json'}
+    **kwds :
+        passed to ``pickle.dump()`` or :func:`df_to_json`
+    """
     makedirs(os.path.dirname(fn))
     if fmt == 'pickle':
         with open(fn, 'wb') as fd:
@@ -38,6 +56,7 @@ def df_write(df, fn, fmt='pickle', **kwds):
 
 
 def df_read(fn, fmt='pickle', **kwds):
+    """Read DataFrame from file `fn`. See :func:`df_write`."""
     if fmt == 'pickle':
         with open(fn, 'rb') as fd:
             return pickle.load(fd, **kwds)
@@ -53,6 +72,7 @@ def df_read(fn, fmt='pickle', **kwds):
 
 # https://github.com/elcorto/pwtools
 def makedirs(path):
+    """Create `path` recursively, no questions asked."""
     if not path.strip() == '':
         os.makedirs(path, exist_ok=True)
 
@@ -140,6 +160,16 @@ def loops2params(loops):
 
 def worker_wrapper(pset, worker, tmpsave=False, verbose=False, run_id=None,
                    calc_dir=None, simulate=False):
+    """
+    Parameters
+    ----------
+    pset : dict
+        example: ``{'a': 1, 'b': 'foo'}``
+    run_id : str
+        uuid
+
+    See :func:`run` for other parameters.
+    """
     assert run_id is not None
     assert calc_dir is not None
     pset_id = str(uuid.uuid4())
@@ -169,6 +199,41 @@ def worker_wrapper(pset, worker, tmpsave=False, verbose=False, run_id=None,
 def run(worker, params, df=None, poolsize=None, save=True, tmpsave=False,
         verbose=False, calc_dir='calc', backup_script=None,
         backup_calc_dir=False, simulate=False):
+    """
+    Parameters
+    ----------
+    worker : callable
+        must accept one parameter: `pset` (a dict ``{'a': 1, 'b': 'foo',
+        ...}``), return either an update to `pset` or a new dict, result will
+        be processes as ``pset.update(worker(pset))``
+    params : sequence of dicts
+        each dict is a pset ``{'a': 1, 'b': 'foo', ...}``
+    df : {pandas.DataFrame, None}
+        append rows to this DataFrame, if None then create new one (default)
+    poolsize : {int, None}
+        None : use serial execution
+        int : use multiprocessing.Pool (even for ``poolsize=1``)
+    save : bool
+        save final DataFrame to ``<calc_dir>/results.pk`` (pickle format only)
+    tmpsave : bool
+        save results from this pset (the current DataFrame row) to
+        <calc_dir>/tmpsave/<run_id>/<pset_id>.pk (pickle format only)
+    verbose : {bool, sequence}
+        | bool : print the current DataFrame row
+        | sequence : list of DataFrame column names, print the row but only
+        | those columns
+    calc_dir : str
+    backup_script : {str, None}
+        save the file (``backup_script=/path/to/file.py``,
+        ``backup_script=__file__``) to ``<calc_dir>/backup_script/<run_id>.py``
+    backup_calc_dir : bool
+        backup <calc_dir> to <calc_dir>.<timestamp>, where timestamp is derived
+        from ``df.index.max()``, i.e. the newest entry on the old database
+    simulate : bool
+        run everything in <calc_dir>.simulate, don't call `worker`, i.e. save
+        what the run would create, but without the results from `worker`,
+        useful to check if `params` are correct before starting a production run
+    """
 
     results_fn_base = 'results.pk'
 
