@@ -27,7 +27,7 @@ def df_to_json(df, **kwds):
         date_format='iso',
         double_precision=15)
     for key,val in defaults.items():
-        if not key in kwds.keys():
+        if key not in kwds.keys():
             kwds[key] = val
     return df.to_json(**kwds)
 
@@ -132,9 +132,9 @@ def is_seq(seq):
         return False
     else:
         try:
-            _ = iter(seq)
+            iter(seq)
             return True
-        except:
+        except TypeError:
             return False
 
 
