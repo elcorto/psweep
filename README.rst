@@ -216,15 +216,15 @@ If you want a parameter which is constant, use a list of length one:
 
     >>> c=ps.seq2dicts('c', ['const'])
     >>> ps.loops2params(product(zip(x,y),z,c))
-    [{'a': 1, 'c': 'const', 'y': 'xx', 'z': None},
-     {'a': 1, 'c': 'const', 'y': 'xx', 'z': 1.2},
-     {'a': 1, 'c': 'const', 'y': 'xx', 'z': 'X'},
-     {'a': 2, 'c': 'const', 'y': 'yy', 'z': None},
-     {'a': 2, 'c': 'const', 'y': 'yy', 'z': 1.2},
-     {'a': 2, 'c': 'const', 'y': 'yy', 'z': 'X'},
-     {'a': 3, 'c': 'const', 'y': 'zz', 'z': None},
-     {'a': 3, 'c': 'const', 'y': 'zz', 'z': 1.2},
-     {'a': 3, 'c': 'const', 'y': 'zz', 'z': 'X'}]
+    [{'x': 1, 'c': 'const', 'y': 'xx', 'z': None},
+     {'x': 1, 'c': 'const', 'y': 'xx', 'z': 1.2},
+     {'x': 1, 'c': 'const', 'y': 'xx', 'z': 'X'},
+     {'x': 2, 'c': 'const', 'y': 'yy', 'z': None},
+     {'x': 2, 'c': 'const', 'y': 'yy', 'z': 1.2},
+     {'x': 2, 'c': 'const', 'y': 'yy', 'z': 'X'},
+     {'x': 3, 'c': 'const', 'y': 'zz', 'z': None},
+     {'x': 3, 'c': 'const', 'y': 'zz', 'z': 1.2},
+     {'x': 3, 'c': 'const', 'y': 'zz', 'z': 'X'}]
 
 So, as you can see, the general idea is that we do all the loops *before*
 running any workload, i.e. we assemble the parameter grid to be sampled before
@@ -444,13 +444,13 @@ Give runs names for easy post-processing
 See ``examples/vary_1_param_study_column.py``.
 
 Post-processing is not the scope of the package. The database is a DataFrame
-and that's it. You can query it and use your full pandas Ninja skills here
-(e.g. "give me all psets where parameter 'a' was between 10 and 100, while 'b'
+and that's it. You can query it and use your full pandas Ninja skills here,
+e.g. "give me all psets where parameter 'a' was between 10 and 100, while 'b'
 was constant, which were run last week and the result was not < 0" ... you get
 the idea.
 
 To ease post-processing, it is useful practice to add a constant parameter
-named e.g. "study" or "scan" to label a certain range of runs. If you, for
+named "study" or "scan" to label a certain range of runs. If you, for
 instance, have 5 runs where you scan values for parameter 'a' while keeping
 parameters 'b' and 'c' constant, you'll have 5 ``_run_id`` values. When
 querying the database later, you could limit by ``_run_id`` if you know the
@@ -481,13 +481,13 @@ is just
     >>> df = df[df.study=='a']
 
 You can do more powerful things with this approach. For instance, say you vary
-parameters 'a' and 'b', then you could name the "study" field 'fine_scan=a:b'
+parameters 'a' and 'b', then you could name the "study" field 'scan=a:b'
 and encode which parameters (thus column names) you have varied. Later in the
 post-processing
 
 .. code-block:: python
 
-    >>> study = 'fine_scan=a:b'
+    >>> study = 'scan=a:b'
     # cols = ['a', 'b']
     >>> cols = study.split('=')[1].split(':')
     >>> values = df[cols].values
