@@ -4,9 +4,8 @@
 #   $ python3 setup.py sdist bdist_wheel
 #   $ twine upload dist/*
 
-import os, importlib
+import os
 from setuptools import setup
-from distutils.version import StrictVersion as Version
 
 here = os.path.abspath(os.path.dirname(__file__))
 bindir = 'bin'
