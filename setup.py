@@ -14,7 +14,7 @@ with open(os.path.join(here, 'README.rst')) as fd:
 
 setup(
     name='psweep',
-    version='0.3.0',
+    version='0.3.1',
     description='loop like a pro, make parameter studies fun: set up and \
 run a parameter study/sweep/scan, save a database',
     long_description=long_description,
