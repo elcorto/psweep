@@ -289,7 +289,7 @@ def run(worker, params, df=None, poolsize=None, save=True, tmpsave=False,
             results = pool.map(worker_wrapper_partial, params)
 
     for df_row in results:
-        df = df.append(df_row)
+        df = df.append(df_row, sort=False)
 
     if save:
         df_write(df, results_fn)
