@@ -209,7 +209,8 @@ def run(worker, params, df=None, poolsize=None, save=True, tmpsave=False,
     params : sequence of dicts
         each dict is a pset ``{'a': 1, 'b': 'foo', ...}``
     df : {pandas.DataFrame, None}
-        append rows to this DataFrame, if None then create new one (default)
+        append rows to this DataFrame, if None then either create new one or
+        read existing database file from disk if found
     poolsize : {int, None}
         None : use serial execution
         int : use multiprocessing.Pool (even for ``poolsize=1``)
