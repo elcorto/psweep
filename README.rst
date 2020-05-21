@@ -29,14 +29,14 @@ database is a normal pandas DataFrame.
 Getting started
 ===============
 
-A trivial example: Loop over two parameters 'a' and 'b':
+A trivial example: Loop over two parameters 'a' and 'b' in a nested loop
+(grid):
 
 .. code-block:: python
 
     #!/usr/bin/env python3
 
     import random
-    from itertools import product
     import psweep as ps
 
 
@@ -45,27 +45,26 @@ A trivial example: Loop over two parameters 'a' and 'b':
 
 
     if __name__ == '__main__':
-        a = ps.seq2dicts('a', [1,2,3,4])
-        b = ps.seq2dicts('b', [8,9])
-        params = ps.loops2params(product(a,b))
+        a = ps.plist('a', [1,2,3])
+        b = ps.plist('b', [77,88])
+        params = ps.pgrid(a,b)
         df = ps.run(func, params)
         print(df)
 
-This produces a list ``params`` of parameter sets (dicts ``{'a': ..., 'b': ...}``) to loop
-over::
+``pgrid`` produces a list ``params`` of parameter sets (dicts ``{'a': ..., 'b':
+...}``) to loop over::
 
-    [{'a': 1, 'b': 8},
-     {'a': 1, 'b': 9},
-     {'a': 2, 'b': 8},
-     {'a': 2, 'b': 9},
-     {'a': 3, 'b': 8},
-     {'a': 3, 'b': 9},
-     {'a': 4, 'b': 8},
-     {'a': 4, 'b': 9}]
+    [{'a': 1, 'b': 77},
+     {'a': 1, 'b': 88},
+     {'a': 2, 'b': 77},
+     {'a': 2, 'b': 88},
+     {'a': 3, 'b': 77},
+     {'a': 3, 'b': 88}]
 
 
 and a database of results (pandas DataFrame ``df``, pickled file ``calc/results.pk``
 by default)::
+
 
                                _calc_dir                              _pset_id  \
     2018-07-22 20:06:07.401398      calc  99a0f636-10b3-438c-ab43-c583fda806e8
@@ -74,8 +73,6 @@ by default)::
     2018-07-22 20:06:07.412210      calc  f2b2269b-86e3-4b15-aeb7-92848ae25f7b
     2018-07-22 20:06:07.414637      calc  8e1db575-1be2-4561-a835-c88739dc0440
     2018-07-22 20:06:07.416465      calc  674f8a2c-bc21-40f4-b01f-3702e0338ae8
-    2018-07-22 20:06:07.418866      calc  b4d3d11b-0f22-4c73-a895-7363c635c0c6
-    2018-07-22 20:06:07.420706      calc  a265ca2f-3a9f-4323-b494-4b6763c46929
 
                                                              _run_id  \
     2018-07-22 20:06:07.401398  3e09daf8-c3a7-49cb-8aa3-f2c040c70e8f
@@ -84,18 +81,15 @@ by default)::
     2018-07-22 20:06:07.412210  3e09daf8-c3a7-49cb-8aa3-f2c040c70e8f
     2018-07-22 20:06:07.414637  3e09daf8-c3a7-49cb-8aa3-f2c040c70e8f
     2018-07-22 20:06:07.416465  3e09daf8-c3a7-49cb-8aa3-f2c040c70e8f
-    2018-07-22 20:06:07.418866  3e09daf8-c3a7-49cb-8aa3-f2c040c70e8f
-    2018-07-22 20:06:07.420706  3e09daf8-c3a7-49cb-8aa3-f2c040c70e8f
 
-                                                _time_utc  a  b     result
-    2018-07-22 20:06:07.401398 2018-07-22 20:06:07.401398  1  8   2.288036
-    2018-07-22 20:06:07.406902 2018-07-22 20:06:07.406902  1  9   7.944922
-    2018-07-22 20:06:07.410227 2018-07-22 20:06:07.410227  2  8  14.480190
-    2018-07-22 20:06:07.412210 2018-07-22 20:06:07.412210  2  9   3.532110
-    2018-07-22 20:06:07.414637 2018-07-22 20:06:07.414637  3  8   9.019944
-    2018-07-22 20:06:07.416465 2018-07-22 20:06:07.416465  3  9   4.382123
-    2018-07-22 20:06:07.418866 2018-07-22 20:06:07.418866  4  8   2.713900
-    2018-07-22 20:06:07.420706 2018-07-22 20:06:07.420706  4  9  27.358240
+                                                _time_utc  a   b     result
+    2018-07-22 20:06:07.401398 2018-07-22 20:06:07.401398  1  77   2.288036
+    2018-07-22 20:06:07.406902 2018-07-22 20:06:07.406902  1  88   7.944922
+    2018-07-22 20:06:07.410227 2018-07-22 20:06:07.410227  2  77  14.480190
+    2018-07-22 20:06:07.412210 2018-07-22 20:06:07.412210  2  88   3.532110
+    2018-07-22 20:06:07.414637 2018-07-22 20:06:07.414637  3  77   9.019944
+    2018-07-22 20:06:07.416465 2018-07-22 20:06:07.416465  3  88   4.382123
+
 
 You see the columns 'a' and 'b', the column 'result' (returned by ``func``) and
 a number of reserved fields for book-keeping such as
@@ -164,76 +158,97 @@ and then use something like ``itertools.product`` to loop over them to create
 
     >>> from itertools import product
     >>> import psweep as ps
-    >>> x=ps.seq2dicts('x', [1,2,3])
-    >>> y=ps.seq2dicts('y', ['xx','yy','zz'])
-    >>> x
-    [{'x': 1}, {'x': 2}, {'x': 3}]
-    >>> y
-    [{'y': 'xx'}, {'y': 'yy'}, {'y': 'zz'}]
-    >>> ps.loops2params(product(x,y))
-    [{'x': 1, 'y': 'xx'},
-     {'x': 1, 'y': 'yy'},
-     {'x': 1, 'y': 'zz'},
-     {'x': 2, 'y': 'xx'},
-     {'x': 2, 'y': 'yy'},
-     {'x': 2, 'y': 'zz'},
-     {'x': 3, 'y': 'xx'},
-     {'x': 3, 'y': 'yy'},
-     {'x': 3, 'y': 'zz'}]
+    >>> a=ps.plist('a', [1,2,3])
+    >>> b=ps.plist('b', ['xx', 'yy'])
+    >>> a
+    [{'a': 1}, {'a': 2}, {'a': 3}]
+    >>> b
+    [{'b': 'xx'}, {'b': 'yy'}]
+    >>> ps.itr2params(product(a,b))
+    [{'a': 1, 'b': 'xx'},
+     {'a': 1, 'b': 'yy'},
+     {'a': 2, 'b': 'xx'},
+     {'a': 2, 'b': 'yy'},
+     {'a': 3, 'b': 'xx'},
+     {'a': 3, 'b': 'yy'}]
 
-The logic of the param study is entirely contained in the creation of ``params``.
-E.g., if parameters shall be varied together (say x and y), then instead of
+The last pattern is so common, that we have a function for it: ``pgrid()``.
 
 .. code-block:: python
 
-    >>> product(x,y,z)
+    >>> ps.pgrid(a,b)
+    [{'a': 1, 'b': 'xx'},
+     {'a': 1, 'b': 'yy'},
+     {'a': 2, 'b': 'xx'},
+     {'a': 2, 'b': 'yy'},
+     {'a': 3, 'b': 'xx'},
+     {'a': 3, 'b': 'yy'}]
+
+
+The logic of the param study is entirely contained in the creation of ``params``.
+E.g., if parameters shall be varied together (say a and b), then instead of
+
+.. code-block:: python
+
+    >>> product(a,b,c)
 
 use
 
 .. code-block:: python
 
-    >>> product(zip(x,y), z)
+    >>> product(zip(a,b), c)
 
-The nesting from ``zip()`` is flattened in ``loops2params()``.
+The nesting from ``zip()`` is flattened in ``itr2params()`` and ``pgrid()``
 
 .. code-block:: python
 
-    >>> z=ps.seq2dicts('z', [None, 1.2, 'X'])
-    >>> ps.loops2params(product(zip(x,y),z))
-    [{'x': 1, 'y': 'xx', 'z': None},
-     {'x': 1, 'y': 'xx', 'z': 1.2},
-     {'x': 1, 'y': 'xx', 'z': 'X'},
-     {'x': 2, 'y': 'yy', 'z': None},
-     {'x': 2, 'y': 'yy', 'z': 1.2},
-     {'x': 2, 'y': 'yy', 'z': 'X'},
-     {'x': 3, 'y': 'zz', 'z': None},
-     {'x': 3, 'y': 'zz', 'z': 1.2},
-     {'x': 3, 'y': 'zz', 'z': 'X'}]
+    >>> c=ps.plist('c', [None, 1.2, 'X'])
+    >>> ps.pgrid(zip(a,b),c)
+    [{'a': 1, 'b': 'xx', 'c': None},
+     {'a': 1, 'b': 'xx', 'c': 1.2},
+     {'a': 1, 'b': 'xx', 'c': 'X'},
+     {'a': 2, 'b': 'yy', 'c': None},
+     {'a': 2, 'b': 'yy', 'c': 1.2},
+     {'a': 2, 'b': 'yy', 'c': 'X'}]
+
 
 If you want a parameter which is constant, use a list of length one:
 
 .. code-block:: python
 
-    >>> c=ps.seq2dicts('c', ['const'])
-    >>> ps.loops2params(product(zip(x,y),z,c))
-    [{'x': 1, 'c': 'const', 'y': 'xx', 'z': None},
-     {'x': 1, 'c': 'const', 'y': 'xx', 'z': 1.2},
-     {'x': 1, 'c': 'const', 'y': 'xx', 'z': 'X'},
-     {'x': 2, 'c': 'const', 'y': 'yy', 'z': None},
-     {'x': 2, 'c': 'const', 'y': 'yy', 'z': 1.2},
-     {'x': 2, 'c': 'const', 'y': 'yy', 'z': 'X'},
-     {'x': 3, 'c': 'const', 'y': 'zz', 'z': None},
-     {'x': 3, 'c': 'const', 'y': 'zz', 'z': 1.2},
-     {'x': 3, 'c': 'const', 'y': 'zz', 'z': 'X'}]
+    >>> const=ps.plist('const', [1.23])
+    >>> ps.pgrid(zip(a,b), c, const)
+    [{'a': 1, 'b': 'xx', 'c': None, 'const': 1.23},
+     {'a': 1, 'b': 'xx', 'c': 1.2,  'const': 1.23},
+     {'a': 1, 'b': 'xx', 'c': 'X',  'const': 1.23},
+     {'a': 2, 'b': 'yy', 'c': None, 'const': 1.23},
+     {'a': 2, 'b': 'yy', 'c': 1.2,  'const': 1.23},
+     {'a': 2, 'b': 'yy', 'c': 'X',  'const': 1.23}]
 
 So, as you can see, the general idea is that we do all the loops *before*
 running any workload, i.e. we assemble the parameter grid to be sampled before
 the actual calculations. This has proven to be very practical as it helps
 detecting errors early.
 
-You are, by the way, of course not restricted to use ``itertools.product``. You
-can use any complicated manual loop you can come up with. The point is: you
-generate ``params``, we run the study.
+You are, by the way, of course not restricted to use simple nested loops over
+parameters using ``pgrid()`` (which uses ``itertools.product``). You are
+totally free in how to create ``params``, be it using other fancy stuff from
+``itertools`` or explicit loops. Of course you can also define a static
+``params`` list
+
+.. code-block:: python
+
+    params = [
+        {'a': 1,    'b': 'xx', 'c': None},
+        {'a': 1,    'b': 'yy', 'c': 1.234},
+        {'a': None, 'b': 'xx', 'c': 'X'},
+        ...
+        ]
+
+or read ``params`` in from an external source such as a database from a
+previous study, etc.
+
+The point is: you generate ``params``, we run the study.
 
 
 _pset_id, _run_id and repeated runs
@@ -464,8 +479,10 @@ values:
                 ]
 
 This doesn't look like fun. It shows that the UUIDs (``_run_id`` and
-``_pset_id``) are rarely ment to be used directly. Instead, you should (in this
-example) limit by the constant values of the other parameters:
+``_pset_id``) are rarely ment to be used directly, but rather to
+programatically link psets and runs to other data (as shown above in the "Save
+data on disk" example). Instead, here you could limit by the constant values of
+the other parameters:
 
 .. code-block:: python
 
@@ -521,5 +538,6 @@ Tests
 
 ::
 
-    # apt-get install python3-nose
-    $ nosetests3
+    $ nosetests
+    # or
+    $ pytest
