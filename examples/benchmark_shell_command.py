@@ -18,7 +18,7 @@ params:
 import timeit, os
 from itertools import product
 from subprocess import run
-from psweep import psweep as ps
+import psweep as ps
 
 
 def func(pset):

@@ -6,7 +6,7 @@
 
 import random
 from itertools import product
-from psweep import psweep as ps
+import psweep as ps
 
 
 def func(pset):

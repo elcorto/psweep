@@ -4,7 +4,7 @@ import os, tempfile, io, string, shutil, re
 import pandas as pd
 import numpy as np
 
-from psweep import psweep as ps
+import psweep as ps
 
 pj = os.path.join
 here = os.path.abspath(os.path.dirname(__file__))

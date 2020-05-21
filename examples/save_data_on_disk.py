@@ -2,7 +2,7 @@
 
 import os
 import subprocess
-from psweep import psweep as ps
+import psweep as ps
 
 
 def func(pset):

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import random
-from psweep import psweep as ps
+import psweep as ps
 
 def func(pset):
     return {'result': random.random() * pset['a']}

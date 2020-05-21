@@ -4,7 +4,7 @@ import os
 
 import docopt
 from tabulate import tabulate
-from psweep import psweep as ps
+import psweep as ps
 
 __doc__ = r"""
 Convert psweep database pickle file to table. Use this for quick queries of the
@@ -36,7 +36,7 @@ note:
     For serious queries, use ipython and pandas:
 
         $ ipython
-        >>> from psweep import psweep as ps
+        >>> import psweep as ps
         >>> df=ps.df_read('{db}')
 """.format(this=os.path.basename(__file__),
            db='results.pk')

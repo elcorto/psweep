@@ -3,7 +3,7 @@
 import os
 
 import docopt
-from psweep import psweep as ps
+import psweep as ps
 
 __doc__ = r"""
 Convert psweep database pickle file to json. Use this for quick queries of the

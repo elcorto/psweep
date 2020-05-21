@@ -2,7 +2,7 @@
 
 import random
 import multiprocessing as mp
-from psweep import psweep as ps
+import psweep as ps
 
 def func(pset):
     print(mp.current_process().name)

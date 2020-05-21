@@ -37,7 +37,7 @@ A trivial example: Loop over two parameters 'a' and 'b':
 
     import random
     from itertools import product
-    from psweep import psweep as ps
+    import psweep as ps
 
 
     def func(pset):
@@ -163,7 +163,7 @@ and then use something like ``itertools.product`` to loop over them to create
 .. code-block:: python
 
     >>> from itertools import product
-    >>> from psweep import psweep as ps
+    >>> import psweep as ps
     >>> x=ps.seq2dicts('x', [1,2,3])
     >>> y=ps.seq2dicts('y', ['xx','yy','zz'])
     >>> x
@@ -310,7 +310,7 @@ external program which saves data on disk. Consider this example:
 
     import os
     import subprocess
-    from psweep import psweep as ps
+    import psweep as ps
 
 
     def func(pset):
