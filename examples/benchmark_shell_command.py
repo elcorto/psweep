@@ -15,8 +15,7 @@ params:
  {'a': 4, 'const': 'const', 'b': 2.0}]
 """
 
-import timeit, os
-from itertools import product
+import timeit
 from subprocess import run
 import psweep as ps
 
@@ -35,9 +34,9 @@ def func(pset):
 
 
 if __name__ == '__main__':
-    params = ps.loops2params(product(
-            ps.seq2dicts('a', [1,2,3,4]),
-            ps.seq2dicts('b', [1.0,2.0]),
-            ps.seq2dicts('const', ['const']),
-            ))
+    params = ps.pgrid(
+        ps.plist('a', [1,2,3,4]),
+        ps.plist('b', [1.0,2.0]),
+        ps.plist('const', ['const']),
+        )
     df = ps.run(func, params)

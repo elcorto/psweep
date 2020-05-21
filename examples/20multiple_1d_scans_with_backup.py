@@ -5,7 +5,6 @@
 # run 10multiple_1d_scans_with_backup.py first
 
 import random
-from itertools import product
 import psweep as ps
 
 
@@ -26,8 +25,8 @@ if __name__ == '__main__':
     values = dict(b=[88,99])
 
     for study,seq in values.items():
-        params_1d = ps.seq2dicts(study, seq)
-        this_params = ps.loops2params(product(params_1d, [{'study': study}]))
+        params_1d = ps.plist(study, seq)
+        this_params = ps.pgrid(params_1d, [{'study': study}])
         this_params = [ps.merge_dicts(const, dct) for dct in this_params]
         params += this_params
         disp_cols.append(study)
