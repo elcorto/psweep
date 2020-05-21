@@ -1,14 +1,72 @@
 from io import IOBase
 import multiprocessing as mp
 from functools import partial
+import itertools
 import os, copy, uuid, pickle, time, shutil
 import pandas as pd
 
 pj = os.path.join
 
-
+# pandas defaults
 default_orient = 'records'
 pd_time_unit = 's'
+
+
+#-----------------------------------------------------------------------------
+# helpers
+#-----------------------------------------------------------------------------
+
+def itr(func):
+    """Decorator which makes functions take a sequence of args or individual
+    args.
+
+    ::
+
+        @itr
+        def func(seq):
+            for arg in seq:
+                ...
+        @itr
+        def func(*args):
+            for arg in args:
+                ...
+    """
+
+    def wrapper(*args):
+        if len(args) == 1:
+            return func(args[0])
+        else:
+            return func(args)
+    return wrapper
+
+
+# stolen from pwtools and adapted for python3
+def is_seq(seq):
+    if isinstance(seq, str) or \
+       isinstance(seq, IOBase) or \
+       isinstance(seq, dict):
+        return False
+    else:
+        try:
+            iter(seq)
+            return True
+        except TypeError:
+            return False
+
+
+def flatten(seq):
+    for item in seq:
+        if not is_seq(item):
+            yield item
+        else:
+            for subitem in flatten(item):
+                yield subitem
+
+
+
+#-----------------------------------------------------------------------------
+# pandas
+#-----------------------------------------------------------------------------
 
 
 def df_to_json(df, **kwds):
@@ -70,6 +128,10 @@ def df_read(fn, fmt='pickle', **kwds):
         raise Exception("unknown fmt: {}".format(fmt))
 
 
+#-----------------------------------------------------------------------------
+# path
+#-----------------------------------------------------------------------------
+
 # https://github.com/elcorto/pwtools
 def makedirs(path):
     """Create `path` recursively, no questions asked."""
@@ -82,37 +144,20 @@ def fullpath(path):
     return os.path.abspath(os.path.expanduser(path))
 
 
-def seq2dicts(name, seq):
-    """
-    >>> seq2dicts('a', [1,2,3])
+
+#-----------------------------------------------------------------------------
+# building params
+#-----------------------------------------------------------------------------
+
+
+def plist(name, seq):
+    """Create a list of single-item dicts holding the parameter name and a
+    value.
+
+    >>> plist('a', [1,2,3])
     [{'a': 1}, {'a': 2}, {'a': 3}]
     """
     return [{name: entry} for entry in seq]
-
-
-def itr(func):
-    """Decorator which makes functions take a sequence of args or individual
-    args.
-
-    ::
-
-        @itr
-        def func(seq):
-            for arg in seq:
-                ...
-        @itr
-        def func(*args):
-            for arg in args:
-                ...
-    """
-
-    def wrapper(*args):
-        if len(args) == 1:
-            return func(args[0])
-        else:
-            return func(args)
-    return wrapper
-
 
 @itr
 def merge_dicts(args):
@@ -124,33 +169,64 @@ def merge_dicts(args):
     return dct
 
 
-# stolen from pwtools and adapted for python3
-def is_seq(seq):
-    if isinstance(seq, str) or \
-       isinstance(seq, IOBase) or \
-       isinstance(seq, dict):
-        return False
-    else:
-        try:
-            iter(seq)
-            return True
-        except TypeError:
-            return False
-
-
-def flatten(seq):
-    for item in seq:
-        if not is_seq(item):
-            yield item
-        else:
-            for subitem in flatten(item):
-                yield subitem
-
-
 @itr
-def loops2params(loops):
+def itr2params(loops):
+    """Transform the (possibly nested) result of a loop over plists (or
+    whatever has been used to create psets) to a proper list of psets
+    by flattening and merging dicts.
+
+    Example
+    -------
+    >>> a = ps.plist('a', [1,2])
+    >>> b = ps.plist('b', [77,88])
+    >>> c = ps.plist('c', ['const'])
+
+    # result of loops
+    >>> list(itertools.product(a,b,c))
+    [({'a': 1}, {'b': 77}, {'c': 'const'}),
+     ({'a': 1}, {'b': 88}, {'c': 'const'}),
+     ({'a': 2}, {'b': 77}, {'c': 'const'}),
+     ({'a': 2}, {'b': 88}, {'c': 'const'})]
+
+    # flatten into list of psets
+    >>> ps.itr2params(itertools.product(a,b,c))
+    [{'a': 1, 'b': 77, 'c': 'const'},
+     {'a': 1, 'b': 88, 'c': 'const'},
+     {'a': 2, 'b': 77, 'c': 'const'},
+     {'a': 2, 'b': 88, 'c': 'const'}]
+
+    # also more nested stuff is no problem
+    >>> list(itertools.product(zip(a,b),c))
+    [(({'a': 1}, {'b': 77}), {'c': 'const'}),
+     (({'a': 2}, {'b': 88}), {'c': 'const'})]
+
+    >>> ps.itr2params(itertools.product(zip(a,b),c))
+    [{'a': 1, 'b': 77, 'c': 'const'},
+     {'a': 2, 'b': 88, 'c': 'const'}]
+    """
     return [merge_dicts(flatten(entry)) for entry in loops]
 
+@itr
+def pgrid(plists):
+    """Convenience function for the most common loop: nested loops with
+    ``itertools.product``: ``ps.itr2params(itertools.product(a,b,c,...))``.
+
+    >>> ps.pgrid(a,b,c)
+    [{'a': 1, 'b': 77, 'c': 'const'},
+     {'a': 1, 'b': 88, 'c': 'const'},
+     {'a': 2, 'b': 77, 'c': 'const'},
+     {'a': 2, 'b': 88, 'c': 'const'}]
+
+    >>> ps.pgrid(zip(a,b),c)
+    [{'a': 1, 'b': 77, 'c': 'const'},
+     {'a': 2, 'b': 88, 'c': 'const'}]
+    """
+    return itr2params(itertools.product(*plists))
+
+
+#-----------------------------------------------------------------------------
+# run study
+#-----------------------------------------------------------------------------
 
 # tmpsave: That's cool, but when running in parallel, we loose the ability to
 # store the whole state of the study calculated thus far. For that we would
@@ -295,3 +371,10 @@ def run(worker, params, df=None, poolsize=None, save=True, tmpsave=False,
     if save:
         df_write(df, results_fn)
     return df
+
+
+#-----------------------------------------------------------------------------
+# aliases
+#-----------------------------------------------------------------------------
+seq2dicts = plist
+loops2params = itr2params
