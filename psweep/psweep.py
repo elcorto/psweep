@@ -1,22 +1,30 @@
-from io import IOBase
-import multiprocessing as mp
 from functools import partial
+from io import IOBase
+import copy
 import itertools
-import os, copy, uuid, pickle, time, shutil
+import multiprocessing as mp
+import os
+import pickle
+import shutil
+import string
+import time
+import uuid
 import warnings
+import re
 
 import pandas as pd
 
 pj = os.path.join
 
 # pandas defaults
-default_orient = 'records'
-pd_time_unit = 's'
+default_orient = "records"
+pd_time_unit = "s"
 
 
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 # helpers
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
+
 
 def itr(func):
     """Decorator which makes functions take a sequence of args or individual
@@ -39,14 +47,17 @@ def itr(func):
             return func(args[0])
         else:
             return func(args)
+
     return wrapper
 
 
 # stolen from pwtools and adapted for python3
 def is_seq(seq):
-    if isinstance(seq, str) or \
-       isinstance(seq, IOBase) or \
-       isinstance(seq, dict):
+    if (
+        isinstance(seq, str)
+        or isinstance(seq, IOBase)
+        or isinstance(seq, dict)
+    ):
         return False
     else:
         try:
@@ -65,10 +76,9 @@ def flatten(seq):
                 yield subitem
 
 
-
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 # pandas
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 
 def df_to_json(df, **kwds):
@@ -84,15 +94,16 @@ def df_to_json(df, **kwds):
     defaults = dict(
         orient=default_orient,
         date_unit=pd_time_unit,
-        date_format='iso',
-        double_precision=15)
-    for key,val in defaults.items():
+        date_format="iso",
+        double_precision=15,
+    )
+    for key, val in defaults.items():
         if key not in kwds.keys():
             kwds[key] = val
     return df.to_json(**kwds)
 
 
-def df_write(df, fn, fmt='pickle', **kwds):
+def df_write(df, fn, fmt="pickle", **kwds):
     """Write DataFrame to disk.
 
     Parameters
@@ -106,38 +117,37 @@ def df_write(df, fn, fmt='pickle', **kwds):
         passed to ``pickle.dump()`` or :func:`df_to_json`
     """
     makedirs(os.path.dirname(fn))
-    if fmt == 'pickle':
-        with open(fn, 'wb') as fd:
+    if fmt == "pickle":
+        with open(fn, "wb") as fd:
             pickle.dump(df, fd, **kwds)
-    elif fmt == 'json':
+    elif fmt == "json":
         df_to_json(df, path_or_buf=fn, **kwds)
     else:
         raise Exception("unknown fmt: {}".format(fmt))
 
 
-def df_read(fn, fmt='pickle', **kwds):
+def df_read(fn, fmt="pickle", **kwds):
     """Read DataFrame from file `fn`. See :func:`df_write`."""
-    if fmt == 'pickle':
-        with open(fn, 'rb') as fd:
+    if fmt == "pickle":
+        with open(fn, "rb") as fd:
             return pickle.load(fd, **kwds)
-    elif fmt == 'json':
-        orient = kwds.pop('orient', default_orient)
-        return pd.io.json.read_json(fn,
-                                    precise_float=True,
-                                    orient=orient,
-                                    **kwds)
+    elif fmt == "json":
+        orient = kwds.pop("orient", default_orient)
+        return pd.io.json.read_json(
+            fn, precise_float=True, orient=orient, **kwds
+        )
     else:
         raise Exception("unknown fmt: {}".format(fmt))
 
 
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 # path
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 # https://github.com/elcorto/pwtools
 def makedirs(path):
     """Create `path` recursively, no questions asked."""
-    if not path.strip() == '':
+    if not path.strip() == "":
         os.makedirs(path, exist_ok=True)
 
 
@@ -146,10 +156,9 @@ def fullpath(path):
     return os.path.abspath(os.path.expanduser(path))
 
 
-
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 # building params
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 
 def plist(name, seq):
@@ -160,6 +169,7 @@ def plist(name, seq):
     [{'a': 1}, {'a': 2}, {'a': 3}]
     """
     return [{name: entry} for entry in seq]
+
 
 @itr
 def merge_dicts(args):
@@ -208,6 +218,7 @@ def itr2params(loops):
     """
     return [merge_dicts(flatten(entry)) for entry in loops]
 
+
 @itr
 def pgrid(plists):
     """Convenience function for the most common loop: nested loops with
@@ -226,9 +237,9 @@ def pgrid(plists):
     return itr2params(itertools.product(*plists))
 
 
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 # run study
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 # tmpsave: That's cool, but when running in parallel, we loose the ability to
 # store the whole state of the study calculated thus far. For that we would
@@ -236,8 +247,16 @@ def pgrid(plists):
 # informed by workers about finished work and collects the so-far written temp
 # results into a global df -- maybe useful for monitoring progress.
 
-def worker_wrapper(pset, worker, tmpsave=False, verbose=False, run_id=None,
-                   calc_dir=None, simulate=False):
+
+def worker_wrapper(
+    pset,
+    worker,
+    tmpsave=False,
+    verbose=False,
+    run_id=None,
+    calc_dir=None,
+    simulate=False,
+):
     """
     Parameters
     ----------
@@ -253,11 +272,12 @@ def worker_wrapper(pset, worker, tmpsave=False, verbose=False, run_id=None,
     pset_id = str(uuid.uuid4())
     _pset = copy.deepcopy(pset)
     _time_utc = pd.Timestamp(time.time(), unit=pd_time_unit)
-    update = {'_run_id': run_id,
-              '_pset_id': pset_id,
-              '_calc_dir': calc_dir,
-              '_time_utc': _time_utc
-              }
+    update = {
+        "_run_id": run_id,
+        "_pset_id": pset_id,
+        "_calc_dir": calc_dir,
+        "_time_utc": _time_utc,
+    }
     _pset.update(update)
     # for printing only
     df_row = pd.DataFrame([_pset])
@@ -269,13 +289,22 @@ def worker_wrapper(pset, worker, tmpsave=False, verbose=False, run_id=None,
         _pset.update(worker(_pset))
     df_row = pd.DataFrame([_pset], index=[_time_utc])
     if tmpsave:
-        fn = pj(calc_dir, 'tmpsave', run_id, pset_id + '.pk')
+        fn = pj(calc_dir, "tmpsave", run_id, pset_id + ".pk")
         df_write(df_row, fn)
     return df_row
 
 
-def run_local(worker, params, df=None, poolsize=None, save=True, tmpsave=False,
-              verbose=False, calc_dir='calc', simulate=False):
+def run_local(
+    worker,
+    params,
+    df=None,
+    poolsize=None,
+    save=True,
+    tmpsave=False,
+    verbose=False,
+    calc_dir="calc",
+    simulate=False,
+):
     """
     Parameters
     ----------
@@ -307,10 +336,10 @@ def run_local(worker, params, df=None, poolsize=None, save=True, tmpsave=False,
         useful to check if `params` are correct before starting a production run
     """
 
-    results_fn_base = 'results.pk'
+    results_fn_base = "results.pk"
 
     if simulate:
-        calc_dir_sim = calc_dir + '.simulate'
+        calc_dir_sim = calc_dir + ".simulate"
         if os.path.exists(calc_dir_sim):
             shutil.rmtree(calc_dir_sim)
         makedirs(calc_dir_sim)
@@ -329,14 +358,15 @@ def run_local(worker, params, df=None, poolsize=None, save=True, tmpsave=False,
 
     run_id = str(uuid.uuid4())
 
-    worker_wrapper_partial = partial(worker_wrapper,
-                                     worker=worker,
-                                     tmpsave=tmpsave,
-                                     verbose=verbose,
-                                     run_id=run_id,
-                                     calc_dir=calc_dir,
-                                     simulate=simulate,
-                                     )
+    worker_wrapper_partial = partial(
+        worker_wrapper,
+        worker=worker,
+        tmpsave=tmpsave,
+        verbose=verbose,
+        run_id=run_id,
+        calc_dir=calc_dir,
+        simulate=simulate,
+    )
 
     if poolsize is None:
         results = [worker_wrapper_partial(x) for x in params]
@@ -352,11 +382,12 @@ def run_local(worker, params, df=None, poolsize=None, save=True, tmpsave=False,
     return df
 
 
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 # aliases
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 seq2dicts = plist
 loops2params = itr2params
+
 
 def run(*args, **kwds):
     warnings.warn("run() was renamed to run_local()", DeprecationWarning)
