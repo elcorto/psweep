@@ -3,6 +3,8 @@ import multiprocessing as mp
 from functools import partial
 import itertools
 import os, copy, uuid, pickle, time, shutil
+import warnings
+
 import pandas as pd
 
 pj = os.path.join
@@ -272,8 +274,8 @@ def worker_wrapper(pset, worker, tmpsave=False, verbose=False, run_id=None,
     return df_row
 
 
-def run(worker, params, df=None, poolsize=None, save=True, tmpsave=False,
-        verbose=False, calc_dir='calc', simulate=False):
+def run_local(worker, params, df=None, poolsize=None, save=True, tmpsave=False,
+              verbose=False, calc_dir='calc', simulate=False):
     """
     Parameters
     ----------
@@ -355,3 +357,7 @@ def run(worker, params, df=None, poolsize=None, save=True, tmpsave=False,
 #-----------------------------------------------------------------------------
 seq2dicts = plist
 loops2params = itr2params
+
+def run(*args, **kwds):
+    warnings.warn("run() was renamed to run_local()", DeprecationWarning)
+    return run_local(*args, **kwds)
