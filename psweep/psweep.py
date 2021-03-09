@@ -304,6 +304,7 @@ def run_local(
     verbose=False,
     calc_dir="calc",
     simulate=False,
+    database_dir=None,
 ):
     """
     Parameters
@@ -321,7 +322,7 @@ def run_local(
         None : use serial execution
         int : use multiprocessing.Pool (even for ``poolsize=1``)
     save : bool
-        save final DataFrame to ``<calc_dir>/results.pk`` (pickle format only)
+        save final DataFrame to ``<calc_dir>/database.pk`` (pickle format only)
     tmpsave : bool
         save results from this pset (the current DataFrame row) to
         <calc_dir>/tmpsave/<run_id>/<pset_id>.pk (pickle format only)
@@ -334,25 +335,30 @@ def run_local(
         run everything in <calc_dir>.simulate, don't call `worker`, i.e. save
         what the run would create, but without the results from `worker`,
         useful to check if `params` are correct before starting a production run
+    database_dir : str
+        Path for the database. Default is <calc_dir>.
     """
 
-    results_fn_base = "results.pk"
+    database_fn_base = "database.pk"
+
+    database_dir = calc_dir if database_dir is None else database_dir
 
     if simulate:
         calc_dir_sim = calc_dir + ".simulate"
         if os.path.exists(calc_dir_sim):
             shutil.rmtree(calc_dir_sim)
         makedirs(calc_dir_sim)
-        old_db = pj(calc_dir, results_fn_base)
+        old_db = pj(database_dir, database_fn_base)
         if os.path.exists(old_db):
-            shutil.copy(old_db, pj(calc_dir_sim, results_fn_base))
+            shutil.copy(old_db, pj(calc_dir_sim, database_fn_base))
         calc_dir = calc_dir_sim
-
-    results_fn = pj(calc_dir, results_fn_base)
+        database_fn = pj(calc_dir, database_fn_base)
+    else:
+        database_fn = pj(database_dir, database_fn_base)
 
     if df is None:
-        if os.path.exists(results_fn):
-            df = df_read(results_fn)
+        if os.path.exists(database_fn):
+            df = df_read(database_fn)
         else:
             df = pd.DataFrame()
 
@@ -378,7 +384,8 @@ def run_local(
         df = df.append(df_row, sort=False)
 
     if save:
-        df_write(df, results_fn)
+        df_write(df, database_fn)
+
     return df
 
 
