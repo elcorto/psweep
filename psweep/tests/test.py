@@ -210,48 +210,6 @@ def test_merge_dicts():
     assert m == {'a': 3}
 
 
-def test_backup():
-    def func(pset):
-        # write stuff to calc_dir
-        dr = pj(pset['_calc_dir'], pset['_pset_id'])
-        ps.makedirs(dr)
-        fn = pj(dr, 'foo')
-        with open(fn, 'w') as fd:
-            fd.write("bar")
-        return ps.merge_dicts(pset, {'result': pset['a']*10})
-
-    tmpdir = tempfile.mkdtemp(prefix='psweep_test_run_')
-    params = [{'a': 1}, {'a': 2}, {'a': 3}, {'a': 4}]
-    calc_dir = "{}/calc".format(tmpdir)
-
-    # First run. backup_calc_dir does nothing yet. Test backup_script.
-    df = ps.run(func, params, calc_dir=calc_dir, backup_script=__file__,
-                backup_calc_dir=True)
-    run_id = df._run_id.unique()[-1]
-    script_fn = "{}/backup_script/{}.py".format(calc_dir, run_id)
-    assert os.path.exists(script_fn)
-    with open(script_fn) as fd1, open(__file__) as fd2:
-        assert fd1.read() == fd2.read()
-    df1 = df.copy()
-
-    # Second run. This time, test backup_calc_dir.
-    df = ps.run(func, params, calc_dir=calc_dir, backup_calc_dir=True)
-    rex = re.compile(r"calc_[0-9-]+T[0-9:\.]+Z")
-    found = False
-    for name in os.listdir(tmpdir):
-        if rex.search(name) is not None:
-            backup_dir = pj(tmpdir, name)
-            found = True
-            break
-    assert found
-    print(os.listdir(backup_dir))
-    for pset_id in df1[df1._run_id==run_id]._pset_id:
-        tgt = pj(backup_dir, pset_id, 'foo')
-        assert os.path.exists(tgt)
-    assert os.path.exists(pj(backup_dir, 'results.pk'))
-    assert os.path.exists("{}/backup_script/{}.py".format(backup_dir, run_id))
-
-
 def test_scripts():
     tmpdir = tempfile.mkdtemp(prefix='psweep_test_bin_')
     params = [{'a': 1}, {'a': 2}, {'a': 3}, {'a': 4}]

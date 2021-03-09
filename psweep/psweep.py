@@ -273,8 +273,7 @@ def worker_wrapper(pset, worker, tmpsave=False, verbose=False, run_id=None,
 
 
 def run(worker, params, df=None, poolsize=None, save=True, tmpsave=False,
-        verbose=False, calc_dir='calc', backup_script=None,
-        backup_calc_dir=False, simulate=False):
+        verbose=False, calc_dir='calc', simulate=False):
     """
     Parameters
     ----------
@@ -300,12 +299,6 @@ def run(worker, params, df=None, poolsize=None, save=True, tmpsave=False,
         | sequence : list of DataFrame column names, print the row but only
         | those columns
     calc_dir : str
-    backup_script : {str, None}
-        save the file (``backup_script=/path/to/file.py``,
-        ``backup_script=__file__``) to ``<calc_dir>/backup_script/<run_id>.py``
-    backup_calc_dir : bool
-        backup <calc_dir> to <calc_dir>.<timestamp>, where timestamp is derived
-        from ``df.index.max()``, i.e. the newest entry on the old database
     simulate : bool
         run everything in <calc_dir>.simulate, don't call `worker`, i.e. save
         what the run would create, but without the results from `worker`,
@@ -332,23 +325,7 @@ def run(worker, params, df=None, poolsize=None, save=True, tmpsave=False,
         else:
             df = pd.DataFrame()
 
-    if backup_calc_dir and len(df.index) > 0:
-        last = df.index.max().strftime('%Y-%m-%dT%H:%M:%S.%fZ')
-        dst = calc_dir + '_' + last
-        assert not os.path.exists(dst), \
-            ("backup destination {dst} exists, seems like there has been no new "
-             "data in {calc_dir} since the last backup".format(dst=dst,
-                                                               calc_dir=calc_dir))
-        shutil.copytree(calc_dir, dst)
-
     run_id = str(uuid.uuid4())
-    if backup_script is not None:
-        assert os.path.exists(backup_script), \
-            "{} does not exist".format(backup_script)
-
-        path = pj(calc_dir, 'backup_script')
-        makedirs(path)
-        shutil.copy(backup_script , pj(path, run_id + '.py'))
 
     worker_wrapper_partial = partial(worker_wrapper,
                                      worker=worker,
