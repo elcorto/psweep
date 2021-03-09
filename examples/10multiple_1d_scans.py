@@ -6,9 +6,6 @@ from the `const` dict. We use merge_dicts() to combine constant and varied
 values. Note that merge_dicts() operates left-to-right, so const must be
 left, i.e. replace const values which are varied.
 
-We also use the backup_* options to show that they can be always used (also
-when there is no data yet).
-
 run:
     $ rm -rf calc*; ./10multiple*.py; ./20multiple*.py
 """
@@ -43,6 +40,5 @@ if __name__ == '__main__':
         disp_cols.append(study)
 
     disp_cols += ['_run_id']
-    df = ps.run(func, params, backup_script=__file__, backup_calc_dir=True,
-                verbose=disp_cols)
+    df = ps.run_local(func, params, verbose=disp_cols)
     print(df[disp_cols + ['result']])

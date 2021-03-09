@@ -15,16 +15,16 @@ if __name__ == '__main__':
     params = ps.pgrid(
         ps.plist('a', [1,2,3,4]),
         ps.plist('b', [100]))
-    df = ps.run(func, params)
+    df = ps.run_local(func, params)
     print(df[sel])
 
     # simulate run: check if new parameter grid is OK
     params = ps.pgrid(
         ps.plist('a', [5,6]),
         ps.plist('b', [88, 99]))
-    df = ps.run(func, params, simulate=True)
+    df = ps.run_local(func, params, simulate=True)
     print(df[sel])
 
     # looks good, 2nd real run with new params
-    df = ps.run(func, params)
+    df = ps.run_local(func, params)
     print(df[sel])

@@ -13,5 +13,5 @@ if __name__ == '__main__':
         ps.plist('a', [1,2,3,4]),
         ps.plist('b', [8,9]),
         )
-    df = ps.run(func, params)
+    df = ps.run_local(func, params)
     print(df)

@@ -39,4 +39,4 @@ if __name__ == '__main__':
         ps.plist('b', [1.0,2.0]),
         ps.plist('const', ['const']),
         )
-    df = ps.run(func, params)
+    df = ps.run_local(func, params)

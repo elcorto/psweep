@@ -32,6 +32,5 @@ if __name__ == '__main__':
         disp_cols.append(study)
 
     disp_cols += ['_run_id']
-    df = ps.run(func, params, backup_script=__file__, backup_calc_dir=True,
-                verbose=disp_cols)
+    df = ps.run_local(func, params, verbose=disp_cols)
     print(df[disp_cols + ['result']])

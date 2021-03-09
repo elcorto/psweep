@@ -10,5 +10,5 @@ def func(pset):
 
 if __name__ == '__main__':
     params = ps.plist('a', [1,2,3,4])
-    df = ps.run(func, params)
+    df = ps.run_local(func, params)
     print(df)
