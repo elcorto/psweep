@@ -25,6 +25,17 @@ pd_time_unit = "s"
 # helpers
 # -----------------------------------------------------------------------------
 
+# https://github.com/elcorto/pwtools
+def makedirs(path):
+    """Create `path` recursively, no questions asked."""
+    if not path.strip() == "":
+        os.makedirs(path, exist_ok=True)
+
+
+# https://github.com/elcorto/pwtools
+def fullpath(path):
+    return os.path.abspath(os.path.expanduser(path))
+
 
 def itr(func):
     """Decorator which makes functions take a sequence of args or individual
@@ -74,6 +85,17 @@ def flatten(seq):
         else:
             for subitem in flatten(item):
                 yield subitem
+
+
+def file_write(fn, txt, mode="w"):
+    makedirs(os.path.dirname(fn))
+    with open(fn, mode=mode) as fd:
+        fd.write(txt)
+
+
+def file_read(fn):
+    with open(fn, "r") as fd:
+        return fd.read()
 
 
 # -----------------------------------------------------------------------------
@@ -138,22 +160,6 @@ def df_read(fn, fmt="pickle", **kwds):
         )
     else:
         raise Exception("unknown fmt: {}".format(fmt))
-
-
-# -----------------------------------------------------------------------------
-# path
-# -----------------------------------------------------------------------------
-
-# https://github.com/elcorto/pwtools
-def makedirs(path):
-    """Create `path` recursively, no questions asked."""
-    if not path.strip() == "":
-        os.makedirs(path, exist_ok=True)
-
-
-# https://github.com/elcorto/pwtools
-def fullpath(path):
-    return os.path.abspath(os.path.expanduser(path))
 
 
 # -----------------------------------------------------------------------------
