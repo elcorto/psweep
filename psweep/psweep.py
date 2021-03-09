@@ -1,17 +1,20 @@
 from functools import partial
 from io import IOBase
 import copy
+import hashlib
 import itertools
+import json
 import multiprocessing as mp
 import os
 import pickle
+import re
 import shutil
 import string
 import time
 import uuid
 import warnings
-import re
 
+import numpy as np
 import pandas as pd
 
 pj = os.path.join
@@ -97,6 +100,12 @@ def file_read(fn):
     with open(fn, "r") as fd:
         return fd.read()
 
+
+
+def dict_hash(dct, method="sha1"):
+    h = getattr(hashlib, method)()
+    h.update(json.dumps(dct, sort_keys=True).encode())
+    return h.hexdigest()
 
 # -----------------------------------------------------------------------------
 # pandas
@@ -278,11 +287,17 @@ def worker_wrapper(
     pset_id = str(uuid.uuid4())
     _pset = copy.deepcopy(pset)
     _time_utc = pd.Timestamp(time.time(), unit=pd_time_unit)
+    hash_alg = "sha1"
+    try:
+        pset_hash = dict_hash(pset, hash_alg)
+    except TypeError:
+        pset_hash = np.nan
     update = {
         "_run_id": run_id,
         "_pset_id": pset_id,
         "_calc_dir": calc_dir,
         "_time_utc": _time_utc,
+        f"_pset_{hash_alg}": pset_hash,
     }
     _pset.update(update)
     # for printing only
