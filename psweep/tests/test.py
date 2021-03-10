@@ -48,18 +48,19 @@ def test_run():
 
     # run two times, updating the database, the second time,
     # also write tmp results
-    df = ps.run(func, params, calc_dir=calc_dir)
+    df = ps.run_local(func, params, calc_dir=calc_dir)
     assert len(df) == 4
     assert len(df._run_id.unique()) == 1
     assert len(df._pset_id.unique()) == 4
-    df = ps.run(func, params, calc_dir=calc_dir, poolsize=2, tmpsave=True)
+    df = ps.run_local(func, params, calc_dir=calc_dir, poolsize=2, tmpsave=True)
     assert len(df) == 8
     assert len(df._run_id.unique()) == 2
     assert len(df._pset_id.unique()) == 8
     assert set(df.columns) == \
-        set(['_calc_dir', '_pset_id', '_run_id', '_time_utc', 'a', 'result'])
+        set(['_calc_dir', '_pset_id', '_run_id', '_pset_seq', '_run_seq',
+             '_pset_sha1', '_time_utc', 'a', 'result'])
 
-    dbfn = "{}/results.pk".format(calc_dir)
+    dbfn = "{}/database.pk".format(calc_dir)
     assert os.path.exists(dbfn)
     assert df.equals(ps.df_read(dbfn))
 
@@ -79,10 +80,10 @@ def test_simulate():
     calc_dir = "{}/calc".format(tmpdir)
     calc_dir_sim = calc_dir + '.simulate'
 
-    df = ps.run(func, params, calc_dir=calc_dir)
-    df_sim = ps.run(func, params_sim, calc_dir=calc_dir, simulate=True)
-    dbfn = "{}/results.pk".format(calc_dir)
-    dbfn_sim = "{}/results.pk".format(calc_dir_sim)
+    df = ps.run_local(func, params, calc_dir=calc_dir)
+    df_sim = ps.run_local(func, params_sim, calc_dir=calc_dir, simulate=True)
+    dbfn = "{}/database.pk".format(calc_dir)
+    dbfn_sim = "{}/database.pk".format(calc_dir_sim)
 
     assert len(df_sim) == 6
     assert len(df) == 4
@@ -94,7 +95,7 @@ def test_simulate():
     assert df.iloc[:4].equals(df_sim.iloc[:4])
     assert np.isnan(df_sim.result.values[-2:]).all()
 
-    df2 = ps.run(func, params_sim, calc_dir=calc_dir)
+    df2 = ps.run_local(func, params_sim, calc_dir=calc_dir)
     assert len(df2) == 6
     assert df.iloc[:4].equals(df2.iloc[:4])
     assert (df2.result.values[-2:] == np.array([880.0, 990.0])).all()
@@ -114,7 +115,7 @@ def test_is_seq():
 
 
 def test_df_io():
-    from pandas.util.testing import assert_frame_equal
+    from pandas.testing import assert_frame_equal
     letters = string.ascii_letters
     ri = np.random.randint
     rn = np.random.rand
@@ -157,7 +158,7 @@ def test_df_io():
                     ps.df_write(df, fn, fmt=fmt)
                     read = ps.df_read(fn, fmt=fmt)
                 os.remove(fn)
-                assert_frame_equal(df, read, check_exact=False, check_less_precise=12)
+                assert_frame_equal(df, read, check_exact=False)
         elif fmt == 'pickle':
             fn = tempfile.mktemp(prefix='psweep_test_df_io_{}_'.format(fmt))
             ps.df_write(df, fn, fmt=fmt)
@@ -173,13 +174,13 @@ def test_save():
     tmpdir = tempfile.mkdtemp(prefix='psweep_test_run_')
     params = [{'a': 1}, {'a': 2}, {'a': 3}, {'a': 4}]
     calc_dir = "{}/calc".format(tmpdir)
-    dbfn = "{}/results.pk".format(calc_dir)
+    dbfn = "{}/database.pk".format(calc_dir)
 
-    df = ps.run(func, params, calc_dir=calc_dir, save=False)
+    df = ps.run_local(func, params, calc_dir=calc_dir, save=False)
     assert not os.path.exists(dbfn)
     assert os.listdir(tmpdir) == []
 
-    df = ps.run(func, params, calc_dir=calc_dir, save=True)
+    df = ps.run_local(func, params, calc_dir=calc_dir, save=True)
     assert os.path.exists(dbfn)
     assert os.listdir(tmpdir) != []
     shutil.rmtree(tmpdir)
@@ -214,10 +215,10 @@ def test_scripts():
     tmpdir = tempfile.mkdtemp(prefix='psweep_test_bin_')
     params = [{'a': 1}, {'a': 2}, {'a': 3}, {'a': 4}]
     calc_dir = "{}/calc".format(tmpdir)
-    df = ps.run(func, params, calc_dir=calc_dir)
+    df = ps.run_local(func, params, calc_dir=calc_dir)
 
     bindir = ps.fullpath(pj(os.path.dirname(__file__), '../../bin'))
-    db = pj(calc_dir, 'results.pk')
+    db = pj(calc_dir, 'database.pk')
     print(system("{}/psweepdb2json.py -o columns {}".format(bindir, db)))
     print(system("{}/psweepdb2table.py -i -a -f simple {}".format(bindir, db)))
     shutil.rmtree(tmpdir)
