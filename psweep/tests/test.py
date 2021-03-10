@@ -219,6 +219,6 @@ def test_scripts():
 
     bindir = ps.fullpath(pj(os.path.dirname(__file__), '../../bin'))
     db = pj(calc_dir, 'database.pk')
-    print(system("{}/psweepdb2json.py -o columns {}".format(bindir, db)))
-    print(system("{}/psweepdb2table.py -i -a -f simple {}".format(bindir, db)))
+    print(system("{}/psweep-db2json -o columns {}".format(bindir, db)))
+    print(system("{}/psweep-db2table -i -a -f simple {}".format(bindir, db)))
     shutil.rmtree(tmpdir)
