@@ -1,0 +1,12 @@
+#!/bin/sh
+
+set -eu
+
+host=$1
+basedir=$(pwd | sed -re "s|$HOME/||")
+
+rsync_opts="-avz"
+[ -e excl_push ] && rsync_opts="$rsync_opts --exclude-from=excl_push"
+
+ssh $host "mkdir -pv $basedir"
+rsync $rsync_opts ./calc $host:$basedir/
