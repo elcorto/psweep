@@ -101,11 +101,11 @@ def file_read(fn):
         return fd.read()
 
 
-
 def dict_hash(dct, method="sha1"):
     h = getattr(hashlib, method)()
     h.update(json.dumps(dct, sort_keys=True).encode())
     return h.hexdigest()
+
 
 # -----------------------------------------------------------------------------
 # pandas
@@ -271,6 +271,8 @@ def worker_wrapper(
     run_id=None,
     calc_dir=None,
     simulate=False,
+    pset_seq=np.nan,
+    run_seq=None,
 ):
     """
     Parameters
@@ -298,6 +300,8 @@ def worker_wrapper(
         "_calc_dir": calc_dir,
         "_time_utc": _time_utc,
         f"_pset_{hash_alg}": pset_hash,
+        "_pset_seq": pset_seq,
+        "_run_seq": run_seq,
     }
     _pset.update(update)
     # for printing only
@@ -380,8 +384,12 @@ def run_local(
     if df is None:
         if os.path.exists(database_fn):
             df = df_read(database_fn)
+            pset_seq_old = df._pset_seq.values.max()
+            run_seq_old = df._run_seq.values.max()
         else:
             df = pd.DataFrame()
+            pset_seq_old = -1
+            run_seq_old = -1
 
     run_id = str(uuid.uuid4())
 
@@ -396,10 +404,25 @@ def run_local(
     )
 
     if poolsize is None:
-        results = [worker_wrapper_partial(x) for x in params]
+        results = [
+            worker_wrapper_partial(
+                pset=pset,
+                pset_seq=pset_seq_old + ii + 1,
+                run_seq=run_seq_old + 1,
+            )
+            for ii, pset in enumerate(params)
+        ]
     else:
+        # Can't use lambda here b/c pool.map() still can't pickle local scope
+        # lambdas. That's why we emulate
+        #   pool.map(lambda pset: worker_wrapper_partial(pset, run_seq=...,
+        #            params)
+        # with nested partial(). Cool, eh?
+        _worker_wrapper_partial = partial(
+            worker_wrapper_partial, run_seq=run_seq_old + 1
+        )
         with mp.Pool(poolsize) as pool:
-            results = pool.map(worker_wrapper_partial, params)
+            results = pool.map(_worker_wrapper_partial, params)
 
     for df_row in results:
         df = df.append(df_row, sort=False)
