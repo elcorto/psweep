@@ -39,7 +39,7 @@ note:
         >>> import psweep as ps
         >>> df=ps.df_read('{db}')
 """.format(this=os.path.basename(__file__),
-           db='results.pk')
+           db='database.pk')
 
 if __name__ == '__main__':
     args = docopt.docopt(__doc__)
