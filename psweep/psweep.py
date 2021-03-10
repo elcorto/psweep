@@ -1,5 +1,6 @@
 from functools import partial
 from io import IOBase
+from subprocess import run as sp_run
 import copy
 import hashlib
 import itertools
@@ -27,6 +28,11 @@ pd_time_unit = "s"
 # -----------------------------------------------------------------------------
 # helpers
 # -----------------------------------------------------------------------------
+
+
+def system(cmd, **kwds):
+    return sp_run(cmd, shell=True, check=True, **kwds)
+
 
 # https://github.com/elcorto/pwtools
 def makedirs(path):
@@ -430,6 +436,128 @@ def run_local(
     if save:
         df_write(df, database_fn)
 
+    return df
+
+
+# -----------------------------------------------------------------------------
+# HPC cluster batch runs
+# -----------------------------------------------------------------------------
+
+
+class Machine:
+    _must_have_attrs = ["subcmd"]
+
+    def __init__(self, jobfile_template_fn):
+        # calc.templ/job.cluster
+        self.jobfile_template_fn = jobfile_template_fn
+        # job.cluster
+        self.jobfile_basename = os.path.basename(jobfile_template_fn)
+        # cluster
+        self.name = self.jobfile_basename.replace("job.", "")
+        self.info = self.parse_machine_info()
+        assert (aa := set(self._must_have_attrs)) <= (
+            bb := set(self.info.keys())
+        ), (
+            f"expected keys {aa} not found in keys {bb} parsed from "
+            f"{self.jobfile_template_fn}"
+        )
+        for key, val in self.info.items():
+            setattr(self, key, val)
+        self._attrs = [
+            "name",
+            "jobfile_basename",
+            "jobfile_template_fn",
+        ] + list(self.info.keys())
+
+    def __repr__(self):
+        return str({k: getattr(self, k) for k in self._attrs})
+
+    def parse_machine_info(self):
+        txt = file_read(self.jobfile_template_fn)
+        return dict(
+            [
+                x.strip().split("=")
+                for x in re.search(r"^#psweep:(.+)$", txt, re.M)
+                .group(1)
+                .split(",")
+            ]
+        )
+
+
+class FileTemplate:
+    def __init__(self, path):
+        self.path = path
+        self.basename = os.path.basename(path)
+
+    def __repr__(self):
+        return self.path
+
+    def fill(self, pset):
+        txt = file_read(self.path)
+        return string.Template(txt).substitute(pset)
+
+
+def git_clean():
+    cmd = "git status --porcelain"
+    return system(cmd, capture_output=True).stdout.decode() == ""
+
+
+def prep_batch(params, calc_dir="calc", template_dir="calc.templ", git=True):
+
+    if git:
+        if not os.path.exists(".git"):
+            system("git init; git add -A; git commit -m 'psweep: init'")
+
+        if not git_clean():
+            raise Exception("dirty git repo")
+
+    file_excl_rex = re.compile("^\.(.+)(\.(sw(p|o)|bak))*$")
+    templates = [
+        FileTemplate(pj(template_dir, basename))
+        for basename in os.listdir(template_dir)
+        if file_excl_rex.match(basename) is None
+    ]
+
+    def worker(pset):
+        for template in templates:
+            file_write(
+                pj(calc_dir, pset["_pset_id"], template.basename),
+                template.fill(pset),
+            )
+        return {}
+
+    df = run_local(worker, params)
+
+    machines = [
+        Machine(pj(template_dir, template.basename))
+        for template in templates
+        if template.basename.startswith("job.")
+    ]
+
+    msk_latest = df._run_seq == df._run_seq.values.max()
+    msk_old = df._run_seq < df._run_seq.values.max()
+    for machine in machines:
+        txt = ""
+        for pfx, msk in [("# ", msk_old), ("", msk_latest)]:
+            if msk.any():
+                txt += "\n"
+            txt += "\n".join(
+                f"{pfx}cd {pset_id}; {machine.subcmd} {machine.jobfile_basename}; cd $here  # run_seq={run_seq} pset_seq={pset_seq}"
+                for pset_id, pset_seq, run_seq in zip(
+                    df[msk]._pset_id.values,
+                    df[msk]._pset_seq.values,
+                    df[msk]._run_seq.values,
+                )
+            )
+        file_write(
+            f"{calc_dir}/run_{machine.name}.sh",
+            f"#!/bin/sh\n\nhere=$(pwd)\n{txt}\n",
+        )
+
+    if git:
+        system(
+            f"git add -A; git commit -m 'psweep: run_id={df._run_id.values[-1]}'"
+        )
     return df
 
 
