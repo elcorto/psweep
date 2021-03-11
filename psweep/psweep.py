@@ -21,8 +21,8 @@ import pandas as pd
 pj = os.path.join
 
 # pandas defaults
-default_orient = "records"
-pd_time_unit = "s"
+pandas_default_orient = "records"
+pandas_time_unit = "s"
 
 
 # -----------------------------------------------------------------------------
@@ -129,8 +129,8 @@ def df_to_json(df, **kwds):
         passed to df.to_json()
     """
     defaults = dict(
-        orient=default_orient,
-        date_unit=pd_time_unit,
+        orient=pandas_default_orient,
+        date_unit=pandas_time_unit,
         date_format="iso",
         double_precision=15,
     )
@@ -169,7 +169,7 @@ def df_read(fn, fmt="pickle", **kwds):
         with open(fn, "rb") as fd:
             return pickle.load(fd, **kwds)
     elif fmt == "json":
-        orient = kwds.pop("orient", default_orient)
+        orient = kwds.pop("orient", pandas_default_orient)
         return pd.io.json.read_json(
             fn, precise_float=True, orient=orient, **kwds
         )
@@ -335,13 +335,13 @@ def worker_wrapper(
     run_id : str
         uuid
 
-    See :func:`run` for other parameters.
+    See :func:`run_local` for other parameters.
     """
     assert run_id is not None
     assert calc_dir is not None
     pset_id = str(uuid.uuid4())
     _pset = copy.deepcopy(pset)
-    _time_utc = pd.Timestamp(time.time(), unit=pd_time_unit)
+    _time_utc = pd.Timestamp(time.time(), unit=pandas_time_unit)
     hash_alg = "sha1"
     try:
         pset_hash = dict_hash(pset, hash_alg)
