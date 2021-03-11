@@ -109,7 +109,9 @@ def test_simulate():
         calc_dir_sim = calc_dir + ".simulate"
 
         df = ps.run_local(func, params, calc_dir=calc_dir)
-        df_sim = ps.run_local(func, params_sim, calc_dir=calc_dir, simulate=True)
+        df_sim = ps.run_local(
+            func, params_sim, calc_dir=calc_dir, simulate=True
+        )
         dbfn = "{}/database.pk".format(calc_dir)
         dbfn_sim = "{}/database.pk".format(calc_dir_sim)
 
@@ -252,4 +254,6 @@ def test_scripts():
         bindir = ps.fullpath(pj(os.path.dirname(__file__), "../../bin"))
         db = pj(calc_dir, "database.pk")
         print(system("{}/psweep-db2json -o columns {}".format(bindir, db)))
-        print(system("{}/psweep-db2table -i -a -f simple {}".format(bindir, db)))
+        print(
+            system("{}/psweep-db2table -i -a -f simple {}".format(bindir, db))
+        )
