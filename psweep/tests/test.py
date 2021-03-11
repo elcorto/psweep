@@ -1,5 +1,10 @@
+import io
+import os
+import re
+import shutil
+import string
 import subprocess as sp
-import os, tempfile, io, string, shutil, re
+import tempfile
 
 import pandas as pd
 import numpy as np
@@ -26,15 +31,14 @@ def test_run_all_examples():
     dr = os.path.abspath("{}/../../examples".format(here))
     for basename in os.listdir(dr):
         if basename.endswith(".py"):
-            tmpdir = tempfile.mkdtemp(prefix="psweep_test_examples_")
-            cmd = """
-                cp {fn} {tmpdir}/; cd {tmpdir};
-                python3 {fn}
-            """.format(
-                tmpdir=tmpdir, fn=pj(dr, basename)
-            )
-            print(system(cmd))
-            shutil.rmtree(tmpdir)
+            with tempfile.TemporaryDirectory() as tmpdir:
+                cmd = """
+                    cp {fn} {tmpdir}/; cd {tmpdir};
+                    python3 {fn}
+                """.format(
+                    tmpdir=tmpdir, fn=pj(dr, basename)
+                )
+                print(system(cmd))
 
 
 def func(pset):
@@ -45,78 +49,75 @@ def func(pset):
 
 
 def test_run():
-    tmpdir = tempfile.mkdtemp(prefix="psweep_test_run_")
-    params = [{"a": 1}, {"a": 2}, {"a": 3}, {"a": 4}]
-    calc_dir = "{}/calc".format(tmpdir)
+    with tempfile.TemporaryDirectory() as tmpdir:
+        params = [{"a": 1}, {"a": 2}, {"a": 3}, {"a": 4}]
+        calc_dir = "{}/calc".format(tmpdir)
 
-    # run two times, updating the database, the second time,
-    # also write tmp results
-    df = ps.run_local(func, params, calc_dir=calc_dir)
-    assert len(df) == 4
-    assert len(df._run_id.unique()) == 1
-    assert len(df._pset_id.unique()) == 4
-    df = ps.run_local(
-        func, params, calc_dir=calc_dir, poolsize=2, tmpsave=True
-    )
-    assert len(df) == 8
-    assert len(df._run_id.unique()) == 2
-    assert len(df._pset_id.unique()) == 8
-    assert set(df.columns) == set(
-        [
-            "_calc_dir",
-            "_pset_id",
-            "_run_id",
-            "_pset_seq",
-            "_run_seq",
-            "_pset_sha1",
-            "_time_utc",
-            "a",
-            "result",
-        ]
-    )
-
-    dbfn = "{}/database.pk".format(calc_dir)
-    assert os.path.exists(dbfn)
-    assert df.equals(ps.df_read(dbfn))
-
-    # tmp results of second run
-    run_id = df._run_id.unique()[-1]
-    for pset_id in df[df._run_id == run_id]._pset_id:
-        tmpsave_fn = "{calc_dir}/tmpsave/{run_id}/{pset_id}.pk".format(
-            calc_dir=calc_dir, run_id=run_id, pset_id=pset_id
+        # run two times, updating the database, the second time,
+        # also write tmp results
+        df = ps.run_local(func, params, calc_dir=calc_dir)
+        assert len(df) == 4
+        assert len(df._run_id.unique()) == 1
+        assert len(df._pset_id.unique()) == 4
+        df = ps.run_local(
+            func, params, calc_dir=calc_dir, poolsize=2, tmpsave=True
         )
-        assert os.path.exists(tmpsave_fn)
-    shutil.rmtree(tmpdir)
+        assert len(df) == 8
+        assert len(df._run_id.unique()) == 2
+        assert len(df._pset_id.unique()) == 8
+        assert set(df.columns) == set(
+            [
+                "_calc_dir",
+                "_pset_id",
+                "_run_id",
+                "_pset_seq",
+                "_run_seq",
+                "_pset_sha1",
+                "_time_utc",
+                "a",
+                "result",
+            ]
+        )
+
+        dbfn = "{}/database.pk".format(calc_dir)
+        assert os.path.exists(dbfn)
+        assert df.equals(ps.df_read(dbfn))
+
+        # tmp results of second run
+        run_id = df._run_id.unique()[-1]
+        for pset_id in df[df._run_id == run_id]._pset_id:
+            tmpsave_fn = "{calc_dir}/tmpsave/{run_id}/{pset_id}.pk".format(
+                calc_dir=calc_dir, run_id=run_id, pset_id=pset_id
+            )
+            assert os.path.exists(tmpsave_fn)
 
 
 def test_simulate():
-    tmpdir = tempfile.mkdtemp(prefix="psweep_test_simulate_")
-    params = [{"a": 1}, {"a": 2}, {"a": 3}, {"a": 4}]
-    params_sim = [{"a": 88}, {"a": 99}]
-    calc_dir = "{}/calc".format(tmpdir)
-    calc_dir_sim = calc_dir + ".simulate"
+    with tempfile.TemporaryDirectory() as tmpdir:
+        params = [{"a": 1}, {"a": 2}, {"a": 3}, {"a": 4}]
+        params_sim = [{"a": 88}, {"a": 99}]
+        calc_dir = "{}/calc".format(tmpdir)
+        calc_dir_sim = calc_dir + ".simulate"
 
-    df = ps.run_local(func, params, calc_dir=calc_dir)
-    df_sim = ps.run_local(func, params_sim, calc_dir=calc_dir, simulate=True)
-    dbfn = "{}/database.pk".format(calc_dir)
-    dbfn_sim = "{}/database.pk".format(calc_dir_sim)
+        df = ps.run_local(func, params, calc_dir=calc_dir)
+        df_sim = ps.run_local(func, params_sim, calc_dir=calc_dir, simulate=True)
+        dbfn = "{}/database.pk".format(calc_dir)
+        dbfn_sim = "{}/database.pk".format(calc_dir_sim)
 
-    assert len(df_sim) == 6
-    assert len(df) == 4
-    assert os.path.exists(dbfn)
-    assert os.path.exists(dbfn_sim)
-    assert df.equals(ps.df_read(dbfn))
-    assert df_sim.equals(ps.df_read(dbfn_sim))
+        assert len(df_sim) == 6
+        assert len(df) == 4
+        assert os.path.exists(dbfn)
+        assert os.path.exists(dbfn_sim)
+        assert df.equals(ps.df_read(dbfn))
+        assert df_sim.equals(ps.df_read(dbfn_sim))
 
-    assert df.iloc[:4].equals(df_sim.iloc[:4])
-    assert np.isnan(df_sim.result.values[-2:]).all()
+        assert df.iloc[:4].equals(df_sim.iloc[:4])
+        assert np.isnan(df_sim.result.values[-2:]).all()
 
-    df2 = ps.run_local(func, params_sim, calc_dir=calc_dir)
-    assert len(df2) == 6
-    assert df.iloc[:4].equals(df2.iloc[:4])
-    assert (df2.result.values[-2:] == np.array([880.0, 990.0])).all()
-
-    shutil.rmtree(tmpdir)
+        df2 = ps.run_local(func, params_sim, calc_dir=calc_dir)
+        assert len(df2) == 6
+        assert df.iloc[:4].equals(df2.iloc[:4])
+        assert (df2.result.values[-2:] == np.array([880.0, 990.0])).all()
 
 
 def test_is_seq():
@@ -176,42 +177,36 @@ def test_df_io():
                 "_default_",
             ]:
                 print("orient: ", orient)
-                fn = tempfile.mktemp(
-                    prefix="psweep_test_df_io_{}_{}_".format(fmt, orient)
-                )
-                if orient != "_default_":
-                    ps.df_write(df, fn, fmt=fmt, orient=orient)
-                    read = ps.df_read(fn, fmt=fmt, orient=orient)
-                else:
-                    ps.df_write(df, fn, fmt=fmt)
-                    read = ps.df_read(fn, fmt=fmt)
-                os.remove(fn)
-                assert_frame_equal(df, read, check_exact=False)
+                with tempfile.NamedTemporaryFile() as fd:
+                    if orient != "_default_":
+                        ps.df_write(df, fd.name, fmt=fmt, orient=orient)
+                        read = ps.df_read(fd.name, fmt=fmt, orient=orient)
+                    else:
+                        ps.df_write(df, fd.name, fmt=fmt)
+                        read = ps.df_read(fd.name, fmt=fmt)
+                    assert_frame_equal(df, read, check_exact=False)
         elif fmt == "pickle":
-            fn = tempfile.mktemp(prefix="psweep_test_df_io_{}_".format(fmt))
-            ps.df_write(df, fn, fmt=fmt)
-            read = ps.df_read(fn, fmt=fmt)
-            os.remove(fn)
-            ##            assert_frame_equal(df, read, check_exact=True)
-            assert_frame_equal(df, read)
+            with tempfile.NamedTemporaryFile() as fd:
+                ps.df_write(df, fd.name, fmt=fmt)
+                read = ps.df_read(fd.name, fmt=fmt)
+                assert_frame_equal(df, read)
         else:
             raise Exception("unknown fmt")
 
 
 def test_save():
-    tmpdir = tempfile.mkdtemp(prefix="psweep_test_run_")
-    params = [{"a": 1}, {"a": 2}, {"a": 3}, {"a": 4}]
-    calc_dir = "{}/calc".format(tmpdir)
-    dbfn = "{}/database.pk".format(calc_dir)
+    with tempfile.TemporaryDirectory() as tmpdir:
+        params = [{"a": 1}, {"a": 2}, {"a": 3}, {"a": 4}]
+        calc_dir = "{}/calc".format(tmpdir)
+        dbfn = "{}/database.pk".format(calc_dir)
 
-    df = ps.run_local(func, params, calc_dir=calc_dir, save=False)
-    assert not os.path.exists(dbfn)
-    assert os.listdir(tmpdir) == []
+        df = ps.run_local(func, params, calc_dir=calc_dir, save=False)
+        assert not os.path.exists(dbfn)
+        assert os.listdir(tmpdir) == []
 
-    df = ps.run_local(func, params, calc_dir=calc_dir, save=True)
-    assert os.path.exists(dbfn)
-    assert os.listdir(tmpdir) != []
-    shutil.rmtree(tmpdir)
+        df = ps.run_local(func, params, calc_dir=calc_dir, save=True)
+        assert os.path.exists(dbfn)
+        assert os.listdir(tmpdir) != []
 
 
 def test_merge_dicts():
@@ -240,13 +235,12 @@ def test_merge_dicts():
 
 
 def test_scripts():
-    tmpdir = tempfile.mkdtemp(prefix="psweep_test_bin_")
-    params = [{"a": 1}, {"a": 2}, {"a": 3}, {"a": 4}]
-    calc_dir = "{}/calc".format(tmpdir)
-    df = ps.run_local(func, params, calc_dir=calc_dir)
+    with tempfile.TemporaryDirectory() as tmpdir:
+        params = [{"a": 1}, {"a": 2}, {"a": 3}, {"a": 4}]
+        calc_dir = "{}/calc".format(tmpdir)
+        df = ps.run_local(func, params, calc_dir=calc_dir)
 
-    bindir = ps.fullpath(pj(os.path.dirname(__file__), "../../bin"))
-    db = pj(calc_dir, "database.pk")
-    print(system("{}/psweep-db2json -o columns {}".format(bindir, db)))
-    print(system("{}/psweep-db2table -i -a -f simple {}".format(bindir, db)))
-    shutil.rmtree(tmpdir)
+        bindir = ps.fullpath(pj(os.path.dirname(__file__), "../../bin"))
+        db = pj(calc_dir, "database.pk")
+        print(system("{}/psweep-db2json -o columns {}".format(bindir, db)))
+        print(system("{}/psweep-db2table -i -a -f simple {}".format(bindir, db)))
