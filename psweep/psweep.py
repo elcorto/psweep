@@ -594,6 +594,12 @@ def git_clean():
     return system(cmd).stdout.decode() == ""
 
 
+# If we ever add a "simulate" kwd here: don't pass that thru to run_local() b/c
+# there this prevents worker() from being executed, but that's what we always
+# want here since it writes only input files. Instead, just set calc_dir =
+# calc_dir_sim and copy the database as in run_local() and go. Don't copy the
+# run_*.sh scripts b/c they are generated afresh anyway.
+#
 def prep_batch(
     params,
     calc_dir="calc",

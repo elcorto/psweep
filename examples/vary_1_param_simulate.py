@@ -18,7 +18,8 @@ if __name__ == '__main__':
     df = ps.run_local(func, params)
     print(df[sel])
 
-    # simulate run: check if new parameter grid is OK
+    # simulate run: check if new parameter grid is OK; result values for new
+    # params witll be missing (NaN in pandas DataFrame)
     params = ps.pgrid(
         ps.plist('a', [5,6]),
         ps.plist('b', [88, 99]))
