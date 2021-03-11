@@ -30,14 +30,23 @@ def system(cmd):
 def test_run_all_examples():
     dr = os.path.abspath("{}/../../examples".format(here))
     for basename in os.listdir(dr):
+        path = pj(dr, basename)
+        print(f"running example: {path}")
         if basename.endswith(".py"):
             with tempfile.TemporaryDirectory() as tmpdir:
-                cmd = """
-                    cp {fn} {tmpdir}/; cd {tmpdir};
-                    python3 {fn}
-                """.format(
-                    tmpdir=tmpdir, fn=pj(dr, basename)
-                )
+                cmd = f"""
+                    cp {path} {tmpdir}/; cd {tmpdir};
+                    python3 {path}
+                """
+                print(system(cmd))
+        elif os.path.isdir(path):
+            with tempfile.TemporaryDirectory() as tmpdir:
+                shutil.copytree(path, tmpdir, dirs_exist_ok=True)
+                cmd = f"""
+                    cd {tmpdir};
+                    ./run_example.sh;
+                    # skip ./clean.sh at the end b/c temp dir
+                    """
                 print(system(cmd))
 
 
