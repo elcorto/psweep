@@ -1,0 +1,16 @@
+#!/bin/bash
+
+#SBATCH --time 00:20:00
+#SBATCH -o out.job
+#SBATCH -J foo_${_pset_seq}_${_pset_id}
+#SBATCH -p bar
+#SBATCH -A baz
+
+echo "hostname=$$(hostname)"
+
+module purge
+
+module load bzzrrr/1.2.3
+module load python
+
+python3 run.py
