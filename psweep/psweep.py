@@ -177,6 +177,53 @@ def df_read(fn, fmt="pickle", **kwds):
         raise Exception("unknown fmt: {}".format(fmt))
 
 
+def df_print(df, index=False):
+    """Print DataFrame, by default without the index."""
+    print(df.to_string(index=index))
+
+
+def df_filter_conds(df, conds):
+    """Filter DataFrame using bool arrays/Series/DataFrames in `conds`.
+
+    Logical-and all bool sequences in `conds`. Same as
+
+    >>> df[conds[0] & conds[1] & conds[2] & ...]
+
+    but `conds` can be programatically generated while the expression above
+    would need to be changed by hand if `conds` changes.
+
+    Parameters
+    ----------
+    df : DataFrame
+    conds : sequence
+        list of bool masks
+
+    Returns
+    -------
+    DataFrame
+
+    Examples
+    --------
+    >>> df=pd.DataFrame({'a': arange(10), 'b': arange(10)+4})
+    >>> c1=df.a > 3
+    >>> c2=df.b < 9
+    >>> c3=df.a % 2 == 0
+    >>> df[c1 & c2 & c3]
+       a  b
+    4  4  8
+    >>> ps.df_filter_conds(df, [c1, c2, c3])
+       a  b
+    4  4  8
+    """
+    if len(conds) == 0:
+        msk = [True] * len(df)
+    elif len(conds) == 1:
+        msk = conds[0]
+    else:
+        msk = np.logical_and.reduce(conds)
+    return df[msk]
+
+
 # -----------------------------------------------------------------------------
 # building params
 # -----------------------------------------------------------------------------
