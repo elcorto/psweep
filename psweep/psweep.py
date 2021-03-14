@@ -383,6 +383,8 @@ def run_local(
     calc_dir="calc",
     simulate=False,
     database_dir=None,
+    backup=False,
+    backup_calc_dir=False,
 ):
     """
     Parameters
@@ -415,6 +417,8 @@ def run_local(
         useful to check if `params` are correct before starting a production run
     database_dir : str
         Path for the database. Default is <calc_dir>.
+    backup : bool
+        Make backup of <calc_dir> to <calc_dir>.bak_<timestamp>_run_id_<_run_id_>
     """
 
     database_fn_base = "database.pk"
@@ -443,6 +447,22 @@ def run_local(
             df = pd.DataFrame()
             pset_seq_old = -1
             run_seq_old = -1
+
+    if backup_calc_dir:
+        warnings.warn(
+            "'backup_calc_dir' was renamed to 'backup'", DeprecationWarning
+        )
+        backup = True
+    if backup and len(df.index) > 0:
+        stamp = df.index.max().strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+        dst = f"{calc_dir}.bak_{stamp}_run_id_{df._run_id.values[-1]}"
+        assert not os.path.exists(dst), (
+            "backup destination {dst} exists, seems like there has been no new "
+            "data in {calc_dir} since the last backup".format(
+                dst=dst, calc_dir=calc_dir
+            )
+        )
+        shutil.copytree(calc_dir, dst)
 
     run_id = str(uuid.uuid4())
 
