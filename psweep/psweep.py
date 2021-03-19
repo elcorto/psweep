@@ -1,6 +1,5 @@
 from functools import partial
 from io import IOBase
-from subprocess import run as sp_run
 import copy
 import hashlib
 import itertools
@@ -8,9 +7,9 @@ import json
 import multiprocessing as mp
 import os
 import pickle
-import re
 import shutil
 import string
+import subprocess
 import time
 import uuid
 import warnings
@@ -31,7 +30,32 @@ pandas_time_unit = "s"
 
 
 def system(cmd, **kwds):
-    return sp_run(cmd, shell=True, check=True, **kwds)
+    """
+    Call shell command.
+
+    Parameters
+    ----------
+    cmd : str
+        shell command
+    kwds : dict
+        passed to subprocess.run()
+
+    Returns
+    -------
+    subprocess.CalledProcessError
+    """
+    try:
+        return subprocess.run(
+            cmd,
+            shell=True,
+            check=True,
+            stderr=subprocess.STDOUT,
+            stdout=subprocess.PIPE,
+            **kwds,
+        )
+    except subprocess.CalledProcessError as ex:
+        print(ex.stdout.decode())
+        raise ex
 
 
 # https://github.com/elcorto/pwtools
@@ -566,7 +590,7 @@ class FileTemplate:
 
 def git_clean():
     cmd = "git status --porcelain"
-    return system(cmd, capture_output=True).stdout.decode() == ""
+    return system(cmd).stdout.decode() == ""
 
 
 def prep_batch(params, calc_dir="calc", template_dir="calc.templ", git=True):
