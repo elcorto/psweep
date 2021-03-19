@@ -13,6 +13,7 @@ import subprocess
 import time
 import uuid
 import warnings
+import yaml
 
 import numpy as np
 import pandas as pd
@@ -536,56 +537,52 @@ def run_local(
 
 
 class Machine:
-    _must_have_attrs = ["subcmd"]
-
-    def __init__(self, jobfile_template_fn):
-        # calc.templ/job.cluster
-        self.jobfile_template_fn = jobfile_template_fn
-        # job.cluster
-        self.jobfile_basename = os.path.basename(jobfile_template_fn)
-        # cluster
-        self.name = self.jobfile_basename.replace("job.", "")
-        self.info = self.parse_machine_info()
-        assert (aa := set(self._must_have_attrs)) <= (
-            bb := set(self.info.keys())
-        ), (
-            f"expected keys {aa} not found in keys {bb} parsed from "
-            f"{self.jobfile_template_fn}"
+    def __init__(self, machine_dir, jobscript_name="jobscript"):
+        # templates/machines/<name>/info.yaml
+        # ^^^^^^^^^^^^^^^^^^^^^^^^^------------- machine_dir
+        # templates/machines/<name>/jobscript
+        #                           ^^^^^^^^^--- template.basename
+        self.name = os.path.basename(os.path.normpath(machine_dir))
+        self.template = FileTemplate(
+            pj(machine_dir, jobscript_name), target_suffix="_" + self.name
         )
-        for key, val in self.info.items():
+        with open(pj(machine_dir, "info.yaml")) as fd:
+            info = yaml.safe_load(fd)
+        for key, val in info.items():
+            assert key not in self.__dict__, f"cannot overwrite '{key}'"
             setattr(self, key, val)
-        self._attrs = [
-            "name",
-            "jobfile_basename",
-            "jobfile_template_fn",
-        ] + list(self.info.keys())
 
     def __repr__(self):
-        return str({k: getattr(self, k) for k in self._attrs})
-
-    def parse_machine_info(self):
-        txt = file_read(self.jobfile_template_fn)
-        return dict(
-            [
-                x.strip().split("=")
-                for x in re.search(r"^#psweep:(.+)$", txt, re.M)
-                .group(1)
-                .split(",")
-            ]
-        )
+        return f"{self.name}:{self.template}"
 
 
 class FileTemplate:
-    def __init__(self, path):
-        self.path = path
-        self.basename = os.path.basename(path)
+    def __init__(self, filename, target_suffix=""):
+        self.filename = filename
+        self.basename = os.path.basename(filename)
+        self.dirname = os.path.dirname(filename)
+        self.targetname = f"{self.basename}{target_suffix}"
 
     def __repr__(self):
-        return self.path
+        return self.filename
 
     def fill(self, pset):
-        txt = file_read(self.path)
+        txt = file_read(self.filename)
         return string.Template(txt).substitute(pset)
+
+
+def gather_calc_templates(calc_templ_dir):
+    return [
+        FileTemplate(pj(calc_templ_dir, basename))
+        for basename in os.listdir(calc_templ_dir)
+    ]
+
+
+def gather_machines(machine_templ_dir):
+    return [
+        Machine(pj(machine_templ_dir, basename))
+        for basename in os.listdir(machine_templ_dir)
+    ]
 
 
 def git_clean():
@@ -593,37 +590,34 @@ def git_clean():
     return system(cmd).stdout.decode() == ""
 
 
-def prep_batch(params, calc_dir="calc", template_dir="calc.templ", git=True):
+def prep_batch(
+    params,
+    calc_dir="calc",
+    calc_templ_dir="templates/calc",
+    machine_templ_dir="templates/machines",
+    git=False,
+    backup=False,
+):
 
     if git:
         if not os.path.exists(".git"):
             system("git init; git add -A; git commit -m 'psweep: init'")
-
         if not git_clean():
             raise Exception("dirty git repo")
 
-    file_excl_rex = re.compile("^\.(.+)(\.(sw(p|o)|bak))*$")
-    templates = [
-        FileTemplate(pj(template_dir, basename))
-        for basename in os.listdir(template_dir)
-        if file_excl_rex.match(basename) is None
-    ]
+    calc_templates = gather_calc_templates(calc_templ_dir)
+    machines = gather_machines(machine_templ_dir)
+    templates = calc_templates + [m.template for m in machines]
 
     def worker(pset):
         for template in templates:
             file_write(
-                pj(calc_dir, pset["_pset_id"], template.basename),
+                pj(calc_dir, pset["_pset_id"], template.targetname),
                 template.fill(pset),
             )
         return {}
 
-    df = run_local(worker, params)
-
-    machines = [
-        Machine(pj(template_dir, template.basename))
-        for template in templates
-        if template.basename.startswith("job.")
-    ]
+    df = run_local(worker, params, calc_dir=calc_dir, backup=backup)
 
     msk_latest = df._run_seq == df._run_seq.values.max()
     msk_old = df._run_seq < df._run_seq.values.max()
@@ -633,7 +627,7 @@ def prep_batch(params, calc_dir="calc", template_dir="calc.templ", git=True):
             if msk.any():
                 txt += "\n"
             txt += "\n".join(
-                f"{pfx}cd {pset_id}; {machine.subcmd} {machine.jobfile_basename}; cd $here  # run_seq={run_seq} pset_seq={pset_seq}"
+                f"{pfx}cd {pset_id}; {machine.subcmd} {machine.template.targetname}; cd $here  # run_seq={run_seq} pset_seq={pset_seq}"
                 for pset_id, pset_seq, run_seq in zip(
                     df[msk]._pset_id.values,
                     df[msk]._pset_seq.values,
@@ -646,9 +640,10 @@ def prep_batch(params, calc_dir="calc", template_dir="calc.templ", git=True):
         )
 
     if git:
-        system(
-            f"git add -A; git commit -m 'psweep: run_id={df._run_id.values[-1]}'"
-        )
+        if not git_clean():
+            system(
+                f"git add -A; git commit -m 'psweep: run_id={df._run_id.values[-1]}'"
+            )
     return df
 
 
