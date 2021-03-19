@@ -257,3 +257,47 @@ def test_scripts():
         print(
             system("{}/psweep-db2table -i -a -f simple {}".format(bindir, db))
         )
+
+
+def test_backup():
+    def func(pset):
+        # write stuff to calc_dir
+        dr = pj(pset["_calc_dir"], pset["_pset_id"])
+        ps.makedirs(dr)
+        fn = pj(dr, "foo")
+        with open(fn, "w") as fd:
+            fd.write(pset["_pset_id"])
+        return {"result": pset["a"] * 10}
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        calc_dir = pj(tmpdir, "calc")
+        params = [{"a": 1}, {"a": 2}, {"a": 3}, {"a": 4}]
+
+        # First run. backup does nothing yet
+        df0 = ps.run(func, params, calc_dir=calc_dir)
+        unq = df0._run_id.unique()
+        assert len(unq) == 1
+        run_id_0 = unq[0]
+
+        # Second run. This time, test backup.
+        df1 = ps.run(func, params, calc_dir=calc_dir, backup=True)
+        rex = re.compile(r"calc.bak_[0-9-]+T[0-9:\.]+Z_run_id.+")
+        found = False
+        files = os.listdir(tmpdir)
+        for name in os.listdir(tmpdir):
+            if rex.search(name) is not None:
+                backup_dir = pj(tmpdir, name)
+                found = True
+                break
+        assert found, f"backup dir matching {rex} not found in:\n{files}"
+        print(os.listdir(backup_dir))
+        msk = df1._run_id == run_id_0
+        assert len(df1[msk]) == len(df0)
+        assert len(df1) == 2 * len(df0)
+        assert len(df1._run_id.unique()) == 2
+        for pset_id in df1[msk]._pset_id:
+            tgt = pj(backup_dir, pset_id, "foo")
+            assert os.path.exists(tgt)
+            with open(tgt) as fd:
+                fd.read().strip() == pset_id
+        assert os.path.exists(pj(backup_dir, "database.pk"))
