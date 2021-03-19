@@ -408,6 +408,7 @@ def run_local(
     calc_dir="calc",
     simulate=False,
     database_dir=None,
+    database_basename="database.pk",
     backup=False,
     backup_calc_dir=False,
 ):
@@ -442,11 +443,11 @@ def run_local(
         useful to check if `params` are correct before starting a production run
     database_dir : str
         Path for the database. Default is <calc_dir>.
+    database_basename : str
+        <database_dir>/<database_basename>
     backup : bool
         Make backup of <calc_dir> to <calc_dir>.bak_<timestamp>_run_id_<_run_id_>
     """
-
-    database_fn_base = "database.pk"
 
     database_dir = calc_dir if database_dir is None else database_dir
 
@@ -455,13 +456,16 @@ def run_local(
         if os.path.exists(calc_dir_sim):
             shutil.rmtree(calc_dir_sim)
         makedirs(calc_dir_sim)
-        old_db = pj(database_dir, database_fn_base)
+        old_db = pj(database_dir, database_basename)
         if os.path.exists(old_db):
-            shutil.copy(old_db, pj(calc_dir_sim, database_fn_base))
+            shutil.copy(old_db, pj(calc_dir_sim, database_basename))
+        else:
+            warnings.warn(f"simulate: {old_db} not found, will create new db in "
+                          f"{calc_dir_sim}")
+        database_fn = pj(calc_dir_sim, database_basename)
         calc_dir = calc_dir_sim
-        database_fn = pj(calc_dir, database_fn_base)
     else:
-        database_fn = pj(database_dir, database_fn_base)
+        database_fn = pj(database_dir, database_basename)
 
     if df is None:
         if os.path.exists(database_fn):
