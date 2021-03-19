@@ -3,7 +3,6 @@ import os
 import re
 import shutil
 import string
-import subprocess as sp
 import tempfile
 
 import pandas as pd
@@ -16,15 +15,7 @@ here = os.path.abspath(os.path.dirname(__file__))
 
 
 def system(cmd):
-    try:
-        proc = sp.run(
-            cmd, shell=True, check=True, stdout=sp.PIPE, stderr=sp.STDOUT
-        )
-        out = proc.stdout.strip().decode()
-    except sp.CalledProcessError as err:
-        print(err.output.decode())
-        raise
-    return out
+    return ps.system(cmd).stdout.decode()
 
 
 def test_run_all_examples():
