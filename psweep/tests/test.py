@@ -206,7 +206,7 @@ def test_save():
         assert not os.path.exists(dbfn)
         assert os.listdir(tmpdir) == []
 
-        df = ps.run_local(func, params, calc_dir=calc_dir, save=True)
+        ps.run_local(func, params, calc_dir=calc_dir, save=True)
         assert os.path.exists(dbfn)
         assert os.listdir(tmpdir) != []
 
@@ -240,7 +240,7 @@ def test_scripts():
     with tempfile.TemporaryDirectory() as tmpdir:
         params = [{"a": 1}, {"a": 2}, {"a": 3}, {"a": 4}]
         calc_dir = "{}/calc".format(tmpdir)
-        df = ps.run_local(func, params, calc_dir=calc_dir)
+        ps.run_local(func, params, calc_dir=calc_dir)
 
         bindir = ps.fullpath(pj(os.path.dirname(__file__), "../../bin"))
         db = pj(calc_dir, "database.pk")
