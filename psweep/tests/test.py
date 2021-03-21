@@ -33,11 +33,7 @@ def test_run_all_examples():
         elif os.path.isdir(path):
             with tempfile.TemporaryDirectory() as tmpdir:
                 shutil.copytree(path, tmpdir, dirs_exist_ok=True)
-                cmd = f"""
-                    cd {tmpdir};
-                    ./run_example.sh;
-                    # skip ./clean.sh at the end b/c temp dir
-                    """
+                cmd = f"cd {tmpdir}; ./run_example.sh; ./clean.sh"
                 print(system(cmd))
 
 
