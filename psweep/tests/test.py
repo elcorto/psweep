@@ -41,6 +41,16 @@ def test_run_all_examples():
                 print(system(cmd))
 
 
+def test_shell_call():
+    print(system("ls"))
+    with tempfile.TemporaryDirectory() as tmpdir:
+        txt = "ls"
+        fn = pj(tmpdir, "test.sh")
+        ps.file_write(fn, txt)
+        cmd = f"cd {tmpdir}; sh test.sh"
+        print(system(cmd))
+
+
 def func(pset):
     # We need to multiply by a float here to make sure the 'result' column has
     # float dtype. Else the column will be cast to float once we add NaNs,
