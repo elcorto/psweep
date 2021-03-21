@@ -6,9 +6,8 @@ import psweep as ps
 if __name__ == "__main__":
     df = ps.df_read("calc/database.pk")
 
-    func = lambda fn: np.load(fn)
     arr = np.array(
-        [func(f"calc/{pset_id}/out.npy") for pset_id in df._pset_id.values]
+        [np.load(f"calc/{pset_id}/out.npy") for pset_id in df._pset_id.values]
     )
 
     df["mean"] = arr.mean(axis=1)
