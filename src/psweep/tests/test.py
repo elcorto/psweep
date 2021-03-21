@@ -306,3 +306,43 @@ def test_backup():
             with open(tgt) as fd:
                 fd.read().strip() == pset_id
         assert os.path.exists(pj(backup_dir, "database.pk"))
+
+
+def test_pass_df_interactive():
+    def df_cmp(dfa, dfb):
+        assert (dfa.a.values == dfb.a.values).all()
+        assert (dfa.result.values == dfb.result.values).all()
+        assert (dfa._pset_seq.values == dfb._pset_seq.values).all()
+        assert (dfa._run_seq.values == dfb._run_seq.values).all()
+        assert (dfa._pset_sha1.values == dfb._pset_sha1.values).all()
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        calc_dir = pj(tmpdir, "calc")
+        params = ps.plist("a", [1, 2, 3, 4])
+
+        # no db disk write for now, test passing in no df, df=None and empty df
+        df1_1 = ps.run_local(func, params, calc_dir=calc_dir, save=False)
+        df1_2 = ps.run_local(
+            func, params, calc_dir=calc_dir, save=False, df=None
+        )
+        df_cmp(df1_1, df1_2)
+        df1_3 = ps.run_local(
+            func, params, calc_dir=calc_dir, save=False, df=pd.DataFrame()
+        )
+        df_cmp(df1_1, df1_3)
+
+        # still no disk write, pass in df1 and extend
+        df1 = df1_3
+        df2 = ps.run_local(func, params, calc_dir=calc_dir, save=False, df=df1)
+        assert not os.path.exists(pj(tmpdir, "calc"))
+        assert len(df2) == 2 * len(df1)
+        assert (df2.a.values == np.tile(df1.a.values, 2)).all()
+        assert (
+            df2._pset_sha1.values == np.tile(df1._pset_sha1.values, 2)
+        ).all()
+
+        # df2 again, but now write to disk and read (ignore that run_local()
+        # also returns it)
+        ps.run_local(func, params, calc_dir=calc_dir, df=df1)
+        df2_disk = ps.df_read(pj(calc_dir, "database.pk"))
+        df_cmp(df2, df2_disk)

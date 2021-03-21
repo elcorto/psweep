@@ -470,12 +470,16 @@ def run_local(
     if df is None:
         if os.path.exists(database_fn):
             df = df_read(database_fn)
-            pset_seq_old = df._pset_seq.values.max()
-            run_seq_old = df._run_seq.values.max()
         else:
             df = pd.DataFrame()
-            pset_seq_old = -1
-            run_seq_old = -1
+
+    if len(df) == 0:
+        pset_seq_old = -1
+        run_seq_old = -1
+    else:
+        pset_seq_old = df._pset_seq.values.max()
+        run_seq_old = df._run_seq.values.max()
+
 
     if backup_calc_dir:
         warnings.warn(
