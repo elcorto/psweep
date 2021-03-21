@@ -19,7 +19,7 @@ def system(cmd):
 
 
 def test_run_all_examples():
-    dr = os.path.abspath("{}/../../examples".format(here))
+    dr = os.path.abspath("{}/../../../examples".format(here))
     for basename in os.listdir(dr):
         path = pj(dr, basename)
         print(f"running example: {path}")
@@ -248,11 +248,10 @@ def test_scripts():
         calc_dir = "{}/calc".format(tmpdir)
         ps.run_local(func, params, calc_dir=calc_dir)
 
-        bindir = ps.fullpath(pj(os.path.dirname(__file__), "../../bin"))
         db = pj(calc_dir, "database.pk")
-        print(system("{}/psweep-db2json -o columns {}".format(bindir, db)))
+        print(system(f"psweep-db2json -o columns {db}"))
         print(
-            system("{}/psweep-db2table -i -a -f simple {}".format(bindir, db))
+            system(f"psweep-db2table -i -a -f simple {db}")
         )
 
 
