@@ -8,7 +8,7 @@ with open(os.path.join(here, "README.md")) as fd:
 
 setup(
     name="psweep",
-    version="0.4.0",
+    version="0.5.0",
     description=(
         "loop like a pro, make parameter studies fun: set up and "
         "run a parameter study/sweep/scan, save a database"
