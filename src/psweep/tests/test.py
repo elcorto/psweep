@@ -13,9 +13,25 @@ import psweep as ps
 pj = os.path.join
 here = os.path.abspath(os.path.dirname(__file__))
 
+# ----------------------------------------------------------------------------
+# helpers
+# ----------------------------------------------------------------------------
+
 
 def system(cmd):
     return ps.system(cmd).stdout.decode()
+
+
+def func(pset):
+    # We need to multiply by a float here to make sure the 'result' column has
+    # float dtype. Else the column will be cast to float once we add NaNs,
+    # which breaks df.equals(other_df) .
+    return {"result": pset["a"] * 10.0}
+
+
+# ----------------------------------------------------------------------------
+# test function
+# ----------------------------------------------------------------------------
 
 
 def test_run_all_examples():
@@ -45,13 +61,6 @@ def test_shell_call():
         ps.file_write(fn, txt)
         cmd = f"cd {tmpdir}; sh test.sh"
         print(system(cmd))
-
-
-def func(pset):
-    # We need to multiply by a float here to make sure the 'result' column has
-    # float dtype. Else the column will be cast to float once we add NaNs,
-    # which breaks df.equals(other_df) .
-    return {"result": pset["a"] * 10.0}
 
 
 def test_run():
