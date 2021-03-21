@@ -2,7 +2,7 @@
 
 # second run: extend study with more 'b' values
 #
-# run 10multiple_1d_scans_with_backup.py first
+# run 10multiple_1d_scans.py first
 
 import random
 import psweep as ps
@@ -32,5 +32,5 @@ if __name__ == '__main__':
         disp_cols.append(study)
 
     disp_cols += ['_run_id']
-    df = ps.run_local(func, params, verbose=disp_cols)
+    df = ps.run_local(func, params, verbose=disp_cols, backup=True)
     print(df[disp_cols + ['result']])
