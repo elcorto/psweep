@@ -259,9 +259,7 @@ def test_scripts():
 
         db = pj(calc_dir, "database.pk")
         print(system(f"psweep-db2json -o columns {db}"))
-        print(
-            system(f"psweep-db2table -i -a -f simple {db}")
-        )
+        print(system(f"psweep-db2table -i -a -f simple {db}"))
 
 
 def test_backup():
@@ -279,13 +277,13 @@ def test_backup():
         params = [{"a": 1}, {"a": 2}, {"a": 3}, {"a": 4}]
 
         # First run. backup does nothing yet
-        df0 = ps.run(func, params, calc_dir=calc_dir)
+        df0 = ps.run_local(func, params, calc_dir=calc_dir)
         unq = df0._run_id.unique()
         assert len(unq) == 1
         run_id_0 = unq[0]
 
         # Second run. This time, test backup.
-        df1 = ps.run(func, params, calc_dir=calc_dir, backup=True)
+        df1 = ps.run_local(func, params, calc_dir=calc_dir, backup=True)
         rex = re.compile(r"calc.bak_[0-9-]+T[0-9:\.]+Z_run_id.+")
         found = False
         files = os.listdir(tmpdir)
@@ -346,3 +344,15 @@ def test_pass_df_interactive():
         ps.run_local(func, params, calc_dir=calc_dir, df=df1)
         df2_disk = ps.df_read(pj(calc_dir, "database.pk"))
         df_cmp(df2, df2_disk)
+
+
+def test_df_filter_conds():
+    df = pd.DataFrame({"a": np.arange(10), "b": np.arange(10) + 4})
+
+    _msks = [df.a > 3, df.b < 9, df.a % 2 == 0]
+    df_ref = df[_msks[0] & _msks[1] & _msks[2]]
+    # use instantiated sequence _msks
+    assert df_ref.equals(ps.df_filter_conds(df, _msks))
+    for filt in [lambda x: x, lambda x: x.to_numpy(), lambda x: x.to_list()]:
+        # use iterator map(...)
+        assert df_ref.equals(ps.df_filter_conds(df, map(filt, _msks)))
