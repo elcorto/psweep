@@ -1,0 +1,6 @@
+psweep.psweep.loops2params
+==========================
+
+.. currentmodule:: psweep.psweep
+
+.. autofunction:: loops2params

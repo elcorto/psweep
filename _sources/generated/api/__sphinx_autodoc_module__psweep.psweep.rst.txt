@@ -1,0 +1,49 @@
+
+.. rst file which lists all members of the current module. They will be
+.. handled by the Sphinx autosummary extension.
+
+psweep
+======
+
+.. Documentation string which may be at the top of the module.
+.. automodule:: psweep.psweep
+   :no-members:
+   :no-inherited-members:
+
+.. currentmodule:: psweep.psweep
+
+.. Links to members.
+.. autosummary::
+   :toctree:
+
+   FileTemplate
+   Machine
+   df_filter_conds
+   df_print
+   df_read
+   df_to_json
+   df_write
+   dict_hash
+   file_read
+   file_write
+   flatten
+   fullpath
+   gather_calc_templates
+   gather_machines
+   git_clean
+   is_seq
+   itr
+   itr2params
+   loops2params
+   makedirs
+   merge_dicts
+   pandas_default_orient
+   pandas_time_unit
+   pgrid
+   plist
+   prep_batch
+   run
+   run_local
+   seq2dicts
+   system
+   worker_wrapper
