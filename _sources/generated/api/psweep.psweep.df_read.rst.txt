@@ -1,6 +1,0 @@
-psweep.psweep.df\_read
-======================
-
-.. currentmodule:: psweep.psweep
-
-.. autofunction:: df_read

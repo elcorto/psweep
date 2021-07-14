@@ -1,6 +1,0 @@
-psweep.psweep.df\_filter\_conds
-===============================
-
-.. currentmodule:: psweep.psweep
-
-.. autofunction:: df_filter_conds

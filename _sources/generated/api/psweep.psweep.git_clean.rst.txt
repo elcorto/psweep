@@ -1,6 +1,0 @@
-psweep.psweep.git\_clean
-========================
-
-.. currentmodule:: psweep.psweep
-
-.. autofunction:: git_clean

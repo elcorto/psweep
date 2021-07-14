@@ -1,6 +1,0 @@
-psweep.psweep.fullpath
-======================
-
-.. currentmodule:: psweep.psweep
-
-.. autofunction:: fullpath

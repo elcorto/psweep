@@ -1,6 +1,0 @@
-psweep.psweep.dict\_hash
-========================
-
-.. currentmodule:: psweep.psweep
-
-.. autofunction:: dict_hash
