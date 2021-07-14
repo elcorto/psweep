@@ -1,0 +1,145 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>psweep.psweep.run_local &#8212; psweep 0.5.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="psweep.psweep.seq2dicts" href="psweep.psweep.seq2dicts.html" />
+    <link rel="prev" title="psweep.psweep.run" href="psweep.psweep.run.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="psweep-psweep-run-local">
+<h1>psweep.psweep.run_local<a class="headerlink" href="#psweep-psweep-run-local" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="psweep.psweep.run_local">
+<code class="descclassname">psweep.psweep.</code><code class="descname">run_local</code><span class="sig-paren">(</span><em>worker: Callable, params: Sequence[dict], df: Optional[pandas.core.frame.DataFrame] = None, poolsize: Optional[int] = None, save=True, tmpsave=False, verbose: Union[bool, Sequence[str]] = False, calc_dir='calc', simulate=False, database_dir: Optional[str] = None, database_basename='database.pk', backup=False, backup_calc_dir=False</em><span class="sig-paren">)</span> &#x2192; pandas.core.frame.DataFrame<a class="reference internal" href="../../_modules/psweep/psweep.html#run_local"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#psweep.psweep.run_local" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>worker</strong> – must accept one parameter: <cite>pset</cite> (a dict <code class="docutils literal notranslate"><span class="pre">{'a':</span> <span class="pre">1,</span> <span class="pre">'b':</span> <span class="pre">'foo',</span>
+<span class="pre">...}</span></code>), return either an update to <cite>pset</cite> or a new dict, result will
+be processes as <code class="docutils literal notranslate"><span class="pre">pset.update(worker(pset))</span></code></li>
+<li><strong>params</strong> – each dict is a pset <code class="docutils literal notranslate"><span class="pre">{'a':</span> <span class="pre">1,</span> <span class="pre">'b':</span> <span class="pre">'foo',</span> <span class="pre">...}</span></code></li>
+<li><strong>df</strong> – append rows to this DataFrame, if None then either create new one or
+read existing database file from disk if found</li>
+<li><strong>poolsize</strong> – <div class="line-block">
+<div class="line">None : use serial execution</div>
+<div class="line">int : use multiprocessing.Pool (even for <code class="docutils literal notranslate"><span class="pre">poolsize=1</span></code>)</div>
+</div>
+</li>
+<li><strong>save</strong> – save final DataFrame to <code class="docutils literal notranslate"><span class="pre">&lt;calc_dir&gt;/database.pk</span></code> (pickle format only)</li>
+<li><strong>tmpsave</strong> – save results from this pset (the current DataFrame row) to
+<code class="docutils literal notranslate"><span class="pre">&lt;calc_dir&gt;/tmpsave/&lt;run_id&gt;/&lt;pset_id&gt;.pk</span></code> (pickle format only)</li>
+<li><strong>verbose</strong> – <div class="line-block">
+<div class="line">bool : print the current DataFrame row</div>
+<div class="line">sequence : list of DataFrame column names, print the row but only</div>
+<div class="line">those columns</div>
+</div>
+</li>
+<li><strong>calc_dir</strong> – </li>
+<li><strong>simulate</strong> – run everything in <code class="docutils literal notranslate"><span class="pre">&lt;calc_dir&gt;.simulate</span></code>, don’t call <cite>worker</cite>, i.e. save
+what the run would create, but without the results from <cite>worker</cite>,
+useful to check if <cite>params</cite> are correct before starting a production run</li>
+<li><strong>database_dir</strong> – Path for the database. Default is <code class="docutils literal notranslate"><span class="pre">&lt;calc_dir&gt;</span></code>.</li>
+<li><strong>database_basename</strong> – <code class="docutils literal notranslate"><span class="pre">&lt;database_dir&gt;/&lt;database_basename&gt;</span></code></li>
+<li><strong>backup</strong> – Make backup of <code class="docutils literal notranslate"><span class="pre">&lt;calc_dir&gt;</span></code> to <code class="docutils literal notranslate"><span class="pre">&lt;calc_dir&gt;.bak_&lt;timestamp&gt;_run_id_&lt;_run_id&gt;</span></code></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">psweep</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">API Reference</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">API Reference</a><ul>
+  <li><a href="__sphinx_autodoc_module__psweep.psweep.html">psweep</a><ul>
+      <li>Previous: <a href="psweep.psweep.run.html" title="previous chapter">psweep.psweep.run</a></li>
+      <li>Next: <a href="psweep.psweep.seq2dicts.html" title="next chapter">psweep.psweep.seq2dicts</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, Steve Schmerler.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="../../_sources/generated/api/psweep.psweep.run_local.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

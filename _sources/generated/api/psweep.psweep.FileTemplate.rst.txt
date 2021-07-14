@@ -1,0 +1,31 @@
+psweep.psweep.FileTemplate
+==========================
+
+.. currentmodule:: psweep.psweep
+
+.. autoclass:: FileTemplate
+   :no-members:
+   :no-inherited-members:
+   :no-special-members:
+
+  
+  
+
+   .. automethod:: __init__
+
+  
+
+   .. rubric:: Methods
+
+   .. autosummary::
+      :toctree:
+   
+      ~FileTemplate.fill
+   
+  
+  
+
+
+  
+  
+  

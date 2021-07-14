@@ -1,0 +1,6 @@
+psweep.psweep.seq2dicts
+=======================
+
+.. currentmodule:: psweep.psweep
+
+.. autofunction:: seq2dicts
