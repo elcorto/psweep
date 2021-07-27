@@ -1,4 +1,5 @@
-from functools import partial
+from typing import Any, Optional, Union, Sequence, Callable, Iterator, List
+from functools import partial, wraps
 from io import IOBase
 import copy
 import hashlib
@@ -15,14 +16,15 @@ import uuid
 import warnings
 import yaml
 
-import numpy as np
+# Using numpy type hints is complicated, so skip it for now.
+import numpy as np  # type: ignore
 import pandas as pd
 
 pj = os.path.join
 
 # pandas defaults
-pandas_default_orient = "records"
-pandas_time_unit = "s"
+PANDAS_DEFAULT_ORIENT = "records"
+PANDAS_TIME_UNIT = "s"
 
 
 # -----------------------------------------------------------------------------
@@ -30,20 +32,16 @@ pandas_time_unit = "s"
 # -----------------------------------------------------------------------------
 
 
-def system(cmd, **kwds):
+def system(cmd: str, **kwds) -> subprocess.CompletedProcess:
     """
     Call shell command.
 
     Parameters
     ----------
-    cmd : str
+    cmd :
         shell command
-    kwds : dict
-        passed to subprocess.run()
-
-    Returns
-    -------
-    subprocess.CalledProcessError
+    kwds :
+        keywords passed to `subprocess.run`
     """
     try:
         return subprocess.run(
@@ -60,33 +58,38 @@ def system(cmd, **kwds):
 
 
 # https://github.com/elcorto/pwtools
-def makedirs(path):
+def makedirs(path: str) -> None:
     """Create `path` recursively, no questions asked."""
     if not path.strip() == "":
         os.makedirs(path, exist_ok=True)
 
 
 # https://github.com/elcorto/pwtools
-def fullpath(path):
+def fullpath(path: str) -> str:
     return os.path.abspath(os.path.expanduser(path))
 
 
-def itr(func):
+def itr(func: Callable) -> Callable:
     """Decorator which makes functions take a sequence of args or individual
     args.
 
-    ::
-
-        @itr
-        def func(seq):
-            for arg in seq:
-                ...
-        @itr
-        def func(*args):
-            for arg in args:
-                ...
+    Examples
+    --------
+    >>> @itr
+    ... def func(args):
+    ...     for arg in args:
+    ...         print(arg)
+    >>> func([1,2,3])
+    1
+    2
+    3
+    >>> func(1,2,3)
+    1
+    2
+    3
     """
 
+    @wraps(func)
     def wrapper(*args):
         if len(args) == 1:
             return func(args[0])
@@ -96,8 +99,8 @@ def itr(func):
     return wrapper
 
 
-# stolen from pwtools and adapted for python3
-def is_seq(seq):
+# https://github.com/elcorto/pwtools
+def is_seq(seq) -> bool:
     if (
         isinstance(seq, str)
         or isinstance(seq, IOBase)
@@ -121,21 +124,26 @@ def flatten(seq):
                 yield subitem
 
 
-def file_write(fn, txt, mode="w"):
+def file_write(fn: str, txt: str, mode="w"):
     makedirs(os.path.dirname(fn))
     with open(fn, mode=mode) as fd:
         fd.write(txt)
 
 
-def file_read(fn):
+def file_read(fn: str):
     with open(fn, "r") as fd:
         return fd.read()
 
 
-def dict_hash(dct, method="sha1"):
+def dict_hash(dct: dict, method="sha1"):
     h = getattr(hashlib, method)()
     h.update(json.dumps(dct, sort_keys=True).encode())
     return h.hexdigest()
+
+
+def git_clean():
+    cmd = "git status --porcelain"
+    return system(cmd).stdout.decode() == ""
 
 
 # -----------------------------------------------------------------------------
@@ -143,19 +151,19 @@ def dict_hash(dct, method="sha1"):
 # -----------------------------------------------------------------------------
 
 
-def df_to_json(df, **kwds):
-    """Like df.to_json() but with defaults for orient, date_unit, date_format,
+def df_to_json(df: pd.DataFrame, **kwds) -> Optional[str]:
+    """Like `df.to_json` but with defaults for orient, date_unit, date_format,
     double_precision.
 
     Parameters
     ----------
-    df : pandas.DataFrame
-    **kwds :
-        passed to df.to_json()
+    df : DataFrame
+    kwds :
+        passed to :meth:`df.to_json`
     """
     defaults = dict(
-        orient=pandas_default_orient,
-        date_unit=pandas_time_unit,
+        orient=PANDAS_DEFAULT_ORIENT,
+        date_unit=PANDAS_TIME_UNIT,
         date_format="iso",
         double_precision=15,
     )
@@ -165,17 +173,17 @@ def df_to_json(df, **kwds):
     return df.to_json(**kwds)
 
 
-def df_write(df, fn, fmt="pickle", **kwds):
+def df_write(df: pd.DataFrame, fn: str, fmt="pickle", **kwds) -> None:
     """Write DataFrame to disk.
 
     Parameters
     ----------
-    df : pandas.DataFrame
-    fn : str
+    df : DataFrame
+    fn :
         filename
-    fmt : str
-        {'pickle', 'json'}
-    **kwds :
+    fmt :
+        ``{'pickle', 'json'}``
+    kwds :
         passed to ``pickle.dump()`` or :func:`df_to_json`
     """
     makedirs(os.path.dirname(fn))
@@ -188,13 +196,13 @@ def df_write(df, fn, fmt="pickle", **kwds):
         raise Exception("unknown fmt: {}".format(fmt))
 
 
-def df_read(fn, fmt="pickle", **kwds):
+def df_read(fn: str, fmt="pickle", **kwds):
     """Read DataFrame from file `fn`. See :func:`df_write`."""
     if fmt == "pickle":
         with open(fn, "rb") as fd:
             return pickle.load(fd, **kwds)
     elif fmt == "json":
-        orient = kwds.pop("orient", pandas_default_orient)
+        orient = kwds.pop("orient", PANDAS_DEFAULT_ORIENT)
         return pd.io.json.read_json(
             fn, precise_float=True, orient=orient, **kwds
         )
@@ -202,7 +210,7 @@ def df_read(fn, fmt="pickle", **kwds):
         raise Exception("unknown fmt: {}".format(fmt))
 
 
-def df_print(df, index=False):
+def df_print(df: pd.DataFrame, index=False):
     """Print DataFrame, by default without the index."""
     print(df.to_string(index=index))
 
@@ -254,7 +262,7 @@ def df_filter_conds(df, conds):
 # -----------------------------------------------------------------------------
 
 
-def plist(name, seq):
+def plist(name: str, seq: Sequence[Any]):
     """Create a list of single-item dicts holding the parameter name and a
     value.
 
@@ -265,7 +273,7 @@ def plist(name, seq):
 
 
 @itr
-def merge_dicts(args):
+def merge_dicts(args: Sequence[dict]):
     """Start with an empty dict and update with each arg dict
     left-to-right."""
     dct = {}
@@ -275,32 +283,32 @@ def merge_dicts(args):
 
 
 @itr
-def itr2params(loops):
+def itr2params(loops: Iterator[Any]):
     """Transform the (possibly nested) result of a loop over plists (or
     whatever has been used to create psets) to a proper list of psets
     by flattening and merging dicts.
 
-    Example
-    -------
+    Examples
+    --------
     >>> a = ps.plist('a', [1,2])
     >>> b = ps.plist('b', [77,88])
     >>> c = ps.plist('c', ['const'])
 
-    # result of loops
+    >>> # result of loops
     >>> list(itertools.product(a,b,c))
     [({'a': 1}, {'b': 77}, {'c': 'const'}),
      ({'a': 1}, {'b': 88}, {'c': 'const'}),
      ({'a': 2}, {'b': 77}, {'c': 'const'}),
      ({'a': 2}, {'b': 88}, {'c': 'const'})]
 
-    # flatten into list of psets
+    >>> # flatten into list of psets
     >>> ps.itr2params(itertools.product(a,b,c))
     [{'a': 1, 'b': 77, 'c': 'const'},
      {'a': 1, 'b': 88, 'c': 'const'},
      {'a': 2, 'b': 77, 'c': 'const'},
      {'a': 2, 'b': 88, 'c': 'const'}]
 
-    # also more nested stuff is no problem
+    >>> # also more nested stuff is no problem
     >>> list(itertools.product(zip(a,b),c))
     [(({'a': 1}, {'b': 77}), {'c': 'const'}),
      (({'a': 2}, {'b': 88}), {'c': 'const'})]
@@ -317,6 +325,12 @@ def pgrid(plists):
     """Convenience function for the most common loop: nested loops with
     ``itertools.product``: ``ps.itr2params(itertools.product(a,b,c,...))``.
 
+    Examples
+    --------
+    >>> a = ps.plist('a', [1,2])
+    >>> b = ps.plist('b', [77,88])
+    >>> c = ps.plist('c', ['const'])
+    >>> # same as pgrid([a,b,c])
     >>> ps.pgrid(a,b,c)
     [{'a': 1, 'b': 77, 'c': 'const'},
      {'a': 1, 'b': 88, 'c': 'const'},
@@ -342,31 +356,21 @@ def pgrid(plists):
 
 
 def worker_wrapper(
-    pset,
-    worker,
-    tmpsave=False,
-    verbose=False,
-    run_id=None,
-    calc_dir=None,
-    simulate=False,
+    pset: dict,
+    worker: Callable,
+    tmpsave: bool = False,
+    verbose: bool = False,
+    run_id: str = None,
+    calc_dir: str = None,
+    simulate: bool = False,
     pset_seq=np.nan,
-    run_seq=None,
+    run_seq: int = None,
 ):
-    """
-    Parameters
-    ----------
-    pset : dict
-        example: ``{'a': 1, 'b': 'foo'}``
-    run_id : str
-        uuid
-
-    See :func:`run_local` for other parameters.
-    """
     assert run_id is not None
     assert calc_dir is not None
     pset_id = str(uuid.uuid4())
     _pset = copy.deepcopy(pset)
-    _time_utc = pd.Timestamp(time.time(), unit=pandas_time_unit)
+    _time_utc = pd.Timestamp(time.time(), unit=PANDAS_TIME_UNIT)
     hash_alg = "sha1"
     try:
         pset_hash = dict_hash(pset, hash_alg)
@@ -398,55 +402,55 @@ def worker_wrapper(
 
 
 def run_local(
-    worker,
-    params,
-    df=None,
-    poolsize=None,
+    worker: Callable,
+    params: Sequence[dict],
+    df: Optional[pd.DataFrame] = None,
+    poolsize: Optional[int] = None,
     save=True,
     tmpsave=False,
-    verbose=False,
+    verbose: Union[bool, Sequence[str]] = False,
     calc_dir="calc",
     simulate=False,
-    database_dir=None,
+    database_dir: Optional[str] = None,
     database_basename="database.pk",
     backup=False,
     backup_calc_dir=False,
-):
+) -> pd.DataFrame:
     """
     Parameters
     ----------
-    worker : callable
+    worker : Callable
         must accept one parameter: `pset` (a dict ``{'a': 1, 'b': 'foo',
         ...}``), return either an update to `pset` or a new dict, result will
         be processes as ``pset.update(worker(pset))``
-    params : sequence of dicts
+    params : seq of dicts
         each dict is a pset ``{'a': 1, 'b': 'foo', ...}``
-    df : {pandas.DataFrame, None}
+    df : DataFrame
         append rows to this DataFrame, if None then either create new one or
         read existing database file from disk if found
-    poolsize : {int, None}
-        None : use serial execution
-        int : use multiprocessing.Pool (even for ``poolsize=1``)
+    poolsize : {bool, None}
+        | None : use serial execution
+        | int : use multiprocessing.Pool (even for ``poolsize=1``)
     save : bool
         save final DataFrame to ``<calc_dir>/database.pk`` (pickle format only)
-    tmpsave : bool
+    tmpsave : bol
         save results from this pset (the current DataFrame row) to
-        <calc_dir>/tmpsave/<run_id>/<pset_id>.pk (pickle format only)
-    verbose : {bool, sequence}
+        ``<calc_dir>/tmpsave/<run_id>/<pset_id>.pk`` (pickle format only)
+    verbose : {bool, sequence of str}
         | bool : print the current DataFrame row
         | sequence : list of DataFrame column names, print the row but only
         | those columns
     calc_dir : str
     simulate : bool
-        run everything in <calc_dir>.simulate, don't call `worker`, i.e. save
+        run everything in ``<calc_dir>.simulate``, don't call `worker`, i.e. save
         what the run would create, but without the results from `worker`,
         useful to check if `params` are correct before starting a production run
     database_dir : str
-        Path for the database. Default is <calc_dir>.
+        Path for the database. Default is ``<calc_dir>``.
     database_basename : str
-        <database_dir>/<database_basename>
+        ``<database_dir>/<database_basename>``
     backup : bool
-        Make backup of <calc_dir> to <calc_dir>.bak_<timestamp>_run_id_<_run_id_>
+        Make backup of ``<calc_dir>`` to ``<calc_dir>.bak_<timestamp>_run_id_<_run_id>``
     """
 
     database_dir = calc_dir if database_dir is None else database_dir
@@ -460,8 +464,10 @@ def run_local(
         if os.path.exists(old_db):
             shutil.copy(old_db, pj(calc_dir_sim, database_basename))
         else:
-            warnings.warn(f"simulate: {old_db} not found, will create new db in "
-                          f"{calc_dir_sim}")
+            warnings.warn(
+                f"simulate: {old_db} not found, will create new db in "
+                f"{calc_dir_sim}"
+            )
         database_fn = pj(calc_dir_sim, database_basename)
         calc_dir = calc_dir_sim
     else:
@@ -479,7 +485,6 @@ def run_local(
     else:
         pset_seq_old = df._pset_seq.values.max()
         run_seq_old = df._run_seq.values.max()
-
 
     if backup_calc_dir:
         warnings.warn(
@@ -545,11 +550,15 @@ def run_local(
 
 
 class Machine:
-    def __init__(self, machine_dir, jobscript_name="jobscript"):
-        # templates/machines/<name>/info.yaml
-        # ^^^^^^^^^^^^^^^^^^^^^^^^^------------- machine_dir
-        # templates/machines/<name>/jobscript
-        #                           ^^^^^^^^^--- template.basename
+    def __init__(self, machine_dir: str, jobscript_name: str = "jobscript"):
+        """
+        Expected templates layout::
+
+            templates/machines/<name>/info.yaml
+            ^^^^^^^^^^^^^^^^^^^^^^^^^------------- machine_dir
+            templates/machines/<name>/jobscript
+                                      ^^^^^^^^^--- template.basename
+        """
         self.name = os.path.basename(os.path.normpath(machine_dir))
         self.template = FileTemplate(
             pj(machine_dir, jobscript_name), target_suffix="_" + self.name
@@ -593,11 +602,6 @@ def gather_machines(machine_templ_dir):
     ]
 
 
-def git_clean():
-    cmd = "git status --porcelain"
-    return system(cmd).stdout.decode() == ""
-
-
 # If we ever add a "simulate" kwd here: don't pass that thru to run_local() b/c
 # there this prevents worker() from being executed, but that's what we always
 # want here since it writes only input files. Instead, just set calc_dir =
@@ -605,13 +609,13 @@ def git_clean():
 # run_*.sh scripts b/c they are generated afresh anyway.
 #
 def prep_batch(
-    params,
-    calc_dir="calc",
-    calc_templ_dir="templates/calc",
-    machine_templ_dir="templates/machines",
-    git=False,
-    backup=False,
-):
+    params: Sequence[dict],
+    calc_dir: str = "calc",
+    calc_templ_dir: str = "templates/calc",
+    machine_templ_dir: str = "templates/machines",
+    git: bool = False,
+    backup: bool = False,
+) -> pd.DataFrame:
 
     if git:
         if not os.path.exists(".git"):
@@ -668,6 +672,7 @@ seq2dicts = plist
 loops2params = itr2params
 
 
+@wraps(run_local)
 def run(*args, **kwds):
     warnings.warn("run() was renamed to run_local()", DeprecationWarning)
     return run_local(*args, **kwds)
