@@ -422,6 +422,7 @@ def run_local(
     database_dir: Optional[str] = None,
     database_basename="database.pk",
     backup=False,
+    git=False,
 ) -> pd.DataFrame:
     """
     Parameters
@@ -440,8 +441,8 @@ def run_local(
         | int : use multiprocessing.Pool (even for ``poolsize=1``)
     save : bool
         save final DataFrame to ``<calc_dir>/database.pk`` (pickle format only)
-    tmpsave : bol
-        save results from this pset (the current DataFrame row) to
+    tmpsave : bool
+        save results from each `pset` in `params` (the current DataFrame row) to
         ``<calc_dir>/tmpsave/<run_id>/<pset_id>.pk`` (pickle format only)
     verbose : {bool, sequence of str}
         | bool : print the current DataFrame row
@@ -458,9 +459,19 @@ def run_local(
         ``<database_dir>/<database_basename>``
     backup : bool
         Make backup of ``<calc_dir>`` to ``<calc_dir>.bak_<timestamp>_run_id_<_run_id>``
+    git : bool
+        Use ``git`` to commit all files written and changed by the current run
+        (`_run_id`). Make sure to create a `.gitignore` manually before if
+        needed.
     """
 
     database_dir = calc_dir if database_dir is None else database_dir
+
+    if git:
+        if not os.path.exists(".git"):
+            system("git init; git add -A; git commit -m 'psweep: init'")
+        if not git_clean():
+            raise Exception("dirty git repo")
 
     if simulate:
         calc_dir_sim = calc_dir + ".simulate"
@@ -542,6 +553,11 @@ def run_local(
 
     if save:
         df_write(df, database_fn)
+
+    if git and (not git_clean()):
+        system(
+            f"git add -A; git commit -m 'psweep: run_id={df._run_id.values[-1]}'"
+        )
 
     return df
 
@@ -636,7 +652,7 @@ def prep_batch(
             )
         return {}
 
-    df = run_local(worker, params, calc_dir=calc_dir, backup=backup)
+    df = run_local(worker, params, calc_dir=calc_dir, backup=backup, git=False)
 
     msk_latest = df._run_seq == df._run_seq.values.max()
     msk_old = df._run_seq < df._run_seq.values.max()
@@ -658,9 +674,9 @@ def prep_batch(
             f"#!/bin/sh\n\nhere=$(pwd)\n{txt}\n",
         )
 
-    if git:
-        if not git_clean():
-            system(
-                f"git add -A; git commit -m 'psweep: run_id={df._run_id.values[-1]}'"
-            )
+    if git and (not git_clean()):
+        system(
+            f"git add -A; git commit -m 'psweep: run_id={df._run_id.values[-1]}'"
+        )
+
     return df
