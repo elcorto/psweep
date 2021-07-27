@@ -302,7 +302,7 @@ session when you pass in `df` again, in which case we don't read it from disk:
 ```
 
 
-# `_pset_id`, `_pset_seq`, `_run_id`, `_run_seq`, `_pset_sha1` and repeated runs
+# Special database fields and repeated runs
 
 See `examples/*repeat.py`.
 
