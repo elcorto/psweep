@@ -215,7 +215,10 @@ def df_print(df: pd.DataFrame, index=False):
     print(df.to_string(index=index))
 
 
-def df_filter_conds(df, conds):
+T = Union[pd.Series, pd.DataFrame, np.ndarray, List[bool]]
+
+
+def df_filter_conds(df: pd.DataFrame, conds: Sequence[T]) -> pd.DataFrame:
     """Filter DataFrame using bool arrays/Series/DataFrames in `conds`.
 
     Logical-and all bool sequences in `conds`. Same as
@@ -228,8 +231,8 @@ def df_filter_conds(df, conds):
     Parameters
     ----------
     df : DataFrame
-    conds : sequence
-        list of bool masks
+    conds :
+        sequence of bool masks, each of length `len(df)`
 
     Returns
     -------
@@ -248,12 +251,18 @@ def df_filter_conds(df, conds):
        a  b
     4  4  8
     """
-    if len(conds) == 0:
-        msk = [True] * len(df)
-    elif len(conds) == 1:
-        msk = conds[0]
+    cc = conds if hasattr(conds, "__len__") else list(conds)
+    if len(cc) == 0:
+        return df
+    for ic, c in enumerate(cc):
+        # fmt: off
+        assert len(c) == len(df), \
+            f"Condition at index {ic} has {len(c)=}, expect {len(df)=}"
+        # fmt: on
+    if len(cc) == 1:
+        msk = cc[0]
     else:
-        msk = np.logical_and.reduce(conds)
+        msk = np.logical_and.reduce(cc)
     return df[msk]
 
 
