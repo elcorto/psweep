@@ -22,8 +22,45 @@
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head><body>
-  <div class="document">
-    
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="psweep-psweep-pgrid">
+<h1>psweep.psweep.pgrid<a class="headerlink" href="#psweep-psweep-pgrid" title="Permalink to this headline">¶</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="psweep.psweep.pgrid">
+<span class="sig-prename descclassname"><span class="pre">psweep.psweep.</span></span><span class="sig-name descname"><span class="pre">pgrid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">plists</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/psweep/psweep.html#pgrid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psweep.psweep.pgrid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convenience function for the most common loop: nested loops with
+<code class="docutils literal notranslate"><span class="pre">itertools.product</span></code>: <code class="docutils literal notranslate"><span class="pre">ps.itr2params(itertools.product(a,b,c,...))</span></code>.</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">plist</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">plist</span><span class="p">(</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">77</span><span class="p">,</span><span class="mi">88</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">c</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">plist</span><span class="p">(</span><span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;const&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># same as pgrid([a,b,c])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">pgrid</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">)</span>
+<span class="go">[{&#39;a&#39;: 1, &#39;b&#39;: 77, &#39;c&#39;: &#39;const&#39;},</span>
+<span class="go"> {&#39;a&#39;: 1, &#39;b&#39;: 88, &#39;c&#39;: &#39;const&#39;},</span>
+<span class="go"> {&#39;a&#39;: 2, &#39;b&#39;: 77, &#39;c&#39;: &#39;const&#39;},</span>
+<span class="go"> {&#39;a&#39;: 2, &#39;b&#39;: 88, &#39;c&#39;: &#39;const&#39;}]</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">pgrid</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">),</span><span class="n">c</span><span class="p">)</span>
+<span class="go">[{&#39;a&#39;: 1, &#39;b&#39;: 77, &#39;c&#39;: &#39;const&#39;},</span>
+<span class="go"> {&#39;a&#39;: 2, &#39;b&#39;: 88, &#39;c&#39;: &#39;const&#39;}]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
 <h1 class="logo"><a href="../../index.html">psweep</a></h1>
@@ -76,44 +113,8 @@
 <script>$('#searchbox').show(0);</script>
         </div>
       </div>
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          <div class="body" role="main">
-            
-  <div class="section" id="psweep-psweep-pgrid">
-<h1>psweep.psweep.pgrid<a class="headerlink" href="#psweep-psweep-pgrid" title="Permalink to this headline">¶</a></h1>
-<dl class="py function">
-<dt class="sig sig-object py" id="psweep.psweep.pgrid">
-<span class="sig-prename descclassname"><span class="pre">psweep.psweep.</span></span><span class="sig-name descname"><span class="pre">pgrid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">plists</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/psweep/psweep.html#pgrid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psweep.psweep.pgrid" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convenience function for the most common loop: nested loops with
-<code class="docutils literal notranslate"><span class="pre">itertools.product</span></code>: <code class="docutils literal notranslate"><span class="pre">ps.itr2params(itertools.product(a,b,c,...))</span></code>.</p>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">plist</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">plist</span><span class="p">(</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">77</span><span class="p">,</span><span class="mi">88</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">c</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">plist</span><span class="p">(</span><span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;const&#39;</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># same as pgrid([a,b,c])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">pgrid</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">)</span>
-<span class="go">[{&#39;a&#39;: 1, &#39;b&#39;: 77, &#39;c&#39;: &#39;const&#39;},</span>
-<span class="go"> {&#39;a&#39;: 1, &#39;b&#39;: 88, &#39;c&#39;: &#39;const&#39;},</span>
-<span class="go"> {&#39;a&#39;: 2, &#39;b&#39;: 77, &#39;c&#39;: &#39;const&#39;},</span>
-<span class="go"> {&#39;a&#39;: 2, &#39;b&#39;: 88, &#39;c&#39;: &#39;const&#39;}]</span>
-</pre></div>
-</div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">pgrid</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">),</span><span class="n">c</span><span class="p">)</span>
-<span class="go">[{&#39;a&#39;: 1, &#39;b&#39;: 77, &#39;c&#39;: &#39;const&#39;},</span>
-<span class="go"> {&#39;a&#39;: 2, &#39;b&#39;: 88, &#39;c&#39;: &#39;const&#39;}]</span>
-</pre></div>
-</div>
-</dd></dl>
-
-</div>
-
-
-          </div>
-        </div>
-      </div>
-    <div class="clearer"></div>
-  </div>
+      <div class="clearer"></div>
+    </div>
     <div class="footer">
       &copy;2021, Steve Schmerler.
       

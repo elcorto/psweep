@@ -22,8 +22,59 @@
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head><body>
-  <div class="document">
-    
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="psweep-psweep-run-local">
+<h1>psweep.psweep.run_local<a class="headerlink" href="#psweep-psweep-run-local" title="Permalink to this headline">¶</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="psweep.psweep.run_local">
+<span class="sig-prename descclassname"><span class="pre">psweep.psweep.</span></span><span class="sig-name descname"><span class="pre">run_local</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">worker</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Callable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">pandas.core.frame.DataFrame</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">poolsize</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tmpsave</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">,</span> </span><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calc_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'calc'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">simulate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">database_dir</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">database_basename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'database.pk'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backup</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backup_calc_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pandas.core.frame.DataFrame</span></span></span><a class="reference internal" href="../../_modules/psweep/psweep.html#run_local"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psweep.psweep.run_local" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>worker</strong> (<em>Callable</em>) – must accept one parameter: <cite>pset</cite> (a dict <code class="docutils literal notranslate"><span class="pre">{'a':</span> <span class="pre">1,</span> <span class="pre">'b':</span> <span class="pre">'foo',</span>
+<span class="pre">...}</span></code>), return either an update to <cite>pset</cite> or a new dict, result will
+be processes as <code class="docutils literal notranslate"><span class="pre">pset.update(worker(pset))</span></code></p></li>
+<li><p><strong>params</strong> (<em>seq of dicts</em>) – each dict is a pset <code class="docutils literal notranslate"><span class="pre">{'a':</span> <span class="pre">1,</span> <span class="pre">'b':</span> <span class="pre">'foo',</span> <span class="pre">...}</span></code></p></li>
+<li><p><strong>df</strong> (<em>DataFrame</em>) – append rows to this DataFrame, if None then either create new one or
+read existing database file from disk if found</p></li>
+<li><p><strong>poolsize</strong> (<em>{bool</em><em>, </em><em>None}</em>) – <div class="line-block">
+<div class="line">None : use serial execution</div>
+<div class="line">int : use multiprocessing.Pool (even for <code class="docutils literal notranslate"><span class="pre">poolsize=1</span></code>)</div>
+</div>
+</p></li>
+<li><p><strong>save</strong> (<em>bool</em>) – save final DataFrame to <code class="docutils literal notranslate"><span class="pre">&lt;calc_dir&gt;/database.pk</span></code> (pickle format only)</p></li>
+<li><p><strong>tmpsave</strong> (<em>bol</em>) – save results from this pset (the current DataFrame row) to
+<code class="docutils literal notranslate"><span class="pre">&lt;calc_dir&gt;/tmpsave/&lt;run_id&gt;/&lt;pset_id&gt;.pk</span></code> (pickle format only)</p></li>
+<li><p><strong>verbose</strong> (<em>{bool</em><em>, </em><em>sequence of str}</em>) – <div class="line-block">
+<div class="line">bool : print the current DataFrame row</div>
+<div class="line">sequence : list of DataFrame column names, print the row but only</div>
+<div class="line">those columns</div>
+</div>
+</p></li>
+<li><p><strong>calc_dir</strong> (<em>str</em>) – </p></li>
+<li><p><strong>simulate</strong> (<em>bool</em>) – run everything in <code class="docutils literal notranslate"><span class="pre">&lt;calc_dir&gt;.simulate</span></code>, don’t call <cite>worker</cite>, i.e. save
+what the run would create, but without the results from <cite>worker</cite>,
+useful to check if <cite>params</cite> are correct before starting a production run</p></li>
+<li><p><strong>database_dir</strong> (<em>str</em>) – Path for the database. Default is <code class="docutils literal notranslate"><span class="pre">&lt;calc_dir&gt;</span></code>.</p></li>
+<li><p><strong>database_basename</strong> (<em>str</em>) – <code class="docutils literal notranslate"><span class="pre">&lt;database_dir&gt;/&lt;database_basename&gt;</span></code></p></li>
+<li><p><strong>backup</strong> (<em>bool</em>) – Make backup of <code class="docutils literal notranslate"><span class="pre">&lt;calc_dir&gt;</span></code> to <code class="docutils literal notranslate"><span class="pre">&lt;calc_dir&gt;.bak_&lt;timestamp&gt;_run_id_&lt;_run_id&gt;</span></code></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
 <h1 class="logo"><a href="../../index.html">psweep</a></h1>
@@ -76,58 +127,8 @@
 <script>$('#searchbox').show(0);</script>
         </div>
       </div>
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          <div class="body" role="main">
-            
-  <div class="section" id="psweep-psweep-run-local">
-<h1>psweep.psweep.run_local<a class="headerlink" href="#psweep-psweep-run-local" title="Permalink to this headline">¶</a></h1>
-<dl class="py function">
-<dt class="sig sig-object py" id="psweep.psweep.run_local">
-<span class="sig-prename descclassname"><span class="pre">psweep.psweep.</span></span><span class="sig-name descname"><span class="pre">run_local</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">worker</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Callable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">pandas.core.frame.DataFrame</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">poolsize</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tmpsave</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">,</span> </span><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calc_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'calc'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">simulate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">database_dir</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">database_basename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'database.pk'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backup</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backup_calc_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pandas.core.frame.DataFrame</span></span></span><a class="reference internal" href="../../_modules/psweep/psweep.html#run_local"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psweep.psweep.run_local" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>worker</strong> (<em>Callable</em>) – must accept one parameter: <cite>pset</cite> (a dict <code class="docutils literal notranslate"><span class="pre">{'a':</span> <span class="pre">1,</span> <span class="pre">'b':</span> <span class="pre">'foo',</span>
-<span class="pre">...}</span></code>), return either an update to <cite>pset</cite> or a new dict, result will
-be processes as <code class="docutils literal notranslate"><span class="pre">pset.update(worker(pset))</span></code></p></li>
-<li><p><strong>params</strong> (<em>seq of dicts</em>) – each dict is a pset <code class="docutils literal notranslate"><span class="pre">{'a':</span> <span class="pre">1,</span> <span class="pre">'b':</span> <span class="pre">'foo',</span> <span class="pre">...}</span></code></p></li>
-<li><p><strong>df</strong> (<em>DataFrame</em>) – append rows to this DataFrame, if None then either create new one or
-read existing database file from disk if found</p></li>
-<li><p><strong>poolsize</strong> (<em>{bool</em><em>, </em><em>None}</em>) – <div class="line-block">
-<div class="line">None : use serial execution</div>
-<div class="line">int : use multiprocessing.Pool (even for <code class="docutils literal notranslate"><span class="pre">poolsize=1</span></code>)</div>
-</div>
-</p></li>
-<li><p><strong>save</strong> (<em>bool</em>) – save final DataFrame to <code class="docutils literal notranslate"><span class="pre">&lt;calc_dir&gt;/database.pk</span></code> (pickle format only)</p></li>
-<li><p><strong>tmpsave</strong> (<em>bol</em>) – save results from this pset (the current DataFrame row) to
-<code class="docutils literal notranslate"><span class="pre">&lt;calc_dir&gt;/tmpsave/&lt;run_id&gt;/&lt;pset_id&gt;.pk</span></code> (pickle format only)</p></li>
-<li><p><strong>verbose</strong> (<em>{bool</em><em>, </em><em>sequence of str}</em>) – <div class="line-block">
-<div class="line">bool : print the current DataFrame row</div>
-<div class="line">sequence : list of DataFrame column names, print the row but only</div>
-<div class="line">those columns</div>
-</div>
-</p></li>
-<li><p><strong>calc_dir</strong> (<em>str</em>) – </p></li>
-<li><p><strong>simulate</strong> (<em>bool</em>) – run everything in <code class="docutils literal notranslate"><span class="pre">&lt;calc_dir&gt;.simulate</span></code>, don’t call <cite>worker</cite>, i.e. save
-what the run would create, but without the results from <cite>worker</cite>,
-useful to check if <cite>params</cite> are correct before starting a production run</p></li>
-<li><p><strong>database_dir</strong> (<em>str</em>) – Path for the database. Default is <code class="docutils literal notranslate"><span class="pre">&lt;calc_dir&gt;</span></code>.</p></li>
-<li><p><strong>database_basename</strong> (<em>str</em>) – <code class="docutils literal notranslate"><span class="pre">&lt;database_dir&gt;/&lt;database_basename&gt;</span></code></p></li>
-<li><p><strong>backup</strong> (<em>bool</em>) – Make backup of <code class="docutils literal notranslate"><span class="pre">&lt;calc_dir&gt;</span></code> to <code class="docutils literal notranslate"><span class="pre">&lt;calc_dir&gt;.bak_&lt;timestamp&gt;_run_id_&lt;_run_id&gt;</span></code></p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-</div>
-
-
-          </div>
-        </div>
-      </div>
-    <div class="clearer"></div>
-  </div>
+      <div class="clearer"></div>
+    </div>
     <div class="footer">
       &copy;2021, Steve Schmerler.
       
