@@ -1,4 +1,4 @@
-psweep.psweep.seq2dicts
+﻿psweep.psweep.seq2dicts
 =======================
 
 .. currentmodule:: psweep.psweep

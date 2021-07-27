@@ -1,4 +1,4 @@
-psweep.psweep.PANDAS\_TIME\_UNIT
+﻿psweep.psweep.PANDAS\_TIME\_UNIT
 ================================
 
 .. currentmodule:: psweep.psweep

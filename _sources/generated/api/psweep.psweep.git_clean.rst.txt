@@ -1,4 +1,4 @@
-psweep.psweep.git\_clean
+﻿psweep.psweep.git\_clean
 ========================
 
 .. currentmodule:: psweep.psweep

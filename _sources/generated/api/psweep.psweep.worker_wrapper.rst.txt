@@ -1,4 +1,4 @@
-psweep.psweep.worker\_wrapper
+﻿psweep.psweep.worker\_wrapper
 =============================
 
 .. currentmodule:: psweep.psweep

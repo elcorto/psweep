@@ -1,0 +1,741 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>About &#8212; psweep 0.5.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="&lt;no title&gt;" href="index.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="tex2jax_ignore mathjax_ignore section" id="about">
+<h1>About<a class="headerlink" href="#about" title="Permalink to this headline">¶</a></h1>
+<p>This package helps you to set up and run parameter studies.</p>
+<p>Mostly, you’ll start with a script and a for-loop and ask “why do I
+need a package for that”? Well, soon you’ll want housekeeping tools
+and a database for your runs and results. This package exists because
+sooner or later, everyone doing parameter scans arrives at roughly the
+same workflow and tools.</p>
+<p>This package deals with commonly encountered boilerplate tasks:</p>
+<ul class="simple">
+<li><p>write a database of parameters and results automatically</p></li>
+<li><p>make a backup of the database and all results when you repeat or
+extend the study</p></li>
+<li><p>append new rows to the database when extending the study</p></li>
+<li><p>simulate a parameter scan</p></li>
+<li><p><strong>experimental</strong>: support for managing batch runs, e.g. on remote HPC
+systems, including basic <code class="docutils literal notranslate"><span class="pre">git</span></code> workflow support</p></li>
+</ul>
+<p>Otherwise, the main goal is to not constrain your flexibility by
+building a complicated framework – we provide only very basic building
+blocks. All data structures are really simple (dicts), as are the
+provided functions. The database is a normal pandas DataFrame.</p>
+</div>
+<div class="tex2jax_ignore mathjax_ignore section" id="getting-started">
+<h1>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h1>
+<p>A simple example: Loop over two parameters ‘a’ and ‘b’ in a nested loop (grid),
+calculate and store the result of a calculation for each parameter combination.</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">psweep</span> <span class="kn">as</span> <span class="nn">ps</span>
+
+
+<span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="n">pset</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;result&#39;</span><span class="p">:</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">*</span> <span class="n">pset</span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">pset</span><span class="p">[</span><span class="s1">&#39;b&#39;</span><span class="p">]}</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">plist</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">plist</span><span class="p">(</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">77</span><span class="p">,</span><span class="mi">88</span><span class="p">])</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">pgrid</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">run_local</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">pgrid</span></code> produces a list <code class="docutils literal notranslate"><span class="pre">params</span></code> of parameter sets (dicts
+<code class="docutils literal notranslate"><span class="pre">{'a':</span> <span class="pre">...,</span> <span class="pre">'b':</span> <span class="pre">...}</span></code>) to loop over:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="mi">77</span><span class="p">},</span>
+ <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="mi">88</span><span class="p">},</span>
+ <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="mi">77</span><span class="p">},</span>
+ <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="mi">88</span><span class="p">},</span>
+ <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="mi">77</span><span class="p">},</span>
+ <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="mi">88</span><span class="p">}]</span>
+</pre></div>
+</div>
+<p>and a database of results (pandas DataFrame <code class="docutils literal notranslate"><span class="pre">df</span></code>, pickled file
+<code class="docutils literal notranslate"><span class="pre">calc/database.pk</span></code> by default):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>                               <span class="n">a</span>   <span class="n">b</span>                               <span class="n">_run_id</span>  \
+<span class="mi">2021</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">19</span> <span class="mi">22</span><span class="p">:</span><span class="mi">58</span><span class="p">:</span><span class="mf">17.015223265</span>  <span class="mi">1</span>  <span class="mi">77</span>  <span class="n">bb32aade</span><span class="o">-</span><span class="mi">6</span><span class="n">ac9</span><span class="o">-</span><span class="mi">4</span><span class="n">ac2</span><span class="o">-</span><span class="mi">9019</span><span class="o">-</span><span class="mi">3093</span><span class="n">c5f00965</span>
+<span class="mi">2021</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">19</span> <span class="mi">22</span><span class="p">:</span><span class="mi">58</span><span class="p">:</span><span class="mf">17.020342588</span>  <span class="mi">1</span>  <span class="mi">88</span>  <span class="n">bb32aade</span><span class="o">-</span><span class="mi">6</span><span class="n">ac9</span><span class="o">-</span><span class="mi">4</span><span class="n">ac2</span><span class="o">-</span><span class="mi">9019</span><span class="o">-</span><span class="mi">3093</span><span class="n">c5f00965</span>
+<span class="mi">2021</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">19</span> <span class="mi">22</span><span class="p">:</span><span class="mi">58</span><span class="p">:</span><span class="mf">17.023407698</span>  <span class="mi">2</span>  <span class="mi">77</span>  <span class="n">bb32aade</span><span class="o">-</span><span class="mi">6</span><span class="n">ac9</span><span class="o">-</span><span class="mi">4</span><span class="n">ac2</span><span class="o">-</span><span class="mi">9019</span><span class="o">-</span><span class="mi">3093</span><span class="n">c5f00965</span>
+<span class="mi">2021</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">19</span> <span class="mi">22</span><span class="p">:</span><span class="mi">58</span><span class="p">:</span><span class="mf">17.025991917</span>  <span class="mi">2</span>  <span class="mi">88</span>  <span class="n">bb32aade</span><span class="o">-</span><span class="mi">6</span><span class="n">ac9</span><span class="o">-</span><span class="mi">4</span><span class="n">ac2</span><span class="o">-</span><span class="mi">9019</span><span class="o">-</span><span class="mi">3093</span><span class="n">c5f00965</span>
+<span class="mi">2021</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">19</span> <span class="mi">22</span><span class="p">:</span><span class="mi">58</span><span class="p">:</span><span class="mf">17.028507948</span>  <span class="mi">3</span>  <span class="mi">77</span>  <span class="n">bb32aade</span><span class="o">-</span><span class="mi">6</span><span class="n">ac9</span><span class="o">-</span><span class="mi">4</span><span class="n">ac2</span><span class="o">-</span><span class="mi">9019</span><span class="o">-</span><span class="mi">3093</span><span class="n">c5f00965</span>
+<span class="mi">2021</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">19</span> <span class="mi">22</span><span class="p">:</span><span class="mi">58</span><span class="p">:</span><span class="mf">17.030908823</span>  <span class="mi">3</span>  <span class="mi">88</span>  <span class="n">bb32aade</span><span class="o">-</span><span class="mi">6</span><span class="n">ac9</span><span class="o">-</span><span class="mi">4</span><span class="n">ac2</span><span class="o">-</span><span class="mi">9019</span><span class="o">-</span><span class="mi">3093</span><span class="n">c5f00965</span>
+
+                                                           <span class="n">_pset_id</span> <span class="n">_calc_dir</span>  \
+<span class="mi">2021</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">19</span> <span class="mi">22</span><span class="p">:</span><span class="mi">58</span><span class="p">:</span><span class="mf">17.015223265</span>  <span class="n">e6fbfe50</span><span class="o">-</span><span class="mi">8</span><span class="n">c14</span><span class="o">-</span><span class="mi">49</span><span class="n">f3</span><span class="o">-</span><span class="n">b9f7</span><span class="o">-</span><span class="mi">83268</span><span class="n">c73f34d</span>      <span class="n">calc</span>
+<span class="mi">2021</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">19</span> <span class="mi">22</span><span class="p">:</span><span class="mi">58</span><span class="p">:</span><span class="mf">17.020342588</span>  <span class="n">d8599b90</span><span class="o">-</span><span class="mi">8475</span><span class="o">-</span><span class="mi">4</span><span class="n">bfb</span><span class="o">-</span><span class="mi">96</span><span class="n">b5</span><span class="o">-</span><span class="mf">4e7068195057</span>      <span class="n">calc</span>
+<span class="mi">2021</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">19</span> <span class="mi">22</span><span class="p">:</span><span class="mi">58</span><span class="p">:</span><span class="mf">17.023407698</span>  <span class="mi">85948244</span><span class="o">-</span><span class="mi">46</span><span class="n">a3</span><span class="o">-</span><span class="mi">4</span><span class="n">b19</span><span class="o">-</span><span class="n">bd1c</span><span class="o">-</span><span class="mi">2</span><span class="n">d59e32328a6</span>      <span class="n">calc</span>
+<span class="mi">2021</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">19</span> <span class="mi">22</span><span class="p">:</span><span class="mi">58</span><span class="p">:</span><span class="mf">17.025991917</span>  <span class="n">a775be5e</span><span class="o">-</span><span class="n">bc53</span><span class="o">-</span><span class="mi">4</span><span class="n">c3a</span><span class="o">-</span><span class="n">a237</span><span class="o">-</span><span class="mi">7151</span><span class="n">b279f1bd</span>      <span class="n">calc</span>
+<span class="mi">2021</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">19</span> <span class="mi">22</span><span class="p">:</span><span class="mi">58</span><span class="p">:</span><span class="mf">17.028507948</span>  <span class="n">b0ad166f</span><span class="o">-</span><span class="mi">6</span><span class="n">bd8</span><span class="o">-</span><span class="mi">4</span><span class="n">d64</span><span class="o">-</span><span class="n">a82a</span><span class="o">-</span><span class="mf">7e8</span><span class="n">e8ac91b20</span>      <span class="n">calc</span>
+<span class="mi">2021</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">19</span> <span class="mi">22</span><span class="p">:</span><span class="mi">58</span><span class="p">:</span><span class="mf">17.030908823</span>  <span class="n">e91309d4</span><span class="o">-</span><span class="mi">21</span><span class="n">b4</span><span class="o">-</span><span class="mi">4</span><span class="n">d45</span><span class="o">-</span><span class="mi">9</span><span class="n">fb6</span><span class="o">-</span><span class="n">cb84ffb31e24</span>      <span class="n">calc</span>
+
+                                                  <span class="n">_time_utc</span>  \
+<span class="mi">2021</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">19</span> <span class="mi">22</span><span class="p">:</span><span class="mi">58</span><span class="p">:</span><span class="mf">17.015223265</span> <span class="mi">2021</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">19</span> <span class="mi">22</span><span class="p">:</span><span class="mi">58</span><span class="p">:</span><span class="mf">17.015223265</span>
+<span class="mi">2021</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">19</span> <span class="mi">22</span><span class="p">:</span><span class="mi">58</span><span class="p">:</span><span class="mf">17.020342588</span> <span class="mi">2021</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">19</span> <span class="mi">22</span><span class="p">:</span><span class="mi">58</span><span class="p">:</span><span class="mf">17.020342588</span>
+<span class="mi">2021</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">19</span> <span class="mi">22</span><span class="p">:</span><span class="mi">58</span><span class="p">:</span><span class="mf">17.023407698</span> <span class="mi">2021</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">19</span> <span class="mi">22</span><span class="p">:</span><span class="mi">58</span><span class="p">:</span><span class="mf">17.023407698</span>
+<span class="mi">2021</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">19</span> <span class="mi">22</span><span class="p">:</span><span class="mi">58</span><span class="p">:</span><span class="mf">17.025991917</span> <span class="mi">2021</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">19</span> <span class="mi">22</span><span class="p">:</span><span class="mi">58</span><span class="p">:</span><span class="mf">17.025991917</span>
+<span class="mi">2021</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">19</span> <span class="mi">22</span><span class="p">:</span><span class="mi">58</span><span class="p">:</span><span class="mf">17.028507948</span> <span class="mi">2021</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">19</span> <span class="mi">22</span><span class="p">:</span><span class="mi">58</span><span class="p">:</span><span class="mf">17.028507948</span>
+<span class="mi">2021</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">19</span> <span class="mi">22</span><span class="p">:</span><span class="mi">58</span><span class="p">:</span><span class="mf">17.030908823</span> <span class="mi">2021</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">19</span> <span class="mi">22</span><span class="p">:</span><span class="mi">58</span><span class="p">:</span><span class="mf">17.030908823</span>
+
+                                                             <span class="n">_pset_sha1</span>  \
+<span class="mi">2021</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">19</span> <span class="mi">22</span><span class="p">:</span><span class="mi">58</span><span class="p">:</span><span class="mf">17.015223265</span>  <span class="mi">281</span><span class="n">c595edf7ffa124ac3ef82f26de3f8eb8517f2</span>
+<span class="mi">2021</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">19</span> <span class="mi">22</span><span class="p">:</span><span class="mi">58</span><span class="p">:</span><span class="mf">17.020342588</span>  <span class="mi">088056</span><span class="n">f830758f949823ddc52bf8527f3e727b45</span>
+<span class="mi">2021</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">19</span> <span class="mi">22</span><span class="p">:</span><span class="mi">58</span><span class="p">:</span><span class="mf">17.023407698</span>  <span class="n">b59bc3ae98e8b93de34135d751ed5090c3f087c5</span>
+<span class="mi">2021</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">19</span> <span class="mi">22</span><span class="p">:</span><span class="mi">58</span><span class="p">:</span><span class="mf">17.025991917</span>  <span class="mi">52434</span><span class="n">b66dd37763d09280480ff449d66ffcdcd4f</span>
+<span class="mi">2021</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">19</span> <span class="mi">22</span><span class="p">:</span><span class="mi">58</span><span class="p">:</span><span class="mf">17.028507948</span>  <span class="n">f6295cdfab520d9ede7e709bc68d4d65ffc45848</span>
+<span class="mi">2021</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">19</span> <span class="mi">22</span><span class="p">:</span><span class="mi">58</span><span class="p">:</span><span class="mf">17.030908823</span>  <span class="mi">35</span><span class="n">af18a51c425b09097af78d55ebdd91588c6f3c</span>
+
+                               <span class="n">_pset_seq</span>  <span class="n">_run_seq</span>     <span class="n">result</span>
+<span class="mi">2021</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">19</span> <span class="mi">22</span><span class="p">:</span><span class="mi">58</span><span class="p">:</span><span class="mf">17.015223265</span>          <span class="mi">0</span>         <span class="mi">0</span>  <span class="mf">35.276105</span>
+<span class="mi">2021</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">19</span> <span class="mi">22</span><span class="p">:</span><span class="mi">58</span><span class="p">:</span><span class="mf">17.020342588</span>          <span class="mi">1</span>         <span class="mi">0</span>  <span class="mf">30.183059</span>
+<span class="mi">2021</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">19</span> <span class="mi">22</span><span class="p">:</span><span class="mi">58</span><span class="p">:</span><span class="mf">17.023407698</span>          <span class="mi">2</span>         <span class="mi">0</span>  <span class="mf">50.545904</span>
+<span class="mi">2021</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">19</span> <span class="mi">22</span><span class="p">:</span><span class="mi">58</span><span class="p">:</span><span class="mf">17.025991917</span>          <span class="mi">3</span>         <span class="mi">0</span>  <span class="mf">59.443434</span>
+<span class="mi">2021</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">19</span> <span class="mi">22</span><span class="p">:</span><span class="mi">58</span><span class="p">:</span><span class="mf">17.028507948</span>          <span class="mi">4</span>         <span class="mi">0</span>  <span class="mf">78.027465</span>
+<span class="mi">2021</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">19</span> <span class="mi">22</span><span class="p">:</span><span class="mi">58</span><span class="p">:</span><span class="mf">17.030908823</span>          <span class="mi">5</span>         <span class="mi">0</span>  <span class="mf">62.461030</span>
+</pre></div>
+</div>
+<p>You see the columns ‘a’ and ‘b’, the column ‘result’ (returned by
+<code class="docutils literal notranslate"><span class="pre">func</span></code>) and a number of reserved fields for book-keeping such as</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">_run_id</span>
+<span class="n">_pset_id</span>
+<span class="n">_run_seq</span>
+<span class="n">_pset_seq</span>
+<span class="n">_pset_sha1</span>
+<span class="n">_calc_dir</span>
+<span class="n">_time_utc</span>
+</pre></div>
+</div>
+<p>as well as the <code class="docutils literal notranslate"><span class="pre">df.index</span></code> also holding a time stamp.</p>
+<p>Observe that one call <code class="docutils literal notranslate"><span class="pre">ps.run_local(func,</span> <span class="pre">params)</span></code> creates one <code class="docutils literal notranslate"><span class="pre">_run_id</span></code> – a
+UUID identifying this run, where by “run” we mean one loop over all parameter
+combinations. Inside that, each call <code class="docutils literal notranslate"><span class="pre">func(pset)</span></code> creates a UUID <code class="docutils literal notranslate"><span class="pre">_pset_id</span></code> and
+a new row in the DataFrame (the database). In addition we also add sequential
+integer IDs <code class="docutils literal notranslate"><span class="pre">_run_seq</span></code> and <code class="docutils literal notranslate"><span class="pre">_pset_seq</span></code> for convenience, as well as an
+additional hash <code class="docutils literal notranslate"><span class="pre">_pset_sha1</span></code> over the input dict (<code class="docutils literal notranslate"><span class="pre">pset</span></code> in the example) to
+<code class="docutils literal notranslate"><span class="pre">func()</span></code>.</p>
+</div>
+<div class="tex2jax_ignore mathjax_ignore section" id="concepts">
+<h1>Concepts<a class="headerlink" href="#concepts" title="Permalink to this headline">¶</a></h1>
+<p>The basic data structure for a param study is a list of “parameter sets” or
+short “psets”, each of which is a dict.</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">params</span> <span class="o">=</span> <span class="p">[{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="s1">&#39;lala&#39;</span><span class="p">},</span>  <span class="c1"># pset 1</span>
+          <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="s1">&#39;zzz&#39;</span><span class="p">},</span>   <span class="c1"># pset 2</span>
+          <span class="o">...</span>                     <span class="c1"># ...</span>
+         <span class="p">]</span>
+</pre></div>
+</div>
+<p>Each pset contains values of parameters (‘a’ and ‘b’) which are varied during
+the parameter study.</p>
+<p>You need to define a callback function <code class="docutils literal notranslate"><span class="pre">func</span></code>, which takes exactly one
+pset such as:</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="s1">&#39;lala&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>and runs the workload for that pset. <code class="docutils literal notranslate"><span class="pre">func</span></code> must return a
+dict, for example:</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;result&#39;</span><span class="p">:</span> <span class="mf">1.234</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>or an updated ‘pset’:</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="s1">&#39;lala&#39;</span><span class="p">,</span> <span class="s1">&#39;result&#39;</span><span class="p">:</span> <span class="mf">1.234</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>We always merge (<code class="docutils literal notranslate"><span class="pre">dict.update</span></code>) the result of <code class="docutils literal notranslate"><span class="pre">func</span></code> with the pset, which gives
+you flexibility in what to return from <code class="docutils literal notranslate"><span class="pre">func</span></code>. In particular, you are free to
+also return an empty dict if you record results in another way (see the
+<code class="docutils literal notranslate"><span class="pre">save_data_on_disk</span></code> example later).</p>
+<p>The psets form the rows of a pandas <code class="docutils literal notranslate"><span class="pre">DataFrame</span></code>, which we use to store the
+pset and the result from each <code class="docutils literal notranslate"><span class="pre">func(pset)</span></code>.</p>
+<p>The idea is now to run <code class="docutils literal notranslate"><span class="pre">func</span></code> in a loop over all psets in <code class="docutils literal notranslate"><span class="pre">params</span></code>. You do this
+using the <code class="docutils literal notranslate"><span class="pre">ps.run_local()</span></code> helper function. The function adds some special
+columns such as <code class="docutils literal notranslate"><span class="pre">_run_id</span></code> (once per <code class="docutils literal notranslate"><span class="pre">ps.run_local()</span></code> call) or <code class="docutils literal notranslate"><span class="pre">_pset_id</span></code> (once
+per pset). Using <code class="docutils literal notranslate"><span class="pre">ps.run_local(...</span> <span class="pre">poolsize=...)</span></code> runs <code class="docutils literal notranslate"><span class="pre">func</span></code> in parallel on
+<code class="docutils literal notranslate"><span class="pre">params</span></code> using <code class="docutils literal notranslate"><span class="pre">multiprocessing.Pool</span></code>.</p>
+<p>This package offers some very simple helper functions which assist in
+creating <code class="docutils literal notranslate"><span class="pre">params</span></code>. Basically, we define the to-be-varied parameters
+(‘a’ and ‘b’) and then use something like <code class="docutils literal notranslate"><span class="pre">itertools.product</span></code> to
+loop over them to create <code class="docutils literal notranslate"><span class="pre">params</span></code>, which is passed to <code class="docutils literal notranslate"><span class="pre">ps.run_local()</span></code> to
+actually perform the loop over all psets.</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">product</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">psweep</span> <span class="kn">as</span> <span class="nn">ps</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="o">=</span><span class="n">ps</span><span class="o">.</span><span class="n">plist</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span><span class="o">=</span><span class="n">ps</span><span class="o">.</span><span class="n">plist</span><span class="p">(</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;xx&#39;</span><span class="p">,</span> <span class="s1">&#39;yy&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span>
+<span class="go">[{&#39;a&#39;: 1}, {&#39;a&#39;: 2}, {&#39;a&#39;: 3}]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span>
+<span class="go">[{&#39;b&#39;: &#39;xx&#39;}, {&#39;b&#39;: &#39;yy&#39;}]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">itr2params</span><span class="p">(</span><span class="n">product</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">))</span>
+<span class="go">[{&#39;a&#39;: 1, &#39;b&#39;: &#39;xx&#39;},</span>
+<span class="go"> {&#39;a&#39;: 1, &#39;b&#39;: &#39;yy&#39;},</span>
+<span class="go"> {&#39;a&#39;: 2, &#39;b&#39;: &#39;xx&#39;},</span>
+<span class="go"> {&#39;a&#39;: 2, &#39;b&#39;: &#39;yy&#39;},</span>
+<span class="go"> {&#39;a&#39;: 3, &#39;b&#39;: &#39;xx&#39;},</span>
+<span class="go"> {&#39;a&#39;: 3, &#39;b&#39;: &#39;yy&#39;}]</span>
+</pre></div>
+</div>
+<p>The last pattern is so common, that we have a function for it:
+<code class="docutils literal notranslate"><span class="pre">pgrid()</span></code>.</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">pgrid</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">)</span>
+<span class="go">[{&#39;a&#39;: 1, &#39;b&#39;: &#39;xx&#39;},</span>
+<span class="go"> {&#39;a&#39;: 1, &#39;b&#39;: &#39;yy&#39;},</span>
+<span class="go"> {&#39;a&#39;: 2, &#39;b&#39;: &#39;xx&#39;},</span>
+<span class="go"> {&#39;a&#39;: 2, &#39;b&#39;: &#39;yy&#39;},</span>
+<span class="go"> {&#39;a&#39;: 3, &#39;b&#39;: &#39;xx&#39;},</span>
+<span class="go"> {&#39;a&#39;: 3, &#39;b&#39;: &#39;yy&#39;}]</span>
+</pre></div>
+</div>
+<p>The logic of the param study is entirely contained in the creation of
+<code class="docutils literal notranslate"><span class="pre">params</span></code>. E.g., if parameters shall be varied together (say a and b),
+then instead of</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">product</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>use</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">product</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">),</span> <span class="n">c</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The nesting from <code class="docutils literal notranslate"><span class="pre">zip()</span></code> is flattened in <code class="docutils literal notranslate"><span class="pre">itr2params()</span></code> and <code class="docutils literal notranslate"><span class="pre">pgrid()</span></code></p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">c</span><span class="o">=</span><span class="n">ps</span><span class="o">.</span><span class="n">plist</span><span class="p">(</span><span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="p">[</span><span class="bp">None</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">,</span> <span class="s1">&#39;X&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">pgrid</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">),</span><span class="n">c</span><span class="p">)</span>
+<span class="go">[{&#39;a&#39;: 1, &#39;b&#39;: &#39;xx&#39;, &#39;c&#39;: None},</span>
+<span class="go"> {&#39;a&#39;: 1, &#39;b&#39;: &#39;xx&#39;, &#39;c&#39;: 1.2},</span>
+<span class="go"> {&#39;a&#39;: 1, &#39;b&#39;: &#39;xx&#39;, &#39;c&#39;: &#39;X&#39;},</span>
+<span class="go"> {&#39;a&#39;: 2, &#39;b&#39;: &#39;yy&#39;, &#39;c&#39;: None},</span>
+<span class="go"> {&#39;a&#39;: 2, &#39;b&#39;: &#39;yy&#39;, &#39;c&#39;: 1.2},</span>
+<span class="go"> {&#39;a&#39;: 2, &#39;b&#39;: &#39;yy&#39;, &#39;c&#39;: &#39;X&#39;}]</span>
+</pre></div>
+</div>
+<p>If you want a parameter which is constant, use a list of length one:</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">const</span><span class="o">=</span><span class="n">ps</span><span class="o">.</span><span class="n">plist</span><span class="p">(</span><span class="s1">&#39;const&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mf">1.23</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">pgrid</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">),</span> <span class="n">c</span><span class="p">,</span> <span class="n">const</span><span class="p">)</span>
+<span class="go">[{&#39;a&#39;: 1, &#39;b&#39;: &#39;xx&#39;, &#39;c&#39;: None, &#39;const&#39;: 1.23},</span>
+<span class="go"> {&#39;a&#39;: 1, &#39;b&#39;: &#39;xx&#39;, &#39;c&#39;: 1.2,  &#39;const&#39;: 1.23},</span>
+<span class="go"> {&#39;a&#39;: 1, &#39;b&#39;: &#39;xx&#39;, &#39;c&#39;: &#39;X&#39;,  &#39;const&#39;: 1.23},</span>
+<span class="go"> {&#39;a&#39;: 2, &#39;b&#39;: &#39;yy&#39;, &#39;c&#39;: None, &#39;const&#39;: 1.23},</span>
+<span class="go"> {&#39;a&#39;: 2, &#39;b&#39;: &#39;yy&#39;, &#39;c&#39;: 1.2,  &#39;const&#39;: 1.23},</span>
+<span class="go"> {&#39;a&#39;: 2, &#39;b&#39;: &#39;yy&#39;, &#39;c&#39;: &#39;X&#39;,  &#39;const&#39;: 1.23}]</span>
+</pre></div>
+</div>
+<p>So, as you can see, the general idea is that we do all the loops
+<em>before</em> running any workload, i.e. we assemble the parameter grid to be
+sampled before the actual calculations. This has proven to be very
+practical as it helps detecting errors early.</p>
+<p>You are, by the way, of course not restricted to use simple nested loops
+over parameters using <code class="docutils literal notranslate"><span class="pre">pgrid()</span></code> (which uses <code class="docutils literal notranslate"><span class="pre">itertools.product</span></code>). You
+are totally free in how to create <code class="docutils literal notranslate"><span class="pre">params</span></code>, be it using other fancy
+stuff from <code class="docutils literal notranslate"><span class="pre">itertools</span></code> or explicit loops. Of course you can also define
+a static <code class="docutils literal notranslate"><span class="pre">params</span></code> list</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">params</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>    <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="s1">&#39;xx&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">:</span> <span class="bp">None</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>    <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="s1">&#39;yy&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">:</span> <span class="mf">1.234</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="bp">None</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="s1">&#39;xx&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">:</span> <span class="s1">&#39;X&#39;</span><span class="p">},</span>
+    <span class="o">...</span>
+    <span class="p">]</span>
+</pre></div>
+</div>
+<p>or read <code class="docutils literal notranslate"><span class="pre">params</span></code> in from an external source such as a database from a
+previous study, etc.</p>
+<p>The point is: you generate <code class="docutils literal notranslate"><span class="pre">params</span></code>, we run the study.</p>
+</div>
+<div class="tex2jax_ignore mathjax_ignore section" id="the-database">
+<h1>The database<a class="headerlink" href="#the-database" title="Permalink to this headline">¶</a></h1>
+<p>By default, <code class="docutils literal notranslate"><span class="pre">ps.run_local()</span></code> writes a database <code class="docutils literal notranslate"><span class="pre">calc/database.pk</span></code> (a pickled
+DataFrame) with the default <code class="docutils literal notranslate"><span class="pre">calc_dir='calc'</span></code>. You can turn that off using
+<code class="docutils literal notranslate"><span class="pre">save=False</span></code> if you want. If you run <code class="docutils literal notranslate"><span class="pre">ps.run_local()</span></code> again</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">run_local</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">run_local</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">other_params</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>it will read and append to that file. The same happens in an interactive
+session when you pass in <code class="docutils literal notranslate"><span class="pre">df</span></code> again, in which case we don’t read it from disk:</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="c1"># default is df=None -&gt; create empty df</span>
+<span class="c1"># save=False: don&#39;t write db to disk, optional</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">df_run_0</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">run_local</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">save</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">df_run_0_and_1</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">run_local</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">other_params</span><span class="p">,</span> <span class="n">save</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">df</span><span class="o">=</span><span class="n">df_run_0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="tex2jax_ignore mathjax_ignore section" id="pset-id-pset-seq-run-id-run-seq-pset-sha1-and-repeated-runs">
+<h1><code class="docutils literal notranslate"><span class="pre">_pset_id</span></code>, <code class="docutils literal notranslate"><span class="pre">_pset_seq</span></code>, <code class="docutils literal notranslate"><span class="pre">_run_id</span></code>, <code class="docutils literal notranslate"><span class="pre">_run_seq</span></code>, <code class="docutils literal notranslate"><span class="pre">_pset_sha1</span></code> and repeated runs<a class="headerlink" href="#pset-id-pset-seq-run-id-run-seq-pset-sha1-and-repeated-runs" title="Permalink to this headline">¶</a></h1>
+<p>See <code class="docutils literal notranslate"><span class="pre">examples/*repeat.py</span></code>.</p>
+<p>It is important to get the difference between the two special fields
+<code class="docutils literal notranslate"><span class="pre">_run_id</span></code> and <code class="docutils literal notranslate"><span class="pre">_pset_id</span></code>, the most important one being <code class="docutils literal notranslate"><span class="pre">_pset_id</span></code>.</p>
+<p>Both are random UUIDs. They are used to uniquely identify things.</p>
+<p>Once per <code class="docutils literal notranslate"><span class="pre">ps.run_local()</span></code> call, a <code class="docutils literal notranslate"><span class="pre">_run_id</span></code> and <code class="docutils literal notranslate"><span class="pre">_run_seq</span></code> is created. Which
+means that when you call <code class="docutils literal notranslate"><span class="pre">ps.run_local()</span></code> multiple times <em>using the same
+database</em> as just shown, you will see multiple (in this case two) <code class="docutils literal notranslate"><span class="pre">_run_id</span></code>
+and <code class="docutils literal notranslate"><span class="pre">_run_seq</span></code> values.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>                             <span class="n">_run_id</span>                              <span class="n">_pset_id</span>  <span class="n">_run_seq</span>  <span class="n">_pset_seq</span>
+<span class="mi">8543</span><span class="n">fdad</span><span class="o">-</span><span class="mi">4426</span><span class="o">-</span><span class="mi">41</span><span class="n">cb</span><span class="o">-</span><span class="n">ab42</span><span class="o">-</span><span class="mi">8</span><span class="n">a80b1bebbe2</span>  <span class="mi">08</span><span class="n">cb5f7c</span><span class="o">-</span><span class="mi">8</span><span class="n">ce8</span><span class="o">-</span><span class="mi">451</span><span class="n">f</span><span class="o">-</span><span class="mi">846</span><span class="n">d</span><span class="o">-</span><span class="n">db5ac3bcc746</span>         <span class="mi">0</span>          <span class="mi">0</span>
+<span class="mi">8543</span><span class="n">fdad</span><span class="o">-</span><span class="mi">4426</span><span class="o">-</span><span class="mi">41</span><span class="n">cb</span><span class="o">-</span><span class="n">ab42</span><span class="o">-</span><span class="mi">8</span><span class="n">a80b1bebbe2</span>  <span class="mi">18</span><span class="n">da3840</span><span class="o">-</span><span class="n">d00e</span><span class="o">-</span><span class="mi">4</span><span class="n">bdd</span><span class="o">-</span><span class="n">b29c</span><span class="o">-</span><span class="mi">68</span><span class="n">be2adb164e</span>         <span class="mi">0</span>          <span class="mi">1</span>
+<span class="mi">8543</span><span class="n">fdad</span><span class="o">-</span><span class="mi">4426</span><span class="o">-</span><span class="mi">41</span><span class="n">cb</span><span class="o">-</span><span class="n">ab42</span><span class="o">-</span><span class="mi">8</span><span class="n">a80b1bebbe2</span>  <span class="n">bcc47205</span><span class="o">-</span><span class="mi">0919</span><span class="o">-</span><span class="mi">4084</span><span class="o">-</span><span class="mi">9</span><span class="n">f07</span><span class="o">-</span><span class="mi">072</span><span class="n">eb56ed5fd</span>         <span class="mi">0</span>          <span class="mi">2</span>
+<span class="mi">969592</span><span class="n">bc</span><span class="o">-</span><span class="mf">65e6</span><span class="o">-</span><span class="mi">4315</span><span class="o">-</span><span class="mf">9e6</span><span class="n">b</span><span class="o">-</span><span class="mi">5</span><span class="n">d64b6eaa0b3</span>  <span class="mi">809064</span><span class="n">d6</span><span class="o">-</span><span class="n">c7aa</span><span class="o">-</span><span class="mf">4e43</span><span class="o">-</span><span class="mi">81</span><span class="n">ea</span><span class="o">-</span><span class="n">cebfd4f85a12</span>         <span class="mi">1</span>          <span class="mi">3</span>
+<span class="mi">969592</span><span class="n">bc</span><span class="o">-</span><span class="mf">65e6</span><span class="o">-</span><span class="mi">4315</span><span class="o">-</span><span class="mf">9e6</span><span class="n">b</span><span class="o">-</span><span class="mi">5</span><span class="n">d64b6eaa0b3</span>  <span class="n">ef5f06d4</span><span class="o">-</span><span class="mi">8906</span><span class="o">-</span><span class="mi">4605</span><span class="o">-</span><span class="mi">99</span><span class="n">cb</span><span class="o">-</span><span class="mi">2</span><span class="n">a9550fdd8de</span>         <span class="mi">1</span>          <span class="mi">4</span>
+<span class="mi">969592</span><span class="n">bc</span><span class="o">-</span><span class="mf">65e6</span><span class="o">-</span><span class="mi">4315</span><span class="o">-</span><span class="mf">9e6</span><span class="n">b</span><span class="o">-</span><span class="mi">5</span><span class="n">d64b6eaa0b3</span>  <span class="mi">162</span><span class="n">a7b8c</span><span class="o">-</span><span class="mi">3</span><span class="n">ab5</span><span class="o">-</span><span class="mi">41</span><span class="n">bb</span><span class="o">-</span><span class="mi">92</span><span class="n">cd</span><span class="o">-</span><span class="mf">1e5</span><span class="n">d0db0842f</span>         <span class="mi">1</span>          <span class="mi">5</span>
+</pre></div>
+</div>
+<p>Each <code class="docutils literal notranslate"><span class="pre">ps.run_local()</span></code> call in turn calls <code class="docutils literal notranslate"><span class="pre">func(pset)</span></code> for each pset in <code class="docutils literal notranslate"><span class="pre">params</span></code>.
+Each <code class="docutils literal notranslate"><span class="pre">func</span></code> invocation creates a unique <code class="docutils literal notranslate"><span class="pre">_pset_id</span></code> and increment the integer
+counter <code class="docutils literal notranslate"><span class="pre">_pset_seq</span></code>. Thus, we have a very simple, yet powerful one-to-one
+mapping and a way to refer to a specific pset.</p>
+<p>An interesting special case (see <code class="docutils literal notranslate"><span class="pre">examples/vary_1_param_repeat_same.py</span></code>) is
+when you call <code class="docutils literal notranslate"><span class="pre">ps.run_local()</span></code> multiple times using <em>the exact same</em> <code class="docutils literal notranslate"><span class="pre">params</span></code>,</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">run_local</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">run_local</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>which is perfectly fine, e.g. in cases where you just want to sample more data
+for the same psets in <code class="docutils literal notranslate"><span class="pre">params</span></code> over and over again. In this case, you will have
+as above two unique <code class="docutils literal notranslate"><span class="pre">_run_id</span></code>s but <em>two sets of the same</em> <code class="docutils literal notranslate"><span class="pre">_pset_sha1</span></code>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>                             <span class="n">_run_id</span>                              <span class="n">_pset_id</span>  <span class="n">_run_seq</span>  <span class="n">_pset_seq</span>                                <span class="n">_pset_sha1</span>  <span class="n">a</span>    <span class="n">result</span>
+<span class="mi">8543</span><span class="n">fdad</span><span class="o">-</span><span class="mi">4426</span><span class="o">-</span><span class="mi">41</span><span class="n">cb</span><span class="o">-</span><span class="n">ab42</span><span class="o">-</span><span class="mi">8</span><span class="n">a80b1bebbe2</span>  <span class="mi">08</span><span class="n">cb5f7c</span><span class="o">-</span><span class="mi">8</span><span class="n">ce8</span><span class="o">-</span><span class="mi">451</span><span class="n">f</span><span class="o">-</span><span class="mi">846</span><span class="n">d</span><span class="o">-</span><span class="n">db5ac3bcc746</span>         <span class="mi">0</span>          <span class="mi">0</span>  <span class="n">e4ad4daad53a2eec0313386ada88211e50d693bd</span>  <span class="mi">1</span>  <span class="mf">0.381589</span>
+<span class="mi">8543</span><span class="n">fdad</span><span class="o">-</span><span class="mi">4426</span><span class="o">-</span><span class="mi">41</span><span class="n">cb</span><span class="o">-</span><span class="n">ab42</span><span class="o">-</span><span class="mi">8</span><span class="n">a80b1bebbe2</span>  <span class="mi">18</span><span class="n">da3840</span><span class="o">-</span><span class="n">d00e</span><span class="o">-</span><span class="mi">4</span><span class="n">bdd</span><span class="o">-</span><span class="n">b29c</span><span class="o">-</span><span class="mi">68</span><span class="n">be2adb164e</span>         <span class="mi">0</span>          <span class="mi">1</span>  <span class="mi">7</span><span class="n">b7ee754248759adcee9e62a4c1477ed1a8bb1ab</span>  <span class="mi">2</span>  <span class="mf">1.935220</span>
+<span class="mi">8543</span><span class="n">fdad</span><span class="o">-</span><span class="mi">4426</span><span class="o">-</span><span class="mi">41</span><span class="n">cb</span><span class="o">-</span><span class="n">ab42</span><span class="o">-</span><span class="mi">8</span><span class="n">a80b1bebbe2</span>  <span class="n">bcc47205</span><span class="o">-</span><span class="mi">0919</span><span class="o">-</span><span class="mi">4084</span><span class="o">-</span><span class="mi">9</span><span class="n">f07</span><span class="o">-</span><span class="mi">072</span><span class="n">eb56ed5fd</span>         <span class="mi">0</span>          <span class="mi">2</span>  <span class="mf">9e0</span><span class="n">e6d8a99c72daf40337183358cbef91bba7311</span>  <span class="mi">3</span>  <span class="mf">2.187107</span>
+<span class="mi">969592</span><span class="n">bc</span><span class="o">-</span><span class="mf">65e6</span><span class="o">-</span><span class="mi">4315</span><span class="o">-</span><span class="mf">9e6</span><span class="n">b</span><span class="o">-</span><span class="mi">5</span><span class="n">d64b6eaa0b3</span>  <span class="mi">809064</span><span class="n">d6</span><span class="o">-</span><span class="n">c7aa</span><span class="o">-</span><span class="mf">4e43</span><span class="o">-</span><span class="mi">81</span><span class="n">ea</span><span class="o">-</span><span class="n">cebfd4f85a12</span>         <span class="mi">1</span>          <span class="mi">3</span>  <span class="n">e4ad4daad53a2eec0313386ada88211e50d693bd</span>  <span class="mi">1</span>  <span class="mf">0.590200</span>
+<span class="mi">969592</span><span class="n">bc</span><span class="o">-</span><span class="mf">65e6</span><span class="o">-</span><span class="mi">4315</span><span class="o">-</span><span class="mf">9e6</span><span class="n">b</span><span class="o">-</span><span class="mi">5</span><span class="n">d64b6eaa0b3</span>  <span class="n">ef5f06d4</span><span class="o">-</span><span class="mi">8906</span><span class="o">-</span><span class="mi">4605</span><span class="o">-</span><span class="mi">99</span><span class="n">cb</span><span class="o">-</span><span class="mi">2</span><span class="n">a9550fdd8de</span>         <span class="mi">1</span>          <span class="mi">4</span>  <span class="mi">7</span><span class="n">b7ee754248759adcee9e62a4c1477ed1a8bb1ab</span>  <span class="mi">2</span>  <span class="mf">1.322758</span>
+<span class="mi">969592</span><span class="n">bc</span><span class="o">-</span><span class="mf">65e6</span><span class="o">-</span><span class="mi">4315</span><span class="o">-</span><span class="mf">9e6</span><span class="n">b</span><span class="o">-</span><span class="mi">5</span><span class="n">d64b6eaa0b3</span>  <span class="mi">162</span><span class="n">a7b8c</span><span class="o">-</span><span class="mi">3</span><span class="n">ab5</span><span class="o">-</span><span class="mi">41</span><span class="n">bb</span><span class="o">-</span><span class="mi">92</span><span class="n">cd</span><span class="o">-</span><span class="mf">1e5</span><span class="n">d0db0842f</span>         <span class="mi">1</span>          <span class="mi">5</span>  <span class="mf">9e0</span><span class="n">e6d8a99c72daf40337183358cbef91bba7311</span>  <span class="mi">3</span>  <span class="mf">1.639455</span>
+</pre></div>
+</div>
+<p>This is a very powerful tool to filter the database for calculations that used
+the same pset, e.g. an exact repetition of one experiment. But since we use
+UUIDs for <code class="docutils literal notranslate"><span class="pre">_pset_id</span></code>, those calculations can still be distinguished.</p>
+</div>
+<div class="tex2jax_ignore mathjax_ignore section" id="best-practices">
+<h1>Best practices<a class="headerlink" href="#best-practices" title="Permalink to this headline">¶</a></h1>
+<p>The following workflows and practices come from experience. They are, if
+you will, the “framework” for how to do things. However, we decided to
+not codify any of these ideas but to only provide tools to make them
+happen easily, because you will probably have quite different
+requirements and workflows.</p>
+<p>Please also have a look at the <code class="docutils literal notranslate"><span class="pre">examples/</span></code> dir where we document these
+and more common workflows.</p>
+<div class="section" id="save-data-on-disk-use-uuids">
+<h2>Save data on disk, use UUIDs<a class="headerlink" href="#save-data-on-disk-use-uuids" title="Permalink to this headline">¶</a></h2>
+<p>Assume that you need to save results from a <code class="docutils literal notranslate"><span class="pre">func()</span></code> call not only in the
+returned dict from <code class="docutils literal notranslate"><span class="pre">func</span></code> (or even not at all!) but on disk, for instance when
+you call an external program which saves data on disk. Consider this toy
+example (<code class="docutils literal notranslate"><span class="pre">examples/save_data_on_disk/10run.py</span></code>):</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/env python3</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">import</span> <span class="nn">psweep</span> <span class="kn">as</span> <span class="nn">ps</span>
+
+
+<span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="n">pset</span><span class="p">):</span>
+    <span class="n">fn</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">pset</span><span class="p">[</span><span class="s2">&quot;_calc_dir&quot;</span><span class="p">],</span> <span class="n">pset</span><span class="p">[</span><span class="s2">&quot;_pset_id&quot;</span><span class="p">],</span> <span class="s2">&quot;output.txt&quot;</span><span class="p">)</span>
+    <span class="n">cmd</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">f</span><span class="s2">&quot;mkdir -p $(dirname {fn}); &quot;</span>
+        <span class="n">f</span><span class="s2">&quot;echo {pset[&#39;a&#39;]} {pset[&#39;a&#39;]*2} {pset[&#39;a&#39;]*4} &gt; {fn}&quot;</span>
+    <span class="p">)</span>
+    <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;cmd&quot;</span><span class="p">:</span> <span class="n">cmd</span><span class="p">}</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">plist</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">])</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">run_local</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>In this case, you call an external program (here a dummy shell command) which
+saves its output on disk. Note that we don’t return any output from the
+external command in <code class="docutils literal notranslate"><span class="pre">func</span></code>’s <code class="docutils literal notranslate"><span class="pre">return</span></code> statement. We only update the database
+row added for each call to <code class="docutils literal notranslate"><span class="pre">func</span></code> by returning a dict <code class="docutils literal notranslate"><span class="pre">{&quot;cmd&quot;:</span> <span class="pre">cmd}</span></code> with the
+shell <code class="docutils literal notranslate"><span class="pre">cmd</span></code> we call in order to have that in the database.</p>
+<p>Also note how we use the special fields <code class="docutils literal notranslate"><span class="pre">_pset_id</span></code> and <code class="docutils literal notranslate"><span class="pre">_calc_dir</span></code>, which are
+added in <code class="docutils literal notranslate"><span class="pre">ps.run_local()</span></code> to <code class="docutils literal notranslate"><span class="pre">pset</span></code> <em>before</em> <code class="docutils literal notranslate"><span class="pre">func</span></code> is called.</p>
+<p>After the run, we have four dirs for each pset, each simply named with
+<code class="docutils literal notranslate"><span class="pre">_pset_id</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>calc
+├── 63b5daae-1b37-47e9-a11c-463fb4934d14
+│   └── output.txt
+├── 657cb9f9-8720-4d4c-8ff1-d7ddc7897700
+│   └── output.txt
+├── d7849792-622d-4479-aec6-329ed8bedd9b
+│   └── output.txt
+├── de8ac159-b5d0-4df6-9e4b-22ebf78bf9b0
+│   └── output.txt
+└── database.pk
+</pre></div>
+</div>
+<p>This is a useful pattern. History has shown that in the end, most naming
+conventions start simple but turn out to be inflexible and hard to adapt
+later on. I have seen people write scripts which create things like:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>calc/param_a=1.2_param_b=66.77
+calc/param_a=3.4_param_b=88.99
+</pre></div>
+</div>
+<p>i.e. encode the parameter values in path names, because they don’t have
+a database. Good luck parsing that. I don’t say this cannot be done –
+sure it can (in fact the example above easy to parse). It is just not
+fun – and there is no need to. What if you need to add a “column”
+for parameter ‘c’ later? Impossible (well, painful at least). This
+approach makes sense for very quick throw-away test runs, but gets out
+of hand quickly.</p>
+<p>Since we have a database, we can simply drop all data in
+<code class="docutils literal notranslate"><span class="pre">calc/&lt;_pset_id&gt;</span></code> and be done with it. Each parameter set is identified
+by a UUID that will never change. This is the only kind of naming
+convention which makes sense in the long run.</p>
+</div>
+<div class="section" id="post-processing">
+<h2>Post-processing<a class="headerlink" href="#post-processing" title="Permalink to this headline">¶</a></h2>
+<p>An example of a simple post-processing script that reads data from disk
+(<code class="docutils literal notranslate"><span class="pre">examples/save_data_on_disk/20eval.py</span></code>):</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">df_read</span><span class="p">(</span><span class="s2">&quot;calc/database.pk&quot;</span><span class="p">)</span>
+
+<span class="c1"># Filter database</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">a</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">df</span><span class="o">.</span><span class="n">a</span><span class="o">.</span><span class="n">isna</span><span class="p">()]</span>
+
+<span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+    <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;calc/{pset_id}/output.txt&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">pset_id</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">_pset_id</span><span class="o">.</span><span class="n">values</span><span class="p">]</span>
+<span class="p">)</span>
+
+<span class="n">df</span><span class="p">[</span><span class="s2">&quot;mean&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">arr</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;mean&quot;</span><span class="p">,</span> <span class="s2">&quot;_pset_id&quot;</span><span class="p">]</span>
+<span class="n">ps</span><span class="o">.</span><span class="n">df_print</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">cols</span><span class="p">])</span>
+
+<span class="n">ps</span><span class="o">.</span><span class="n">df_write</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s2">&quot;calc/database_eval.pk&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="iterative-extension-of-a-parameter-study">
+<h2>Iterative extension of a parameter study<a class="headerlink" href="#iterative-extension-of-a-parameter-study" title="Permalink to this headline">¶</a></h2>
+<p>See <code class="docutils literal notranslate"><span class="pre">examples/multiple_local_1d_scans/</span></code> and <code class="docutils literal notranslate"><span class="pre">examples/*repeat*</span></code>.</p>
+<p>You can backup old calc dirs when repeating calls to <code class="docutils literal notranslate"><span class="pre">ps.run_local()</span></code> using the
+<code class="docutils literal notranslate"><span class="pre">backup</span></code> keyword.</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">run_local</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">backup</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This will save a copy of the old <code class="docutils literal notranslate"><span class="pre">calc_dir</span></code> to something like</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">calc</span><span class="o">.</span><span class="n">bak_2021</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">19</span><span class="n">T23</span><span class="p">:</span><span class="mi">20</span><span class="p">:</span><span class="mf">33.621004</span><span class="n">Z_run_id_d309c2c6</span><span class="o">-</span><span class="n">e4ba</span><span class="o">-</span><span class="mi">4</span><span class="n">ef4</span><span class="o">-</span><span class="mi">934</span><span class="n">c</span><span class="o">-</span><span class="mi">2</span><span class="n">a4b2df07941</span>
+</pre></div>
+</div>
+<p>That way, you can track old states of the overall study, and recover from
+mistakes, e.g. by just</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$ rm -r calc
+$ mv calc.bak_2021-03-19T2* calc
+</pre></div>
+</div>
+<p>For any non-trivial work, you won’t use an interactive session. Instead, you
+will have a driver script (say <code class="docutils literal notranslate"><span class="pre">run.py</span></code>) which defines <code class="docutils literal notranslate"><span class="pre">params</span></code> and starts
+<code class="docutils literal notranslate"><span class="pre">ps.run_local()</span></code>. Also in a common workflow, you won’t define <code class="docutils literal notranslate"><span class="pre">params</span></code> and run
+a study once. Instead you will first have an idea about which parameter values
+to scan. You will start with a coarse grid of parameters and then inspect the
+results and identify regions where you need more data (e.g. more dense
+sampling). Then you will modify <code class="docutils literal notranslate"><span class="pre">params</span></code> and run the study again. You will
+modify <code class="docutils literal notranslate"><span class="pre">run.py</span></code> multiple times, as you refine your study.</p>
+</div>
+<div class="section" id="use-git">
+<h2>Use git<a class="headerlink" href="#use-git" title="Permalink to this headline">¶</a></h2>
+<p>Instead or in addition to using <code class="docutils literal notranslate"><span class="pre">backup</span></code>, we recommend a <code class="docutils literal notranslate"><span class="pre">git</span></code>-based workflow
+to at least track changes to <code class="docutils literal notranslate"><span class="pre">run.py</span></code> (instead of manually creating backups
+such as <code class="docutils literal notranslate"><span class="pre">run.py.0</span></code>, <code class="docutils literal notranslate"><span class="pre">run.py.1</span></code>, …). We recommend to create a <code class="docutils literal notranslate"><span class="pre">.gitignore</span></code>
+such as</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># ignore backups</span>
+<span class="n">calc</span><span class="o">.</span><span class="n">bak</span><span class="o">*</span>
+
+<span class="c1"># ignore simulate runs</span>
+<span class="n">calc</span><span class="o">.</span><span class="n">simulate</span>
+
+<span class="c1"># ignore the whole calc/ dir, track only scripts</span>
+<span class="c1">##calc/</span>
+
+<span class="c1"># or just ignore potentially big files coming from a simulation you run</span>
+<span class="n">calc</span><span class="o">/*/*.</span><span class="n">bin</span>
+</pre></div>
+</div>
+<p>You can even go crazy with <a class="reference external" href="https://git-lfs.github.com"><code class="docutils literal notranslate"><span class="pre">git-lfs</span></code></a> here. Again,
+we don’t enforce a specific workflow. We just provide basic building blocks to
+create your own.</p>
+</div>
+<div class="section" id="simulate-dry-run-look-before-you-leap">
+<h2>Simulate / Dry-Run: look before you leap<a class="headerlink" href="#simulate-dry-run-look-before-you-leap" title="Permalink to this headline">¶</a></h2>
+<p>See <code class="docutils literal notranslate"><span class="pre">examples/vary_1_param_simulate.py</span></code>.</p>
+<p>When you fiddle with finding the next good <code class="docutils literal notranslate"><span class="pre">params</span></code> and even when using
+<code class="docutils literal notranslate"><span class="pre">backup</span></code> and/or <code class="docutils literal notranslate"><span class="pre">git</span></code>, appending to the old database might be
+a hassle if you find that you made a mistake when setting up <code class="docutils literal notranslate"><span class="pre">params</span></code>.
+You need to abort the current run, copy the backup over or use <code class="docutils literal notranslate"><span class="pre">git</span></code> to go
+back.</p>
+<p>Instead, while you tinker with <code class="docutils literal notranslate"><span class="pre">params</span></code>, use another
+<code class="docutils literal notranslate"><span class="pre">calc_dir</span></code>, e.g.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="c1"># only needed so that we can copy the old database over</span>
+$ mkdir -p calc.simulate
+$ cp calc/database.pk calc.simulate/
+</pre></div>
+</div>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">run_local</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">calc_dir</span><span class="o">=</span><span class="s1">&#39;calc.simulate&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>But what’s even better: keep everything as it is and just set
+<code class="docutils literal notranslate"><span class="pre">simulate=True</span></code>, which performs exactly the two steps above.</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">run_local</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">simulate</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>It will copy only the database, not all the (possible large) data in <code class="docutils literal notranslate"><span class="pre">calc/</span></code> to
+<code class="docutils literal notranslate"><span class="pre">calc.simulate/</span></code> and run the study there. Additionally , it <em>will not call</em> call
+<code class="docutils literal notranslate"><span class="pre">func()</span></code> to run any workload. So you still append to your old database as in a
+real run, but in a safe separate dir which you can delete later.</p>
+</div>
+<div class="section" id="advanced-give-runs-names-for-easy-post-processing">
+<h2>Advanced: Give runs names for easy post-processing<a class="headerlink" href="#advanced-give-runs-names-for-easy-post-processing" title="Permalink to this headline">¶</a></h2>
+<p>See <code class="docutils literal notranslate"><span class="pre">examples/vary_1_param_study_column.py</span></code>.</p>
+<p>Post-processing is not the scope of the package. The database is a
+pandas DataFrame and that’s it. You can query it and use your full pandas
+Ninja skills here, e.g. “give me all psets where parameter ‘a’ was
+between 10 and 100, while ‘b’ was constant, …”. You get the idea.</p>
+<p>To ease post-processing, it can be useful practice to add a constant parameter
+named “study” or “scan” to label a certain range of runs. If you, for instance,
+have 5 runs (meaning 5 calls to <code class="docutils literal notranslate"><span class="pre">ps.run_local()</span></code>) where you scan values for
+parameter ‘a’ while keeping parameters ‘b’ and ‘c’ constant, you’ll have 5
+<code class="docutils literal notranslate"><span class="pre">_run_id</span></code> values. When querying the database later, you could limit by
+<code class="docutils literal notranslate"><span class="pre">_run_id</span></code> if you know the values:</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">df_filtered</span> <span class="o">=</span> <span class="n">df</span><span class="p">[(</span><span class="n">df</span><span class="o">.</span><span class="n">_run_id</span><span class="o">==</span><span class="s1">&#39;afa03dab-071e-472d-a396-37096580bfee&#39;</span><span class="p">)</span> <span class="o">|</span>
+<span class="go">                     (df._run_id==&#39;e813db52-7fb9-4777-a4c8-2ce0dddc283c&#39;) |</span>
+<span class="go">                     ...</span>
+<span class="go">                     ]</span>
+</pre></div>
+</div>
+<p>This doesn’t look like fun. It shows that the UUIDs (<code class="docutils literal notranslate"><span class="pre">_run_id</span></code> and
+<code class="docutils literal notranslate"><span class="pre">_pset_id</span></code>) are rarely meant to be used directly, but rather to
+programmatically link psets and runs to other data (as shown above in the
+“Save data on disk” example). You can also use the integer IDs <code class="docutils literal notranslate"><span class="pre">_run_seq</span></code> and
+<code class="docutils literal notranslate"><span class="pre">_pset_seq</span></code> instead. But still, you need to know to which parameter values they
+correspond to.</p>
+<p>When possible, you could limit by the constant values of the other parameters:</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">df_filtered</span> <span class="o">=</span> <span class="n">df</span><span class="p">[(</span><span class="n">df</span><span class="o">.</span><span class="n">b</span><span class="o">==</span><span class="mi">10</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">c</span><span class="o">==</span><span class="s1">&#39;foo&#39;</span><span class="p">)]</span>
+</pre></div>
+</div>
+<p>Much better! This is what most post-processing scripts will do. In fact, we
+have a shortcut function</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">conds</span> <span class="o">=</span> <span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">b</span><span class="o">==</span><span class="mi">10</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">c</span><span class="o">==</span><span class="s1">&#39;foo&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df_filtered</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">df_filter_conds</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">conds</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>which is useful in post-processing scripts where <code class="docutils literal notranslate"><span class="pre">conds</span></code> is
+created programmatically.</p>
+<p>But when you have a column “study” which has the value <code class="docutils literal notranslate"><span class="pre">'a'</span></code> all the
+time, it is just</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">study</span><span class="o">==</span><span class="s1">&#39;a&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>You can do more powerful things with this approach. For instance, say
+you vary parameters ‘a’ and ‘b’, then you could name the “study”
+field ‘scan=a:b’ and encode which parameters (thus column names) you
+have varied. Later in the post-processing</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">study</span> <span class="o">=</span> <span class="s1">&#39;scan=a:b&#39;</span>
+<span class="go"># cols = [&#39;a&#39;, &#39;b&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cols</span> <span class="o">=</span> <span class="n">study</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;=&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">values</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">cols</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+</pre></div>
+</div>
+<p>So in this case, a naming convention <em>is</em> useful in order to bypass
+possibly complex database queries. But it is still flexible – you can
+change the “study” column at any time, or delete it again.</p>
+<p>Pro tip: You can manipulate the database at any later point and add the
+“study” column after all runs have been done.</p>
+<p>Super Pro tip: Make a backup of the database first!</p>
+</div>
+</div>
+<div class="tex2jax_ignore mathjax_ignore section" id="batch-runs">
+<h1>Batch runs<a class="headerlink" href="#batch-runs" title="Permalink to this headline">¶</a></h1>
+<p>We have experimental support for managing calculations on remote systems such
+as HPC clusters with a batch system like SLURM. It is basically a modernized
+and stripped-down version of
+<a class="reference external" href="https://elcorto.github.io/pwtools/written/background/param_study.html"><code class="docutils literal notranslate"><span class="pre">pwtools.batch</span></code></a>.
+Note that we don’t use any method like DRMAA to automatically dispatch jobs to
+clusters. Our design revolves around maximal user control of each step of the
+workflow.</p>
+<p>See <code class="docutils literal notranslate"><span class="pre">ps.prep_batch()</span></code> and <code class="docutils literal notranslate"><span class="pre">examples/batch/</span></code>. The workflow is based on
+<strong>template files</strong>. In the templates, we use (for now) the standard library’s
+<code class="docutils literal notranslate"><span class="pre">string.Template</span></code>, where each <code class="docutils literal notranslate"><span class="pre">$foo</span></code> is replaced by a value contained in a
+pset, so <code class="docutils literal notranslate"><span class="pre">$param_a</span></code>, <code class="docutils literal notranslate"><span class="pre">$param_b</span></code>, as well as <code class="docutils literal notranslate"><span class="pre">$_pset_id</span></code> and so forth.</p>
+<p>We piggy-back on the <code class="docutils literal notranslate"><span class="pre">run_local()</span></code> workflow from above to use all it’s power
+and flexibility to create batch scripts using template files. Again, you have
+full control over every part of the workflow. We just automate the boring
+stuff.</p>
+<p>Workflow summary:</p>
+<ul class="simple">
+<li><p>define <code class="docutils literal notranslate"><span class="pre">params</span></code> to be varied as shown above (probably in a script, say
+<code class="docutils literal notranslate"><span class="pre">input.py</span></code>)</p></li>
+<li><p>in that script, call <code class="docutils literal notranslate"><span class="pre">ps.prep_batch(params)</span></code>, which does</p>
+<ul>
+<li><p>use <code class="docutils literal notranslate"><span class="pre">templates/calc/*</span></code>: scripts that you want to run in each batch job</p></li>
+<li><p>use <code class="docutils literal notranslate"><span class="pre">templates/machines/&lt;mycluster&gt;/jobscript</span></code>: batch job script</p></li>
+<li><p>read <code class="docutils literal notranslate"><span class="pre">templates/machines/&lt;mycluster&gt;/info.yaml</span></code>: machine-specific info
+(e.g. command to submit the <code class="docutils literal notranslate"><span class="pre">jobscript</span></code>)</p></li>
+<li><p>define <code class="docutils literal notranslate"><span class="pre">func()</span></code> that will create a dir named <code class="docutils literal notranslate"><span class="pre">calc/&lt;_pset_id&gt;</span></code> for each
+batch job, <strong>replace placeholders</strong> such as <code class="docutils literal notranslate"><span class="pre">$param_a</span></code> from psets
+(including special ones such as <code class="docutils literal notranslate"><span class="pre">$_pset_id</span></code>)</p></li>
+<li><p>call <code class="docutils literal notranslate"><span class="pre">run_local(func,</span> <span class="pre">params)</span></code></p></li>
+<li><p>create a script <code class="docutils literal notranslate"><span class="pre">calc/run_&lt;mycluster&gt;.sh</span></code> to submit all jobs</p></li>
+</ul>
+</li>
+</ul>
+<p>We replace running jobs locally (i.e. what <code class="docutils literal notranslate"><span class="pre">ps.run_local()</span></code> would do) with some
+small helper scripts:</p>
+<ul class="simple">
+<li><p>use <code class="docutils literal notranslate"><span class="pre">bin/psweep-push</span> <span class="pre">&lt;mycluster&gt;</span></code> to <code class="docutils literal notranslate"><span class="pre">rsync</span></code> <code class="docutils literal notranslate"><span class="pre">calc/</span></code> to a cluster</p></li>
+<li><p>ssh to cluster; execute <code class="docutils literal notranslate"><span class="pre">calc/run_&lt;mycluster&gt;.sh</span></code>, wait …</p></li>
+<li><p>use <code class="docutils literal notranslate"><span class="pre">bin/psweep-pull</span> <span class="pre">&lt;mycluster&gt;</span></code> to <code class="docutils literal notranslate"><span class="pre">rsync</span></code> results back</p></li>
+</ul>
+<p>Now suppose that each of our batch jobs produces a output file, then we have
+the same post-processing setup as in <code class="docutils literal notranslate"><span class="pre">save_data_on_disk</span></code>, namely</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>calc
+├── 63b5daae-1b37-47e9-a11c-463fb4934d14
+│   └── output.txt
+├── 657cb9f9-8720-4d4c-8ff1-d7ddc7897700
+│   └── output.txt
+├── d7849792-622d-4479-aec6-329ed8bedd9b
+│   └── output.txt
+├── de8ac159-b5d0-4df6-9e4b-22ebf78bf9b0
+│   └── output.txt
+└── database.pk
+</pre></div>
+</div>
+<p>The only difference is that the outputs were not calculated and written locally
+but <code class="docutils literal notranslate"><span class="pre">rsync</span></code>ed from the cluster.</p>
+<p>And then post-processing is (almost) as before:</p>
+<ul class="simple">
+<li><p>analyze results, run post-processing script(s) on <code class="docutils literal notranslate"><span class="pre">calc/database.pk</span></code>, read in
+<code class="docutils literal notranslate"><span class="pre">output.txt</span></code> for each <code class="docutils literal notranslate"><span class="pre">_pset_id</span></code></p></li>
+<li><p>when extending the study (modify <code class="docutils literal notranslate"><span class="pre">params</span></code>, call <code class="docutils literal notranslate"><span class="pre">input.py</span></code> again), we use the
+same features shown above</p>
+<ul>
+<li><p>append to database</p></li>
+<li><p>create new unique <code class="docutils literal notranslate"><span class="pre">calc/&lt;_pset_id&gt;</span></code> without overwriting anything</p></li>
+<li><p>additionally: write a new <code class="docutils literal notranslate"><span class="pre">calc/run_&lt;mycluster&gt;.sh</span></code> with old submit
+commands still in there, but commented out</p></li>
+</ul>
+</li>
+</ul>
+<div class="section" id="git-support">
+<h2>git support<a class="headerlink" href="#git-support" title="Permalink to this headline">¶</a></h2>
+<p>Use <code class="docutils literal notranslate"><span class="pre">prep_batch(...,</span> <span class="pre">git=True)</span></code> to have some basic git support such as
+automatic commits in each call. Make sure to create <code class="docutils literal notranslate"><span class="pre">.gitignore</span></code> first, else
+we’ll track <code class="docutils literal notranslate"><span class="pre">calc/</span></code> as well, which you may safely do when data in <code class="docutils literal notranslate"><span class="pre">calc</span></code> is
+small.</p>
+</div>
+</div>
+<div class="tex2jax_ignore mathjax_ignore section" id="install">
+<h1>Install<a class="headerlink" href="#install" title="Permalink to this headline">¶</a></h1>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$ pip install psweep
+</pre></div>
+</div>
+<p>Dev install of this repo:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$ pip install -e .
+</pre></div>
+</div>
+<p>See also <a class="reference external" href="https://github.com/elcorto/samplepkg">https://github.com/elcorto/samplepkg</a>.</p>
+</div>
+<div class="tex2jax_ignore mathjax_ignore section" id="tests">
+<h1>Tests<a class="headerlink" href="#tests" title="Permalink to this headline">¶</a></h1>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> src/psweep/tests
+pytest test.py
+</pre></div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">psweep</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../generated/api/index.html">API Reference</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">About</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#getting-started">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#concepts">Concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#the-database">The database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#pset-id-pset-seq-run-id-run-seq-pset-sha1-and-repeated-runs"><code class="docutils literal notranslate"><span class="pre">_pset_id</span></code>, <code class="docutils literal notranslate"><span class="pre">_pset_seq</span></code>, <code class="docutils literal notranslate"><span class="pre">_run_id</span></code>, <code class="docutils literal notranslate"><span class="pre">_run_seq</span></code>, <code class="docutils literal notranslate"><span class="pre">_pset_sha1</span></code> and repeated runs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#best-practices">Best practices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#batch-runs">Batch runs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#install">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#tests">Tests</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">&lt;no title&gt;</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">&lt;no title&gt;</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, Steve Schmerler.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="../_sources/written/content.md.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

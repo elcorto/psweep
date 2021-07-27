@@ -1,19 +1,17 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>psweep.psweep &#8212; psweep 0.5.0 documentation</title>
-    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
    
@@ -108,14 +106,17 @@
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
 <span class="sd">    &gt;&gt;&gt; @itr</span>
-<span class="sd">    ... def func(seq):</span>
-<span class="sd">    ...     for arg in seq:</span>
-<span class="sd">    ...         foo(arg)</span>
-
-<span class="sd">    &gt;&gt;&gt; @itr</span>
-<span class="sd">    ... def func(*args):</span>
+<span class="sd">    ... def func(args):</span>
 <span class="sd">    ...     for arg in args:</span>
-<span class="sd">    ...         foo(arg)</span>
+<span class="sd">    ...         print(arg)</span>
+<span class="sd">    &gt;&gt;&gt; func([1,2,3])</span>
+<span class="sd">    1</span>
+<span class="sd">    2</span>
+<span class="sd">    3</span>
+<span class="sd">    &gt;&gt;&gt; func(1,2,3)</span>
+<span class="sd">    1</span>
+<span class="sd">    2</span>
+<span class="sd">    3</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="nd">@wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
@@ -129,7 +130,7 @@
 
 
 <span class="c1"># https://github.com/elcorto/pwtools</span>
-<div class="viewcode-block" id="is_seq"><a class="viewcode-back" href="../../generated/api/psweep.psweep.is_seq.html#psweep.psweep.is_seq">[docs]</a><span class="k">def</span> <span class="nf">is_seq</span><span class="p">(</span><span class="n">seq</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">IOBase</span><span class="p">,</span> <span class="nb">dict</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="is_seq"><a class="viewcode-back" href="../../generated/api/psweep.psweep.is_seq.html#psweep.psweep.is_seq">[docs]</a><span class="k">def</span> <span class="nf">is_seq</span><span class="p">(</span><span class="n">seq</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
     <span class="k">if</span> <span class="p">(</span>
         <span class="nb">isinstance</span><span class="p">(</span><span class="n">seq</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
         <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">seq</span><span class="p">,</span> <span class="n">IOBase</span><span class="p">)</span>
@@ -168,6 +169,11 @@
     <span class="n">h</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">hashlib</span><span class="p">,</span> <span class="n">method</span><span class="p">)()</span>
     <span class="n">h</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">dct</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span>
     <span class="k">return</span> <span class="n">h</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="git_clean"><a class="viewcode-back" href="../../generated/api/psweep.psweep.git_clean.html#psweep.psweep.git_clean">[docs]</a><span class="k">def</span> <span class="nf">git_clean</span><span class="p">():</span>
+    <span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;git status --porcelain&quot;</span>
+    <span class="k">return</span> <span class="n">system</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span></div>
 
 
 <span class="c1"># -----------------------------------------------------------------------------</span>
@@ -240,6 +246,8 @@
 
 
 <span class="n">T</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">bool</span><span class="p">]]</span>
+
+
 <div class="viewcode-block" id="df_filter_conds"><a class="viewcode-back" href="../../generated/api/psweep.psweep.df_filter_conds.html#psweep.psweep.df_filter_conds">[docs]</a><span class="k">def</span> <span class="nf">df_filter_conds</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">conds</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">T</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Filter DataFrame using bool arrays/Series/DataFrames in `conds`.</span>
 
@@ -277,8 +285,10 @@
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cc</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">df</span>
     <span class="k">for</span> <span class="n">ic</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">cc</span><span class="p">):</span>
-        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">),</span> <span class="p">(</span>
-            <span class="n">f</span><span class="s2">&quot;Condition at index </span><span class="si">{ic}</span><span class="s2"> has {len(c)=}, expect {len(df)=}&quot;</span><span class="p">)</span>
+        <span class="c1"># fmt: off</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">),</span> \
+            <span class="n">f</span><span class="s2">&quot;Condition at index </span><span class="si">{ic}</span><span class="s2"> has {len(c)=}, expect {len(df)=}&quot;</span>
+        <span class="c1"># fmt: on</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cc</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
         <span class="n">msk</span> <span class="o">=</span> <span class="n">cc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
@@ -356,6 +366,10 @@
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; a = ps.plist(&#39;a&#39;, [1,2])</span>
+<span class="sd">    &gt;&gt;&gt; b = ps.plist(&#39;b&#39;, [77,88])</span>
+<span class="sd">    &gt;&gt;&gt; c = ps.plist(&#39;c&#39;, [&#39;const&#39;])</span>
+<span class="sd">    &gt;&gt;&gt; # same as pgrid([a,b,c])</span>
 <span class="sd">    &gt;&gt;&gt; ps.pgrid(a,b,c)</span>
 <span class="sd">    [{&#39;a&#39;: 1, &#39;b&#39;: 77, &#39;c&#39;: &#39;const&#39;},</span>
 <span class="sd">     {&#39;a&#39;: 1, &#39;b&#39;: 88, &#39;c&#39;: &#39;const&#39;},</span>
@@ -381,27 +395,16 @@
 
 
 <div class="viewcode-block" id="worker_wrapper"><a class="viewcode-back" href="../../generated/api/psweep.psweep.worker_wrapper.html#psweep.psweep.worker_wrapper">[docs]</a><span class="k">def</span> <span class="nf">worker_wrapper</span><span class="p">(</span>
-    <span class="n">pset</span><span class="p">,</span>
-    <span class="n">worker</span><span class="p">,</span>
-    <span class="n">tmpsave</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-    <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-    <span class="n">run_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">calc_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">simulate</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">pset</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+    <span class="n">worker</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span>
+    <span class="n">tmpsave</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">run_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">calc_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">simulate</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">pset_seq</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
-    <span class="n">run_seq</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">run_seq</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    pset : dict</span>
-<span class="sd">        example: ``{&#39;a&#39;: 1, &#39;b&#39;: &#39;foo&#39;}``</span>
-<span class="sd">    run_id : str</span>
-<span class="sd">        uuid</span>
-
-
-<span class="sd">    See :func:`run_local` for other parameters.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">assert</span> <span class="n">run_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
     <span class="k">assert</span> <span class="n">calc_dir</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
     <span class="n">pset_id</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">())</span>
@@ -455,37 +458,37 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    worker :</span>
+<span class="sd">    worker : Callable</span>
 <span class="sd">        must accept one parameter: `pset` (a dict ``{&#39;a&#39;: 1, &#39;b&#39;: &#39;foo&#39;,</span>
 <span class="sd">        ...}``), return either an update to `pset` or a new dict, result will</span>
 <span class="sd">        be processes as ``pset.update(worker(pset))``</span>
-<span class="sd">    params :</span>
+<span class="sd">    params : seq of dicts</span>
 <span class="sd">        each dict is a pset ``{&#39;a&#39;: 1, &#39;b&#39;: &#39;foo&#39;, ...}``</span>
-<span class="sd">    df :</span>
+<span class="sd">    df : DataFrame</span>
 <span class="sd">        append rows to this DataFrame, if None then either create new one or</span>
 <span class="sd">        read existing database file from disk if found</span>
-<span class="sd">    poolsize :</span>
+<span class="sd">    poolsize : {bool, None}</span>
 <span class="sd">        | None : use serial execution</span>
 <span class="sd">        | int : use multiprocessing.Pool (even for ``poolsize=1``)</span>
-<span class="sd">    save :</span>
+<span class="sd">    save : bool</span>
 <span class="sd">        save final DataFrame to ``&lt;calc_dir&gt;/database.pk`` (pickle format only)</span>
-<span class="sd">    tmpsave :</span>
+<span class="sd">    tmpsave : bol</span>
 <span class="sd">        save results from this pset (the current DataFrame row) to</span>
 <span class="sd">        ``&lt;calc_dir&gt;/tmpsave/&lt;run_id&gt;/&lt;pset_id&gt;.pk`` (pickle format only)</span>
-<span class="sd">    verbose :</span>
+<span class="sd">    verbose : {bool, sequence of str}</span>
 <span class="sd">        | bool : print the current DataFrame row</span>
 <span class="sd">        | sequence : list of DataFrame column names, print the row but only</span>
 <span class="sd">        | those columns</span>
-<span class="sd">    calc_dir :</span>
-<span class="sd">    simulate :</span>
+<span class="sd">    calc_dir : str</span>
+<span class="sd">    simulate : bool</span>
 <span class="sd">        run everything in ``&lt;calc_dir&gt;.simulate``, don&#39;t call `worker`, i.e. save</span>
 <span class="sd">        what the run would create, but without the results from `worker`,</span>
 <span class="sd">        useful to check if `params` are correct before starting a production run</span>
-<span class="sd">    database_dir :</span>
+<span class="sd">    database_dir : str</span>
 <span class="sd">        Path for the database. Default is ``&lt;calc_dir&gt;``.</span>
-<span class="sd">    database_basename :</span>
+<span class="sd">    database_basename : str</span>
 <span class="sd">        ``&lt;database_dir&gt;/&lt;database_basename&gt;``</span>
-<span class="sd">    backup :</span>
+<span class="sd">    backup : bool</span>
 <span class="sd">        Make backup of ``&lt;calc_dir&gt;`` to ``&lt;calc_dir&gt;.bak_&lt;timestamp&gt;_run_id_&lt;_run_id&gt;``</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -587,10 +590,14 @@
 
 <div class="viewcode-block" id="Machine"><a class="viewcode-back" href="../../generated/api/psweep.psweep.Machine.html#psweep.psweep.Machine">[docs]</a><span class="k">class</span> <span class="nc">Machine</span><span class="p">:</span>
 <div class="viewcode-block" id="Machine.__init__"><a class="viewcode-back" href="../../generated/api/psweep.psweep.Machine.html#psweep.psweep.Machine.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">machine_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">jobscript_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;jobscript&quot;</span><span class="p">):</span>
-        <span class="c1"># templates/machines/&lt;name&gt;/info.yaml</span>
-        <span class="c1"># ^^^^^^^^^^^^^^^^^^^^^^^^^------------- machine_dir</span>
-        <span class="c1"># templates/machines/&lt;name&gt;/jobscript</span>
-        <span class="c1">#                           ^^^^^^^^^--- template.basename</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Expected templates layout::</span>
+
+<span class="sd">            templates/machines/&lt;name&gt;/info.yaml</span>
+<span class="sd">            ^^^^^^^^^^^^^^^^^^^^^^^^^------------- machine_dir</span>
+<span class="sd">            templates/machines/&lt;name&gt;/jobscript</span>
+<span class="sd">                                      ^^^^^^^^^--- template.basename</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">machine_dir</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">template</span> <span class="o">=</span> <span class="n">FileTemplate</span><span class="p">(</span>
             <span class="n">pj</span><span class="p">(</span><span class="n">machine_dir</span><span class="p">,</span> <span class="n">jobscript_name</span><span class="p">),</span> <span class="n">target_suffix</span><span class="o">=</span><span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
@@ -632,11 +639,6 @@
         <span class="n">Machine</span><span class="p">(</span><span class="n">pj</span><span class="p">(</span><span class="n">machine_templ_dir</span><span class="p">,</span> <span class="n">basename</span><span class="p">))</span>
         <span class="k">for</span> <span class="n">basename</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">machine_templ_dir</span><span class="p">)</span>
     <span class="p">]</span></div>
-
-
-<div class="viewcode-block" id="git_clean"><a class="viewcode-back" href="../../generated/api/psweep.psweep.git_clean.html#psweep.psweep.git_clean">[docs]</a><span class="k">def</span> <span class="nf">git_clean</span><span class="p">():</span>
-    <span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;git status --porcelain&quot;</span>
-    <span class="k">return</span> <span class="n">system</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span></div>
 
 
 <span class="c1"># If we ever add a &quot;simulate&quot; kwd here: don&#39;t pass that thru to run_local() b/c</span>
@@ -733,6 +735,17 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../generated/api/index.html">API Reference</a></li>
 </ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../written/content.html">About</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../written/content.html#getting-started">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../written/content.html#concepts">Concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../written/content.html#the-database">The database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../written/content.html#pset-id-pset-seq-run-id-run-seq-pset-sha1-and-repeated-runs"><code class="docutils literal notranslate"><span class="pre">_pset_id</span></code>, <code class="docutils literal notranslate"><span class="pre">_pset_seq</span></code>, <code class="docutils literal notranslate"><span class="pre">_run_id</span></code>, <code class="docutils literal notranslate"><span class="pre">_run_seq</span></code>, <code class="docutils literal notranslate"><span class="pre">_pset_sha1</span></code> and repeated runs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../written/content.html#best-practices">Best practices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../written/content.html#batch-runs">Batch runs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../written/content.html#install">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../written/content.html#tests">Tests</a></li>
+</ul>
 
 <div class="relations">
 <h3>Related Topics</h3>
@@ -744,17 +757,15 @@
 </ul>
 </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../../search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -763,7 +774,7 @@
       &copy;2021, Steve Schmerler.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.5</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.1.2</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
       
     </div>

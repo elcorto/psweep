@@ -1,4 +1,4 @@
-psweep.psweep.merge\_dicts
+﻿psweep.psweep.merge\_dicts
 ==========================
 
 .. currentmodule:: psweep.psweep

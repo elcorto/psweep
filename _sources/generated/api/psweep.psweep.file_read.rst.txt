@@ -1,4 +1,4 @@
-psweep.psweep.file\_read
+﻿psweep.psweep.file\_read
 ========================
 
 .. currentmodule:: psweep.psweep

@@ -1,4 +1,4 @@
-psweep.psweep.Machine
+﻿psweep.psweep.Machine
 =====================
 
 .. currentmodule:: psweep.psweep

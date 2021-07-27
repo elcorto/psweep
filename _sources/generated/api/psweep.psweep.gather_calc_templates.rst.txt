@@ -1,4 +1,4 @@
-psweep.psweep.gather\_calc\_templates
+﻿psweep.psweep.gather\_calc\_templates
 =====================================
 
 .. currentmodule:: psweep.psweep

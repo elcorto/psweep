@@ -1,4 +1,4 @@
-psweep.psweep.flatten
+﻿psweep.psweep.flatten
 =====================
 
 .. currentmodule:: psweep.psweep

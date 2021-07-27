@@ -1,4 +1,4 @@
-psweep.psweep.dict\_hash
+﻿psweep.psweep.dict\_hash
 ========================
 
 .. currentmodule:: psweep.psweep

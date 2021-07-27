@@ -1,4 +1,4 @@
-psweep.psweep.is\_seq
+﻿psweep.psweep.is\_seq
 =====================
 
 .. currentmodule:: psweep.psweep

@@ -1,4 +1,4 @@
-psweep.psweep.FileTemplate
+﻿psweep.psweep.FileTemplate
 ==========================
 
 .. currentmodule:: psweep.psweep

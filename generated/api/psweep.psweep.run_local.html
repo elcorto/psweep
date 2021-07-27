@@ -1,19 +1,17 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>psweep.psweep.run_local &#8212; psweep 0.5.0 documentation</title>
-    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="psweep.psweep.seq2dicts" href="psweep.psweep.seq2dicts.html" />
@@ -33,46 +31,42 @@
             
   <div class="section" id="psweep-psweep-run-local">
 <h1>psweep.psweep.run_local<a class="headerlink" href="#psweep-psweep-run-local" title="Permalink to this headline">¶</a></h1>
-<dl class="function">
-<dt id="psweep.psweep.run_local">
-<code class="descclassname">psweep.psweep.</code><code class="descname">run_local</code><span class="sig-paren">(</span><em>worker: Callable, params: Sequence[dict], df: Optional[pandas.core.frame.DataFrame] = None, poolsize: Optional[int] = None, save=True, tmpsave=False, verbose: Union[bool, Sequence[str]] = False, calc_dir='calc', simulate=False, database_dir: Optional[str] = None, database_basename='database.pk', backup=False, backup_calc_dir=False</em><span class="sig-paren">)</span> &#x2192; pandas.core.frame.DataFrame<a class="reference internal" href="../../_modules/psweep/psweep.html#run_local"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#psweep.psweep.run_local" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>worker</strong> – must accept one parameter: <cite>pset</cite> (a dict <code class="docutils literal notranslate"><span class="pre">{'a':</span> <span class="pre">1,</span> <span class="pre">'b':</span> <span class="pre">'foo',</span>
+<dl class="py function">
+<dt class="sig sig-object py" id="psweep.psweep.run_local">
+<span class="sig-prename descclassname"><span class="pre">psweep.psweep.</span></span><span class="sig-name descname"><span class="pre">run_local</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">worker</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Callable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">pandas.core.frame.DataFrame</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">poolsize</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tmpsave</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">,</span> </span><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calc_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'calc'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">simulate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">database_dir</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">database_basename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'database.pk'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backup</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backup_calc_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pandas.core.frame.DataFrame</span></span></span><a class="reference internal" href="../../_modules/psweep/psweep.html#run_local"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psweep.psweep.run_local" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>worker</strong> (<em>Callable</em>) – must accept one parameter: <cite>pset</cite> (a dict <code class="docutils literal notranslate"><span class="pre">{'a':</span> <span class="pre">1,</span> <span class="pre">'b':</span> <span class="pre">'foo',</span>
 <span class="pre">...}</span></code>), return either an update to <cite>pset</cite> or a new dict, result will
-be processes as <code class="docutils literal notranslate"><span class="pre">pset.update(worker(pset))</span></code></li>
-<li><strong>params</strong> – each dict is a pset <code class="docutils literal notranslate"><span class="pre">{'a':</span> <span class="pre">1,</span> <span class="pre">'b':</span> <span class="pre">'foo',</span> <span class="pre">...}</span></code></li>
-<li><strong>df</strong> – append rows to this DataFrame, if None then either create new one or
-read existing database file from disk if found</li>
-<li><strong>poolsize</strong> – <div class="line-block">
+be processes as <code class="docutils literal notranslate"><span class="pre">pset.update(worker(pset))</span></code></p></li>
+<li><p><strong>params</strong> (<em>seq of dicts</em>) – each dict is a pset <code class="docutils literal notranslate"><span class="pre">{'a':</span> <span class="pre">1,</span> <span class="pre">'b':</span> <span class="pre">'foo',</span> <span class="pre">...}</span></code></p></li>
+<li><p><strong>df</strong> (<em>DataFrame</em>) – append rows to this DataFrame, if None then either create new one or
+read existing database file from disk if found</p></li>
+<li><p><strong>poolsize</strong> (<em>{bool</em><em>, </em><em>None}</em>) – <div class="line-block">
 <div class="line">None : use serial execution</div>
 <div class="line">int : use multiprocessing.Pool (even for <code class="docutils literal notranslate"><span class="pre">poolsize=1</span></code>)</div>
 </div>
-</li>
-<li><strong>save</strong> – save final DataFrame to <code class="docutils literal notranslate"><span class="pre">&lt;calc_dir&gt;/database.pk</span></code> (pickle format only)</li>
-<li><strong>tmpsave</strong> – save results from this pset (the current DataFrame row) to
-<code class="docutils literal notranslate"><span class="pre">&lt;calc_dir&gt;/tmpsave/&lt;run_id&gt;/&lt;pset_id&gt;.pk</span></code> (pickle format only)</li>
-<li><strong>verbose</strong> – <div class="line-block">
+</p></li>
+<li><p><strong>save</strong> (<em>bool</em>) – save final DataFrame to <code class="docutils literal notranslate"><span class="pre">&lt;calc_dir&gt;/database.pk</span></code> (pickle format only)</p></li>
+<li><p><strong>tmpsave</strong> (<em>bol</em>) – save results from this pset (the current DataFrame row) to
+<code class="docutils literal notranslate"><span class="pre">&lt;calc_dir&gt;/tmpsave/&lt;run_id&gt;/&lt;pset_id&gt;.pk</span></code> (pickle format only)</p></li>
+<li><p><strong>verbose</strong> (<em>{bool</em><em>, </em><em>sequence of str}</em>) – <div class="line-block">
 <div class="line">bool : print the current DataFrame row</div>
 <div class="line">sequence : list of DataFrame column names, print the row but only</div>
 <div class="line">those columns</div>
 </div>
-</li>
-<li><strong>calc_dir</strong> – </li>
-<li><strong>simulate</strong> – run everything in <code class="docutils literal notranslate"><span class="pre">&lt;calc_dir&gt;.simulate</span></code>, don’t call <cite>worker</cite>, i.e. save
+</p></li>
+<li><p><strong>calc_dir</strong> (<em>str</em>) – </p></li>
+<li><p><strong>simulate</strong> (<em>bool</em>) – run everything in <code class="docutils literal notranslate"><span class="pre">&lt;calc_dir&gt;.simulate</span></code>, don’t call <cite>worker</cite>, i.e. save
 what the run would create, but without the results from <cite>worker</cite>,
-useful to check if <cite>params</cite> are correct before starting a production run</li>
-<li><strong>database_dir</strong> – Path for the database. Default is <code class="docutils literal notranslate"><span class="pre">&lt;calc_dir&gt;</span></code>.</li>
-<li><strong>database_basename</strong> – <code class="docutils literal notranslate"><span class="pre">&lt;database_dir&gt;/&lt;database_basename&gt;</span></code></li>
-<li><strong>backup</strong> – Make backup of <code class="docutils literal notranslate"><span class="pre">&lt;calc_dir&gt;</span></code> to <code class="docutils literal notranslate"><span class="pre">&lt;calc_dir&gt;.bak_&lt;timestamp&gt;_run_id_&lt;_run_id&gt;</span></code></li>
+useful to check if <cite>params</cite> are correct before starting a production run</p></li>
+<li><p><strong>database_dir</strong> (<em>str</em>) – Path for the database. Default is <code class="docutils literal notranslate"><span class="pre">&lt;calc_dir&gt;</span></code>.</p></li>
+<li><p><strong>database_basename</strong> (<em>str</em>) – <code class="docutils literal notranslate"><span class="pre">&lt;database_dir&gt;/&lt;database_basename&gt;</span></code></p></li>
+<li><p><strong>backup</strong> (<em>bool</em>) – Make backup of <code class="docutils literal notranslate"><span class="pre">&lt;calc_dir&gt;</span></code> to <code class="docutils literal notranslate"><span class="pre">&lt;calc_dir&gt;.bak_&lt;timestamp&gt;_run_id_&lt;_run_id&gt;</span></code></p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 </div>
@@ -96,6 +90,17 @@ useful to check if <cite>params</cite> are correct before starting a production 
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">API Reference</a></li>
 </ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../written/content.html">About</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../written/content.html#getting-started">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../written/content.html#concepts">Concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../written/content.html#the-database">The database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../written/content.html#pset-id-pset-seq-run-id-run-seq-pset-sha1-and-repeated-runs"><code class="docutils literal notranslate"><span class="pre">_pset_id</span></code>, <code class="docutils literal notranslate"><span class="pre">_pset_seq</span></code>, <code class="docutils literal notranslate"><span class="pre">_run_id</span></code>, <code class="docutils literal notranslate"><span class="pre">_run_seq</span></code>, <code class="docutils literal notranslate"><span class="pre">_pset_sha1</span></code> and repeated runs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../written/content.html#best-practices">Best practices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../written/content.html#batch-runs">Batch runs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../written/content.html#install">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../written/content.html#tests">Tests</a></li>
+</ul>
 
 <div class="relations">
 <h3>Related Topics</h3>
@@ -111,17 +116,15 @@ useful to check if <cite>params</cite> are correct before starting a production 
 </ul>
 </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../../search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -130,7 +133,7 @@ useful to check if <cite>params</cite> are correct before starting a production 
       &copy;2021, Steve Schmerler.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.5</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.1.2</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
       
       |

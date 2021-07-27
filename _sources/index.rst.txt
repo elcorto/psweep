@@ -1,12 +1,22 @@
 psweep
 ======
 
-Table of contents
------------------
+API
+---
+
 .. toctree::
    :maxdepth: 1
 
    generated/api/index
+
+
+Manual
+------
+
+.. toctree::
+   :maxdepth: 1
+
+   written/index
 
 
 Indices and tables
