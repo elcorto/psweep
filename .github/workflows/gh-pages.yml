@@ -1,0 +1,45 @@
+name: docs
+
+on:
+  push
+
+jobs:
+  pages:
+    runs-on: ubuntu-latest
+    steps:
+      - name: deps
+        run: |
+          # This installs a super old Sphinx (1.8.x), hello Ubuntu? But at
+          # least we fetch some deps that way from Ubuntu's repos instead of
+          # downloading half the internet from pypi.
+          sudo apt install --no-install-recommends -y python3-sphinx sphinx-common
+          which sphinx-build
+
+      - name: checkout
+        uses: actions/checkout@v2
+
+      - name: build
+        run: |
+          here=$(pwd)
+          pip install -r requirements_doc.txt
+
+          # must be here, doesn't work if placed in "deps" step, how stupid
+          cd $HOME
+          git clone https://github.com/elcorto/sphinx-autodoc
+          cd sphinx-autodoc
+          pip install -e .
+          cd $HOME
+          sphinx-autodoc -h
+
+          # sphinx-autodoc needs target package to be installed
+          cd $here
+          pip install -e .
+          cd doc
+          sh generate-doc.sh
+
+      - name: deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          # base dir is checkout: /path/to/psweep
+          publish_dir: doc/build/html

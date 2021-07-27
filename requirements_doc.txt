@@ -1,0 +1,6 @@
+# weird sidebar placement with sphinx 4.x, deal with that later, until then use
+# sphinx 3.x
+sphinx > 2, < 4
+
+# For inclusion of README.md
+myst-parser

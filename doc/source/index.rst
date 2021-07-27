@@ -1,0 +1,27 @@
+psweep
+======
+
+API
+---
+
+.. toctree::
+   :maxdepth: 1
+
+   generated/api/index
+
+
+Manual
+------
+
+.. toctree::
+   :maxdepth: 2
+
+   written/index
+
+
+Indices and tables
+------------------
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`
