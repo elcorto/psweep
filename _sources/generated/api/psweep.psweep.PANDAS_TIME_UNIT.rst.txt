@@ -1,6 +1,6 @@
-psweep.psweep.pandas\_time\_unit
+psweep.psweep.PANDAS\_TIME\_UNIT
 ================================
 
 .. currentmodule:: psweep.psweep
 
-.. autodata:: pandas_time_unit
+.. autodata:: PANDAS_TIME_UNIT

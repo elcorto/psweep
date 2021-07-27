@@ -1,6 +1,6 @@
-psweep.psweep.pandas\_default\_orient
+psweep.psweep.PANDAS\_DEFAULT\_ORIENT
 =====================================
 
 .. currentmodule:: psweep.psweep
 
-.. autodata:: pandas_default_orient
+.. autodata:: PANDAS_DEFAULT_ORIENT

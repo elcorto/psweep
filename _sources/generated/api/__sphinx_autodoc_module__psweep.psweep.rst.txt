@@ -18,6 +18,8 @@ psweep
 
    FileTemplate
    Machine
+   PANDAS_DEFAULT_ORIENT
+   PANDAS_TIME_UNIT
    df_filter_conds
    df_print
    df_read
@@ -37,8 +39,6 @@ psweep
    loops2params
    makedirs
    merge_dicts
-   pandas_default_orient
-   pandas_time_unit
    pgrid
    plist
    prep_batch

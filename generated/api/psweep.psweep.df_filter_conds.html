@@ -17,7 +17,7 @@
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="psweep.psweep.df_print" href="psweep.psweep.df_print.html" />
-    <link rel="prev" title="psweep.psweep.Machine" href="psweep.psweep.Machine.html" />
+    <link rel="prev" title="psweep.psweep.PANDAS_TIME_UNIT" href="psweep.psweep.PANDAS_TIME_UNIT.html" />
    
   <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
   
@@ -35,7 +35,7 @@
 <h1>psweep.psweep.df_filter_conds<a class="headerlink" href="#psweep-psweep-df-filter-conds" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="psweep.psweep.df_filter_conds">
-<code class="descclassname">psweep.psweep.</code><code class="descname">df_filter_conds</code><span class="sig-paren">(</span><em>df: pandas.core.frame.DataFrame, conds: Sequence[T_co]</em><span class="sig-paren">)</span> &#x2192; pandas.core.frame.DataFrame<a class="reference internal" href="../../_modules/psweep/psweep.html#df_filter_conds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#psweep.psweep.df_filter_conds" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">psweep.psweep.</code><code class="descname">df_filter_conds</code><span class="sig-paren">(</span><em>df: pandas.core.frame.DataFrame, conds: Sequence[Union[pandas.core.series.Series, pandas.core.frame.DataFrame, numpy.ndarray, List[bool]]]</em><span class="sig-paren">)</span> &#x2192; pandas.core.frame.DataFrame<a class="reference internal" href="../../_modules/psweep/psweep.html#df_filter_conds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#psweep.psweep.df_filter_conds" title="Permalink to this definition">¶</a></dt>
 <dd><p>Filter DataFrame using bool arrays/Series/DataFrames in <cite>conds</cite>.</p>
 <p>Logical-and all bool sequences in <cite>conds</cite>. Same as</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">df</span><span class="p">[</span><span class="n">conds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&amp;</span> <span class="n">conds</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&amp;</span> <span class="n">conds</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">&amp;</span> <span class="o">...</span><span class="p">]</span>
@@ -49,7 +49,7 @@ would need to be changed by hand if <cite>conds</cite> changes.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>df</strong> (<em>DataFrame</em>) – </li>
-<li><strong>conds</strong> – sequence of bool masks</li>
+<li><strong>conds</strong> – sequence of bool masks, each of length <cite>len(df)</cite></li>
 </ul>
 </td>
 </tr>
@@ -104,7 +104,7 @@ would need to be changed by hand if <cite>conds</cite> changes.</p>
   <li><a href="../../index.html">Documentation overview</a><ul>
   <li><a href="index.html">API Reference</a><ul>
   <li><a href="__sphinx_autodoc_module__psweep.psweep.html">psweep</a><ul>
-      <li>Previous: <a href="psweep.psweep.Machine.html" title="previous chapter">psweep.psweep.Machine</a></li>
+      <li>Previous: <a href="psweep.psweep.PANDAS_TIME_UNIT.html" title="previous chapter">psweep.psweep.PANDAS_TIME_UNIT</a></li>
       <li>Next: <a href="psweep.psweep.df_print.html" title="next chapter">psweep.psweep.df_print</a></li>
   </ul></li>
   </ul></li>

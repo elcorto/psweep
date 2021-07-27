@@ -30,7 +30,7 @@
           <div class="body" role="main">
             
   <h1>Source code for psweep.psweep</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Iterator</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Iterator</span><span class="p">,</span> <span class="n">List</span>
 <span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">partial</span><span class="p">,</span> <span class="n">wraps</span>
 <span class="kn">from</span> <span class="nn">io</span> <span class="k">import</span> <span class="n">IOBase</span>
 <span class="kn">import</span> <span class="nn">copy</span>
@@ -48,16 +48,15 @@
 <span class="kn">import</span> <span class="nn">warnings</span>
 <span class="kn">import</span> <span class="nn">yaml</span>
 
+<span class="c1"># Using numpy type hints is complicated, so skip it for now.</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>  <span class="c1"># type: ignore</span>
-
-<span class="c1">##import numpy as np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
 <span class="n">pj</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span>
 
 <span class="c1"># pandas defaults</span>
-<span class="n">pandas_default_orient</span> <span class="o">=</span> <span class="s2">&quot;records&quot;</span>
-<span class="n">pandas_time_unit</span> <span class="o">=</span> <span class="s2">&quot;s&quot;</span>
+<span class="n">PANDAS_DEFAULT_ORIENT</span> <span class="o">=</span> <span class="s2">&quot;records&quot;</span>
+<span class="n">PANDAS_TIME_UNIT</span> <span class="o">=</span> <span class="s2">&quot;s&quot;</span>
 
 
 <span class="c1"># -----------------------------------------------------------------------------</span>
@@ -102,7 +101,7 @@
     <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="n">path</span><span class="p">))</span></div>
 
 
-<div class="viewcode-block" id="itr"><a class="viewcode-back" href="../../generated/api/psweep.psweep.itr.html#psweep.psweep.itr">[docs]</a><span class="k">def</span> <span class="nf">itr</span><span class="p">(</span><span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">):</span>
+<div class="viewcode-block" id="itr"><a class="viewcode-back" href="../../generated/api/psweep.psweep.itr.html#psweep.psweep.itr">[docs]</a><span class="k">def</span> <span class="nf">itr</span><span class="p">(</span><span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Decorator which makes functions take a sequence of args or individual</span>
 <span class="sd">    args.</span>
 
@@ -129,7 +128,7 @@
     <span class="k">return</span> <span class="n">wrapper</span></div>
 
 
-<span class="c1"># stolen from pwtools and adapted for python3</span>
+<span class="c1"># https://github.com/elcorto/pwtools</span>
 <div class="viewcode-block" id="is_seq"><a class="viewcode-back" href="../../generated/api/psweep.psweep.is_seq.html#psweep.psweep.is_seq">[docs]</a><span class="k">def</span> <span class="nf">is_seq</span><span class="p">(</span><span class="n">seq</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">IOBase</span><span class="p">,</span> <span class="nb">dict</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
     <span class="k">if</span> <span class="p">(</span>
         <span class="nb">isinstance</span><span class="p">(</span><span class="n">seq</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
@@ -187,8 +186,8 @@
 <span class="sd">        passed to :meth:`df.to_json`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">defaults</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
-        <span class="n">orient</span><span class="o">=</span><span class="n">pandas_default_orient</span><span class="p">,</span>
-        <span class="n">date_unit</span><span class="o">=</span><span class="n">pandas_time_unit</span><span class="p">,</span>
+        <span class="n">orient</span><span class="o">=</span><span class="n">PANDAS_DEFAULT_ORIENT</span><span class="p">,</span>
+        <span class="n">date_unit</span><span class="o">=</span><span class="n">PANDAS_TIME_UNIT</span><span class="p">,</span>
         <span class="n">date_format</span><span class="o">=</span><span class="s2">&quot;iso&quot;</span><span class="p">,</span>
         <span class="n">double_precision</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>
     <span class="p">)</span>
@@ -227,7 +226,7 @@
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fd</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">fd</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">fmt</span> <span class="o">==</span> <span class="s2">&quot;json&quot;</span><span class="p">:</span>
-        <span class="n">orient</span> <span class="o">=</span> <span class="n">kwds</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;orient&quot;</span><span class="p">,</span> <span class="n">pandas_default_orient</span><span class="p">)</span>
+        <span class="n">orient</span> <span class="o">=</span> <span class="n">kwds</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;orient&quot;</span><span class="p">,</span> <span class="n">PANDAS_DEFAULT_ORIENT</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">json</span><span class="o">.</span><span class="n">read_json</span><span class="p">(</span>
             <span class="n">fn</span><span class="p">,</span> <span class="n">precise_float</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">orient</span><span class="o">=</span><span class="n">orient</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span>
         <span class="p">)</span>
@@ -240,9 +239,8 @@
     <span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">))</span></div>
 
 
-<span class="c1">##T = Union[pd.Series, pd.DataFrame, np.ndarray]</span>
-<span class="c1">##def df_filter_conds(df: pd.DataFrame, conds: Sequence[T]) -&gt; pd.DataFrame:</span>
-<div class="viewcode-block" id="df_filter_conds"><a class="viewcode-back" href="../../generated/api/psweep.psweep.df_filter_conds.html#psweep.psweep.df_filter_conds">[docs]</a><span class="k">def</span> <span class="nf">df_filter_conds</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">conds</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="n">T</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">bool</span><span class="p">]]</span>
+<div class="viewcode-block" id="df_filter_conds"><a class="viewcode-back" href="../../generated/api/psweep.psweep.df_filter_conds.html#psweep.psweep.df_filter_conds">[docs]</a><span class="k">def</span> <span class="nf">df_filter_conds</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">conds</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">T</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Filter DataFrame using bool arrays/Series/DataFrames in `conds`.</span>
 
 <span class="sd">    Logical-and all bool sequences in `conds`. Same as</span>
@@ -256,7 +254,7 @@
 <span class="sd">    ----------</span>
 <span class="sd">    df : DataFrame</span>
 <span class="sd">    conds :</span>
-<span class="sd">        sequence of bool masks</span>
+<span class="sd">        sequence of bool masks, each of length `len(df)`</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -277,8 +275,11 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">cc</span> <span class="o">=</span> <span class="n">conds</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">conds</span><span class="p">,</span> <span class="s2">&quot;__len__&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="nb">list</span><span class="p">(</span><span class="n">conds</span><span class="p">)</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cc</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">msk</span> <span class="o">=</span> <span class="p">[</span><span class="kc">True</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">cc</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">df</span>
+    <span class="k">for</span> <span class="n">ic</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">cc</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">),</span> <span class="p">(</span>
+            <span class="n">f</span><span class="s2">&quot;Condition at index </span><span class="si">{ic}</span><span class="s2"> has {len(c)=}, expect {len(df)=}&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cc</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
         <span class="n">msk</span> <span class="o">=</span> <span class="n">cc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">msk</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="o">.</span><span class="n">reduce</span><span class="p">(</span><span class="n">cc</span><span class="p">)</span>
@@ -405,7 +406,7 @@
     <span class="k">assert</span> <span class="n">calc_dir</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
     <span class="n">pset_id</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">())</span>
     <span class="n">_pset</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">pset</span><span class="p">)</span>
-    <span class="n">_time_utc</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">(),</span> <span class="n">unit</span><span class="o">=</span><span class="n">pandas_time_unit</span><span class="p">)</span>
+    <span class="n">_time_utc</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">(),</span> <span class="n">unit</span><span class="o">=</span><span class="n">PANDAS_TIME_UNIT</span><span class="p">)</span>
     <span class="n">hash_alg</span> <span class="o">=</span> <span class="s2">&quot;sha1&quot;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">pset_hash</span> <span class="o">=</span> <span class="n">dict_hash</span><span class="p">(</span><span class="n">pset</span><span class="p">,</span> <span class="n">hash_alg</span><span class="p">)</span>
@@ -706,6 +707,7 @@
 <span class="c1"># -----------------------------------------------------------------------------</span>
 <span class="n">seq2dicts</span> <span class="o">=</span> <span class="n">plist</span>
 <span class="n">loops2params</span> <span class="o">=</span> <span class="n">itr2params</span>
+
 
 <div class="viewcode-block" id="run"><a class="viewcode-back" href="../../generated/api/psweep.psweep.run.html#psweep.psweep.run">[docs]</a><span class="nd">@wraps</span><span class="p">(</span><span class="n">run_local</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">):</span>
