@@ -4,9 +4,11 @@ import re
 import shutil
 import string
 import tempfile
+import pickle
 
 import pandas as pd
 import numpy as np
+import pytest
 
 import psweep as ps
 
@@ -356,3 +358,87 @@ def test_df_filter_conds():
     for filt in [lambda x: x, lambda x: x.to_numpy(), lambda x: x.to_list()]:
         # use iterator map(...)
         assert df_ref.equals(ps.df_filter_conds(df, map(filt, _msks)))
+
+
+class _Foo:
+    """Dummy custom type used in test_dotdict(). As always, must be defined
+    outside b/c Python can't pickle stuff defined in the same scope."""
+    x = 55
+
+    def __eq__(self, other):
+        return self.x == other.x
+
+    def __hash__(self):
+        return self.x
+
+
+@pytest.mark.skipif(not hasattr(ps, "dotdict"),
+                    reason="psweep.dotdict not defined")
+def test_dotdict():
+    """Test a possible implementation for a dict with optional dot attr access.
+    See e.g. [1]  for all the stunts people have pulled so far (including
+    ourself [2]!!). The idea is to eventually use that for
+
+    * psets instead of plain dicts
+    * general purpose dot access container type (e.g. for param study driver
+      scripts)
+
+    None of the present hacks meets all our needs
+
+    * optional dot access
+    * update __repr__ after attr setting (e.g. d=dotdict(...); d.x=4)
+    * can be pickeled
+
+    except for those that live in an external package (box, dotmap), but
+    getting some random pypi package as a dep is not worth it. Maybe we'll
+    stumble upon a small and neat implementation that we can add to psweep.
+    Until then, just stick to plain dicts.
+
+
+    [1] https://stackoverflow.com/a/23689767
+    [2] https://github.com/elcorto/pwtools/blob/master/pwtools/batch.py#L735
+    """
+    # psweep.py::
+    #
+    #     class dotdict(dict):
+    #         """Not good enough, can't be pickled. So sad!"""
+    #         __getattr__ = dict.get
+    #         __setattr__ = dict.__setitem__
+    #         __delattr__ = dict.__delitem__
+    #         __dir__ = dict.keys
+    #
+    #     # works: https://github.com/cdgriffith/Box
+    #     from box import Box
+    #     dotdict = Box
+    #     # works: https://github.com/drgrib/dotmap
+    #     from dotmap import DotMap
+    #     dotdict = DotMap
+
+
+    f = _Foo()
+    ref = dict(a=1, b=2, c=np.sin, d=f, e=_Foo)
+
+    def dct_cmp(ref, ddict):
+        assert ref == ddict
+        assert set(ref.keys()) == set(ddict.keys())
+        assert set(ref.values()) == set(ddict.values())
+        if isinstance(ddict, ps.dotdict):
+            ddict.a
+            ddict.b
+            ddict.c
+            ddict.d
+            ddict.e
+
+    for ddict in [ps.dotdict(ref), ps.dotdict(**ref)]:
+        dct_cmp(ref, ddict)
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        for iddict, ddict in enumerate([ref, ps.dotdict(ref), ps.dotdict(**ref)]):
+            fn = pj(tmpdir, f"dict_{iddict}")
+            assert not os.path.exists(fn)
+            with open(fn, "wb") as fd:
+                print(ddict, fd)
+                pickle.dump(ddict, fd)
+            with open(fn, "rb") as fd:
+                loaded_ddict = pickle.load(fd)
+            dct_cmp(ref, loaded_ddict)

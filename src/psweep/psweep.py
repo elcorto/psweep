@@ -31,7 +31,6 @@ PANDAS_TIME_UNIT = "s"
 # helpers
 # -----------------------------------------------------------------------------
 
-
 def system(cmd: str, **kwds) -> subprocess.CompletedProcess:
     """
     Call shell command.
