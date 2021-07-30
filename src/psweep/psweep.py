@@ -423,7 +423,6 @@ def run_local(
     database_dir: Optional[str] = None,
     database_basename="database.pk",
     backup=False,
-    backup_calc_dir=False,
 ) -> pd.DataFrame:
     """
     Parameters
@@ -495,11 +494,6 @@ def run_local(
         pset_seq_old = df._pset_seq.values.max()
         run_seq_old = df._run_seq.values.max()
 
-    if backup_calc_dir:
-        warnings.warn(
-            "'backup_calc_dir' was renamed to 'backup'", DeprecationWarning
-        )
-        backup = True
     if backup and len(df.index) > 0:
         stamp = df.index.max().strftime("%Y-%m-%dT%H:%M:%S.%fZ")
         dst = f"{calc_dir}.bak_{stamp}_run_id_{df._run_id.values[-1]}"
@@ -593,8 +587,7 @@ class FileTemplate:
         return self.filename
 
     def fill(self, pset):
-        txt = file_read(self.filename)
-        return string.Template(txt).substitute(pset)
+        return string.Template(file_read(self.filename)).substitute(pset)
 
 
 def gather_calc_templates(calc_templ_dir):
@@ -672,16 +665,3 @@ def prep_batch(
                 f"git add -A; git commit -m 'psweep: run_id={df._run_id.values[-1]}'"
             )
     return df
-
-
-# -----------------------------------------------------------------------------
-# aliases
-# -----------------------------------------------------------------------------
-seq2dicts = plist
-loops2params = itr2params
-
-
-@wraps(run_local)
-def run(*args, **kwds):
-    warnings.warn("run() was renamed to run_local()", DeprecationWarning)
-    return run_local(*args, **kwds)
