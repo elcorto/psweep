@@ -36,14 +36,11 @@ psweep
    is_seq
    itr
    itr2params
-   loops2params
    makedirs
    merge_dicts
    pgrid
    plist
    prep_batch
-   run
    run_local
-   seq2dicts
    system
    worker_wrapper

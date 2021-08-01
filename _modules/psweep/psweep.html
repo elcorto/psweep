@@ -500,7 +500,6 @@
     <span class="n">database_dir</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">database_basename</span><span class="o">=</span><span class="s2">&quot;database.pk&quot;</span><span class="p">,</span>
     <span class="n">backup</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-    <span class="n">backup_calc_dir</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Parameters</span>
@@ -572,11 +571,6 @@
         <span class="n">pset_seq_old</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">_pset_seq</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
         <span class="n">run_seq_old</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">_run_seq</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
 
-    <span class="k">if</span> <span class="n">backup_calc_dir</span><span class="p">:</span>
-        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-            <span class="s2">&quot;&#39;backup_calc_dir&#39; was renamed to &#39;backup&#39;&quot;</span><span class="p">,</span> <span class="ne">DeprecationWarning</span>
-        <span class="p">)</span>
-        <span class="n">backup</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="k">if</span> <span class="n">backup</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">stamp</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">T%H:%M:%S.</span><span class="si">%f</span><span class="s2">Z&quot;</span><span class="p">)</span>
         <span class="n">dst</span> <span class="o">=</span> <span class="n">f</span><span class="s2">&quot;</span><span class="si">{calc_dir}</span><span class="s2">.bak_</span><span class="si">{stamp}</span><span class="s2">_run_id_</span><span class="si">{df._run_id.values[-1]}</span><span class="s2">&quot;</span>
@@ -670,8 +664,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">filename</span>
 
 <div class="viewcode-block" id="FileTemplate.fill"><a class="viewcode-back" href="../../generated/api/psweep.psweep.FileTemplate.fill.html#psweep.psweep.FileTemplate.fill">[docs]</a>    <span class="k">def</span> <span class="nf">fill</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pset</span><span class="p">):</span>
-        <span class="n">txt</span> <span class="o">=</span> <span class="n">file_read</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">string</span><span class="o">.</span><span class="n">Template</span><span class="p">(</span><span class="n">txt</span><span class="p">)</span><span class="o">.</span><span class="n">substitute</span><span class="p">(</span><span class="n">pset</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="n">string</span><span class="o">.</span><span class="n">Template</span><span class="p">(</span><span class="n">file_read</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">))</span><span class="o">.</span><span class="n">substitute</span><span class="p">(</span><span class="n">pset</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="gather_calc_templates"><a class="viewcode-back" href="../../generated/api/psweep.psweep.gather_calc_templates.html#psweep.psweep.gather_calc_templates">[docs]</a><span class="k">def</span> <span class="nf">gather_calc_templates</span><span class="p">(</span><span class="n">calc_templ_dir</span><span class="p">):</span>
@@ -749,19 +742,6 @@
                 <span class="n">f</span><span class="s2">&quot;git add -A; git commit -m &#39;psweep: run_id=</span><span class="si">{df._run_id.values[-1]}</span><span class="s2">&#39;&quot;</span>
             <span class="p">)</span>
     <span class="k">return</span> <span class="n">df</span></div>
-
-
-<span class="c1"># -----------------------------------------------------------------------------</span>
-<span class="c1"># aliases</span>
-<span class="c1"># -----------------------------------------------------------------------------</span>
-<span class="n">seq2dicts</span> <span class="o">=</span> <span class="n">plist</span>
-<span class="n">loops2params</span> <span class="o">=</span> <span class="n">itr2params</span>
-
-
-<div class="viewcode-block" id="run"><a class="viewcode-back" href="../../generated/api/psweep.psweep.run.html#psweep.psweep.run">[docs]</a><span class="nd">@wraps</span><span class="p">(</span><span class="n">run_local</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">):</span>
-    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;run() was renamed to run_local()&quot;</span><span class="p">,</span> <span class="ne">DeprecationWarning</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">run_local</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span></div>
 </pre></div>
 
           </div>
