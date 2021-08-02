@@ -26,6 +26,7 @@ pj = os.path.join
 PANDAS_DEFAULT_ORIENT = "records"
 PANDAS_TIME_UNIT = "s"
 
+GIT_ADD_ALL = "git add -A -v"
 
 # -----------------------------------------------------------------------------
 # helpers
@@ -469,9 +470,10 @@ def run_local(
 
     if git:
         if not os.path.exists(".git"):
-            system("git init; git add -A; git commit -m 'psweep: init'")
+            system(f"git init; {GIT_ADD_ALL}; git commit -m 'psweep: init'")
         if not git_clean():
-            raise Exception("dirty git repo")
+            print("dirty repo, adding all changes")
+            system(f"{GIT_ADD_ALL}; git commit -m 'psweep: local changes'")
 
     if simulate:
         calc_dir_sim = calc_dir + ".simulate"
@@ -556,7 +558,7 @@ def run_local(
 
     if git and (not git_clean()):
         system(
-            f"git add -A; git commit -m 'psweep: run_id={df._run_id.values[-1]}'"
+            f"{GIT_ADD_ALL}; git commit -m 'psweep: run_id={df._run_id.values[-1]}'"
         )
 
     return df
@@ -636,9 +638,11 @@ def prep_batch(
 
     if git:
         if not os.path.exists(".git"):
-            system("git init; git add -A; git commit -m 'psweep: init'")
+            print("init repo")
+            system(f"git init; {GIT_ADD_ALL}; git commit -m 'psweep: init'")
         if not git_clean():
-            raise Exception("dirty git repo")
+            print("dirty repo, adding all changes")
+            system(f"{GIT_ADD_ALL}; git commit -m 'psweep: local changes'")
 
     calc_templates = gather_calc_templates(calc_templ_dir)
     machines = gather_machines(machine_templ_dir)
@@ -676,7 +680,7 @@ def prep_batch(
 
     if git and (not git_clean()):
         system(
-            f"git add -A; git commit -m 'psweep: run_id={df._run_id.values[-1]}'"
+            f"{GIT_ADD_ALL}; git commit -m 'psweep: run_id={df._run_id.values[-1]}'"
         )
 
     return df
