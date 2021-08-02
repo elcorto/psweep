@@ -17,7 +17,6 @@ psweep
    :toctree:
 
    FileTemplate
-   GIT_ADD_ALL
    Machine
    PANDAS_DEFAULT_ORIENT
    PANDAS_TIME_UNIT

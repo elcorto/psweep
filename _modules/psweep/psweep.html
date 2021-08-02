@@ -103,11 +103,11 @@
 <span class="n">PANDAS_DEFAULT_ORIENT</span> <span class="o">=</span> <span class="s2">&quot;records&quot;</span>
 <span class="n">PANDAS_TIME_UNIT</span> <span class="o">=</span> <span class="s2">&quot;s&quot;</span>
 
-<span class="n">GIT_ADD_ALL</span> <span class="o">=</span> <span class="s2">&quot;git add -A -v&quot;</span>
 
 <span class="c1"># -----------------------------------------------------------------------------</span>
 <span class="c1"># helpers</span>
 <span class="c1"># -----------------------------------------------------------------------------</span>
+
 
 <div class="viewcode-block" id="system"><a class="viewcode-back" href="../../generated/api/psweep.psweep.system.html#psweep.psweep.system">[docs]</a><span class="k">def</span> <span class="nf">system</span><span class="p">(</span><span class="n">cmd</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">CompletedProcess</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -500,7 +500,6 @@
     <span class="n">database_dir</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">database_basename</span><span class="o">=</span><span class="s2">&quot;database.pk&quot;</span><span class="p">,</span>
     <span class="n">backup</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-    <span class="n">git</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Parameters</span>
@@ -519,8 +518,8 @@
 <span class="sd">        | int : use multiprocessing.Pool (even for ``poolsize=1``)</span>
 <span class="sd">    save : bool</span>
 <span class="sd">        save final DataFrame to ``&lt;calc_dir&gt;/database.pk`` (pickle format only)</span>
-<span class="sd">    tmpsave : bool</span>
-<span class="sd">        save results from each `pset` in `params` (the current DataFrame row) to</span>
+<span class="sd">    tmpsave : bol</span>
+<span class="sd">        save results from this pset (the current DataFrame row) to</span>
 <span class="sd">        ``&lt;calc_dir&gt;/tmpsave/&lt;run_id&gt;/&lt;pset_id&gt;.pk`` (pickle format only)</span>
 <span class="sd">    verbose : {bool, sequence of str}</span>
 <span class="sd">        | bool : print the current DataFrame row</span>
@@ -537,20 +536,9 @@
 <span class="sd">        ``&lt;database_dir&gt;/&lt;database_basename&gt;``</span>
 <span class="sd">    backup : bool</span>
 <span class="sd">        Make backup of ``&lt;calc_dir&gt;`` to ``&lt;calc_dir&gt;.bak_&lt;timestamp&gt;_run_id_&lt;_run_id&gt;``</span>
-<span class="sd">    git : bool</span>
-<span class="sd">        Use ``git`` to commit all files written and changed by the current run</span>
-<span class="sd">        (`_run_id`). Make sure to create a `.gitignore` manually before if</span>
-<span class="sd">        needed.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">database_dir</span> <span class="o">=</span> <span class="n">calc_dir</span> <span class="k">if</span> <span class="n">database_dir</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">database_dir</span>
-
-    <span class="k">if</span> <span class="n">git</span><span class="p">:</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s2">&quot;.git&quot;</span><span class="p">):</span>
-            <span class="n">system</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;git init; </span><span class="si">{GIT_ADD_ALL}</span><span class="s2">; git commit -m &#39;psweep: init&#39;&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">git_clean</span><span class="p">():</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;dirty repo, adding all changes&quot;</span><span class="p">)</span>
-            <span class="n">system</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;</span><span class="si">{GIT_ADD_ALL}</span><span class="s2">; git commit -m &#39;psweep: local changes&#39;&quot;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">simulate</span><span class="p">:</span>
         <span class="n">calc_dir_sim</span> <span class="o">=</span> <span class="n">calc_dir</span> <span class="o">+</span> <span class="s2">&quot;.simulate&quot;</span>
@@ -633,11 +621,6 @@
     <span class="k">if</span> <span class="n">save</span><span class="p">:</span>
         <span class="n">df_write</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">database_fn</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">git</span> <span class="ow">and</span> <span class="p">(</span><span class="ow">not</span> <span class="n">git_clean</span><span class="p">()):</span>
-        <span class="n">system</span><span class="p">(</span>
-            <span class="n">f</span><span class="s2">&quot;</span><span class="si">{GIT_ADD_ALL}</span><span class="s2">; git commit -m &#39;psweep: run_id=</span><span class="si">{df._run_id.values[-1]}</span><span class="s2">&#39;&quot;</span>
-        <span class="p">)</span>
-
     <span class="k">return</span> <span class="n">df</span></div>
 
 
@@ -715,11 +698,9 @@
 
     <span class="k">if</span> <span class="n">git</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s2">&quot;.git&quot;</span><span class="p">):</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;init repo&quot;</span><span class="p">)</span>
-            <span class="n">system</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;git init; </span><span class="si">{GIT_ADD_ALL}</span><span class="s2">; git commit -m &#39;psweep: init&#39;&quot;</span><span class="p">)</span>
+            <span class="n">system</span><span class="p">(</span><span class="s2">&quot;git init; git add -A; git commit -m &#39;psweep: init&#39;&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">git_clean</span><span class="p">():</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;dirty repo, adding all changes&quot;</span><span class="p">)</span>
-            <span class="n">system</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;</span><span class="si">{GIT_ADD_ALL}</span><span class="s2">; git commit -m &#39;psweep: local changes&#39;&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;dirty git repo&quot;</span><span class="p">)</span>
 
     <span class="n">calc_templates</span> <span class="o">=</span> <span class="n">gather_calc_templates</span><span class="p">(</span><span class="n">calc_templ_dir</span><span class="p">)</span>
     <span class="n">machines</span> <span class="o">=</span> <span class="n">gather_machines</span><span class="p">(</span><span class="n">machine_templ_dir</span><span class="p">)</span>
@@ -733,7 +714,7 @@
             <span class="p">)</span>
         <span class="k">return</span> <span class="p">{}</span>
 
-    <span class="n">df</span> <span class="o">=</span> <span class="n">run_local</span><span class="p">(</span><span class="n">worker</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">calc_dir</span><span class="o">=</span><span class="n">calc_dir</span><span class="p">,</span> <span class="n">backup</span><span class="o">=</span><span class="n">backup</span><span class="p">,</span> <span class="n">git</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">run_local</span><span class="p">(</span><span class="n">worker</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">calc_dir</span><span class="o">=</span><span class="n">calc_dir</span><span class="p">,</span> <span class="n">backup</span><span class="o">=</span><span class="n">backup</span><span class="p">)</span>
 
     <span class="n">msk_latest</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">_run_seq</span> <span class="o">==</span> <span class="n">df</span><span class="o">.</span><span class="n">_run_seq</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
     <span class="n">msk_old</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">_run_seq</span> <span class="o">&lt;</span> <span class="n">df</span><span class="o">.</span><span class="n">_run_seq</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
@@ -755,11 +736,11 @@
             <span class="n">f</span><span class="s2">&quot;#!/bin/sh</span><span class="se">\n\n</span><span class="s2">here=$(pwd)</span><span class="se">\n</span><span class="si">{txt}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span>
         <span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">git</span> <span class="ow">and</span> <span class="p">(</span><span class="ow">not</span> <span class="n">git_clean</span><span class="p">()):</span>
-        <span class="n">system</span><span class="p">(</span>
-            <span class="n">f</span><span class="s2">&quot;</span><span class="si">{GIT_ADD_ALL}</span><span class="s2">; git commit -m &#39;psweep: run_id=</span><span class="si">{df._run_id.values[-1]}</span><span class="s2">&#39;&quot;</span>
-        <span class="p">)</span>
-
+    <span class="k">if</span> <span class="n">git</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">git_clean</span><span class="p">():</span>
+            <span class="n">system</span><span class="p">(</span>
+                <span class="n">f</span><span class="s2">&quot;git add -A; git commit -m &#39;psweep: run_id=</span><span class="si">{df._run_id.values[-1]}</span><span class="s2">&#39;&quot;</span>
+            <span class="p">)</span>
     <span class="k">return</span> <span class="n">df</span></div>
 </pre></div>
 
