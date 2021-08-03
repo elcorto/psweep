@@ -374,6 +374,18 @@ class _Foo:
         return self.x
 
 
+# Uncomment to run test_dotdict using one of those implementations.
+
+# https://github.com/cdgriffith/Box
+# pip install python-box
+##from box import Box
+##ps.dotdict = Box
+
+# https://github.com/drgrib/dotmap
+# pip install dotmap
+##from dotmap import DotMap
+##ps.dotdict = DotMap
+
 @pytest.mark.skipif(
     not hasattr(ps, "dotdict"), reason="psweep.dotdict not defined"
 )
@@ -409,13 +421,6 @@ def test_dotdict():
     #         __setattr__ = dict.__setitem__
     #         __delattr__ = dict.__delitem__
     #         __dir__ = dict.keys
-    #
-    #     # works: https://github.com/cdgriffith/Box
-    #     from box import Box
-    #     dotdict = Box
-    #     # works: https://github.com/drgrib/dotmap
-    #     from dotmap import DotMap
-    #     dotdict = DotMap
 
     f = _Foo()
     ref = dict(a=1, b=2, c=np.sin, d=f, e=_Foo)
@@ -433,19 +438,8 @@ def test_dotdict():
 
     for ddict in [ps.dotdict(ref), ps.dotdict(**ref)]:
         dct_cmp(ref, ddict)
-
-    with tempfile.TemporaryDirectory() as tmpdir:
-        for iddict, ddict in enumerate(
-            [ref, ps.dotdict(ref), ps.dotdict(**ref)]
-        ):
-            fn = pj(tmpdir, f"dict_{iddict}")
-            assert not os.path.exists(fn)
-            with open(fn, "wb") as fd:
-                print(ddict, fd)
-                pickle.dump(ddict, fd)
-            with open(fn, "rb") as fd:
-                loaded_ddict = pickle.load(fd)
-            dct_cmp(ref, loaded_ddict)
+        # Test whether dotdict implementation is picklable (yes that is a word!).
+        dct_cmp(ref, pickle.loads(pickle.dumps(ddict)))
 
 
 def test_pset_hash():
