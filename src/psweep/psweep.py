@@ -142,8 +142,23 @@ def dict_hash(dct: dict, method="sha1"):
 
 
 def git_clean():
-    cmd = "git status --porcelain"
-    return system(cmd).stdout.decode() == ""
+    return system("git status --porcelain").stdout.decode() == ""
+
+
+def git_enter(use_git: bool):
+    if use_git:
+        if not os.path.exists(".git"):
+            system(f"git init; {GIT_ADD_ALL}; git commit -m 'psweep: init'")
+        if not git_clean():
+            print("dirty repo, adding all changes")
+            system(f"{GIT_ADD_ALL}; git commit -m 'psweep: local changes'")
+
+
+def git_exit(use_git: bool, df: pd.DataFrame):
+    if use_git and (not git_clean()):
+        system(
+            f"{GIT_ADD_ALL}; git commit -m 'psweep: run_id={df._run_id.values[-1]}'"
+        )
 
 
 # -----------------------------------------------------------------------------
@@ -468,12 +483,7 @@ def run_local(
 
     database_dir = calc_dir if database_dir is None else database_dir
 
-    if git:
-        if not os.path.exists(".git"):
-            system(f"git init; {GIT_ADD_ALL}; git commit -m 'psweep: init'")
-        if not git_clean():
-            print("dirty repo, adding all changes")
-            system(f"{GIT_ADD_ALL}; git commit -m 'psweep: local changes'")
+    git_enter(git)
 
     if simulate:
         calc_dir_sim = calc_dir + ".simulate"
@@ -556,10 +566,7 @@ def run_local(
     if save:
         df_write(df, database_fn)
 
-    if git and (not git_clean()):
-        system(
-            f"{GIT_ADD_ALL}; git commit -m 'psweep: run_id={df._run_id.values[-1]}'"
-        )
+    git_exit(git, df)
 
     return df
 
@@ -636,13 +643,7 @@ def prep_batch(
     backup: bool = False,
 ) -> pd.DataFrame:
 
-    if git:
-        if not os.path.exists(".git"):
-            print("init repo")
-            system(f"git init; {GIT_ADD_ALL}; git commit -m 'psweep: init'")
-        if not git_clean():
-            print("dirty repo, adding all changes")
-            system(f"{GIT_ADD_ALL}; git commit -m 'psweep: local changes'")
+    git_enter(git)
 
     calc_templates = gather_calc_templates(calc_templ_dir)
     machines = gather_machines(machine_templ_dir)
@@ -678,9 +679,6 @@ def prep_batch(
             f"#!/bin/sh\n\nhere=$(pwd)\n{txt}\n",
         )
 
-    if git and (not git_clean()):
-        system(
-            f"{GIT_ADD_ALL}; git commit -m 'psweep: run_id={df._run_id.values[-1]}'"
-        )
+    git_exit(git, df)
 
     return df
