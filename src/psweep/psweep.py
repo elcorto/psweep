@@ -176,23 +176,45 @@ def pset_hash(dct: dict, method="sha1"):
         return np.nan
 
 
+# -----------------------------------------------------------------------------
+# git
+# -----------------------------------------------------------------------------
+
+
 def git_clean():
     return system("git status --porcelain").stdout.decode() == ""
 
 
-def git_enter(use_git: bool):
+def in_git_repo():
+    # fmt: off
+    return subprocess.run(
+        "git status",
+        check=False,
+        shell=True,
+        capture_output=True,
+        ).returncode == 0
+    # fmt: on
+
+
+def git_enter(use_git: bool, always_commit=False):
+    path = os.path.basename(fullpath(os.curdir))
     if use_git:
-        if not os.path.exists(".git"):
-            system(f"git init; {GIT_ADD_ALL}; git commit -m 'psweep: init'")
+        if not in_git_repo():
+            system(f"git init; {GIT_ADD_ALL}; git commit -m 'psweep: {path}: init'")
         if not git_clean():
-            print("dirty repo, adding all changes")
-            system(f"{GIT_ADD_ALL}; git commit -m 'psweep: local changes'")
+            if always_commit:
+                print("dirty repo, adding all changes")
+                system(f"{GIT_ADD_ALL}; git commit -m 'psweep: {path}: local changes'")
+            else:
+                raise Exception("dirty repo, commit first")
+
 
 
 def git_exit(use_git: bool, df: pd.DataFrame):
+    path = os.path.basename(fullpath(os.curdir))
     if use_git and (not git_clean()):
         system(
-            f"{GIT_ADD_ALL}; git commit -m 'psweep: run_id={df._run_id.values[-1]}'"
+            f"{GIT_ADD_ALL}; git commit -m 'psweep: {path}: run_id={df._run_id.values[-1]}'"
         )
 
 

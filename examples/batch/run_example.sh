@@ -2,8 +2,16 @@
 
 set -eux
 
+
 ./clean.sh
 
+# Buy writing this, we create a dirty repo, which will make the first
+# ps.run_local() call fail since by default we (hopefully :)) don't commit
+# local changes. This will prevent people from accidentally committing to a
+# psweep checkout.
+#
+# To run this example, copy the dir to some temp location, which we also do in
+# the tests.
 cat > .gitignore << eof
 calc/*/out.npy
 calc/database_eval.pk
