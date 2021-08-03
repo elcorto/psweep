@@ -219,7 +219,7 @@ def test_save():
         calc_dir = "{}/calc".format(tmpdir)
         dbfn = "{}/database.pk".format(calc_dir)
 
-        df = ps.run_local(func, params, calc_dir=calc_dir, save=False)
+        ps.run_local(func, params, calc_dir=calc_dir, save=False)
         assert not os.path.exists(dbfn)
         assert os.listdir(tmpdir) == []
 
@@ -362,7 +362,9 @@ def test_df_filter_conds():
 
 class _Foo:
     """Dummy custom type used in test_dotdict(). As always, must be defined
-    outside b/c Python can't pickle stuff defined in the same scope."""
+    outside b/c Python can't pickle stuff defined in the same scope.
+    """
+
     x = 55
 
     def __eq__(self, other):
@@ -372,8 +374,9 @@ class _Foo:
         return self.x
 
 
-@pytest.mark.skipif(not hasattr(ps, "dotdict"),
-                    reason="psweep.dotdict not defined")
+@pytest.mark.skipif(
+    not hasattr(ps, "dotdict"), reason="psweep.dotdict not defined"
+)
 def test_dotdict():
     """Test a possible implementation for a dict with optional dot attr access.
     See e.g. [1]  for all the stunts people have pulled so far (including
@@ -414,7 +417,6 @@ def test_dotdict():
     #     from dotmap import DotMap
     #     dotdict = DotMap
 
-
     f = _Foo()
     ref = dict(a=1, b=2, c=np.sin, d=f, e=_Foo)
 
@@ -433,7 +435,9 @@ def test_dotdict():
         dct_cmp(ref, ddict)
 
     with tempfile.TemporaryDirectory() as tmpdir:
-        for iddict, ddict in enumerate([ref, ps.dotdict(ref), ps.dotdict(**ref)]):
+        for iddict, ddict in enumerate(
+            [ref, ps.dotdict(ref), ps.dotdict(**ref)]
+        ):
             fn = pj(tmpdir, f"dict_{iddict}")
             assert not os.path.exists(fn)
             with open(fn, "wb") as fd:

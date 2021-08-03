@@ -32,6 +32,7 @@ GIT_ADD_ALL = "git add -A -v"
 # helpers
 # -----------------------------------------------------------------------------
 
+
 def system(cmd: str, **kwds) -> subprocess.CompletedProcess:
     """
     Call shell command.
@@ -274,7 +275,7 @@ def df_filter_conds(df: pd.DataFrame, conds: Sequence[T]) -> pd.DataFrame:
 
     >>> df[conds[0] & conds[1] & conds[2] & ...]
 
-    but `conds` can be programatically generated while the expression above
+    but `conds` can be programmatically generated while the expression above
     would need to be changed by hand if `conds` changes.
 
     Parameters
