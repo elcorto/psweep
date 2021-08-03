@@ -1,5 +1,5 @@
 #!/bin/sh
 
-set -eu
+set -eux
 
 rm -rf .git .gitignore calc calc_* calc.bak*

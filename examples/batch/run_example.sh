@@ -1,6 +1,6 @@
 #!/bin/sh
 
-set -eu -x
+set -eux
 
 ./clean.sh
 
