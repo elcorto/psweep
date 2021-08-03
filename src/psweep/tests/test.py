@@ -442,3 +442,18 @@ def test_dotdict():
             with open(fn, "rb") as fd:
                 loaded_ddict = pickle.load(fd)
             dct_cmp(ref, loaded_ddict)
+
+
+def test_pset_hash():
+    dref = dict(a=1, b=dict(c=2, d=[1, 2, "a"]))
+    d1 = dict(b=dict(c=2, d=[1, 2, "a"]), a=1)
+    d2 = dict(a=1, b=dict(d=[1, 2, "a"], c=2))
+
+    assert ps.pset_hash(dref) is not np.nan
+    assert ps.pset_hash(dref) == "c97e3156eaa0d0820cbc0ce114b3e45bef8e8536"
+    assert ps.pset_hash(d1) == ps.pset_hash(dref)
+    assert ps.pset_hash(d2) == ps.pset_hash(dref)
+
+    assert ps.pset_hash(dict(a=np.sin)) is np.nan
+    assert ps.pset_hash(dict(a=_Foo)) is np.nan
+    assert ps.pset_hash(dict(a=_Foo())) is np.nan

@@ -135,7 +135,38 @@ def file_read(fn: str):
         return fd.read()
 
 
-def dict_hash(dct: dict, method="sha1"):
+def pset_hash(dct: dict, method="sha1"):
+    """Reproducible hash of a dict for usage in database (hash of a `pset`).
+
+    We target "reproducible" hashes, i.e. not what Python's ``hash`` function
+    does, for instance for two interpreter sessions::
+
+        $ python
+        >>> hash("12")
+        8013944793133897043
+
+        $ python
+        >>> hash("12")
+        4021864388667373027
+
+    We only try to hash a dict if it is json-serializable. Things which aren't
+    are also not hashable in a reproducible fashion, even if we could hash,
+    say, the pickled byte string of some object (e.g.
+    ``hash(pickle.dumps(obj))``), b/c that may contain a ref to its memory
+    location which is not what we're interested in. Similarly, also using
+    ``repr`` is not reproducible::
+
+        >>> class Foo:
+        ...     pass
+
+        >>> repr(Foo())
+        '<__main__.Foo object at 0x7fcc68aa9d60>'
+        >>> repr(Foo())
+        '<__main__.Foo object at 0x7fcc732034c0>'
+
+    even though for our purpose, we'd consider the two instances of ``Foo`` to
+    be the same. Better be safe and return NaN in that case.
+    """
     try:
         h = getattr(hashlib, method)()
         h.update(json.dumps(dct, sort_keys=True).encode())
@@ -404,7 +435,7 @@ def worker_wrapper(
         "_pset_id": pset_id,
         "_calc_dir": calc_dir,
         "_time_utc": _time_utc,
-        f"_pset_{hash_alg}": dict_hash(pset, hash_alg),
+        f"_pset_{hash_alg}": pset_hash(pset, hash_alg),
         "_pset_seq": pset_seq,
         "_run_seq": run_seq,
     }
