@@ -136,9 +136,12 @@ def file_read(fn: str):
 
 
 def dict_hash(dct: dict, method="sha1"):
-    h = getattr(hashlib, method)()
-    h.update(json.dumps(dct, sort_keys=True).encode())
-    return h.hexdigest()
+    try:
+        h = getattr(hashlib, method)()
+        h.update(json.dumps(dct, sort_keys=True).encode())
+        return h.hexdigest()
+    except TypeError:
+        return np.nan
 
 
 def git_clean():
@@ -396,16 +399,12 @@ def worker_wrapper(
     _pset = copy.deepcopy(pset)
     _time_utc = pd.Timestamp(time.time(), unit=PANDAS_TIME_UNIT)
     hash_alg = "sha1"
-    try:
-        pset_hash = dict_hash(pset, hash_alg)
-    except TypeError:
-        pset_hash = np.nan
     update = {
         "_run_id": run_id,
         "_pset_id": pset_id,
         "_calc_dir": calc_dir,
         "_time_utc": _time_utc,
-        f"_pset_{hash_alg}": pset_hash,
+        f"_pset_{hash_alg}": dict_hash(pset, hash_alg),
         "_pset_seq": pset_seq,
         "_run_seq": run_seq,
     }
