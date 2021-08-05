@@ -21,10 +21,9 @@ create more psets (_run_seq=1)
         5        100           1            6  9f953b9a-4da0-4c67-9fcd-6e18d0b8f36a
         6        100           1            7  9f953b9a-4da0-4c67-9fcd-6e18d0b8f36a
 
-NOTE: In a normal workflow, where we iteratively extend the study, we would
-instead change 10input.py and track changes by git instead of creating a new
-*input.py script like this one here. We do this here only for the sake of
-automatically running the example!
+NOTE: In a normal workflow, where we iteratively extend the study, we
+change 10input.py and track changes by git. That's why this script is used to
+overwrite 10input.py, but can also be run on its own, of course.
 """
 
 import psweep as ps
