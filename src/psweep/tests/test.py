@@ -5,6 +5,7 @@ import shutil
 import string
 import tempfile
 import pickle
+import subprocess
 
 import pandas as pd
 import numpy as np
@@ -44,25 +45,85 @@ def test_run_all_examples():
         if basename.endswith(".py"):
             with tempfile.TemporaryDirectory() as tmpdir:
                 cmd = f"""
-                    cp {path} {tmpdir}/; cd {tmpdir};
+                    cp {path} {tmpdir}/ && cd {tmpdir} && \
                     python3 {path}
                 """
                 print(system(cmd))
         elif os.path.isdir(path):
             with tempfile.TemporaryDirectory() as tmpdir:
                 shutil.copytree(path, tmpdir, dirs_exist_ok=True)
-                cmd = f"cd {tmpdir}; ./run_example.sh; ./clean.sh"
+                cmd = f"cd {tmpdir} &&./run_example.sh &&./clean.sh"
                 print(system(cmd))
+
+
+def test_shell_call_fail():
+    """
+    When calling multiple shell commands, we need to chain them using
+      cmd1 && cmd2 && ... && cmdN
+    rather than
+      cmd1; cmd2; ...; cmdN
+    In the latter case, only cmdN's exit code determines the returncode, thus
+    hiding any preveously failed commands.
+    """
+    # this must pass
+    system("ls; thiswillfail but be hidden; ls; pwd")
+
+    # all others must fail
+    with pytest.raises(subprocess.CalledProcessError):
+        system("ls && thiswillfail and break the chain && ls && pwd")
+
+    # several types of script content that must fail
+    txts = []
+    txts.append(
+        """
+echo "exit 1"
+exit 1
+"""
+    )
+
+    txts.append(
+        """
+set -eux
+exit 1111
+"""
+    )
+
+    txts.append(
+        """
+set -eux
+randomfoocommanddoesntexist
+"""
+    )
+
+    txts.append(
+        """
+set -eux
+python3 -c "raise Exception('foo')"
+"""
+    )
+
+    txts.append(
+        """
+set -eux
+python3 -c "raise Exception('foo')"
+"""
+    )
+
+    basename = "test.sh"
+    for ii, txt in enumerate(txts):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            with pytest.raises(subprocess.CalledProcessError):
+                ps.file_write(pj(tmpdir, basename), txt)
+                print(system(f"cd {tmpdir}; sh {basename}"))
 
 
 def test_shell_call():
     print(system("ls"))
     with tempfile.TemporaryDirectory() as tmpdir:
         txt = "ls"
-        fn = pj(tmpdir, "test.sh")
-        ps.file_write(fn, txt)
-        cmd = f"cd {tmpdir}; sh test.sh"
-        print(system(cmd))
+        basename = "test.sh"
+        ps.file_write(pj(tmpdir, basename), txt)
+        print(system(f"cd {tmpdir}; sh {basename}"))
 
 
 def test_run():
@@ -385,6 +446,7 @@ class _Foo:
 # pip install dotmap
 ##from dotmap import DotMap
 ##ps.dotdict = DotMap
+
 
 @pytest.mark.skipif(
     not hasattr(ps, "dotdict"), reason="psweep.dotdict not defined"
