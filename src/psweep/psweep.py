@@ -200,7 +200,10 @@ def git_enter(use_git: bool, always_commit=False):
     path = os.path.basename(fullpath(os.curdir))
     if use_git:
         if not in_git_repo():
-            system(f"git init; {GIT_ADD_ALL}; git commit -m 'psweep: {path}: init'")
+            if always_commit:
+                system(f"git init; {GIT_ADD_ALL}; git commit -m 'psweep: {path}: init'")
+            else:
+                raise Exception("no git repo here, create one first")
         if not git_clean():
             if always_commit:
                 print("dirty repo, adding all changes")
