@@ -8,6 +8,7 @@ import json
 import multiprocessing as mp
 import os
 import pickle
+import re
 import shutil
 import string
 import subprocess
@@ -174,6 +175,33 @@ def pset_hash(dct: dict, method="sha1"):
         return h.hexdigest()
     except TypeError:
         return np.nan
+
+
+def check_calc_dir(calc_dir: str, df: pd.DataFrame):
+    """Check calc dir for consistency with database.
+
+    Assuming dirs are named::
+
+        <calc_dir>/<pset_id1>
+        <calc_dir>/<pset_id2>
+        ...
+
+    check if we have matching dirs to ``_pset_id`` values in the
+    database.
+    """
+    # fmt: off
+    pset_ids_disk = set([
+        m.group()
+        for m in [
+            re.match(r"(([0-9a-z]+)-){4}([0-9a-z]+)", x)
+            for x in os.listdir(calc_dir)
+        ] if m is not None])
+    # fmt: off
+    pset_ids_db = set(df._pset_id.values)
+    return dict(
+        db_not_disk=pset_ids_db - pset_ids_disk,
+        disk_not_db=pset_ids_disk - pset_ids_db,
+    )
 
 
 # -----------------------------------------------------------------------------
