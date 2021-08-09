@@ -24,4 +24,9 @@ setup(
     packages=find_packages(where="src"),
     install_requires=open("requirements.txt").read().splitlines(),
     scripts=["{}/{}".format(bindir, script) for script in os.listdir(bindir)],
+    entry_points={
+        "console_scripts": [
+            "psweep-checkdir=psweep.cli:check_calc_dir",
+        ],
+    },
 )
