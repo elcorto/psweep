@@ -63,7 +63,7 @@ def test_shell_call_fail():
     rather than
       cmd1; cmd2; ...; cmdN
     In the latter case, only cmdN's exit code determines the returncode, thus
-    hiding any preveously failed commands.
+    hiding any previously failed commands.
     """
     # this must pass
     system("ls; thiswillfail but be hidden; ls; pwd")
@@ -102,15 +102,8 @@ python3 -c "raise Exception('foo')"
 """
     )
 
-    txts.append(
-        """
-set -eux
-python3 -c "raise Exception('foo')"
-"""
-    )
-
     basename = "test.sh"
-    for ii, txt in enumerate(txts):
+    for txt in txts:
         with tempfile.TemporaryDirectory() as tmpdir:
             with pytest.raises(subprocess.CalledProcessError):
                 ps.file_write(pj(tmpdir, basename), txt)
@@ -454,7 +447,7 @@ class _Foo:
 def test_dotdict():
     """Test a possible implementation for a dict with optional dot attr access.
     See e.g. [1]  for all the stunts people have pulled so far (including
-    ourself [2]!!). The idea is to eventually use that for
+    ourselves [2]!!). The idea is to eventually use that for
 
     * psets instead of plain dicts
     * general purpose dot access container type (e.g. for param study driver
@@ -464,7 +457,7 @@ def test_dotdict():
 
     * optional dot access
     * update __repr__ after attr setting (e.g. d=dotdict(...); d.x=4)
-    * can be pickeled
+    * can be pickled
 
     except for those that live in an external package (box, dotmap), but
     getting some random pypi package as a dep is not worth it. Maybe we'll
@@ -500,7 +493,7 @@ def test_dotdict():
 
     for ddict in [ps.dotdict(ref), ps.dotdict(**ref)]:
         dct_cmp(ref, ddict)
-        # Test whether dotdict implementation is picklable (yes that is a word!).
+        # Test whether dotdict implementation can be pickled.
         dct_cmp(ref, pickle.loads(pickle.dumps(ddict)))
 
 
