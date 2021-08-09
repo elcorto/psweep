@@ -28,7 +28,4 @@
   unlikely but we don't check for that!
   pset_id: serial: pass df or list of existing pset_ids to worker??
 
-* Add git workflow also to run_local() if we need it, for now only in
-  prep_batch()
-
 * make test_run_all_examples run in parallel
