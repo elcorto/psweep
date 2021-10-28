@@ -1,6 +1,6 @@
-# About
+[![pypi](https://img.shields.io/pypi/v/psweep)](https://pypi.org/project/psweep)
 
-Docs: <https://elcorto.github.io/psweep>
+# About
 
 This package helps you to set up and run parameter studies.
 
