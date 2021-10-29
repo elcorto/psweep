@@ -529,10 +529,8 @@ calc.simulate
 calc/*/*.bin
 ```
 
-You can even go crazy with [`git-lfs`](https://git-lfs.github.com) here. Again,
-we don't enforce a specific workflow. We just provide basic building blocks to
-create your own.
-
+You can even go crazy with [`git-lfs`][git-lfs] here. Again, we don't enforce a
+specific workflow but instead just provide basic building blocks.
 
 ## Simulate / Dry-Run: look before you leap
 
@@ -747,3 +745,78 @@ See also <https://github.com/elcorto/samplepkg>.
 cd src/psweep/tests
 pytest test.py
 ```
+
+# Special topics
+
+## How to migrate a normal `git` repo to `git-lfs`
+
+First we'll quickly mention how to set up LFS in a *new* repo. In this case we
+just need to configure `git lfs` to track certain files. We'll use dirs
+`_pics/` and `calc/` as examples.
+
+```sh
+$ git lfs track "_pics/**" "calc/**"
+```
+
+where `**` means recursive. This will write the config to `.gitattributes`.
+
+```sh
+$ cat .gitattributes
+_pics/** filter=lfs diff=lfs merge=lfs -text
+calc/** filter=lfs diff=lfs merge=lfs -text
+```
+
+Please refer to the [git lfs docs][git-lfs] for more info.
+
+Note: LFS can be tricky to get right the first time around. We actually
+recommend to fork the upstream repo, call that remote something like
+`lfsremote` and experiment with that before force-pushing LFS content to
+`origin`. Anyhow, let's continue.
+
+Now we like to migrate an existing git repo to LFS. Here we don't need to call
+`git lfs track` because we'll use `git lfs migrate import` to convert the repo.
+We will use the `-I/--include=` option to specify which files we would like to
+convert to LFS. Those patterns will and up in `.gitattributes` and the file
+will even be created of not present already.
+
+We found that only one `-I/--include=` at a time works, but we can separate
+patterns by "," to include multiple ones.
+
+```sh
+$ git lfs migrate import -I '_pics/**,calc/**' --include-ref=master
+
+$ cat .gitattributes
+_pics/** filter=lfs diff=lfs merge=lfs -text
+calc/** filter=lfs diff=lfs merge=lfs -text
+```
+
+Now after the migrate, all LFS files in the working tree (files on disk) have
+been converted from their real content to text stub files.
+
+```sh
+$ cat _pics/foo.png
+version https://git-lfs.github.com/spec/v1
+oid sha256:de0a80ff0fa13a3e8cf8662c073ce76bfc986b64b3c079072202ecff411188ba
+size 28339
+```
+
+The following will not change that.
+
+```sh
+$ git push lfsremote master -f
+$ git lfs fetch lfsremote --all
+```
+
+Their real content is however still contained in the `.git` dir. A simple
+
+```sh
+$ git lfs checkout .
+
+$ cat _pics/foo.png
+<<binary foo>>
+```
+
+will bring the content back to the working dir.
+
+
+[git-lfs]: https://git-lfs.github.com
