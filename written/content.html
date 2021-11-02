@@ -59,6 +59,10 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="#install">Install</a></li>
 <li class="toctree-l1"><a class="reference internal" href="#tests">Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#special-topics">Special topics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#how-to-migrate-a-normal-git-repo-to-git-lfs">How to migrate a normal <code class="docutils literal notranslate"><span class="pre">git</span></code> repo to <code class="docutils literal notranslate"><span class="pre">git-lfs</span></code></a></li>
+</ul>
+</li>
 </ul>
 
 <div class="relations">
@@ -536,9 +540,8 @@ such as</p>
 <span class="n">calc</span><span class="o">/*/*.</span><span class="n">bin</span>
 </pre></div>
 </div>
-<p>You can even go crazy with <a class="reference external" href="https://git-lfs.github.com"><code class="docutils literal notranslate"><span class="pre">git-lfs</span></code></a> here. Again,
-we don’t enforce a specific workflow. We just provide basic building blocks to
-create your own.</p>
+<p>You can even go crazy with <a class="reference external" href="https://git-lfs.github.com"><code class="docutils literal notranslate"><span class="pre">git-lfs</span></code></a> here. Again, we don’t enforce a
+specific workflow but instead just provide basic building blocks.</p>
 </div>
 <div class="section" id="simulate-dry-run-look-before-you-leap">
 <h2>Simulate / Dry-Run: look before you leap<a class="headerlink" href="#simulate-dry-run-look-before-you-leap" title="Permalink to this headline">¶</a></h2>
@@ -724,6 +727,64 @@ small.</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> src/psweep/tests
 pytest test.py
 </pre></div>
+</div>
+</div>
+<div class="tex2jax_ignore mathjax_ignore section" id="special-topics">
+<h1>Special topics<a class="headerlink" href="#special-topics" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="how-to-migrate-a-normal-git-repo-to-git-lfs">
+<h2>How to migrate a normal <code class="docutils literal notranslate"><span class="pre">git</span></code> repo to <code class="docutils literal notranslate"><span class="pre">git-lfs</span></code><a class="headerlink" href="#how-to-migrate-a-normal-git-repo-to-git-lfs" title="Permalink to this headline">¶</a></h2>
+<p>First we’ll quickly mention how to set up LFS in a <em>new</em> repo. In this case we
+just need to configure <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">lfs</span></code> to track certain files. We’ll use dirs
+<code class="docutils literal notranslate"><span class="pre">_pics/</span></code> and <code class="docutils literal notranslate"><span class="pre">calc/</span></code> as examples.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$ git lfs track <span class="s2">&quot;_pics/**&quot;</span> <span class="s2">&quot;calc/**&quot;</span>
+</pre></div>
+</div>
+<p>where <code class="docutils literal notranslate"><span class="pre">**</span></code> means recursive. This will write the config to <code class="docutils literal notranslate"><span class="pre">.gitattributes</span></code>.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$ cat .gitattributes
+_pics/** <span class="nv">filter</span><span class="o">=</span>lfs <span class="nv">diff</span><span class="o">=</span>lfs <span class="nv">merge</span><span class="o">=</span>lfs -text
+calc/** <span class="nv">filter</span><span class="o">=</span>lfs <span class="nv">diff</span><span class="o">=</span>lfs <span class="nv">merge</span><span class="o">=</span>lfs -text
+</pre></div>
+</div>
+<p>Please refer to the <a class="reference external" href="https://git-lfs.github.com">git lfs docs</a> for more info.</p>
+<p>Note: LFS can be tricky to get right the first time around. We actually
+recommend to fork the upstream repo, call that remote something like
+<code class="docutils literal notranslate"><span class="pre">lfsremote</span></code> and experiment with that before force-pushing LFS content to
+<code class="docutils literal notranslate"><span class="pre">origin</span></code>. Anyhow, let’s continue.</p>
+<p>Now we like to migrate an existing git repo to LFS. Here we don’t need to call
+<code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">lfs</span> <span class="pre">track</span></code> because we’ll use <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">lfs</span> <span class="pre">migrate</span> <span class="pre">import</span></code> to convert the repo.
+We will use the <code class="docutils literal notranslate"><span class="pre">-I/--include=</span></code> option to specify which files we would like to
+convert to LFS. Those patterns will and up in <code class="docutils literal notranslate"><span class="pre">.gitattributes</span></code> and the file
+will even be created of not present already.</p>
+<p>We found that only one <code class="docutils literal notranslate"><span class="pre">-I/--include=</span></code> at a time works, but we can separate
+patterns by “,” to include multiple ones.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$ git lfs migrate import -I <span class="s1">&#39;_pics/**,calc/**&#39;</span> --include-ref<span class="o">=</span>master
+
+$ cat .gitattributes
+_pics/** <span class="nv">filter</span><span class="o">=</span>lfs <span class="nv">diff</span><span class="o">=</span>lfs <span class="nv">merge</span><span class="o">=</span>lfs -text
+calc/** <span class="nv">filter</span><span class="o">=</span>lfs <span class="nv">diff</span><span class="o">=</span>lfs <span class="nv">merge</span><span class="o">=</span>lfs -text
+</pre></div>
+</div>
+<p>Now after the migrate, all LFS files in the working tree (files on disk) have
+been converted from their real content to text stub files.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$ cat _pics/foo.png
+version https://git-lfs.github.com/spec/v1
+oid sha256:de0a80ff0fa13a3e8cf8662c073ce76bfc986b64b3c079072202ecff411188ba
+size <span class="m">28339</span>
+</pre></div>
+</div>
+<p>The following will not change that.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$ git push lfsremote master -f
+$ git lfs fetch lfsremote --all
+</pre></div>
+</div>
+<p>Their real content is however still contained in the <code class="docutils literal notranslate"><span class="pre">.git</span></code> dir. A simple</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$ git lfs checkout .
+
+$ cat _pics/foo.png
+&lt;&lt;binary foo&gt;&gt;
+</pre></div>
+</div>
+<p>will bring the content back to the working dir.</p>
 </div>
 </div>
 
