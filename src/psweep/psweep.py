@@ -204,6 +204,15 @@ def check_calc_dir(calc_dir: str, df: pd.DataFrame):
     )
 
 
+def pickle_write(fn: str, obj):
+    with open(fn, "wb") as fd:
+        pickle.dump(obj, fd)
+
+
+def pickle_read(fn: str):
+    return pickle.load(open(fn, "rb"))
+
+
 # -----------------------------------------------------------------------------
 # git
 # -----------------------------------------------------------------------------
