@@ -19,13 +19,14 @@ if __name__ == '__main__':
     print(df[sel])
 
     # simulate run: check if new parameter grid is OK; result values for new
-    # params witll be missing (NaN in pandas DataFrame)
+    # params will be missing (NaN in pandas DataFrame); will copy only db to
+    # calc.simulate/
     params = ps.pgrid(
         ps.plist('a', [5,6]),
         ps.plist('b', [88, 99]))
     df = ps.run_local(func, params, simulate=True)
     print(df[sel])
 
-    # looks good, 2nd real run with new params
+    # looks good, 2nd real run with new params; use calc/ again
     df = ps.run_local(func, params)
     print(df[sel])

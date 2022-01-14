@@ -6,6 +6,8 @@
 #SBATCH -p bar
 #SBATCH -A baz
 
+# Because we use Python's string.Template, we need to escape the dollar char
+# with two.
 echo "hostname=$$(hostname)"
 
 module purge
