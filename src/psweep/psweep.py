@@ -1,6 +1,6 @@
-from typing import Any, Optional, Union, Sequence, Callable, Iterator, List
 from functools import partial, wraps
 from io import IOBase
+from typing import Any, Optional, Union, Sequence, Callable, Iterator, List
 import copy
 import hashlib
 import itertools
@@ -16,6 +16,7 @@ import time
 import uuid
 import warnings
 import yaml
+import sys
 
 # Using numpy type hints is complicated, so skip it for now.
 import numpy as np  # type: ignore
@@ -704,7 +705,11 @@ class FileTemplate:
         return self.filename
 
     def fill(self, pset):
-        return string.Template(file_read(self.filename)).substitute(pset)
+        try:
+            return string.Template(file_read(self.filename)).substitute(pset)
+        except:
+            print(f"Failed to fill template: {self.filename}", file=sys.stderr)
+            raise
 
 
 def gather_calc_templates(calc_templ_dir):
