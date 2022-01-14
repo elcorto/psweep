@@ -17,8 +17,9 @@ This package deals with commonly encountered boilerplate tasks:
   extend the study
 * append new rows to the database when extending the study
 * simulate a parameter scan
+* `git` support to track progress of your work and recover from mistakes
 * **experimental**: support for managing batch runs, e.g. on remote HPC
-  systems, including basic `git` workflow support
+  systems, including `git` support
 
 Otherwise, the main goal is to not constrain your flexibility by
 building a complicated framework -- we provide only very basic building
@@ -499,21 +500,39 @@ $ mv calc.bak_2021-03-19T2* calc
 ```
 
 For any non-trivial work, you won't use an interactive session. Instead, you
-will have a driver script (say `run.py`) which defines `params` and starts
+will have a driver script (say `input.py`) which defines `params` and starts
 `ps.run_local()`. Also in a common workflow, you won't define `params` and run
 a study once. Instead you will first have an idea about which parameter values
 to scan. You will start with a coarse grid of parameters and then inspect the
 results and identify regions where you need more data (e.g. more dense
 sampling). Then you will modify `params` and run the study again. You will
-modify `run.py` multiple times, as you refine your study.
+modify `input.py` multiple times, as you refine your study.
 
 
 ## Use git
 
-Instead or in addition to using `backup`, we recommend a `git`-based workflow
-to at least track changes to `run.py` (instead of manually creating backups
-such as `run.py.0`, `run.py.1`, ...). We recommend to create a `.gitignore`
-such as
+Instead or in addition to using
+
+```py
+>>> ps.run_local(..., backup=True)
+```
+
+we recommend a `git`-based workflow to at least track changes to `input.py`
+(instead of manually creating backups such as `input.py.0`, `input.py.1`, ...). You
+can manually `git commit` at any point of course, or use
+
+```py
+>>> ps.run_local(..., git=True)
+```
+
+This will commit any changes made to e.g. `input.py` itself and create a commit
+message containing the current `_run_id` such as
+
+```
+psweep: batch_with_git: run_id=68f5d9b7-efa6-4ed8-9384-4ffccab6f7c5
+```
+
+We **strongly recommend** to create a `.gitignore` such as
 
 ```
 # ignore backups
@@ -529,8 +548,16 @@ calc.simulate
 calc/*/*.bin
 ```
 
-You can even go crazy with [`git-lfs`][git-lfs] here. Again, we don't enforce a
-specific workflow but instead just provide basic building blocks.
+### How to handle large files when using git
+
+The first option is to `.gitignore` them. Another is to use
+[`git-lfs`][git-lfs] (see the section on that later). That way you track their
+changes but only store the most recent version. Or you leave those files on
+another local or remote storage and store only the path to them (and maybe a
+hash) in the database. It's up to you.
+
+Again, we don't enforce a specific workflow but instead just provide basic
+building blocks.
 
 ## Simulate / Dry-Run: look before you leap
 
@@ -644,27 +671,35 @@ Pro tip: You can manipulate the database at any later point and add the
 Super Pro tip: Make a backup of the database first!
 
 
-# Batch runs
+# Remote cluster batch runs
 
 We have experimental support for managing calculations on remote systems such
 as HPC clusters with a batch system like SLURM. It is basically a modernized
 and stripped-down version of
 [`pwtools.batch`](https://elcorto.github.io/pwtools/written/background/param_study.html).
 Note that we don't use any method like DRMAA to automatically dispatch jobs to
-clusters. Our design revolves around maximal user control of each step of the
-workflow.
+clusters. We just write out a shell script to submit jobs, simple. Our design
+revolves around maximal user control of each step of the workflow.
 
-See `ps.prep_batch()` and `examples/batch/`. The workflow is based on
-**template files**. In the templates, we use (for now) the standard library's
-`string.Template`, where each `$foo` is replaced by a value contained in a
-pset, so `$param_a`, `$param_b`, as well as `$_pset_id` and so forth.
+The central function to use is `ps.prep_batch()`. See `examples/batch_with_git`
+for a full example.
+
+The workflow is based on **template files**. In the templates, we use (for now)
+the standard library's `string.Template`, where each `$foo` is replaced by a
+value contained in a pset, so `$param_a`, `$param_b`, as well as `$_pset_id`
+and so forth.
 
 We piggy-back on the `run_local()` workflow from above to use all it's power
-and flexibility to create batch scripts using template files. Again, you have
-full control over every part of the workflow. We just automate the boring
-stuff.
+and flexibility to, instead of running jobs with it, just **create batch
+scripts using template files**.
 
-Workflow summary:
+You can use the proposed workflow below directly the on remote machine (need to
+install `psweep` there, might not be fun) or run it locally and use a
+copy-to-cluster workflow. Since we actually don't start jobs or talk to the
+batch system, you have full control over every part of the workflow. We just
+automate the boring stuff.
+
+## Workflow summary
 
 * define `params` to be varied as shown above (probably in a script, say
   `input.py`)
@@ -679,14 +714,20 @@ Workflow summary:
   * call `run_local(func, params)`
   * create a script `calc/run_<mycluster>.sh` to submit all jobs
 
-We replace running jobs locally (i.e. what `ps.run_local()` would do) with some
-small helper scripts:
+Thus, we replace running jobs directly (i.e. what `ps.run_local()` would do)
+with:
 
-* use `bin/psweep-push <mycluster>` to `rsync` `calc/` to a cluster
-* ssh to cluster; execute `calc/run_<mycluster>.sh`, wait ...
-* use `bin/psweep-pull <mycluster>` to `rsync` results back
+* use `prep_batch(params, ...)` instead of `run_local(params, ...)`
+* if running locally
+  * use `scp` or `rsync` or the helper script `bin/psweep-push <mycluster>` (uses
+    `rsync`) to copy `calc/` to a cluster
+  * ssh to cluster
+* execute `calc/run_<mycluster>.sh`, wait ...
+* if running locally
+  * use `scp` or `rsync` or the helper script use `bin/psweep-pull <mycluster>`
+    (uses `rsync`) to copy results back
 
-Now suppose that each of our batch jobs produces a output file, then we have
+Now suppose that each of our batch jobs produces an output file, then we have
 the same post-processing setup as in `save_data_on_disk`, namely
 
 ```
@@ -702,28 +743,122 @@ calc
 └── database.pk
 ```
 
-The only difference is that the outputs were not calculated and written locally
-but `rsync`ed from the cluster.
-
-And then post-processing is (almost) as before:
+Post-processing is (almost) as before:
 
 * analyze results, run post-processing script(s) on `calc/database.pk`, read in
   `output.txt` for each `_pset_id`
-* when extending the study (modify `params`, call `input.py` again), we use the
-  same features shown above
+* when extending the study (modify `params`, call `input.py` again which calls
+  `prep_batch(params)`), we use the same features shown above
   * append to database
   * create new unique `calc/<_pset_id>` without overwriting anything
-  * additionally: write a new `calc/run_<mycluster>.sh` with old submit
+  * **additionally**: write a new `calc/run_<mycluster>.sh` with old submit
     commands still in there, but commented out
 
+
+## Templates layout and written files
+
+An example template dir, based on ``examples/batch_with_git``:
+
+```
+templates
+├── calc
+│   └── run.py
+└── machines
+    ├── cluster
+    │   ├── info.yaml
+    │   └── jobscript
+    └── local
+        ├── info.yaml
+        └── jobscript
+```
+
+### calc templates
+
+Each file in `templates/calc` such as `run.py` will be treated as
+template, goes thru the file template machinery and ends up in
+`calc/<_pset_id>/`.
+
+### machine templates
+
+The example above has machine templates for 2 machines, "local" and a
+remote machine named "cluster". `psweep` will generate `run_<machine>.sh`
+for both. Also you must provide a file `info.yaml` to store
+machine-specific info. ATM this is only `subcmd`, e.g.
+
+```yaml
+# templates/machines/cluster/info.yaml
+---
+subcmd: sbatch
+```
+
+All other SLURM stuff can go into `templates/machines/cluster/jobscript`, e.g.
+
+```sh
+#SBATCH --time 00:20:00
+#SBATCH -o out.job
+#SBATCH -J foo_${_pset_seq}_${_pset_id}
+#SBATCH -p bar
+#SBATCH -A baz
+
+# Because we use Python's string.Template, we need to escape the dollar char
+# with two.
+echo "hostname=$$(hostname)"
+
+module purge
+
+module load bzzrrr/1.2.3
+module load python
+
+python3 run.py
+```
+
+For the "local" machine we'd just use `sh` (or `bash` or ...) as "submit
+command".
+
+```yaml
+
+# templates/machines/local/info.yaml
+---
+subcmd: sh
+```
+
+
+The files written are:
+
+```
+run_cluster.sh                              # submit script for each machine
+run_local.sh
+
+calc/3c4efcb7-e37e-4ffe-800d-b05db171b41b   # one dir per pset
+├── jobscript_cluster                       # jobscript for each machine
+├── jobscript_local
+└── run.py                                  # from templates/calc/run.py
+calc/11967c0d-7ce6-404f-aae6-2b0ea74beefa
+├── jobscript_cluster
+├── jobscript_local
+└── run.py
+calc/65b7b453-96ec-4694-a0c4-4f71c53d982a
+...
+```
+
+In each `run_<machine>.sh` we use the `subcmd` from `info.yaml`.
+
+```sh
+#!/bin/sh
+here=$(pwd)
+cd 3c4efcb7-e37e-4ffe-800d-b05db171b41b; sbatch jobscript_cluster; cd $here  # run_seq=0 pset_seq=0
+cd 11967c0d-7ce6-404f-aae6-2b0ea74beefa; sbatch jobscript_cluster; cd $here  # run_seq=0 pset_seq=1
+...
+```
 
 ## git support
 
 Use `prep_batch(..., git=True)` to have some basic git support such as
-automatic commits in each call. Make sure to create `.gitignore` first, else
-we'll track `calc/` as well, which you may safely do when data in `calc` is
-small.
-
+automatic commits in each call. It just uses `run_local(..., git=True)` when
+creating batch scripts, so all best practices for that apply here as well. In
+particular, make sure to create `.gitignore` first, else we'll track `calc/` as
+well, which you may safely do when data in `calc` is small. Else use `git-lfs`,
+for example.
 
 # Install
 
@@ -776,7 +911,7 @@ recommend to fork the upstream repo, call that remote something like
 Now we like to migrate an existing git repo to LFS. Here we don't need to call
 `git lfs track` because we'll use `git lfs migrate import` to convert the repo.
 We will use the `-I/--include=` option to specify which files we would like to
-convert to LFS. Those patterns will and up in `.gitattributes` and the file
+convert to LFS. Those patterns will end up in `.gitattributes` and the file
 will even be created of not present already.
 
 We found that only one `-I/--include=` at a time works, but we can separate

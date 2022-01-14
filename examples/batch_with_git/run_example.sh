@@ -25,21 +25,7 @@ git init
 git add -A
 git commit -m "psweep manual: init test example"
 
-# Write files based on templates.
-#
-#     templates
-#     ├── calc
-#     │   └── run.py
-#     └── machines
-#         ├── cluster
-#         │   ├── info.yaml
-#         │   └── jobscript
-#         └── local
-#             ├── info.yaml
-#             └── jobscript
-#
-# We have machine templates for 2 machines, "local" and a remote machine named
-# "cluster". psweep will generate run_<machine>.sh for both.
+# Write files based on templates. See psweep.prep_batch().
 ./10input.py
 
 # In this example, we execute the "batch jobs" locally (run_local.sh). In a
@@ -49,10 +35,10 @@ cd calc
 sh run_local.sh
 
 # Modify driver script, prepare second run. For the sake of running this
-# example automatically, we use an existing script and overwrite it to create
-# some changes to the file we can track with git.
+# example automatically, we use an existing script and overwrite 10input.py to
+# create some changes to the file we can track with git.
 cd ..
-mv _10input_run2.py 10input.py
+cp _10input_run2.py 10input.py
 
 git add -A
 git commit -m "psweep manual: modify 10input.py"
@@ -63,4 +49,4 @@ sh run_local.sh
 cd ..
 ./20eval.py
 
-psweep-db2table calc/database_eval.pk param_a param_b mean _run_seq _pset_seq
+psweep-db2table calc/database_eval.pk param_a param_b mean _run_seq _pset_seq _run_id _pset_id

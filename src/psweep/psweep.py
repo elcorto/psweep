@@ -679,6 +679,8 @@ class Machine:
             ^^^^^^^^^^^^^^^^^^^^^^^^^------------- machine_dir
             templates/machines/<name>/jobscript
                                       ^^^^^^^^^--- template.basename
+
+
         """
         self.name = os.path.basename(os.path.normpath(machine_dir))
         self.template = FileTemplate(
@@ -741,6 +743,9 @@ def prep_batch(
     backup: bool = False,
 ) -> pd.DataFrame:
 
+    """
+    Write files based on templates.
+    """
     git_enter(git)
 
     calc_templates = gather_calc_templates(calc_templ_dir)
