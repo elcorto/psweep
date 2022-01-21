@@ -4,3 +4,6 @@ sphinx > 2, < 4
 
 # For inclusion of README.md
 myst-parser
+
+# For doc/generate-doc.sh
+git+https://github.com/elcorto/sphinx-autodoc
