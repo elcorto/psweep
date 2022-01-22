@@ -14,10 +14,11 @@
     <script src="../../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="psweep.psweep.run_local" href="psweep.psweep.run_local.html" />
+    <link rel="next" title="psweep.psweep.pset_hash" href="psweep.psweep.pset_hash.html" />
     <link rel="prev" title="psweep.psweep.plist" href="psweep.psweep.plist.html" />
    
   <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
@@ -46,7 +47,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../written/content.html#the-database">The database</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../written/content.html#special-database-fields-and-repeated-runs">Special database fields and repeated runs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../written/content.html#best-practices">Best practices</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../written/content.html#batch-runs">Batch runs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../written/content.html#remote-cluster-batch-runs">Remote cluster batch runs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../written/content.html#install">Install</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../written/content.html#tests">Tests</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../written/content.html#special-topics">Special topics</a></li>
@@ -59,7 +60,7 @@
   <li><a href="index.html">API Reference</a><ul>
   <li><a href="__sphinx_autodoc_module__psweep.psweep.html">psweep</a><ul>
       <li>Previous: <a href="psweep.psweep.plist.html" title="previous chapter">psweep.psweep.plist</a></li>
-      <li>Next: <a href="psweep.psweep.run_local.html" title="next chapter">psweep.psweep.run_local</a></li>
+      <li>Next: <a href="psweep.psweep.pset_hash.html" title="next chapter">psweep.psweep.pset_hash</a></li>
   </ul></li>
   </ul></li>
   </ul></li>
@@ -75,10 +76,20 @@
     </div>
 </div>
 <script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
         </div>
       </div>
       <div class="documentwrapper">
         <div class="bodywrapper">
+          
+
           <div class="body" role="main">
             
   <div class="section" id="psweep-psweep-prep-batch">
@@ -86,12 +97,14 @@
 <dl class="py function">
 <dt id="psweep.psweep.prep_batch">
 <code class="sig-prename descclassname"><span class="pre">psweep.psweep.</span></code><code class="sig-name descname"><span class="pre">prep_batch</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calc_dir</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'calc'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calc_templ_dir</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'templates/calc'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">machine_templ_dir</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'templates/machines'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">git</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backup</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">pandas.core.frame.DataFrame</span><a class="reference internal" href="../../_modules/psweep/psweep.html#prep_batch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psweep.psweep.prep_batch" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Write files based on templates.</p>
+</dd></dl>
 
 </div>
 
 
           </div>
+          
         </div>
       </div>
     <div class="clearer"></div>
@@ -101,7 +114,7 @@
       
       |
       Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.4</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
       <a href="../../_sources/generated/api/psweep.psweep.prep_batch.rst.txt"

@@ -17,15 +17,16 @@ psweep
    :toctree:
 
    FileTemplate
+   GIT_ADD_ALL
    Machine
    PANDAS_DEFAULT_ORIENT
    PANDAS_TIME_UNIT
+   check_calc_dir
    df_filter_conds
    df_print
    df_read
    df_to_json
    df_write
-   dict_hash
    file_read
    file_write
    flatten
@@ -33,14 +34,20 @@ psweep
    gather_calc_templates
    gather_machines
    git_clean
+   git_enter
+   git_exit
+   in_git_repo
    is_seq
    itr
    itr2params
    makedirs
    merge_dicts
    pgrid
+   pickle_read
+   pickle_write
    plist
    prep_batch
+   pset_hash
    run_local
    system
    worker_wrapper

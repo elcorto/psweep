@@ -1,0 +1,135 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>psweep.cli &#8212; psweep 0.5.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">psweep</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../generated/api/index.html">API Reference</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../written/content.html">About</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../written/content.html#getting-started">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../written/content.html#concepts">Concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../written/content.html#the-database">The database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../written/content.html#special-database-fields-and-repeated-runs">Special database fields and repeated runs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../written/content.html#best-practices">Best practices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../written/content.html#remote-cluster-batch-runs">Remote cluster batch runs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../written/content.html#install">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../written/content.html#tests">Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../written/content.html#special-topics">Special topics</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for psweep.cli</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">inspect</span>
+
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">psweep</span> <span class="k">as</span> <span class="n">ps</span>
+
+
+<div class="viewcode-block" id="check_calc_dir"><a class="viewcode-back" href="../../generated/api/psweep.cli.check_calc_dir.html#psweep.cli.check_calc_dir">[docs]</a><span class="k">def</span> <span class="nf">check_calc_dir</span><span class="p">():</span>
+    <span class="n">func</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">check_calc_dir</span>
+    <span class="n">desc</span> <span class="o">=</span> <span class="n">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">{inspect.getdoc(func)}</span>
+
+<span class="s2">Uses </span><span class="si">{func.__name__}</span><span class="s2">() in {inspect.getsourcefile(func)}.</span>
+<span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="n">desc</span><span class="p">,</span> <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">RawTextHelpFormatter</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;calc_dir&quot;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;CALC_DIR&quot;</span><span class="p">)</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+    <span class="n">calc_dir</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">calc_dir</span>
+
+    <span class="n">out</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="n">calc_dir</span><span class="p">,</span> <span class="n">ps</span><span class="o">.</span><span class="n">df_read</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;</span><span class="si">{calc_dir}</span><span class="s2">/database.pk&quot;</span><span class="p">))</span>
+    <span class="n">_filt</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">set</span><span class="p">)</span> <span class="k">else</span> <span class="n">x</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="nb">dict</span><span class="p">((</span><span class="n">kk</span><span class="p">,</span> <span class="n">_filt</span><span class="p">(</span><span class="n">vv</span><span class="p">))</span> <span class="k">for</span> <span class="n">kk</span><span class="p">,</span> <span class="n">vv</span> <span class="ow">in</span> <span class="n">out</span><span class="o">.</span><span class="n">items</span><span class="p">())))</span></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2021, Steve Schmerler.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

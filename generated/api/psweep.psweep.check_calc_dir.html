@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>psweep.psweep.gather_calc_templates &#8212; psweep 0.5.0 documentation</title>
+    <title>psweep.psweep.check_calc_dir &#8212; psweep 0.5.0 documentation</title>
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -14,8 +14,8 @@
     <script src="../../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="psweep.psweep.gather_machines" href="psweep.psweep.gather_machines.html" />
-    <link rel="prev" title="psweep.psweep.fullpath" href="psweep.psweep.fullpath.html" />
+    <link rel="next" title="psweep.psweep.df_filter_conds" href="psweep.psweep.df_filter_conds.html" />
+    <link rel="prev" title="psweep.psweep.PANDAS_TIME_UNIT" href="psweep.psweep.PANDAS_TIME_UNIT.html" />
    
   <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
   
@@ -59,8 +59,8 @@
   <li><a href="../../index.html">Documentation overview</a><ul>
   <li><a href="index.html">API Reference</a><ul>
   <li><a href="__sphinx_autodoc_module__psweep.psweep.html">psweep</a><ul>
-      <li>Previous: <a href="psweep.psweep.fullpath.html" title="previous chapter">psweep.psweep.fullpath</a></li>
-      <li>Next: <a href="psweep.psweep.gather_machines.html" title="next chapter">psweep.psweep.gather_machines</a></li>
+      <li>Previous: <a href="psweep.psweep.PANDAS_TIME_UNIT.html" title="previous chapter">psweep.psweep.PANDAS_TIME_UNIT</a></li>
+      <li>Next: <a href="psweep.psweep.df_filter_conds.html" title="next chapter">psweep.psweep.df_filter_conds</a></li>
   </ul></li>
   </ul></li>
   </ul></li>
@@ -92,12 +92,21 @@
 
           <div class="body" role="main">
             
-  <div class="section" id="psweep-psweep-gather-calc-templates">
-<h1>psweep.psweep.gather_calc_templates<a class="headerlink" href="#psweep-psweep-gather-calc-templates" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="psweep-psweep-check-calc-dir">
+<h1>psweep.psweep.check_calc_dir<a class="headerlink" href="#psweep-psweep-check-calc-dir" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
-<dt id="psweep.psweep.gather_calc_templates">
-<code class="sig-prename descclassname"><span class="pre">psweep.psweep.</span></code><code class="sig-name descname"><span class="pre">gather_calc_templates</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">calc_templ_dir</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/psweep/psweep.html#gather_calc_templates"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psweep.psweep.gather_calc_templates" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dt id="psweep.psweep.check_calc_dir">
+<code class="sig-prename descclassname"><span class="pre">psweep.psweep.</span></code><code class="sig-name descname"><span class="pre">check_calc_dir</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">calc_dir</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/psweep/psweep.html#check_calc_dir"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psweep.psweep.check_calc_dir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check calc dir for consistency with database.</p>
+<p>Assuming dirs are named:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">calc_dir</span><span class="o">&gt;/&lt;</span><span class="n">pset_id1</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">calc_dir</span><span class="o">&gt;/&lt;</span><span class="n">pset_id2</span><span class="o">&gt;</span>
+<span class="o">...</span>
+</pre></div>
+</div>
+<p>check if we have matching dirs to <code class="docutils literal notranslate"><span class="pre">_pset_id</span></code> values in the
+database.</p>
+</dd></dl>
 
 </div>
 
@@ -116,7 +125,7 @@
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
-      <a href="../../_sources/generated/api/psweep.psweep.gather_calc_templates.rst.txt"
+      <a href="../../_sources/generated/api/psweep.psweep.check_calc_dir.rst.txt"
           rel="nofollow">Page source</a>
     </div>
 

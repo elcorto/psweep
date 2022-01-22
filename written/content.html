@@ -18,6 +18,7 @@
    
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
   
+  
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head><body>
@@ -53,7 +54,9 @@
 <li class="toctree-l2"><a class="reference internal" href="#advanced-give-runs-names-for-easy-post-processing">Advanced: Give runs names for easy post-processing</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="#batch-runs">Batch runs</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="#remote-cluster-batch-runs">Remote cluster batch runs</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#workflow-summary">Workflow summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#templates-layout-and-written-files">Templates layout and written files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#git-support">git support</a></li>
 </ul>
 </li>
@@ -85,10 +88,20 @@
     </div>
 </div>
 <script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
         </div>
       </div>
       <div class="documentwrapper">
         <div class="bodywrapper">
+          
+
           <div class="body" role="main">
             
   <p><a class="reference external" href="https://pypi.org/project/psweep"><img alt="pypi" src="https://img.shields.io/pypi/v/psweep" /></a></p>
@@ -107,8 +120,9 @@ same workflow and tools.</p>
 extend the study</p></li>
 <li><p>append new rows to the database when extending the study</p></li>
 <li><p>simulate a parameter scan</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">git</span></code> support to track progress of your work and recover from mistakes</p></li>
 <li><p><strong>experimental</strong>: support for managing batch runs, e.g. on remote HPC
-systems, including basic <code class="docutils literal notranslate"><span class="pre">git</span></code> workflow support</p></li>
+systems, including <code class="docutils literal notranslate"><span class="pre">git</span></code> support</p></li>
 </ul>
 <p>Otherwise, the main goal is to not constrain your flexibility by
 building a complicated framework – we provide only very basic building
@@ -513,20 +527,32 @@ $ mv calc.bak_2021-03-19T2* calc
 </pre></div>
 </div>
 <p>For any non-trivial work, you won’t use an interactive session. Instead, you
-will have a driver script (say <code class="docutils literal notranslate"><span class="pre">run.py</span></code>) which defines <code class="docutils literal notranslate"><span class="pre">params</span></code> and starts
+will have a driver script (say <code class="docutils literal notranslate"><span class="pre">input.py</span></code>) which defines <code class="docutils literal notranslate"><span class="pre">params</span></code> and starts
 <code class="docutils literal notranslate"><span class="pre">ps.run_local()</span></code>. Also in a common workflow, you won’t define <code class="docutils literal notranslate"><span class="pre">params</span></code> and run
 a study once. Instead you will first have an idea about which parameter values
 to scan. You will start with a coarse grid of parameters and then inspect the
 results and identify regions where you need more data (e.g. more dense
 sampling). Then you will modify <code class="docutils literal notranslate"><span class="pre">params</span></code> and run the study again. You will
-modify <code class="docutils literal notranslate"><span class="pre">run.py</span></code> multiple times, as you refine your study.</p>
+modify <code class="docutils literal notranslate"><span class="pre">input.py</span></code> multiple times, as you refine your study.</p>
 </div>
 <div class="section" id="use-git">
 <h2>Use git<a class="headerlink" href="#use-git" title="Permalink to this headline">¶</a></h2>
-<p>Instead or in addition to using <code class="docutils literal notranslate"><span class="pre">backup</span></code>, we recommend a <code class="docutils literal notranslate"><span class="pre">git</span></code>-based workflow
-to at least track changes to <code class="docutils literal notranslate"><span class="pre">run.py</span></code> (instead of manually creating backups
-such as <code class="docutils literal notranslate"><span class="pre">run.py.0</span></code>, <code class="docutils literal notranslate"><span class="pre">run.py.1</span></code>, …). We recommend to create a <code class="docutils literal notranslate"><span class="pre">.gitignore</span></code>
-such as</p>
+<p>Instead or in addition to using</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">run_local</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">backup</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>we recommend a <code class="docutils literal notranslate"><span class="pre">git</span></code>-based workflow to at least track changes to <code class="docutils literal notranslate"><span class="pre">input.py</span></code>
+(instead of manually creating backups such as <code class="docutils literal notranslate"><span class="pre">input.py.0</span></code>, <code class="docutils literal notranslate"><span class="pre">input.py.1</span></code>, …). You
+can manually <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">commit</span></code> at any point of course, or use</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">run_local</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">git</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This will commit any changes made to e.g. <code class="docutils literal notranslate"><span class="pre">input.py</span></code> itself and create a commit
+message containing the current <code class="docutils literal notranslate"><span class="pre">_run_id</span></code> such as</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">psweep</span><span class="p">:</span> <span class="n">batch_with_git</span><span class="p">:</span> <span class="n">run_id</span><span class="o">=</span><span class="mi">68</span><span class="n">f5d9b7</span><span class="o">-</span><span class="n">efa6</span><span class="o">-</span><span class="mi">4</span><span class="n">ed8</span><span class="o">-</span><span class="mi">9384</span><span class="o">-</span><span class="mi">4</span><span class="n">ffccab6f7c5</span>
+</pre></div>
+</div>
+<p>We <strong>strongly recommend</strong> to create a <code class="docutils literal notranslate"><span class="pre">.gitignore</span></code> such as</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># ignore backups</span>
 <span class="n">calc</span><span class="o">.</span><span class="n">bak</span><span class="o">*</span>
 
@@ -540,8 +566,16 @@ such as</p>
 <span class="n">calc</span><span class="o">/*/*.</span><span class="n">bin</span>
 </pre></div>
 </div>
-<p>You can even go crazy with <a class="reference external" href="https://git-lfs.github.com"><code class="docutils literal notranslate"><span class="pre">git-lfs</span></code></a> here. Again, we don’t enforce a
-specific workflow but instead just provide basic building blocks.</p>
+<div class="section" id="how-to-handle-large-files-when-using-git">
+<h3>How to handle large files when using git<a class="headerlink" href="#how-to-handle-large-files-when-using-git" title="Permalink to this headline">¶</a></h3>
+<p>The first option is to <code class="docutils literal notranslate"><span class="pre">.gitignore</span></code> them. Another is to use
+<a class="reference external" href="https://git-lfs.github.com"><code class="docutils literal notranslate"><span class="pre">git-lfs</span></code></a> (see the section on that later). That way you track their
+changes but only store the most recent version. Or you leave those files on
+another local or remote storage and store only the path to them (and maybe a
+hash) in the database. It’s up to you.</p>
+<p>Again, we don’t enforce a specific workflow but instead just provide basic
+building blocks.</p>
+</div>
 </div>
 <div class="section" id="simulate-dry-run-look-before-you-leap">
 <h2>Simulate / Dry-Run: look before you leap<a class="headerlink" href="#simulate-dry-run-look-before-you-leap" title="Permalink to this headline">¶</a></h2>
@@ -631,24 +665,31 @@ change the “study” column at any time, or delete it again.</p>
 <p>Super Pro tip: Make a backup of the database first!</p>
 </div>
 </div>
-<div class="tex2jax_ignore mathjax_ignore section" id="batch-runs">
-<h1>Batch runs<a class="headerlink" href="#batch-runs" title="Permalink to this headline">¶</a></h1>
+<div class="tex2jax_ignore mathjax_ignore section" id="remote-cluster-batch-runs">
+<h1>Remote cluster batch runs<a class="headerlink" href="#remote-cluster-batch-runs" title="Permalink to this headline">¶</a></h1>
 <p>We have experimental support for managing calculations on remote systems such
 as HPC clusters with a batch system like SLURM. It is basically a modernized
 and stripped-down version of
 <a class="reference external" href="https://elcorto.github.io/pwtools/written/background/param_study.html"><code class="docutils literal notranslate"><span class="pre">pwtools.batch</span></code></a>.
 Note that we don’t use any method like DRMAA to automatically dispatch jobs to
-clusters. Our design revolves around maximal user control of each step of the
-workflow.</p>
-<p>See <code class="docutils literal notranslate"><span class="pre">ps.prep_batch()</span></code> and <code class="docutils literal notranslate"><span class="pre">examples/batch/</span></code>. The workflow is based on
-<strong>template files</strong>. In the templates, we use (for now) the standard library’s
-<code class="docutils literal notranslate"><span class="pre">string.Template</span></code>, where each <code class="docutils literal notranslate"><span class="pre">$foo</span></code> is replaced by a value contained in a
-pset, so <code class="docutils literal notranslate"><span class="pre">$param_a</span></code>, <code class="docutils literal notranslate"><span class="pre">$param_b</span></code>, as well as <code class="docutils literal notranslate"><span class="pre">$_pset_id</span></code> and so forth.</p>
+clusters. We just write out a shell script to submit jobs, simple. Our design
+revolves around maximal user control of each step of the workflow.</p>
+<p>The central function to use is <code class="docutils literal notranslate"><span class="pre">ps.prep_batch()</span></code>. See <code class="docutils literal notranslate"><span class="pre">examples/batch_with_git</span></code>
+for a full example.</p>
+<p>The workflow is based on <strong>template files</strong>. In the templates, we use (for now)
+the standard library’s <code class="docutils literal notranslate"><span class="pre">string.Template</span></code>, where each <code class="docutils literal notranslate"><span class="pre">$foo</span></code> is replaced by a
+value contained in a pset, so <code class="docutils literal notranslate"><span class="pre">$param_a</span></code>, <code class="docutils literal notranslate"><span class="pre">$param_b</span></code>, as well as <code class="docutils literal notranslate"><span class="pre">$_pset_id</span></code>
+and so forth.</p>
 <p>We piggy-back on the <code class="docutils literal notranslate"><span class="pre">run_local()</span></code> workflow from above to use all it’s power
-and flexibility to create batch scripts using template files. Again, you have
-full control over every part of the workflow. We just automate the boring
-stuff.</p>
-<p>Workflow summary:</p>
+and flexibility to, instead of running jobs with it, just <strong>create batch
+scripts using template files</strong>.</p>
+<p>You can use the proposed workflow below directly the on remote machine (need to
+install <code class="docutils literal notranslate"><span class="pre">psweep</span></code> there, might not be fun) or run it locally and use a
+copy-to-cluster workflow. Since we actually don’t start jobs or talk to the
+batch system, you have full control over every part of the workflow. We just
+automate the boring stuff.</p>
+<div class="section" id="workflow-summary">
+<h2>Workflow summary<a class="headerlink" href="#workflow-summary" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>define <code class="docutils literal notranslate"><span class="pre">params</span></code> to be varied as shown above (probably in a script, say
 <code class="docutils literal notranslate"><span class="pre">input.py</span></code>)</p></li>
@@ -666,12 +707,24 @@ batch job, <strong>replace placeholders</strong> such as <code class="docutils l
 </ul>
 </li>
 </ul>
-<p>We replace running jobs locally (i.e. what <code class="docutils literal notranslate"><span class="pre">ps.run_local()</span></code> would do) with some
-small helper scripts:</p>
+<p>Thus, we replace running jobs directly (i.e. what <code class="docutils literal notranslate"><span class="pre">ps.run_local()</span></code> would do)
+with:</p>
 <ul class="simple">
-<li><p>use <code class="docutils literal notranslate"><span class="pre">bin/psweep-push</span> <span class="pre">&lt;mycluster&gt;</span></code> to <code class="docutils literal notranslate"><span class="pre">rsync</span></code> <code class="docutils literal notranslate"><span class="pre">calc/</span></code> to a cluster</p></li>
-<li><p>ssh to cluster; execute <code class="docutils literal notranslate"><span class="pre">calc/run_&lt;mycluster&gt;.sh</span></code>, wait …</p></li>
-<li><p>use <code class="docutils literal notranslate"><span class="pre">bin/psweep-pull</span> <span class="pre">&lt;mycluster&gt;</span></code> to <code class="docutils literal notranslate"><span class="pre">rsync</span></code> results back</p></li>
+<li><p>use <code class="docutils literal notranslate"><span class="pre">prep_batch(params,</span> <span class="pre">...)</span></code> instead of <code class="docutils literal notranslate"><span class="pre">run_local(params,</span> <span class="pre">...)</span></code></p></li>
+<li><p>if running locally</p>
+<ul>
+<li><p>use <code class="docutils literal notranslate"><span class="pre">scp</span></code> or <code class="docutils literal notranslate"><span class="pre">rsync</span></code> or the helper script <code class="docutils literal notranslate"><span class="pre">bin/psweep-push</span> <span class="pre">&lt;mycluster&gt;</span></code> (uses
+<code class="docutils literal notranslate"><span class="pre">rsync</span></code>) to copy <code class="docutils literal notranslate"><span class="pre">calc/</span></code> to a cluster</p></li>
+<li><p>ssh to cluster</p></li>
+</ul>
+</li>
+<li><p>execute <code class="docutils literal notranslate"><span class="pre">calc/run_&lt;mycluster&gt;.sh</span></code>, wait …</p></li>
+<li><p>if running locally</p>
+<ul>
+<li><p>use <code class="docutils literal notranslate"><span class="pre">scp</span></code> or <code class="docutils literal notranslate"><span class="pre">rsync</span></code> or the helper script use <code class="docutils literal notranslate"><span class="pre">bin/psweep-pull</span> <span class="pre">&lt;mycluster&gt;</span></code>
+(uses <code class="docutils literal notranslate"><span class="pre">rsync</span></code>) to copy results back</p></li>
+</ul>
+</li>
 </ul>
 <p>Now suppose that each of our batch jobs produces a output file, then we have
 the same post-processing setup as in <code class="docutils literal notranslate"><span class="pre">save_data_on_disk</span></code>, namely</p>
@@ -687,28 +740,103 @@ the same post-processing setup as in <code class="docutils literal notranslate">
 └── database.pk
 </pre></div>
 </div>
-<p>The only difference is that the outputs were not calculated and written locally
-but <code class="docutils literal notranslate"><span class="pre">rsync</span></code>ed from the cluster.</p>
-<p>And then post-processing is (almost) as before:</p>
+<p>Post-processing is (almost) as before:</p>
 <ul class="simple">
 <li><p>analyze results, run post-processing script(s) on <code class="docutils literal notranslate"><span class="pre">calc/database.pk</span></code>, read in
 <code class="docutils literal notranslate"><span class="pre">output.txt</span></code> for each <code class="docutils literal notranslate"><span class="pre">_pset_id</span></code></p></li>
-<li><p>when extending the study (modify <code class="docutils literal notranslate"><span class="pre">params</span></code>, call <code class="docutils literal notranslate"><span class="pre">input.py</span></code> again), we use the
-same features shown above</p>
+<li><p>when extending the study (modify <code class="docutils literal notranslate"><span class="pre">params</span></code>, call <code class="docutils literal notranslate"><span class="pre">input.py</span></code> again which calls
+<code class="docutils literal notranslate"><span class="pre">prep_batch(params)</span></code>), we use the same features shown above</p>
 <ul>
 <li><p>append to database</p></li>
 <li><p>create new unique <code class="docutils literal notranslate"><span class="pre">calc/&lt;_pset_id&gt;</span></code> without overwriting anything</p></li>
-<li><p>additionally: write a new <code class="docutils literal notranslate"><span class="pre">calc/run_&lt;mycluster&gt;.sh</span></code> with old submit
+<li><p><strong>additionally</strong>: write a new <code class="docutils literal notranslate"><span class="pre">calc/run_&lt;mycluster&gt;.sh</span></code> with old submit
 commands still in there, but commented out</p></li>
 </ul>
 </li>
 </ul>
+</div>
+<div class="section" id="templates-layout-and-written-files">
+<h2>Templates layout and written files<a class="headerlink" href="#templates-layout-and-written-files" title="Permalink to this headline">¶</a></h2>
+<p>An example template dir, based on <code class="docutils literal notranslate"><span class="pre">examples/batch_with_git</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>templates
+├── calc
+│   └── run.py
+└── machines
+    ├── cluster
+    │   ├── info.yaml
+    │   └── jobscript
+    └── local
+        ├── info.yaml
+        └── jobscript
+</pre></div>
+</div>
+<div class="section" id="calc-templates">
+<h3>calc templates<a class="headerlink" href="#calc-templates" title="Permalink to this headline">¶</a></h3>
+<p>Each file in <code class="docutils literal notranslate"><span class="pre">templates/calc</span></code> such as <code class="docutils literal notranslate"><span class="pre">run.py</span></code> will be treated as
+template, go thru the file template machinery and end up in
+<code class="docutils literal notranslate"><span class="pre">calc/&lt;_pset_id&gt;/</span></code>.</p>
+</div>
+<div class="section" id="machine-templates">
+<h3>machine templates<a class="headerlink" href="#machine-templates" title="Permalink to this headline">¶</a></h3>
+<p>The example above has machine templates for 2 machines, “local” and a
+remote machine named “cluster”. <code class="docutils literal notranslate"><span class="pre">psweep</span></code> will generate <code class="docutils literal notranslate"><span class="pre">run_&lt;machine&gt;.sh</span></code>
+for both. Also you must provide a file <code class="docutils literal notranslate"><span class="pre">info.yaml</span></code> to store
+machine-specific info. ATM this is only <code class="docutils literal notranslate"><span class="pre">subcmd</span></code>, e.g.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># templates/machines/cluster/info.yaml</span>
+<span class="nn">---</span>
+<span class="nt">subcmd</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sbatch</span>
+</pre></div>
+</div>
+<p>All other SLURM stuff can go into <code class="docutils literal notranslate"><span class="pre">templates/machines/cluster/jobscript</span></code>, e.g.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="c1">#SBATCH --time 00:20:00</span>
+<span class="c1">#SBATCH -o out.job</span>
+<span class="c1">#SBATCH -J foo_${_pset_seq}_${_pset_id}</span>
+<span class="c1">#SBATCH -p bar</span>
+<span class="c1">#SBATCH -A baz</span>
+
+<span class="c1"># Because we use Python&#39;s string.Template, we need to escape the dollar char</span>
+<span class="c1"># with two.</span>
+<span class="nb">echo</span> <span class="s2">&quot;hostname=</span><span class="nv">$$</span><span class="s2">(hostname)&quot;</span>
+
+module purge
+
+module load bzzrrr/1.2.3
+module load python
+
+python3 run.py
+</pre></div>
+</div>
+<p>For the “local” machine we’d just use <code class="docutils literal notranslate"><span class="pre">sh</span></code> (or <code class="docutils literal notranslate"><span class="pre">bash</span></code> or …) as “submit
+command”.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># templates/machines/local/info.yaml</span>
+<span class="nn">---</span>
+<span class="nt">subcmd</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sh</span>
+</pre></div>
+</div>
+<p>The files written are:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>
+run_cluster.sh                              # submit script for each machine
+run_local.sh
+
+calc/11967c0d-7ce6-404f-aae6-2b0ea74beefa   # one dir per pset
+...
+calc/11967c0d-7ce6-404f-aae6-2b0ea74beefa
+├── jobscript_cluster                       # jobscript for each machine
+├── jobscript_local
+└── run.py                                  # from templates/calc/run.py
+</pre></div>
+</div>
+<p>In each <code class="docutils literal notranslate"><span class="pre">run_&lt;machine&gt;.sh</span></code> we use the <code class="docutils literal notranslate"><span class="pre">subcmd</span></code> from <code class="docutils literal notranslate"><span class="pre">info.yaml</span></code>.</p>
+</div>
+</div>
 <div class="section" id="git-support">
 <h2>git support<a class="headerlink" href="#git-support" title="Permalink to this headline">¶</a></h2>
 <p>Use <code class="docutils literal notranslate"><span class="pre">prep_batch(...,</span> <span class="pre">git=True)</span></code> to have some basic git support such as
-automatic commits in each call. Make sure to create <code class="docutils literal notranslate"><span class="pre">.gitignore</span></code> first, else
-we’ll track <code class="docutils literal notranslate"><span class="pre">calc/</span></code> as well, which you may safely do when data in <code class="docutils literal notranslate"><span class="pre">calc</span></code> is
-small.</p>
+automatic commits in each call. It just uses <code class="docutils literal notranslate"><span class="pre">run_local(...,</span> <span class="pre">git=True)</span></code> when
+creating batch scripts, so all best practices for that apply here as well. In
+particular, make sure to create <code class="docutils literal notranslate"><span class="pre">.gitignore</span></code> first, else we’ll track <code class="docutils literal notranslate"><span class="pre">calc/</span></code> as
+well, which you may safely do when data in <code class="docutils literal notranslate"><span class="pre">calc</span></code> is small. Else use <code class="docutils literal notranslate"><span class="pre">git-lfs</span></code>,
+for example.</p>
 </div>
 </div>
 <div class="tex2jax_ignore mathjax_ignore section" id="install">
@@ -753,7 +881,7 @@ recommend to fork the upstream repo, call that remote something like
 <p>Now we like to migrate an existing git repo to LFS. Here we don’t need to call
 <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">lfs</span> <span class="pre">track</span></code> because we’ll use <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">lfs</span> <span class="pre">migrate</span> <span class="pre">import</span></code> to convert the repo.
 We will use the <code class="docutils literal notranslate"><span class="pre">-I/--include=</span></code> option to specify which files we would like to
-convert to LFS. Those patterns will and up in <code class="docutils literal notranslate"><span class="pre">.gitattributes</span></code> and the file
+convert to LFS. Those patterns will end up in <code class="docutils literal notranslate"><span class="pre">.gitattributes</span></code> and the file
 will even be created of not present already.</p>
 <p>We found that only one <code class="docutils literal notranslate"><span class="pre">-I/--include=</span></code> at a time works, but we can separate
 patterns by “,” to include multiple ones.</p>
@@ -790,6 +918,7 @@ $ cat _pics/foo.png
 
 
           </div>
+          
         </div>
       </div>
     <div class="clearer"></div>
@@ -799,7 +928,7 @@ $ cat _pics/foo.png
       
       |
       Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.4</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
       <a href="../_sources/written/content.md.txt"

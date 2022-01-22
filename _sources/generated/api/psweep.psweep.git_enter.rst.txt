@@ -1,6 +1,6 @@
-﻿psweep.psweep.dict\_hash
+﻿psweep.psweep.git\_enter
 ========================
 
 .. currentmodule:: psweep.psweep
 
-.. autofunction:: dict_hash
+.. autofunction:: git_enter

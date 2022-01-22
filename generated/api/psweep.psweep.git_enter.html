@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>psweep.psweep.dict_hash &#8212; psweep 0.5.0 documentation</title>
+    <title>psweep.psweep.git_enter &#8212; psweep 0.5.0 documentation</title>
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -14,10 +14,11 @@
     <script src="../../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="psweep.psweep.file_read" href="psweep.psweep.file_read.html" />
-    <link rel="prev" title="psweep.psweep.df_write" href="psweep.psweep.df_write.html" />
+    <link rel="next" title="psweep.psweep.git_exit" href="psweep.psweep.git_exit.html" />
+    <link rel="prev" title="psweep.psweep.git_clean" href="psweep.psweep.git_clean.html" />
    
   <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
@@ -46,7 +47,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../written/content.html#the-database">The database</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../written/content.html#special-database-fields-and-repeated-runs">Special database fields and repeated runs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../written/content.html#best-practices">Best practices</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../written/content.html#batch-runs">Batch runs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../written/content.html#remote-cluster-batch-runs">Remote cluster batch runs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../written/content.html#install">Install</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../written/content.html#tests">Tests</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../written/content.html#special-topics">Special topics</a></li>
@@ -58,8 +59,8 @@
   <li><a href="../../index.html">Documentation overview</a><ul>
   <li><a href="index.html">API Reference</a><ul>
   <li><a href="__sphinx_autodoc_module__psweep.psweep.html">psweep</a><ul>
-      <li>Previous: <a href="psweep.psweep.df_write.html" title="previous chapter">psweep.psweep.df_write</a></li>
-      <li>Next: <a href="psweep.psweep.file_read.html" title="next chapter">psweep.psweep.file_read</a></li>
+      <li>Previous: <a href="psweep.psweep.git_clean.html" title="previous chapter">psweep.psweep.git_clean</a></li>
+      <li>Next: <a href="psweep.psweep.git_exit.html" title="next chapter">psweep.psweep.git_exit</a></li>
   </ul></li>
   </ul></li>
   </ul></li>
@@ -75,23 +76,34 @@
     </div>
 </div>
 <script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
         </div>
       </div>
       <div class="documentwrapper">
         <div class="bodywrapper">
+          
+
           <div class="body" role="main">
             
-  <div class="section" id="psweep-psweep-dict-hash">
-<h1>psweep.psweep.dict_hash<a class="headerlink" href="#psweep-psweep-dict-hash" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="psweep-psweep-git-enter">
+<h1>psweep.psweep.git_enter<a class="headerlink" href="#psweep-psweep-git-enter" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
-<dt id="psweep.psweep.dict_hash">
-<code class="sig-prename descclassname"><span class="pre">psweep.psweep.</span></code><code class="sig-name descname"><span class="pre">dict_hash</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dct</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'sha1'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/psweep/psweep.html#dict_hash"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psweep.psweep.dict_hash" title="Permalink to this definition">¶</a></dt>
+<dt id="psweep.psweep.git_enter">
+<code class="sig-prename descclassname"><span class="pre">psweep.psweep.</span></code><code class="sig-name descname"><span class="pre">git_enter</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">use_git</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">always_commit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/psweep/psweep.html#git_enter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psweep.psweep.git_enter" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </div>
 
 
           </div>
+          
         </div>
       </div>
     <div class="clearer"></div>
@@ -101,10 +113,10 @@
       
       |
       Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.4</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
-      <a href="../../_sources/generated/api/psweep.psweep.dict_hash.rst.txt"
+      <a href="../../_sources/generated/api/psweep.psweep.git_enter.rst.txt"
           rel="nofollow">Page source</a>
     </div>
 

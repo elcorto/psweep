@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>psweep.psweep.gather_calc_templates &#8212; psweep 0.5.0 documentation</title>
+    <title>psweep.psweep.pset_hash &#8212; psweep 0.5.0 documentation</title>
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -14,8 +14,8 @@
     <script src="../../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="psweep.psweep.gather_machines" href="psweep.psweep.gather_machines.html" />
-    <link rel="prev" title="psweep.psweep.fullpath" href="psweep.psweep.fullpath.html" />
+    <link rel="next" title="psweep.psweep.run_local" href="psweep.psweep.run_local.html" />
+    <link rel="prev" title="psweep.psweep.prep_batch" href="psweep.psweep.prep_batch.html" />
    
   <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
   
@@ -59,8 +59,8 @@
   <li><a href="../../index.html">Documentation overview</a><ul>
   <li><a href="index.html">API Reference</a><ul>
   <li><a href="__sphinx_autodoc_module__psweep.psweep.html">psweep</a><ul>
-      <li>Previous: <a href="psweep.psweep.fullpath.html" title="previous chapter">psweep.psweep.fullpath</a></li>
-      <li>Next: <a href="psweep.psweep.gather_machines.html" title="next chapter">psweep.psweep.gather_machines</a></li>
+      <li>Previous: <a href="psweep.psweep.prep_batch.html" title="previous chapter">psweep.psweep.prep_batch</a></li>
+      <li>Next: <a href="psweep.psweep.run_local.html" title="next chapter">psweep.psweep.run_local</a></li>
   </ul></li>
   </ul></li>
   </ul></li>
@@ -92,12 +92,41 @@
 
           <div class="body" role="main">
             
-  <div class="section" id="psweep-psweep-gather-calc-templates">
-<h1>psweep.psweep.gather_calc_templates<a class="headerlink" href="#psweep-psweep-gather-calc-templates" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="psweep-psweep-pset-hash">
+<h1>psweep.psweep.pset_hash<a class="headerlink" href="#psweep-psweep-pset-hash" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
-<dt id="psweep.psweep.gather_calc_templates">
-<code class="sig-prename descclassname"><span class="pre">psweep.psweep.</span></code><code class="sig-name descname"><span class="pre">gather_calc_templates</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">calc_templ_dir</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/psweep/psweep.html#gather_calc_templates"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psweep.psweep.gather_calc_templates" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dt id="psweep.psweep.pset_hash">
+<code class="sig-prename descclassname"><span class="pre">psweep.psweep.</span></code><code class="sig-name descname"><span class="pre">pset_hash</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dct</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'sha1'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/psweep/psweep.html#pset_hash"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psweep.psweep.pset_hash" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reproducible hash of a dict for usage in database (hash of a <cite>pset</cite>).</p>
+<p>We target “reproducible” hashes, i.e. not what Python’s <code class="docutils literal notranslate"><span class="pre">hash</span></code> function
+does, for instance for two interpreter sessions:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ python
+&gt;&gt;&gt; hash(&quot;12&quot;)
+8013944793133897043
+
+$ python
+&gt;&gt;&gt; hash(&quot;12&quot;)
+4021864388667373027
+</pre></div>
+</div>
+<p>We only try to hash a dict if it is json-serializable. Things which aren’t
+are also not hashable in a reproducible fashion, even if we could hash,
+say, the pickled byte string of some object (e.g.
+<code class="docutils literal notranslate"><span class="pre">hash(pickle.dumps(obj))</span></code>), b/c that may contain a ref to its memory
+location which is not what we’re interested in. Similarly, also using
+<code class="docutils literal notranslate"><span class="pre">repr</span></code> is not reproducible:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Foo</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="k">pass</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">repr</span><span class="p">(</span><span class="n">Foo</span><span class="p">())</span>
+<span class="go">&#39;&lt;__main__.Foo object at 0x7fcc68aa9d60&gt;&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">repr</span><span class="p">(</span><span class="n">Foo</span><span class="p">())</span>
+<span class="go">&#39;&lt;__main__.Foo object at 0x7fcc732034c0&gt;&#39;</span>
+</pre></div>
+</div>
+<p>even though for our purpose, we’d consider the two instances of <code class="docutils literal notranslate"><span class="pre">Foo</span></code> to
+be the same. Better be safe and return NaN in that case.</p>
+</dd></dl>
 
 </div>
 
@@ -116,7 +145,7 @@
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
-      <a href="../../_sources/generated/api/psweep.psweep.gather_calc_templates.rst.txt"
+      <a href="../../_sources/generated/api/psweep.psweep.pset_hash.rst.txt"
           rel="nofollow">Page source</a>
     </div>
 
