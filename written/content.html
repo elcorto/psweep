@@ -726,7 +726,7 @@ with:</p>
 </ul>
 </li>
 </ul>
-<p>Now suppose that each of our batch jobs produces a output file, then we have
+<p>Now suppose that each of our batch jobs produces an output file, then we have
 the same post-processing setup as in <code class="docutils literal notranslate"><span class="pre">save_data_on_disk</span></code>, namely</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>calc
 ├── 63b5daae-1b37-47e9-a11c-463fb4934d14
@@ -773,7 +773,7 @@ commands still in there, but commented out</p></li>
 <div class="section" id="calc-templates">
 <h3>calc templates<a class="headerlink" href="#calc-templates" title="Permalink to this headline">¶</a></h3>
 <p>Each file in <code class="docutils literal notranslate"><span class="pre">templates/calc</span></code> such as <code class="docutils literal notranslate"><span class="pre">run.py</span></code> will be treated as
-template, go thru the file template machinery and end up in
+template, goes thru the file template machinery and ends up in
 <code class="docutils literal notranslate"><span class="pre">calc/&lt;_pset_id&gt;/</span></code>.</p>
 </div>
 <div class="section" id="machine-templates">
@@ -814,19 +814,29 @@ command”.</p>
 </pre></div>
 </div>
 <p>The files written are:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>
-run_cluster.sh                              # submit script for each machine
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>run_cluster.sh                              # submit script for each machine
 run_local.sh
 
-calc/11967c0d-7ce6-404f-aae6-2b0ea74beefa   # one dir per pset
-...
-calc/11967c0d-7ce6-404f-aae6-2b0ea74beefa
+calc/3c4efcb7-e37e-4ffe-800d-b05db171b41b   # one dir per pset
 ├── jobscript_cluster                       # jobscript for each machine
 ├── jobscript_local
 └── run.py                                  # from templates/calc/run.py
+calc/11967c0d-7ce6-404f-aae6-2b0ea74beefa
+├── jobscript_cluster
+├── jobscript_local
+└── run.py
+calc/65b7b453-96ec-4694-a0c4-4f71c53d982a
+...
 </pre></div>
 </div>
 <p>In each <code class="docutils literal notranslate"><span class="pre">run_&lt;machine&gt;.sh</span></code> we use the <code class="docutils literal notranslate"><span class="pre">subcmd</span></code> from <code class="docutils literal notranslate"><span class="pre">info.yaml</span></code>.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/sh</span>
+<span class="nv">here</span><span class="o">=</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>
+<span class="nb">cd</span> 3c4efcb7-e37e-4ffe-800d-b05db171b41b<span class="p">;</span> sbatch jobscript_cluster<span class="p">;</span> <span class="nb">cd</span> <span class="nv">$here</span>  <span class="c1"># run_seq=0 pset_seq=0</span>
+<span class="nb">cd</span> 11967c0d-7ce6-404f-aae6-2b0ea74beefa<span class="p">;</span> sbatch jobscript_cluster<span class="p">;</span> <span class="nb">cd</span> <span class="nv">$here</span>  <span class="c1"># run_seq=0 pset_seq=1</span>
+...
+</pre></div>
+</div>
 </div>
 </div>
 <div class="section" id="git-support">
