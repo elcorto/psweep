@@ -1,0 +1,29 @@
+name: tests
+
+on:
+  push:
+    branches:
+      - master
+      - feature-wip
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: checkout
+        uses: actions/checkout@v2
+
+      - name: install
+        run: |
+          pip install -r requirements_test.txt
+          pip install -e .
+
+      - name: run tests
+        run: |
+          # CI runners have no configured git. Need that for git support tests.
+          git config --global user.name "Gaylord Focker"
+          git config --global user.email "gl@focker.com"
+
+          # Run parallel tests (-n flag).
+          pytest -n4 $(pwd)/src/psweep/tests/*.py

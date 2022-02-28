@@ -1,4 +1,6 @@
 [![pypi](https://img.shields.io/pypi/v/psweep)](https://pypi.org/project/psweep)
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/elcorto/psweep/tests?label=tests)
+
 
 # About
 
