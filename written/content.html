@@ -104,8 +104,9 @@
 
           <div class="body" role="main">
             
-  <p><a class="reference external" href="https://pypi.org/project/psweep"><img alt="pypi" src="https://img.shields.io/pypi/v/psweep" /></a></p>
-<div class="tex2jax_ignore mathjax_ignore section" id="about">
+  <p><a class="reference external" href="https://pypi.org/project/psweep"><img alt="pypi" src="https://img.shields.io/pypi/v/psweep" /></a>
+<img alt="GitHub Workflow Status" src="https://img.shields.io/github/workflow/status/elcorto/psweep/tests?label=tests" /></p>
+<div class="section" id="about">
 <h1>About<a class="headerlink" href="#about" title="Permalink to this headline">¶</a></h1>
 <p>This package helps you to set up and run parameter studies.</p>
 <p>Mostly, you’ll start with a script and a for-loop and ask “why do I
@@ -129,7 +130,7 @@ building a complicated framework – we provide only very basic building
 blocks. All data structures are really simple (dicts), as are the
 provided functions. The database is a normal pandas DataFrame.</p>
 </div>
-<div class="tex2jax_ignore mathjax_ignore section" id="getting-started">
+<div class="section" id="getting-started">
 <h1>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h1>
 <p>A simple example: Loop over two parameters ‘a’ and ‘b’ in a nested loop (grid),
 calculate and store the result of a calculation for each parameter combination.</p>
@@ -222,7 +223,7 @@ integer IDs <code class="docutils literal notranslate"><span class="pre">_run_se
 additional hash <code class="docutils literal notranslate"><span class="pre">_pset_sha1</span></code> over the input dict (<code class="docutils literal notranslate"><span class="pre">pset</span></code> in the example) to
 <code class="docutils literal notranslate"><span class="pre">func()</span></code>.</p>
 </div>
-<div class="tex2jax_ignore mathjax_ignore section" id="concepts">
+<div class="section" id="concepts">
 <h1>Concepts<a class="headerlink" href="#concepts" title="Permalink to this headline">¶</a></h1>
 <p>The basic data structure for a param study is a list of “parameter sets” or
 short “psets”, each of which is a dict.</p>
@@ -345,7 +346,7 @@ a static <code class="docutils literal notranslate"><span class="pre">params</sp
 previous study, etc.</p>
 <p>The point is: you generate <code class="docutils literal notranslate"><span class="pre">params</span></code>, we run the study.</p>
 </div>
-<div class="tex2jax_ignore mathjax_ignore section" id="the-database">
+<div class="section" id="the-database">
 <h1>The database<a class="headerlink" href="#the-database" title="Permalink to this headline">¶</a></h1>
 <p>By default, <code class="docutils literal notranslate"><span class="pre">ps.run_local()</span></code> writes a database <code class="docutils literal notranslate"><span class="pre">calc/database.pk</span></code> (a pickled
 DataFrame) with the default <code class="docutils literal notranslate"><span class="pre">calc_dir='calc'</span></code>. You can turn that off using
@@ -363,7 +364,7 @@ session when you pass in <code class="docutils literal notranslate"><span class=
 </pre></div>
 </div>
 </div>
-<div class="tex2jax_ignore mathjax_ignore section" id="special-database-fields-and-repeated-runs">
+<div class="section" id="special-database-fields-and-repeated-runs">
 <h1>Special database fields and repeated runs<a class="headerlink" href="#special-database-fields-and-repeated-runs" title="Permalink to this headline">¶</a></h1>
 <p>See <code class="docutils literal notranslate"><span class="pre">examples/*repeat.py</span></code>.</p>
 <p>It is important to get the difference between the two special fields
@@ -408,7 +409,7 @@ as above two unique <code class="docutils literal notranslate"><span class="pre"
 the same pset, e.g. an exact repetition of one experiment. But since we use
 UUIDs for <code class="docutils literal notranslate"><span class="pre">_pset_id</span></code>, those calculations can still be distinguished.</p>
 </div>
-<div class="tex2jax_ignore mathjax_ignore section" id="best-practices">
+<div class="section" id="best-practices">
 <h1>Best practices<a class="headerlink" href="#best-practices" title="Permalink to this headline">¶</a></h1>
 <p>The following workflows and practices come from experience. They are, if
 you will, the “framework” for how to do things. However, we decided to
@@ -665,7 +666,7 @@ change the “study” column at any time, or delete it again.</p>
 <p>Super Pro tip: Make a backup of the database first!</p>
 </div>
 </div>
-<div class="tex2jax_ignore mathjax_ignore section" id="remote-cluster-batch-runs">
+<div class="section" id="remote-cluster-batch-runs">
 <h1>Remote cluster batch runs<a class="headerlink" href="#remote-cluster-batch-runs" title="Permalink to this headline">¶</a></h1>
 <p>We have experimental support for managing calculations on remote systems such
 as HPC clusters with a batch system like SLURM. It is basically a modernized
@@ -849,7 +850,7 @@ well, which you may safely do when data in <code class="docutils literal notrans
 for example.</p>
 </div>
 </div>
-<div class="tex2jax_ignore mathjax_ignore section" id="install">
+<div class="section" id="install">
 <h1>Install<a class="headerlink" href="#install" title="Permalink to this headline">¶</a></h1>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$ pip install psweep
 </pre></div>
@@ -860,14 +861,14 @@ for example.</p>
 </div>
 <p>See also <a class="reference external" href="https://github.com/elcorto/samplepkg">https://github.com/elcorto/samplepkg</a>.</p>
 </div>
-<div class="tex2jax_ignore mathjax_ignore section" id="tests">
+<div class="section" id="tests">
 <h1>Tests<a class="headerlink" href="#tests" title="Permalink to this headline">¶</a></h1>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> src/psweep/tests
 pytest test.py
 </pre></div>
 </div>
 </div>
-<div class="tex2jax_ignore mathjax_ignore section" id="special-topics">
+<div class="section" id="special-topics">
 <h1>Special topics<a class="headerlink" href="#special-topics" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="how-to-migrate-a-normal-git-repo-to-git-lfs">
 <h2>How to migrate a normal <code class="docutils literal notranslate"><span class="pre">git</span></code> repo to <code class="docutils literal notranslate"><span class="pre">git-lfs</span></code><a class="headerlink" href="#how-to-migrate-a-normal-git-repo-to-git-lfs" title="Permalink to this headline">¶</a></h2>
