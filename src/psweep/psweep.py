@@ -309,9 +309,34 @@ def df_read(fn: str, fmt="pickle", **kwds):
         raise Exception("unknown fmt: {}".format(fmt))
 
 
-def df_print(df: pd.DataFrame, index=False):
-    """Print DataFrame, by default without the index."""
-    print(df.to_string(index=index))
+def df_print(
+    df: pd.DataFrame,
+    index=False,
+    special_cols=False,
+    cols: Sequence[str] = None,
+):
+    """Print DataFrame, by default without the index and special fields such as
+    _pset_id.
+
+    Same logic as in bin/psweep-db2table but w/o tabulate support. Maybe
+    later.
+
+    Parameters
+    ----------
+    df : DataFrame
+    index : include DataFrame index
+    special_cols : include all special cols (_pset_id, ...)
+    cols : explicit list of cols, overrides special_cols
+    """
+    df2str = lambda df: df.to_string(index=index)
+    if cols is not None:
+        print(df2str(df[cols]))
+    else:
+        if special_cols:
+            print(df2str(df))
+        else:
+            _cols = set(x for x in df.columns if not x.startswith("_"))
+            print(df2str(df[_cols]))
 
 
 T = Union[pd.Series, pd.DataFrame, np.ndarray, List[bool]]
