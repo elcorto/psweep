@@ -382,12 +382,13 @@ def merge_dicts(args: Sequence[dict]):
     """Start with an empty dict and update with each arg dict
     left-to-right."""
     dct = {}
+    assert is_seq(args), f"input {args=} is no sequence"
     for entry in args:
+        assert isinstance(entry, dict), f"{entry=} is no dict"
         dct.update(entry)
     return dct
 
 
-@itr
 def itr2params(loops: Iterator[Any]):
     """Transform the (possibly nested) result of a loop over plists (or
     whatever has been used to create psets) to a proper list of psets
@@ -422,7 +423,12 @@ def itr2params(loops: Iterator[Any]):
     [{'a': 1, 'b': 77, 'c': 'const'},
      {'a': 2, 'b': 88, 'c': 'const'}]
     """
-    return [merge_dicts(flatten(entry)) for entry in loops]
+    ret = [merge_dicts(flatten(entry)) for entry in loops]
+    lens = list(map(len, ret))
+    assert len(np.unique(lens)) == 1, (
+        f"not all psets have same length {lens=}\n  {ret=}"
+    )
+    return ret
 
 
 @itr
@@ -446,6 +452,7 @@ def pgrid(plists):
     [{'a': 1, 'b': 77, 'c': 'const'},
      {'a': 2, 'b': 88, 'c': 'const'}]
     """
+    assert is_seq(plists), f"input {plists=} is no sequence"
     return itr2params(itertools.product(*plists))
 
 
