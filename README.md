@@ -30,84 +30,84 @@ provided functions. The database is a normal pandas DataFrame.
 
 # Getting started
 
-A simple example: Loop over two parameters 'a' and 'b' in a nested loop (grid),
+A simple example: Loop over two parameters `a` and `b` in a nested loop (grid),
 calculate and store the result of a calculation for each parameter combination.
 
 ```py
-import random
-import psweep as ps
+>>> import random
+>>> import psweep as ps
 
 
-def func(pset):
-    return {'result': random.random() * pset['a'] * pset['b']}
+>>> def func(pset):
+...    return {"result": random.random() * pset["a"] * pset["b"]}
 
-
-if __name__ == '__main__':
-    a = ps.plist('a', [1,2,3])
-    b = ps.plist('b', [77,88])
-    params = ps.pgrid(a,b)
-    df = ps.run_local(func, params)
-    print(df)
+>>> a = ps.plist("a", [1,2,3])
+>>> b = ps.plist("b", [88,99])
+>>> params = ps.pgrid(a,b)
+>>> df = ps.run_local(func, params)
 ```
 
-`pgrid` produces a list `params` of parameter sets (dicts
-`{'a': ..., 'b': ...}`) to loop over:
+`pgrid` produces a list `params` of parameter sets (dicts `{'a': ..., 'b':
+...}`) to loop over:
 
 ```
-[{'a': 1, 'b': 77},
- {'a': 1, 'b': 88},
- {'a': 2, 'b': 77},
+[{'a': 1, 'b': 88},
+ {'a': 1, 'b': 99},
  {'a': 2, 'b': 88},
- {'a': 3, 'b': 77},
- {'a': 3, 'b': 88}]
+ {'a': 2, 'b': 99},
+ {'a': 3, 'b': 88},
+ {'a': 3, 'b': 99}]
 ```
 
 and a database of results (pandas DataFrame `df`, pickled file
 `calc/database.pk` by default):
 
-```
+```py
+>>> import pandas as pd
+>>> pd.set_option("display.max_columns", None)
+>>> print(df)
                                a   b                               _run_id  \
-2021-03-19 22:58:17.015223265  1  77  bb32aade-6ac9-4ac2-9019-3093c5f00965
-2021-03-19 22:58:17.020342588  1  88  bb32aade-6ac9-4ac2-9019-3093c5f00965
-2021-03-19 22:58:17.023407698  2  77  bb32aade-6ac9-4ac2-9019-3093c5f00965
-2021-03-19 22:58:17.025991917  2  88  bb32aade-6ac9-4ac2-9019-3093c5f00965
-2021-03-19 22:58:17.028507948  3  77  bb32aade-6ac9-4ac2-9019-3093c5f00965
-2021-03-19 22:58:17.030908823  3  88  bb32aade-6ac9-4ac2-9019-3093c5f00965
+2022-03-09 21:41:47.241659641  1  88  21f34c94-3dee-445f-8503-bc849d567afa
+2022-03-09 21:41:47.242649794  1  99  21f34c94-3dee-445f-8503-bc849d567afa
+2022-03-09 21:41:47.243408918  2  88  21f34c94-3dee-445f-8503-bc849d567afa
+2022-03-09 21:41:47.244148254  2  99  21f34c94-3dee-445f-8503-bc849d567afa
+2022-03-09 21:41:47.244868517  3  88  21f34c94-3dee-445f-8503-bc849d567afa
+2022-03-09 21:41:47.245590210  3  99  21f34c94-3dee-445f-8503-bc849d567afa
 
                                                            _pset_id _calc_dir  \
-2021-03-19 22:58:17.015223265  e6fbfe50-8c14-49f3-b9f7-83268c73f34d      calc
-2021-03-19 22:58:17.020342588  d8599b90-8475-4bfb-96b5-4e7068195057      calc
-2021-03-19 22:58:17.023407698  85948244-46a3-4b19-bd1c-2d59e32328a6      calc
-2021-03-19 22:58:17.025991917  a775be5e-bc53-4c3a-a237-7151b279f1bd      calc
-2021-03-19 22:58:17.028507948  b0ad166f-6bd8-4d64-a82a-7e8e8ac91b20      calc
-2021-03-19 22:58:17.030908823  e91309d4-21b4-4d45-9fb6-cb84ffb31e24      calc
+2022-03-09 21:41:47.241659641  cfa0341b-ed2a-480e-bc64-3283fc7661db      calc
+2022-03-09 21:41:47.242649794  52f8926d-7370-47ac-8442-d979cc979606      calc
+2022-03-09 21:41:47.243408918  451bd57d-211b-4860-84ad-89636dc24f97      calc
+2022-03-09 21:41:47.244148254  239adf42-30be-43d0-b980-50846da2e531      calc
+2022-03-09 21:41:47.244868517  4148c499-2578-49c3-9d87-0fb8d50a02fe      calc
+2022-03-09 21:41:47.245590210  f5238602-a3c6-4383-9057-64809e4aef04      calc
 
                                                   _time_utc  \
-2021-03-19 22:58:17.015223265 2021-03-19 22:58:17.015223265
-2021-03-19 22:58:17.020342588 2021-03-19 22:58:17.020342588
-2021-03-19 22:58:17.023407698 2021-03-19 22:58:17.023407698
-2021-03-19 22:58:17.025991917 2021-03-19 22:58:17.025991917
-2021-03-19 22:58:17.028507948 2021-03-19 22:58:17.028507948
-2021-03-19 22:58:17.030908823 2021-03-19 22:58:17.030908823
+2022-03-09 21:41:47.241659641 2022-03-09 21:41:47.241659641
+2022-03-09 21:41:47.242649794 2022-03-09 21:41:47.242649794
+2022-03-09 21:41:47.243408918 2022-03-09 21:41:47.243408918
+2022-03-09 21:41:47.244148254 2022-03-09 21:41:47.244148254
+2022-03-09 21:41:47.244868517 2022-03-09 21:41:47.244868517
+2022-03-09 21:41:47.245590210 2022-03-09 21:41:47.245590210
 
                                                              _pset_sha1  \
-2021-03-19 22:58:17.015223265  281c595edf7ffa124ac3ef82f26de3f8eb8517f2
-2021-03-19 22:58:17.020342588  088056f830758f949823ddc52bf8527f3e727b45
-2021-03-19 22:58:17.023407698  b59bc3ae98e8b93de34135d751ed5090c3f087c5
-2021-03-19 22:58:17.025991917  52434b66dd37763d09280480ff449d66ffcdcd4f
-2021-03-19 22:58:17.028507948  f6295cdfab520d9ede7e709bc68d4d65ffc45848
-2021-03-19 22:58:17.030908823  35af18a51c425b09097af78d55ebdd91588c6f3c
+2022-03-09 21:41:47.241659641  088056f830758f949823ddc52bf8527f3e727b45
+2022-03-09 21:41:47.242649794  365687b444190b7b4596c70cafab721d2c58e892
+2022-03-09 21:41:47.243408918  52434b66dd37763d09280480ff449d66ffcdcd4f
+2022-03-09 21:41:47.244148254  354460f2b5c2ad565155513f95c6dbc1181f0239
+2022-03-09 21:41:47.244868517  35af18a51c425b09097af78d55ebdd91588c6f3c
+2022-03-09 21:41:47.245590210  2e6c6c9a2b05115fced36edab5cafb038c926176
 
-                               _pset_seq  _run_seq     result
-2021-03-19 22:58:17.015223265          0         0  35.276105
-2021-03-19 22:58:17.020342588          1         0  30.183059
-2021-03-19 22:58:17.023407698          2         0  50.545904
-2021-03-19 22:58:17.025991917          3         0  59.443434
-2021-03-19 22:58:17.028507948          4         0  78.027465
-2021-03-19 22:58:17.030908823          5         0  62.461030
+                               _pset_seq  _run_seq      result
+2022-03-09 21:41:47.241659641          0         0   49.657365
+2022-03-09 21:41:47.242649794          1         0   92.940078
+2022-03-09 21:41:47.243408918          2         0   65.836144
+2022-03-09 21:41:47.244148254          3         0  193.589216
+2022-03-09 21:41:47.244868517          4         0  193.032010
+2022-03-09 21:41:47.245590210          5         0  159.747755
 ```
 
-You see the columns 'a' and 'b', the column 'result' (returned by
+You see the columns `a` and `b`, the column `result` (returned by
 `func`) and a number of reserved fields for book-keeping such as
 
 ```
@@ -138,20 +138,20 @@ short "psets", each of which is a dict.
 
 
 ```py
-params = [{'a': 1, 'b': 'lala'},  # pset 1
-          {'a': 2, 'b': 'zzz'},   # pset 2
-          ...                     # ...
+params = [{"a": 1, "b": 88},  # pset 1
+          {"a": 1, "b": 99},  # pset 2
+          ...                 # ...
          ]
 ```
 
-Each pset contains values of parameters ('a' and 'b') which are varied during
-the parameter study.
+Each pset contains values of parameters which are varied during the parameter
+study.
 
 You need to define a callback function `func`, which takes exactly one
 pset such as:
 
 ```py
-{'a': 1, 'b': 'lala'}
+{'a': 1, 'b': 88}
 ```
 
 and runs the workload for that pset. `func` must return a
@@ -164,10 +164,10 @@ dict, for example:
 or an updated 'pset':
 
 ```py
-{'a': 1, 'b': 'lala', 'result': 1.234}
+{'a': 1, 'b': 88, 'result': 1.234}
 ```
 
-We always merge (`dict.update`) the result of `func` with the pset, which gives
+We always merge (`dict.update()`) the result of `func` with the pset, which gives
 you flexibility in what to return from `func`. In particular, you are free to
 also return an empty dict if you record results in another way (see the
 `save_data_on_disk` example later).
@@ -181,81 +181,99 @@ columns such as `_run_id` (once per `ps.run_local()` call) or `_pset_id` (once
 per pset). Using `ps.run_local(... poolsize=...)` runs `func` in parallel on
 `params` using `multiprocessing.Pool`.
 
-This package offers some very simple helper functions which assist in
-creating `params`. Basically, we define the to-be-varied parameters
-('a' and 'b') and then use something like `itertools.product` to
-loop over them to create `params`, which is passed to `ps.run_local()` to
-actually perform the loop over all psets.
+# Building parameter grids
+
+This package offers some very simple helper functions which assist in creating
+`params`. Basically, we define the to-be-varied parameters and then use
+something like `itertools.product()` to loop over them to create `params`,
+which is passed to `ps.run_local()` to actually perform the loop over all
+psets.
 
 ```py
 >>> from itertools import product
 >>> import psweep as ps
->>> a=ps.plist('a', [1,2,3])
->>> b=ps.plist('b', ['xx', 'yy'])
+>>> a=ps.plist("a", [1, 2])
+>>> b=ps.plist("b", ["xx", "yy"])
 >>> a
-[{'a': 1}, {'a': 2}, {'a': 3}]
+[{'a': 1}, {'a': 2}]
 >>> b
 [{'b': 'xx'}, {'b': 'yy'}]
+
+>>> list(product(a,b))
+[({'a': 1}, {'b': 'xx'}),
+ ({'a': 1}, {'b': 'yy'}),
+ ({'a': 2}, {'b': 'xx'}),
+ ({'a': 2}, {'b': 'yy'})]
+
 >>> ps.itr2params(product(a,b))
 [{'a': 1, 'b': 'xx'},
  {'a': 1, 'b': 'yy'},
  {'a': 2, 'b': 'xx'},
- {'a': 2, 'b': 'yy'},
- {'a': 3, 'b': 'xx'},
- {'a': 3, 'b': 'yy'}]
+ {'a': 2, 'b': 'yy'}]
 ```
 
-The last pattern is so common, that we have a function for it:
-`pgrid()`.
+Here we used the helper function `itr2params()` which accepts an iterator
+that represents the loops over params. It merges dicts to psets and also deals
+with nesting when using `zip()` (see below).
+
+The last pattern is so common that we have a short-cut function
+`pgrid()`, which basically does `itr2params(product(a,b))`.
 
 ```py
 >>> ps.pgrid(a,b)
 [{'a': 1, 'b': 'xx'},
  {'a': 1, 'b': 'yy'},
  {'a': 2, 'b': 'xx'},
- {'a': 2, 'b': 'yy'},
- {'a': 3, 'b': 'xx'},
- {'a': 3, 'b': 'yy'}]
+ {'a': 2, 'b': 'yy'}]
 ```
 
-The logic of the param study is entirely contained in the creation of
-`params`. E.g., if parameters shall be varied together (say a and b),
-then instead of
+`pgrid()` accepts either a sequence or individual args (but please
+check the "pgrid gotchas" section below for some corner cases).
 
 ```py
->>> product(a,b,c)
+>>> ps.pgrid([a,b])
+>>> ps.pgrid(a,b)
 ```
 
-use
+So the logic of the param study is entirely contained in the creation of
+`params`. For instance, if parameters shall be varied together (say `a` and
+`b`), then use `zip`. The nesting from `zip()` is flattened in `itr2params()`
+and `pgrid()`.
 
 ```py
->>> product(zip(a,b), c)
+>>> ##ps.itr2params(zip(a, b))
+>>> ps.pgrid([zip(a, b)])
+[{'a': 1, 'b': 'xx'},
+ {'a': 2, 'b': 'yy'}]
 ```
 
-The nesting from `zip()` is flattened in `itr2params()` and `pgrid()`
+Let's add a third parameter to vary. Of course, in general, plists can have
+different lengths.
 
 ```py
->>> c=ps.plist('c', [None, 1.2, 'X'])
->>> ps.pgrid(zip(a,b),c)
-[{'a': 1, 'b': 'xx', 'c': None},
- {'a': 1, 'b': 'xx', 'c': 1.2},
- {'a': 1, 'b': 'xx', 'c': 'X'},
+>>> c=ps.plist("c", [88, None, "Z"])
+>>> ##ps.itr2params(product(zip(a, b), c))
+>>> ##ps.pgrid([zip(a, b), c])
+>>> ps.pgrid(zip(a, b), c)
+[{'a': 1, 'b': 'xx', 'c': 88},
+ {'a': 1, 'b': 'xx', 'c': None},
+ {'a': 1, 'b': 'xx', 'c': 'Z'},
+ {'a': 2, 'b': 'yy', 'c': 88},
  {'a': 2, 'b': 'yy', 'c': None},
- {'a': 2, 'b': 'yy', 'c': 1.2},
- {'a': 2, 'b': 'yy', 'c': 'X'}]
+ {'a': 2, 'b': 'yy', 'c': 'Z'}]
 ```
 
-If you want a parameter which is constant, use a list of length one:
+If you want to add a parameter which is constant, use a list of length one.
 
 ```py
->>> const=ps.plist('const', [1.23])
->>> ps.pgrid(zip(a,b), c, const)
-[{'a': 1, 'b': 'xx', 'c': None, 'const': 1.23},
- {'a': 1, 'b': 'xx', 'c': 1.2,  'const': 1.23},
- {'a': 1, 'b': 'xx', 'c': 'X',  'const': 1.23},
+>>> const=ps.plist("const", [1.23])
+>>> ps.pgrid(zip(a, b), c, const)
+[{'a': 1, 'b': 'xx', 'c': 88,   'const': 1.23},
+ {'a': 1, 'b': 'xx', 'c': None, 'const': 1.23},
+ {'a': 1, 'b': 'xx', 'c': 'Z',  'const': 1.23},
+ {'a': 2, 'b': 'yy', 'c': 88,   'const': 1.23},
  {'a': 2, 'b': 'yy', 'c': None, 'const': 1.23},
- {'a': 2, 'b': 'yy', 'c': 1.2,  'const': 1.23},
- {'a': 2, 'b': 'yy', 'c': 'X',  'const': 1.23}]
+ {'a': 2, 'b': 'yy', 'c': 'Z',  'const': 1.23}]
 ```
 
 So, as you can see, the general idea is that we do all the loops
@@ -264,7 +282,7 @@ sampled before the actual calculations. This has proven to be very
 practical as it helps detecting errors early.
 
 You are, by the way, of course not restricted to use simple nested loops
-over parameters using `pgrid()` (which uses `itertools.product`). You
+over parameters using `pgrid()` (which uses `itertools.product()`). You
 are totally free in how to create `params`, be it using other fancy
 stuff from `itertools` or explicit loops. Of course you can also define
 a static `params` list
@@ -282,6 +300,59 @@ or read `params` in from an external source such as a database from a
 previous study, etc.
 
 The point is: you generate `params`, we run the study.
+
+## Gotchas
+
+### `pgrid`
+
+tl;dr: `pgrid(a,b,...)` is a convenience API. It can't handle all corner
+cases. If in doubt, use `pgrid([a,b,...])` (or even `itr2params(product(...))`
+directly).
+
+Note that for a single param we have
+
+```py
+>>> a=ps.plist("a", [1,2])
+>>> a
+[{'a': 1}, {'a': 2}]
+>>> ps.pgrid([a])
+[{'a': 1}, {'a': 2}]
+```
+
+i.e. the loop from `itertools.product()` is over `[a]` which returns `a`
+itself. You can leave off `[...]` if you have at least two args, say `a` and
+`b` as in
+
+```py
+>>> pgrid([a,b])
+>>> pgrid(a,b)
+```
+
+For a single arg calling `pgrid(a)` is wrong since then `itertools.product()`
+will be called on the entries of `a` which is not what you want. In fact doing
+so will raise an error.
+
+Also, in case
+
+```py
+>>> pgrid([zip(a,b)])
+```
+
+the list `[zip(a,b)]` is what you want to loop over and `pgrid(zip(a,b))` will
+raise an error, just as in case `pgrid(a)` above.
+
+And as before, if you have more plists, then `[...]` is optional, e.g.
+
+```py
+>>> pgrid([zip(a,b), c])
+>>> pgrid(zip(a, b), c)
+```
+
+
+### `zip`
+
+When using `zip(a,b)`, make sure that `a` and `b` have the same length, else `zip`
+will return an iterator whose length is `min(len(a), len(b))`.
 
 
 # The database
@@ -466,6 +537,7 @@ arr = np.array(
     [np.loadtxt(f"calc/{pset_id}/output.txt") for pset_id in df._pset_id.values]
 )
 
+# Add new column to database, print and write new eval database
 df["mean"] = arr.mean(axis=1)
 
 cols = ["a", "mean", "_pset_id"]
@@ -501,13 +573,14 @@ $ mv calc.bak_2021-03-19T2* calc
 ```
 
 For any non-trivial work, you won't use an interactive session. Instead, you
-will have a driver script (say `input.py`) which defines `params` and starts
-`ps.run_local()`. Also in a common workflow, you won't define `params` and run
-a study once. Instead you will first have an idea about which parameter values
-to scan. You will start with a coarse grid of parameters and then inspect the
-results and identify regions where you need more data (e.g. more dense
-sampling). Then you will modify `params` and run the study again. You will
-modify `input.py` multiple times, as you refine your study.
+will have a driver script (say `input.py`, or a jupyter notebook, or ...) which
+defines `params` and starts `ps.run_local()`. Also in a common workflow, you
+won't define `params` and run a study once. Instead you will first have an idea
+about which parameter values to scan. You will start with a coarse grid of
+parameters and then inspect the results and identify regions where you need
+more data (e.g. more dense sampling). Then you will modify `params` and run the
+study again. You will modify `input.py` multiple times, as you refine your
+study.
 
 
 ## Use git
@@ -695,10 +768,9 @@ and flexibility to, instead of running jobs with it, just **create batch
 scripts using template files**.
 
 You can use the proposed workflow below directly the on remote machine (need to
-install `psweep` there, might not be fun) or run it locally and use a
-copy-to-cluster workflow. Since we actually don't start jobs or talk to the
-batch system, you have full control over every part of the workflow. We just
-automate the boring stuff.
+install `psweep` there) or run it locally and use a copy-to-cluster workflow.
+Since we actually don't start jobs or talk to the batch system, you have full
+control over every part of the workflow. We just automate the boring stuff.
 
 ## Workflow summary
 
@@ -954,5 +1026,52 @@ $ cat _pics/foo.png
 
 will bring the content back to the working dir.
 
+# Scope and related projects
+
+This project aims to be easy to set up and use with as few dependencies and new
+concepts to learn as possible. We strive to use standard Python data structures
+(dicts) and functionality (itertools) as well as widely available third party
+packages (pandas). Users should be able to get going quickly without having to
+set up and learn a complex framework. Perhaps most importantly, this project is
+completely agnostic to the field of study, e.g. any problem that can be
+formulated as "let's vary X and analyze the results".
+
+Unsurprisingly, there is a huge pile of similar tools. This project is super
+small and as such of course lacks a lot of features that other packages offer.
+We just attempt to scratch some particular itches which we haven't found to
+be covered in that combination by other tools, namely
+
+* simulate runs
+* backups
+* git support
+* simple local database (no db server to set up, no Mongo, etc)
+* interactive (Python REPL) and script-driven runs
+* local runs, also in parallel
+* tooling for remote runs (template-based workflow)
+* minimal naming conventions, rely on UUIDs
+* no yaml-ish DSLs, just Python please, thank you :)
+* no CLIs, just Python please, thank you :)
+* no config files, just Python please, thank you :)
+* not application specific (e.g. machine learning)
+
+Here is a list of related projects which offer some of the mechanisms
+implemented here.
+
+* https://materialsproject.github.io/fireworks/
+* https://luigi.readthedocs.io
+* https://snakemake.readthedocs.io
+* https://github.com/eviatarbach/parasweep
+* https://github.com/SmokinCaterpillar/pypet
+* https://github.com/pharmbio/sciluigi
+* https://github.com/open-research/sumatra
+* https://www.nist.gov/programs-projects/simulation-management-tools
+* https://github.com/IDSIA/sacred
+* https://www.wandb.com/
+* https://github.com/maiot-io/zenml
+* https://github.com/LLNL/maestrowf
+* https://mlflow.org/
+* https://metaflow.org/
+* https://www.nextflow.io/
+* https://dvc.org/
 
 [git-lfs]: https://git-lfs.github.com
