@@ -73,29 +73,12 @@ def fullpath(path: str) -> str:
 
 
 def itr(func: Callable) -> Callable:
-    """Decorator which makes functions take a sequence of args or individual
-    args.
-
-    Examples
-    --------
-    >>> @itr
-    ... def func(args):
-    ...     for arg in args:
-    ...         print(arg)
-    >>> func([1,2,3])
-    1
-    2
-    3
-    >>> func(1,2,3)
-    1
-    2
-    3
-    """
-
-    @wraps(func)
     def wrapper(*args):
+        # (arg1,)
         if len(args) == 1:
-            return func(args[0])
+            arg = args[0]
+            return func(arg if is_seq(arg) else [arg])
+        # (arg1,...,argN)
         else:
             return func(args)
 
