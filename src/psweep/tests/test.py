@@ -6,6 +6,7 @@ import string
 import tempfile
 import pickle
 import subprocess
+from itertools import product
 
 import pandas as pd
 import numpy as np
@@ -288,6 +289,7 @@ def test_merge_dicts():
     c = {"c": 3}
 
     # API
+    assert a == ps.merge_dicts(a)
     m1 = ps.merge_dicts(a, b, c)
     m2 = ps.merge_dicts([a, b, c])
 
@@ -510,3 +512,65 @@ def test_pset_hash():
     assert ps.pset_hash(dict(a=np.sin)) is np.nan
     assert ps.pset_hash(dict(a=_Foo)) is np.nan
     assert ps.pset_hash(dict(a=_Foo())) is np.nan
+
+
+def test_param_build():
+    a = ps.plist("a", [1, 2])
+    b = ps.plist("b", [77, 88, 99])
+
+    assert a == ps.pgrid([a])
+    with pytest.raises(AssertionError):
+        ps.pgrid(a)
+
+    abref = [
+        {"a": 1, "b": 77},
+        {"a": 1, "b": 88},
+        {"a": 1, "b": 99},
+        {"a": 2, "b": 77},
+        {"a": 2, "b": 88},
+        {"a": 2, "b": 99},
+    ]
+
+    assert abref == ps.pgrid(a, b)
+    assert abref == ps.pgrid([a, b])
+    assert abref == ps.itr2params(product(a, b))
+
+    # a and c together, no product() here so it is an error to use pgrid(a,c)
+    # which calls product(): pgrid(a,c) = itr2params(product(a,c)). We have
+    # only
+    #
+    # >>> list(zip(a,c))
+    # [({'a': 1}, {'c': 11}),
+    #  ({'a': 2}, {'c': 22})]
+    # >>> ps.itr2params(zip(a,c))
+    # [{'a': 1, 'c': 11},
+    #  {'a': 2, 'c': 22}]
+    c = ps.plist("c", [11, 22])
+    acref = [{"a": 1, "c": 11}, {"a": 2, "c": 22}]
+    assert acref == ps.itr2params(zip(a, c))
+    assert acref == ps.pgrid([zip(a, c)])
+    with pytest.raises(AssertionError):
+        ps.pgrid(zip(a, c))
+
+    d = ps.plist("d", [66, 77, 88, 99])
+    acdref = ps.itr2params(product(zip(a, c), d))
+    assert acdref == ps.pgrid([zip(a, c), d])
+    assert acdref == ps.pgrid(zip(a, c), d)
+
+
+def test_itr():
+    @ps.itr
+    def func(args):
+        return [a for a in args]
+
+    def gen(inp):
+        for x in inp:
+            yield x
+
+    assert [1] == func(1)
+    assert [1] == func([1])
+    assert [[1]] == func([[1]])
+    assert [1, 2] == func(1, 2)
+    assert [1, 2] == func([1, 2])
+    assert [[1, 2]] == func([[1, 2]])
+    assert [1, 2] == func(gen([1, 2]))
