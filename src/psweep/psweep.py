@@ -428,9 +428,9 @@ def itr2params(loops: Iterator[Any]):
     """
     ret = [merge_dicts(flatten(entry)) for entry in loops]
     lens = list(map(len, ret))
-    assert len(np.unique(lens)) == 1, (
-        f"not all psets have same length {lens=}\n  {ret=}"
-    )
+    assert (
+        len(np.unique(lens)) == 1
+    ), f"not all psets have same length {lens=}\n  {ret=}"
     return ret
 
 
