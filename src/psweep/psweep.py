@@ -15,12 +15,12 @@ import subprocess
 import time
 import uuid
 import warnings
-import yaml
+import yaml  # type: ignore
 import sys
 
 # Using numpy type hints is complicated, so skip it for now.
 import numpy as np  # type: ignore
-import pandas as pd
+import pandas as pd  # type: ignore
 
 pj = os.path.join
 
@@ -180,7 +180,7 @@ def check_calc_dir(calc_dir: str, df: pd.DataFrame):
             re.match(r"(([0-9a-z]+)-){4}([0-9a-z]+)", x)
             for x in os.listdir(calc_dir)
         ] if m is not None])
-    # fmt: off
+    # fmt: on
     pset_ids_db = set(df._pset_id.values)
     return dict(
         db_not_disk=pset_ids_db - pset_ids_disk,
@@ -222,16 +222,19 @@ def git_enter(use_git: bool, always_commit=False):
     if use_git:
         if not in_git_repo():
             if always_commit:
-                system(f"git init; {GIT_ADD_ALL}; git commit -m 'psweep: {path}: init'")
+                system(
+                    f"git init; {GIT_ADD_ALL}; git commit -m 'psweep: {path}: init'"
+                )
             else:
                 raise Exception("no git repo here, create one first")
         if not git_clean():
             if always_commit:
                 print("dirty repo, adding all changes")
-                system(f"{GIT_ADD_ALL}; git commit -m 'psweep: {path}: local changes'")
+                system(
+                    f"{GIT_ADD_ALL}; git commit -m 'psweep: {path}: local changes'"
+                )
             else:
                 raise Exception("dirty repo, commit first")
-
 
 
 def git_exit(use_git: bool, df: pd.DataFrame):
