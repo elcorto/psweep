@@ -74,6 +74,7 @@ def fullpath(path: str) -> str:
 
 
 def itr(func: Callable) -> Callable:
+    @wraps(func)
     def wrapper(*args):
         # (arg1,)
         if len(args) == 1:
