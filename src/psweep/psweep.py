@@ -512,6 +512,109 @@ def pgrid(plists):
     return itr2params(itertools.product(*plists))
 
 
+def filter_same_hash(params: Sequence[dict], **kwds):
+    """Reduce params to unique psets.
+
+    Parameters
+    ----------
+    params : Sequence of dicts
+    kwds : passed to pset_hash()
+
+    Returns
+    -------
+    params_filt
+    """
+    msk = np.unique(
+        [pset_hash(dct, **kwds) for dct in params], return_index=True
+    )[1]
+    return [params[ii] for ii in np.sort(msk)]
+
+
+def stargrid(
+    const: dict,
+    vary: Sequence[dict],
+    vary_labels: Sequence[str] = None,
+    vary_label_col: str = "_vary",
+    filter_dups=True,
+):
+    """
+    Helper to create a specific param sampling pattern.
+
+    Vary params in a "star" pattern (and not a full pgrid) around constant
+    values (middle of the "star").
+
+    When doing that, duplicate psets can occur. By default try to filter them
+    out (use filter_same_hash()) but ignore hash calculation errors and return
+    non-reduced params in that case. If you want to fail at hash errors, use
+
+    >>> filter_same_hash(stargrid(..., filter_dups=False), raise_error=True)
+
+    Examples
+    --------
+    >>> from psweep import psweep as ps
+    >>> const=dict(a=1, b=77, c=11)
+    >>> a=ps.plist("a", [1,2,3,4])
+    >>> b=ps.plist("b", [77,88,99])
+    >>> c=ps.plist("c", [11,22,33,44])
+
+    >>> ps.stargrid(const, vary=[a, b])
+    [{'a': 1, 'b': 77, 'c': 11},
+     {'a': 2, 'b': 77, 'c': 11},
+     {'a': 3, 'b': 77, 'c': 11},
+     {'a': 4, 'b': 77, 'c': 11},
+     {'a': 1, 'b': 88, 'c': 11},
+     {'a': 1, 'b': 99, 'c': 11}]
+
+    >>> ps.stargrid(const, vary=[a, b], filter_dups=False)
+    [{'a': 1, 'b': 77, 'c': 11},
+     {'a': 2, 'b': 77, 'c': 11},
+     {'a': 3, 'b': 77, 'c': 11},
+     {'a': 4, 'b': 77, 'c': 11},
+     {'a': 1, 'b': 77, 'c': 11},
+     {'a': 1, 'b': 88, 'c': 11},
+     {'a': 1, 'b': 99, 'c': 11}]
+
+    >>> ps.stargrid(const, vary=[a, b], vary_labels=["a", "b"])
+    [{'a': 1, 'b': 77, 'c': 11, '_vary': 'a'},
+     {'a': 2, 'b': 77, 'c': 11, '_vary': 'a'},
+     {'a': 3, 'b': 77, 'c': 11, '_vary': 'a'},
+     {'a': 4, 'b': 77, 'c': 11, '_vary': 'a'},
+     {'a': 1, 'b': 88, 'c': 11, '_vary': 'b'},
+     {'a': 1, 'b': 99, 'c': 11, '_vary': 'b'}]
+
+    >>> ps.stargrid(const, vary=[ps.itr2params(zip(a,c)),b], vary_labels=["a+c", "b"])
+    [{'a': 1, 'b': 77, 'c': 11, '_vary': 'a+c'},
+     {'a': 2, 'b': 77, 'c': 22, '_vary': 'a+c'},
+     {'a': 3, 'b': 77, 'c': 33, '_vary': 'a+c'},
+     {'a': 4, 'b': 77, 'c': 44, '_vary': 'a+c'},
+     {'a': 1, 'b': 88, 'c': 11, '_vary': 'b'},
+     {'a': 1, 'b': 99, 'c': 11, '_vary': 'b'}]
+    """
+    params = []
+    if vary_labels is not None:
+        assert len(vary_labels) == len(
+            vary
+        ), f"{vary_labels=} and {vary=} must have same length"
+    for ii, plist in enumerate(vary):
+        for dct in plist:
+            if vary_labels is not None:
+                label = {vary_label_col: vary_labels[ii]}
+                _dct = merge_dicts(dct, label)
+            else:
+                _dct = dct
+            params.append(merge_dicts(const, _dct))
+
+    if filter_dups:
+        try:
+            return filter_same_hash(
+                params, raise_error=True, skip_special_cols=True
+            )
+        except PsweepHashError:
+            return params
+    else:
+        return params
+
+
 # -----------------------------------------------------------------------------
 # run study
 # -----------------------------------------------------------------------------
