@@ -44,6 +44,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../written/content.html">About</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../written/content.html#getting-started">Getting started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../written/content.html#concepts">Concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../written/content.html#building-parameter-grids">Building parameter grids</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../written/content.html#the-database">The database</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../written/content.html#special-database-fields-and-repeated-runs">Special database fields and repeated runs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../written/content.html#best-practices">Best practices</a></li>
@@ -51,6 +52,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../written/content.html#install">Install</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../written/content.html#tests">Tests</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../written/content.html#special-topics">Special topics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../written/content.html#scope-and-related-projects">Scope and related projects</a></li>
 </ul>
 
 <div class="relations">
@@ -97,24 +99,7 @@
 <dl class="py function">
 <dt id="psweep.psweep.itr">
 <code class="sig-prename descclassname"><span class="pre">psweep.psweep.</span></code><code class="sig-name descname"><span class="pre">itr</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Callable</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Callable</span><a class="reference internal" href="../../_modules/psweep/psweep.html#itr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psweep.psweep.itr" title="Permalink to this definition">¶</a></dt>
-<dd><p>Decorator which makes functions take a sequence of args or individual
-args.</p>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nd">@itr</span>
-<span class="gp">... </span><span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
-<span class="gp">... </span>    <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
-<span class="gp">... </span>        <span class="nb">print</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">func</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
-<span class="go">1</span>
-<span class="go">2</span>
-<span class="go">3</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">func</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
-<span class="go">1</span>
-<span class="go">2</span>
-<span class="go">3</span>
-</pre></div>
-</div>
-</dd></dl>
+<dd></dd></dl>
 
 </div>
 

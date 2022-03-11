@@ -43,6 +43,10 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">About</a></li>
 <li class="toctree-l1"><a class="reference internal" href="#getting-started">Getting started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="#concepts">Concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#building-parameter-grids">Building parameter grids</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#gotchas">Gotchas</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="#the-database">The database</a></li>
 <li class="toctree-l1"><a class="reference internal" href="#special-database-fields-and-repeated-runs">Special database fields and repeated runs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="#best-practices">Best practices</a><ul>
@@ -66,6 +70,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#how-to-migrate-a-normal-git-repo-to-git-lfs">How to migrate a normal <code class="docutils literal notranslate"><span class="pre">git</span></code> repo to <code class="docutils literal notranslate"><span class="pre">git-lfs</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="#scope-and-related-projects">Scope and related projects</a></li>
 </ul>
 
 <div class="relations">
@@ -132,78 +137,77 @@ provided functions. The database is a normal pandas DataFrame.</p>
 </div>
 <div class="section" id="getting-started">
 <h1>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h1>
-<p>A simple example: Loop over two parameters ‘a’ and ‘b’ in a nested loop (grid),
+<p>A simple example: Loop over two parameters <code class="docutils literal notranslate"><span class="pre">a</span></code> and <code class="docutils literal notranslate"><span class="pre">b</span></code> in a nested loop (grid),
 calculate and store the result of a calculation for each parameter combination.</p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">random</span>
-<span class="kn">import</span> <span class="nn">psweep</span> <span class="kn">as</span> <span class="nn">ps</span>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">random</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">psweep</span> <span class="kn">as</span> <span class="nn">ps</span>
 
 
-<span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="n">pset</span><span class="p">):</span>
-    <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;result&#39;</span><span class="p">:</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">*</span> <span class="n">pset</span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">pset</span><span class="p">[</span><span class="s1">&#39;b&#39;</span><span class="p">]}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="n">pset</span><span class="p">):</span>
+<span class="gp">... </span>   <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">*</span> <span class="n">pset</span><span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">pset</span><span class="p">[</span><span class="s2">&quot;b&quot;</span><span class="p">]}</span>
 
-
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
-    <span class="n">a</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">plist</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
-    <span class="n">b</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">plist</span><span class="p">(</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">77</span><span class="p">,</span><span class="mi">88</span><span class="p">])</span>
-    <span class="n">params</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">pgrid</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">)</span>
-    <span class="n">df</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">run_local</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
-    <span class="k">print</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">plist</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">plist</span><span class="p">(</span><span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mi">88</span><span class="p">,</span><span class="mi">99</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">params</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">pgrid</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">run_local</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
 </pre></div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">pgrid</span></code> produces a list <code class="docutils literal notranslate"><span class="pre">params</span></code> of parameter sets (dicts
-<code class="docutils literal notranslate"><span class="pre">{'a':</span> <span class="pre">...,</span> <span class="pre">'b':</span> <span class="pre">...}</span></code>) to loop over:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="mi">77</span><span class="p">},</span>
- <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="mi">88</span><span class="p">},</span>
- <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="mi">77</span><span class="p">},</span>
+<p><code class="docutils literal notranslate"><span class="pre">pgrid</span></code> produces a list <code class="docutils literal notranslate"><span class="pre">params</span></code> of parameter sets (dicts <code class="docutils literal notranslate"><span class="pre">{'a':</span> <span class="pre">...,</span> <span class="pre">'b':</span> <span class="pre">...}</span></code>) to loop over:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="mi">88</span><span class="p">},</span>
+ <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="mi">99</span><span class="p">},</span>
  <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="mi">88</span><span class="p">},</span>
- <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="mi">77</span><span class="p">},</span>
- <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="mi">88</span><span class="p">}]</span>
+ <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="mi">99</span><span class="p">},</span>
+ <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="mi">88</span><span class="p">},</span>
+ <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="mi">99</span><span class="p">}]</span>
 </pre></div>
 </div>
 <p>and a database of results (pandas DataFrame <code class="docutils literal notranslate"><span class="pre">df</span></code>, pickled file
 <code class="docutils literal notranslate"><span class="pre">calc/database.pk</span></code> by default):</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>                               <span class="n">a</span>   <span class="n">b</span>                               <span class="n">_run_id</span>  \
-<span class="mi">2021</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">19</span> <span class="mi">22</span><span class="p">:</span><span class="mi">58</span><span class="p">:</span><span class="mf">17.015223265</span>  <span class="mi">1</span>  <span class="mi">77</span>  <span class="n">bb32aade</span><span class="o">-</span><span class="mi">6</span><span class="n">ac9</span><span class="o">-</span><span class="mi">4</span><span class="n">ac2</span><span class="o">-</span><span class="mi">9019</span><span class="o">-</span><span class="mi">3093</span><span class="n">c5f00965</span>
-<span class="mi">2021</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">19</span> <span class="mi">22</span><span class="p">:</span><span class="mi">58</span><span class="p">:</span><span class="mf">17.020342588</span>  <span class="mi">1</span>  <span class="mi">88</span>  <span class="n">bb32aade</span><span class="o">-</span><span class="mi">6</span><span class="n">ac9</span><span class="o">-</span><span class="mi">4</span><span class="n">ac2</span><span class="o">-</span><span class="mi">9019</span><span class="o">-</span><span class="mi">3093</span><span class="n">c5f00965</span>
-<span class="mi">2021</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">19</span> <span class="mi">22</span><span class="p">:</span><span class="mi">58</span><span class="p">:</span><span class="mf">17.023407698</span>  <span class="mi">2</span>  <span class="mi">77</span>  <span class="n">bb32aade</span><span class="o">-</span><span class="mi">6</span><span class="n">ac9</span><span class="o">-</span><span class="mi">4</span><span class="n">ac2</span><span class="o">-</span><span class="mi">9019</span><span class="o">-</span><span class="mi">3093</span><span class="n">c5f00965</span>
-<span class="mi">2021</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">19</span> <span class="mi">22</span><span class="p">:</span><span class="mi">58</span><span class="p">:</span><span class="mf">17.025991917</span>  <span class="mi">2</span>  <span class="mi">88</span>  <span class="n">bb32aade</span><span class="o">-</span><span class="mi">6</span><span class="n">ac9</span><span class="o">-</span><span class="mi">4</span><span class="n">ac2</span><span class="o">-</span><span class="mi">9019</span><span class="o">-</span><span class="mi">3093</span><span class="n">c5f00965</span>
-<span class="mi">2021</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">19</span> <span class="mi">22</span><span class="p">:</span><span class="mi">58</span><span class="p">:</span><span class="mf">17.028507948</span>  <span class="mi">3</span>  <span class="mi">77</span>  <span class="n">bb32aade</span><span class="o">-</span><span class="mi">6</span><span class="n">ac9</span><span class="o">-</span><span class="mi">4</span><span class="n">ac2</span><span class="o">-</span><span class="mi">9019</span><span class="o">-</span><span class="mi">3093</span><span class="n">c5f00965</span>
-<span class="mi">2021</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">19</span> <span class="mi">22</span><span class="p">:</span><span class="mi">58</span><span class="p">:</span><span class="mf">17.030908823</span>  <span class="mi">3</span>  <span class="mi">88</span>  <span class="n">bb32aade</span><span class="o">-</span><span class="mi">6</span><span class="n">ac9</span><span class="o">-</span><span class="mi">4</span><span class="n">ac2</span><span class="o">-</span><span class="mi">9019</span><span class="o">-</span><span class="mi">3093</span><span class="n">c5f00965</span>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s2">&quot;display.max_columns&quot;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="go">                               a   b                               _run_id  \</span>
+<span class="go">2022-03-09 21:41:47.241659641  1  88  21f34c94-3dee-445f-8503-bc849d567afa</span>
+<span class="go">2022-03-09 21:41:47.242649794  1  99  21f34c94-3dee-445f-8503-bc849d567afa</span>
+<span class="go">2022-03-09 21:41:47.243408918  2  88  21f34c94-3dee-445f-8503-bc849d567afa</span>
+<span class="go">2022-03-09 21:41:47.244148254  2  99  21f34c94-3dee-445f-8503-bc849d567afa</span>
+<span class="go">2022-03-09 21:41:47.244868517  3  88  21f34c94-3dee-445f-8503-bc849d567afa</span>
+<span class="go">2022-03-09 21:41:47.245590210  3  99  21f34c94-3dee-445f-8503-bc849d567afa</span>
 
-                                                           <span class="n">_pset_id</span> <span class="n">_calc_dir</span>  \
-<span class="mi">2021</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">19</span> <span class="mi">22</span><span class="p">:</span><span class="mi">58</span><span class="p">:</span><span class="mf">17.015223265</span>  <span class="n">e6fbfe50</span><span class="o">-</span><span class="mi">8</span><span class="n">c14</span><span class="o">-</span><span class="mi">49</span><span class="n">f3</span><span class="o">-</span><span class="n">b9f7</span><span class="o">-</span><span class="mi">83268</span><span class="n">c73f34d</span>      <span class="n">calc</span>
-<span class="mi">2021</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">19</span> <span class="mi">22</span><span class="p">:</span><span class="mi">58</span><span class="p">:</span><span class="mf">17.020342588</span>  <span class="n">d8599b90</span><span class="o">-</span><span class="mi">8475</span><span class="o">-</span><span class="mi">4</span><span class="n">bfb</span><span class="o">-</span><span class="mi">96</span><span class="n">b5</span><span class="o">-</span><span class="mf">4e7068195057</span>      <span class="n">calc</span>
-<span class="mi">2021</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">19</span> <span class="mi">22</span><span class="p">:</span><span class="mi">58</span><span class="p">:</span><span class="mf">17.023407698</span>  <span class="mi">85948244</span><span class="o">-</span><span class="mi">46</span><span class="n">a3</span><span class="o">-</span><span class="mi">4</span><span class="n">b19</span><span class="o">-</span><span class="n">bd1c</span><span class="o">-</span><span class="mi">2</span><span class="n">d59e32328a6</span>      <span class="n">calc</span>
-<span class="mi">2021</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">19</span> <span class="mi">22</span><span class="p">:</span><span class="mi">58</span><span class="p">:</span><span class="mf">17.025991917</span>  <span class="n">a775be5e</span><span class="o">-</span><span class="n">bc53</span><span class="o">-</span><span class="mi">4</span><span class="n">c3a</span><span class="o">-</span><span class="n">a237</span><span class="o">-</span><span class="mi">7151</span><span class="n">b279f1bd</span>      <span class="n">calc</span>
-<span class="mi">2021</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">19</span> <span class="mi">22</span><span class="p">:</span><span class="mi">58</span><span class="p">:</span><span class="mf">17.028507948</span>  <span class="n">b0ad166f</span><span class="o">-</span><span class="mi">6</span><span class="n">bd8</span><span class="o">-</span><span class="mi">4</span><span class="n">d64</span><span class="o">-</span><span class="n">a82a</span><span class="o">-</span><span class="mf">7e8</span><span class="n">e8ac91b20</span>      <span class="n">calc</span>
-<span class="mi">2021</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">19</span> <span class="mi">22</span><span class="p">:</span><span class="mi">58</span><span class="p">:</span><span class="mf">17.030908823</span>  <span class="n">e91309d4</span><span class="o">-</span><span class="mi">21</span><span class="n">b4</span><span class="o">-</span><span class="mi">4</span><span class="n">d45</span><span class="o">-</span><span class="mi">9</span><span class="n">fb6</span><span class="o">-</span><span class="n">cb84ffb31e24</span>      <span class="n">calc</span>
+<span class="go">                                                           _pset_id _calc_dir  \</span>
+<span class="go">2022-03-09 21:41:47.241659641  cfa0341b-ed2a-480e-bc64-3283fc7661db      calc</span>
+<span class="go">2022-03-09 21:41:47.242649794  52f8926d-7370-47ac-8442-d979cc979606      calc</span>
+<span class="go">2022-03-09 21:41:47.243408918  451bd57d-211b-4860-84ad-89636dc24f97      calc</span>
+<span class="go">2022-03-09 21:41:47.244148254  239adf42-30be-43d0-b980-50846da2e531      calc</span>
+<span class="go">2022-03-09 21:41:47.244868517  4148c499-2578-49c3-9d87-0fb8d50a02fe      calc</span>
+<span class="go">2022-03-09 21:41:47.245590210  f5238602-a3c6-4383-9057-64809e4aef04      calc</span>
 
-                                                  <span class="n">_time_utc</span>  \
-<span class="mi">2021</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">19</span> <span class="mi">22</span><span class="p">:</span><span class="mi">58</span><span class="p">:</span><span class="mf">17.015223265</span> <span class="mi">2021</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">19</span> <span class="mi">22</span><span class="p">:</span><span class="mi">58</span><span class="p">:</span><span class="mf">17.015223265</span>
-<span class="mi">2021</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">19</span> <span class="mi">22</span><span class="p">:</span><span class="mi">58</span><span class="p">:</span><span class="mf">17.020342588</span> <span class="mi">2021</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">19</span> <span class="mi">22</span><span class="p">:</span><span class="mi">58</span><span class="p">:</span><span class="mf">17.020342588</span>
-<span class="mi">2021</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">19</span> <span class="mi">22</span><span class="p">:</span><span class="mi">58</span><span class="p">:</span><span class="mf">17.023407698</span> <span class="mi">2021</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">19</span> <span class="mi">22</span><span class="p">:</span><span class="mi">58</span><span class="p">:</span><span class="mf">17.023407698</span>
-<span class="mi">2021</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">19</span> <span class="mi">22</span><span class="p">:</span><span class="mi">58</span><span class="p">:</span><span class="mf">17.025991917</span> <span class="mi">2021</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">19</span> <span class="mi">22</span><span class="p">:</span><span class="mi">58</span><span class="p">:</span><span class="mf">17.025991917</span>
-<span class="mi">2021</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">19</span> <span class="mi">22</span><span class="p">:</span><span class="mi">58</span><span class="p">:</span><span class="mf">17.028507948</span> <span class="mi">2021</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">19</span> <span class="mi">22</span><span class="p">:</span><span class="mi">58</span><span class="p">:</span><span class="mf">17.028507948</span>
-<span class="mi">2021</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">19</span> <span class="mi">22</span><span class="p">:</span><span class="mi">58</span><span class="p">:</span><span class="mf">17.030908823</span> <span class="mi">2021</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">19</span> <span class="mi">22</span><span class="p">:</span><span class="mi">58</span><span class="p">:</span><span class="mf">17.030908823</span>
+<span class="go">                                                  _time_utc  \</span>
+<span class="go">2022-03-09 21:41:47.241659641 2022-03-09 21:41:47.241659641</span>
+<span class="go">2022-03-09 21:41:47.242649794 2022-03-09 21:41:47.242649794</span>
+<span class="go">2022-03-09 21:41:47.243408918 2022-03-09 21:41:47.243408918</span>
+<span class="go">2022-03-09 21:41:47.244148254 2022-03-09 21:41:47.244148254</span>
+<span class="go">2022-03-09 21:41:47.244868517 2022-03-09 21:41:47.244868517</span>
+<span class="go">2022-03-09 21:41:47.245590210 2022-03-09 21:41:47.245590210</span>
 
-                                                             <span class="n">_pset_sha1</span>  \
-<span class="mi">2021</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">19</span> <span class="mi">22</span><span class="p">:</span><span class="mi">58</span><span class="p">:</span><span class="mf">17.015223265</span>  <span class="mi">281</span><span class="n">c595edf7ffa124ac3ef82f26de3f8eb8517f2</span>
-<span class="mi">2021</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">19</span> <span class="mi">22</span><span class="p">:</span><span class="mi">58</span><span class="p">:</span><span class="mf">17.020342588</span>  <span class="mi">088056</span><span class="n">f830758f949823ddc52bf8527f3e727b45</span>
-<span class="mi">2021</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">19</span> <span class="mi">22</span><span class="p">:</span><span class="mi">58</span><span class="p">:</span><span class="mf">17.023407698</span>  <span class="n">b59bc3ae98e8b93de34135d751ed5090c3f087c5</span>
-<span class="mi">2021</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">19</span> <span class="mi">22</span><span class="p">:</span><span class="mi">58</span><span class="p">:</span><span class="mf">17.025991917</span>  <span class="mi">52434</span><span class="n">b66dd37763d09280480ff449d66ffcdcd4f</span>
-<span class="mi">2021</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">19</span> <span class="mi">22</span><span class="p">:</span><span class="mi">58</span><span class="p">:</span><span class="mf">17.028507948</span>  <span class="n">f6295cdfab520d9ede7e709bc68d4d65ffc45848</span>
-<span class="mi">2021</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">19</span> <span class="mi">22</span><span class="p">:</span><span class="mi">58</span><span class="p">:</span><span class="mf">17.030908823</span>  <span class="mi">35</span><span class="n">af18a51c425b09097af78d55ebdd91588c6f3c</span>
+<span class="go">                                                             _pset_sha1  \</span>
+<span class="go">2022-03-09 21:41:47.241659641  088056f830758f949823ddc52bf8527f3e727b45</span>
+<span class="go">2022-03-09 21:41:47.242649794  365687b444190b7b4596c70cafab721d2c58e892</span>
+<span class="go">2022-03-09 21:41:47.243408918  52434b66dd37763d09280480ff449d66ffcdcd4f</span>
+<span class="go">2022-03-09 21:41:47.244148254  354460f2b5c2ad565155513f95c6dbc1181f0239</span>
+<span class="go">2022-03-09 21:41:47.244868517  35af18a51c425b09097af78d55ebdd91588c6f3c</span>
+<span class="go">2022-03-09 21:41:47.245590210  2e6c6c9a2b05115fced36edab5cafb038c926176</span>
 
-                               <span class="n">_pset_seq</span>  <span class="n">_run_seq</span>     <span class="n">result</span>
-<span class="mi">2021</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">19</span> <span class="mi">22</span><span class="p">:</span><span class="mi">58</span><span class="p">:</span><span class="mf">17.015223265</span>          <span class="mi">0</span>         <span class="mi">0</span>  <span class="mf">35.276105</span>
-<span class="mi">2021</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">19</span> <span class="mi">22</span><span class="p">:</span><span class="mi">58</span><span class="p">:</span><span class="mf">17.020342588</span>          <span class="mi">1</span>         <span class="mi">0</span>  <span class="mf">30.183059</span>
-<span class="mi">2021</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">19</span> <span class="mi">22</span><span class="p">:</span><span class="mi">58</span><span class="p">:</span><span class="mf">17.023407698</span>          <span class="mi">2</span>         <span class="mi">0</span>  <span class="mf">50.545904</span>
-<span class="mi">2021</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">19</span> <span class="mi">22</span><span class="p">:</span><span class="mi">58</span><span class="p">:</span><span class="mf">17.025991917</span>          <span class="mi">3</span>         <span class="mi">0</span>  <span class="mf">59.443434</span>
-<span class="mi">2021</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">19</span> <span class="mi">22</span><span class="p">:</span><span class="mi">58</span><span class="p">:</span><span class="mf">17.028507948</span>          <span class="mi">4</span>         <span class="mi">0</span>  <span class="mf">78.027465</span>
-<span class="mi">2021</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">19</span> <span class="mi">22</span><span class="p">:</span><span class="mi">58</span><span class="p">:</span><span class="mf">17.030908823</span>          <span class="mi">5</span>         <span class="mi">0</span>  <span class="mf">62.461030</span>
+<span class="go">                               _pset_seq  _run_seq      result</span>
+<span class="go">2022-03-09 21:41:47.241659641          0         0   49.657365</span>
+<span class="go">2022-03-09 21:41:47.242649794          1         0   92.940078</span>
+<span class="go">2022-03-09 21:41:47.243408918          2         0   65.836144</span>
+<span class="go">2022-03-09 21:41:47.244148254          3         0  193.589216</span>
+<span class="go">2022-03-09 21:41:47.244868517          4         0  193.032010</span>
+<span class="go">2022-03-09 21:41:47.245590210          5         0  159.747755</span>
 </pre></div>
 </div>
-<p>You see the columns ‘a’ and ‘b’, the column ‘result’ (returned by
+<p>You see the columns <code class="docutils literal notranslate"><span class="pre">a</span></code> and <code class="docutils literal notranslate"><span class="pre">b</span></code>, the column <code class="docutils literal notranslate"><span class="pre">result</span></code> (returned by
 <code class="docutils literal notranslate"><span class="pre">func</span></code>) and a number of reserved fields for book-keeping such as</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">_run_id</span>
 <span class="n">_pset_id</span>
@@ -227,17 +231,17 @@ additional hash <code class="docutils literal notranslate"><span class="pre">_ps
 <h1>Concepts<a class="headerlink" href="#concepts" title="Permalink to this headline">¶</a></h1>
 <p>The basic data structure for a param study is a list of “parameter sets” or
 short “psets”, each of which is a dict.</p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">params</span> <span class="o">=</span> <span class="p">[{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="s1">&#39;lala&#39;</span><span class="p">},</span>  <span class="c1"># pset 1</span>
-          <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="s1">&#39;zzz&#39;</span><span class="p">},</span>   <span class="c1"># pset 2</span>
-          <span class="o">...</span>                     <span class="c1"># ...</span>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">params</span> <span class="o">=</span> <span class="p">[{</span><span class="s2">&quot;a&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">:</span> <span class="mi">88</span><span class="p">},</span>  <span class="c1"># pset 1</span>
+          <span class="p">{</span><span class="s2">&quot;a&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">:</span> <span class="mi">99</span><span class="p">},</span>  <span class="c1"># pset 2</span>
+          <span class="o">...</span>                 <span class="c1"># ...</span>
          <span class="p">]</span>
 </pre></div>
 </div>
-<p>Each pset contains values of parameters (‘a’ and ‘b’) which are varied during
-the parameter study.</p>
+<p>Each pset contains values of parameters which are varied during the parameter
+study.</p>
 <p>You need to define a callback function <code class="docutils literal notranslate"><span class="pre">func</span></code>, which takes exactly one
 pset such as:</p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="s1">&#39;lala&#39;</span><span class="p">}</span>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="mi">88</span><span class="p">}</span>
 </pre></div>
 </div>
 <p>and runs the workload for that pset. <code class="docutils literal notranslate"><span class="pre">func</span></code> must return a
@@ -246,10 +250,10 @@ dict, for example:</p>
 </pre></div>
 </div>
 <p>or an updated ‘pset’:</p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="s1">&#39;lala&#39;</span><span class="p">,</span> <span class="s1">&#39;result&#39;</span><span class="p">:</span> <span class="mf">1.234</span><span class="p">}</span>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="mi">88</span><span class="p">,</span> <span class="s1">&#39;result&#39;</span><span class="p">:</span> <span class="mf">1.234</span><span class="p">}</span>
 </pre></div>
 </div>
-<p>We always merge (<code class="docutils literal notranslate"><span class="pre">dict.update</span></code>) the result of <code class="docutils literal notranslate"><span class="pre">func</span></code> with the pset, which gives
+<p>We always merge (<code class="docutils literal notranslate"><span class="pre">dict.update()</span></code>) the result of <code class="docutils literal notranslate"><span class="pre">func</span></code> with the pset, which gives
 you flexibility in what to return from <code class="docutils literal notranslate"><span class="pre">func</span></code>. In particular, you are free to
 also return an empty dict if you record results in another way (see the
 <code class="docutils literal notranslate"><span class="pre">save_data_on_disk</span></code> example later).</p>
@@ -260,69 +264,87 @@ using the <code class="docutils literal notranslate"><span class="pre">ps.run_lo
 columns such as <code class="docutils literal notranslate"><span class="pre">_run_id</span></code> (once per <code class="docutils literal notranslate"><span class="pre">ps.run_local()</span></code> call) or <code class="docutils literal notranslate"><span class="pre">_pset_id</span></code> (once
 per pset). Using <code class="docutils literal notranslate"><span class="pre">ps.run_local(...</span> <span class="pre">poolsize=...)</span></code> runs <code class="docutils literal notranslate"><span class="pre">func</span></code> in parallel on
 <code class="docutils literal notranslate"><span class="pre">params</span></code> using <code class="docutils literal notranslate"><span class="pre">multiprocessing.Pool</span></code>.</p>
-<p>This package offers some very simple helper functions which assist in
-creating <code class="docutils literal notranslate"><span class="pre">params</span></code>. Basically, we define the to-be-varied parameters
-(‘a’ and ‘b’) and then use something like <code class="docutils literal notranslate"><span class="pre">itertools.product</span></code> to
-loop over them to create <code class="docutils literal notranslate"><span class="pre">params</span></code>, which is passed to <code class="docutils literal notranslate"><span class="pre">ps.run_local()</span></code> to
-actually perform the loop over all psets.</p>
+</div>
+<div class="section" id="building-parameter-grids">
+<h1>Building parameter grids<a class="headerlink" href="#building-parameter-grids" title="Permalink to this headline">¶</a></h1>
+<p>This package offers some very simple helper functions which assist in creating
+<code class="docutils literal notranslate"><span class="pre">params</span></code>. Basically, we define the to-be-varied parameters and then use
+something like <code class="docutils literal notranslate"><span class="pre">itertools.product()</span></code> to loop over them to create <code class="docutils literal notranslate"><span class="pre">params</span></code>,
+which is passed to <code class="docutils literal notranslate"><span class="pre">ps.run_local()</span></code> to actually perform the loop over all
+psets.</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">product</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">psweep</span> <span class="kn">as</span> <span class="nn">ps</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="o">=</span><span class="n">ps</span><span class="o">.</span><span class="n">plist</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span><span class="o">=</span><span class="n">ps</span><span class="o">.</span><span class="n">plist</span><span class="p">(</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;xx&#39;</span><span class="p">,</span> <span class="s1">&#39;yy&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="o">=</span><span class="n">ps</span><span class="o">.</span><span class="n">plist</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span><span class="o">=</span><span class="n">ps</span><span class="o">.</span><span class="n">plist</span><span class="p">(</span><span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;xx&quot;</span><span class="p">,</span> <span class="s2">&quot;yy&quot;</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span>
-<span class="go">[{&#39;a&#39;: 1}, {&#39;a&#39;: 2}, {&#39;a&#39;: 3}]</span>
+<span class="go">[{&#39;a&#39;: 1}, {&#39;a&#39;: 2}]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">b</span>
 <span class="go">[{&#39;b&#39;: &#39;xx&#39;}, {&#39;b&#39;: &#39;yy&#39;}]</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">product</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">))</span>
+<span class="go">[({&#39;a&#39;: 1}, {&#39;b&#39;: &#39;xx&#39;}),</span>
+<span class="go"> ({&#39;a&#39;: 1}, {&#39;b&#39;: &#39;yy&#39;}),</span>
+<span class="go"> ({&#39;a&#39;: 2}, {&#39;b&#39;: &#39;xx&#39;}),</span>
+<span class="go"> ({&#39;a&#39;: 2}, {&#39;b&#39;: &#39;yy&#39;})]</span>
+
 <span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">itr2params</span><span class="p">(</span><span class="n">product</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">))</span>
 <span class="go">[{&#39;a&#39;: 1, &#39;b&#39;: &#39;xx&#39;},</span>
 <span class="go"> {&#39;a&#39;: 1, &#39;b&#39;: &#39;yy&#39;},</span>
 <span class="go"> {&#39;a&#39;: 2, &#39;b&#39;: &#39;xx&#39;},</span>
-<span class="go"> {&#39;a&#39;: 2, &#39;b&#39;: &#39;yy&#39;},</span>
-<span class="go"> {&#39;a&#39;: 3, &#39;b&#39;: &#39;xx&#39;},</span>
-<span class="go"> {&#39;a&#39;: 3, &#39;b&#39;: &#39;yy&#39;}]</span>
+<span class="go"> {&#39;a&#39;: 2, &#39;b&#39;: &#39;yy&#39;}]</span>
 </pre></div>
 </div>
-<p>The last pattern is so common, that we have a function for it:
-<code class="docutils literal notranslate"><span class="pre">pgrid()</span></code>.</p>
+<p>Here we used the helper function <code class="docutils literal notranslate"><span class="pre">itr2params()</span></code> which accepts an iterator
+that represents the loops over params. It merges dicts to psets and also deals
+with nesting when using <code class="docutils literal notranslate"><span class="pre">zip()</span></code> (see below).</p>
+<p>The last pattern is so common that we have a short-cut function
+<code class="docutils literal notranslate"><span class="pre">pgrid()</span></code>, which basically does <code class="docutils literal notranslate"><span class="pre">itr2params(product(a,b))</span></code>.</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">pgrid</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">)</span>
 <span class="go">[{&#39;a&#39;: 1, &#39;b&#39;: &#39;xx&#39;},</span>
 <span class="go"> {&#39;a&#39;: 1, &#39;b&#39;: &#39;yy&#39;},</span>
 <span class="go"> {&#39;a&#39;: 2, &#39;b&#39;: &#39;xx&#39;},</span>
-<span class="go"> {&#39;a&#39;: 2, &#39;b&#39;: &#39;yy&#39;},</span>
-<span class="go"> {&#39;a&#39;: 3, &#39;b&#39;: &#39;xx&#39;},</span>
-<span class="go"> {&#39;a&#39;: 3, &#39;b&#39;: &#39;yy&#39;}]</span>
+<span class="go"> {&#39;a&#39;: 2, &#39;b&#39;: &#39;yy&#39;}]</span>
 </pre></div>
 </div>
-<p>The logic of the param study is entirely contained in the creation of
-<code class="docutils literal notranslate"><span class="pre">params</span></code>. E.g., if parameters shall be varied together (say a and b),
-then instead of</p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">product</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">)</span>
+<p><code class="docutils literal notranslate"><span class="pre">pgrid()</span></code> accepts either a sequence or individual args (but please
+check the “pgrid gotchas” section below for some corner cases).</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">pgrid</span><span class="p">([</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">pgrid</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>use</p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">product</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">),</span> <span class="n">c</span><span class="p">)</span>
+<p>So the logic of the param study is entirely contained in the creation of
+<code class="docutils literal notranslate"><span class="pre">params</span></code>. For instance, if parameters shall be varied together (say <code class="docutils literal notranslate"><span class="pre">a</span></code> and
+<code class="docutils literal notranslate"><span class="pre">b</span></code>), then use <code class="docutils literal notranslate"><span class="pre">zip</span></code>. The nesting from <code class="docutils literal notranslate"><span class="pre">zip()</span></code> is flattened in <code class="docutils literal notranslate"><span class="pre">itr2params()</span></code>
+and <code class="docutils literal notranslate"><span class="pre">pgrid()</span></code>.</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1">##ps.itr2params(zip(a, b))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">pgrid</span><span class="p">([</span><span class="nb">zip</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)])</span>
+<span class="go">[{&#39;a&#39;: 1, &#39;b&#39;: &#39;xx&#39;},</span>
+<span class="go"> {&#39;a&#39;: 2, &#39;b&#39;: &#39;yy&#39;}]</span>
 </pre></div>
 </div>
-<p>The nesting from <code class="docutils literal notranslate"><span class="pre">zip()</span></code> is flattened in <code class="docutils literal notranslate"><span class="pre">itr2params()</span></code> and <code class="docutils literal notranslate"><span class="pre">pgrid()</span></code></p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">c</span><span class="o">=</span><span class="n">ps</span><span class="o">.</span><span class="n">plist</span><span class="p">(</span><span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="p">[</span><span class="bp">None</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">,</span> <span class="s1">&#39;X&#39;</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">pgrid</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">),</span><span class="n">c</span><span class="p">)</span>
-<span class="go">[{&#39;a&#39;: 1, &#39;b&#39;: &#39;xx&#39;, &#39;c&#39;: None},</span>
-<span class="go"> {&#39;a&#39;: 1, &#39;b&#39;: &#39;xx&#39;, &#39;c&#39;: 1.2},</span>
-<span class="go"> {&#39;a&#39;: 1, &#39;b&#39;: &#39;xx&#39;, &#39;c&#39;: &#39;X&#39;},</span>
+<p>Let’s add a third parameter to vary. Of course, in general, plists can have
+different lengths.</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">c</span><span class="o">=</span><span class="n">ps</span><span class="o">.</span><span class="n">plist</span><span class="p">(</span><span class="s2">&quot;c&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mi">88</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="s2">&quot;Z&quot;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1">##ps.itr2params(product(zip(a, b), c))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1">##ps.pgrid([zip(a, b), c])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">pgrid</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">),</span> <span class="n">c</span><span class="p">)</span>
+<span class="go">[{&#39;a&#39;: 1, &#39;b&#39;: &#39;xx&#39;, &#39;c&#39;: 88},</span>
+<span class="go"> {&#39;a&#39;: 1, &#39;b&#39;: &#39;xx&#39;, &#39;c&#39;: None},</span>
+<span class="go"> {&#39;a&#39;: 1, &#39;b&#39;: &#39;xx&#39;, &#39;c&#39;: &#39;Z&#39;},</span>
+<span class="go"> {&#39;a&#39;: 2, &#39;b&#39;: &#39;yy&#39;, &#39;c&#39;: 88},</span>
 <span class="go"> {&#39;a&#39;: 2, &#39;b&#39;: &#39;yy&#39;, &#39;c&#39;: None},</span>
-<span class="go"> {&#39;a&#39;: 2, &#39;b&#39;: &#39;yy&#39;, &#39;c&#39;: 1.2},</span>
-<span class="go"> {&#39;a&#39;: 2, &#39;b&#39;: &#39;yy&#39;, &#39;c&#39;: &#39;X&#39;}]</span>
+<span class="go"> {&#39;a&#39;: 2, &#39;b&#39;: &#39;yy&#39;, &#39;c&#39;: &#39;Z&#39;}]</span>
 </pre></div>
 </div>
-<p>If you want a parameter which is constant, use a list of length one:</p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">const</span><span class="o">=</span><span class="n">ps</span><span class="o">.</span><span class="n">plist</span><span class="p">(</span><span class="s1">&#39;const&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mf">1.23</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">pgrid</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">),</span> <span class="n">c</span><span class="p">,</span> <span class="n">const</span><span class="p">)</span>
-<span class="go">[{&#39;a&#39;: 1, &#39;b&#39;: &#39;xx&#39;, &#39;c&#39;: None, &#39;const&#39;: 1.23},</span>
-<span class="go"> {&#39;a&#39;: 1, &#39;b&#39;: &#39;xx&#39;, &#39;c&#39;: 1.2,  &#39;const&#39;: 1.23},</span>
-<span class="go"> {&#39;a&#39;: 1, &#39;b&#39;: &#39;xx&#39;, &#39;c&#39;: &#39;X&#39;,  &#39;const&#39;: 1.23},</span>
+<p>If you want to add a parameter which is constant, use a list of length one.</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">const</span><span class="o">=</span><span class="n">ps</span><span class="o">.</span><span class="n">plist</span><span class="p">(</span><span class="s2">&quot;const&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mf">1.23</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">pgrid</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">),</span> <span class="n">c</span><span class="p">,</span> <span class="n">const</span><span class="p">)</span>
+<span class="go">[{&#39;a&#39;: 1, &#39;b&#39;: &#39;xx&#39;, &#39;c&#39;: 88,   &#39;const&#39;: 1.23},</span>
+<span class="go"> {&#39;a&#39;: 1, &#39;b&#39;: &#39;xx&#39;, &#39;c&#39;: None, &#39;const&#39;: 1.23},</span>
+<span class="go"> {&#39;a&#39;: 1, &#39;b&#39;: &#39;xx&#39;, &#39;c&#39;: &#39;Z&#39;,  &#39;const&#39;: 1.23},</span>
+<span class="go"> {&#39;a&#39;: 2, &#39;b&#39;: &#39;yy&#39;, &#39;c&#39;: 88,   &#39;const&#39;: 1.23},</span>
 <span class="go"> {&#39;a&#39;: 2, &#39;b&#39;: &#39;yy&#39;, &#39;c&#39;: None, &#39;const&#39;: 1.23},</span>
-<span class="go"> {&#39;a&#39;: 2, &#39;b&#39;: &#39;yy&#39;, &#39;c&#39;: 1.2,  &#39;const&#39;: 1.23},</span>
-<span class="go"> {&#39;a&#39;: 2, &#39;b&#39;: &#39;yy&#39;, &#39;c&#39;: &#39;X&#39;,  &#39;const&#39;: 1.23}]</span>
+<span class="go"> {&#39;a&#39;: 2, &#39;b&#39;: &#39;yy&#39;, &#39;c&#39;: &#39;Z&#39;,  &#39;const&#39;: 1.23}]</span>
 </pre></div>
 </div>
 <p>So, as you can see, the general idea is that we do all the loops
@@ -330,7 +352,7 @@ then instead of</p>
 sampled before the actual calculations. This has proven to be very
 practical as it helps detecting errors early.</p>
 <p>You are, by the way, of course not restricted to use simple nested loops
-over parameters using <code class="docutils literal notranslate"><span class="pre">pgrid()</span></code> (which uses <code class="docutils literal notranslate"><span class="pre">itertools.product</span></code>). You
+over parameters using <code class="docutils literal notranslate"><span class="pre">pgrid()</span></code> (which uses <code class="docutils literal notranslate"><span class="pre">itertools.product()</span></code>). You
 are totally free in how to create <code class="docutils literal notranslate"><span class="pre">params</span></code>, be it using other fancy
 stuff from <code class="docutils literal notranslate"><span class="pre">itertools</span></code> or explicit loops. Of course you can also define
 a static <code class="docutils literal notranslate"><span class="pre">params</span></code> list</p>
@@ -345,6 +367,49 @@ a static <code class="docutils literal notranslate"><span class="pre">params</sp
 <p>or read <code class="docutils literal notranslate"><span class="pre">params</span></code> in from an external source such as a database from a
 previous study, etc.</p>
 <p>The point is: you generate <code class="docutils literal notranslate"><span class="pre">params</span></code>, we run the study.</p>
+<div class="section" id="gotchas">
+<h2>Gotchas<a class="headerlink" href="#gotchas" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="pgrid">
+<h3><code class="docutils literal notranslate"><span class="pre">pgrid</span></code><a class="headerlink" href="#pgrid" title="Permalink to this headline">¶</a></h3>
+<p>tl;dr: <code class="docutils literal notranslate"><span class="pre">pgrid(a,b,...)</span></code> is a convenience API. It can’t handle all corner
+cases. If in doubt, use <code class="docutils literal notranslate"><span class="pre">pgrid([a,b,...])</span></code> (or even <code class="docutils literal notranslate"><span class="pre">itr2params(product(...))</span></code>
+directly).</p>
+<p>Note that for a single param we have</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="o">=</span><span class="n">ps</span><span class="o">.</span><span class="n">plist</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span>
+<span class="go">[{&#39;a&#39;: 1}, {&#39;a&#39;: 2}]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">pgrid</span><span class="p">([</span><span class="n">a</span><span class="p">])</span>
+<span class="go">[{&#39;a&#39;: 1}, {&#39;a&#39;: 2}]</span>
+</pre></div>
+</div>
+<p>i.e. the loop from <code class="docutils literal notranslate"><span class="pre">itertools.product()</span></code> is over <code class="docutils literal notranslate"><span class="pre">[a]</span></code> which returns <code class="docutils literal notranslate"><span class="pre">a</span></code>
+itself. You can leave off <code class="docutils literal notranslate"><span class="pre">[...]</span></code> if you have at least two args, say <code class="docutils literal notranslate"><span class="pre">a</span></code> and
+<code class="docutils literal notranslate"><span class="pre">b</span></code> as in</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pgrid</span><span class="p">([</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pgrid</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>For a single arg calling <code class="docutils literal notranslate"><span class="pre">pgrid(a)</span></code> is wrong since then <code class="docutils literal notranslate"><span class="pre">itertools.product()</span></code>
+will be called on the entries of <code class="docutils literal notranslate"><span class="pre">a</span></code> which is not what you want. In fact doing
+so will raise an error.</p>
+<p>Also, in case</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pgrid</span><span class="p">([</span><span class="nb">zip</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">)])</span>
+</pre></div>
+</div>
+<p>the list <code class="docutils literal notranslate"><span class="pre">[zip(a,b)]</span></code> is what you want to loop over and <code class="docutils literal notranslate"><span class="pre">pgrid(zip(a,b))</span></code> will
+raise an error, just as in case <code class="docutils literal notranslate"><span class="pre">pgrid(a)</span></code> above.</p>
+<p>And as before, if you have more plists, then <code class="docutils literal notranslate"><span class="pre">[...]</span></code> is optional, e.g.</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pgrid</span><span class="p">([</span><span class="nb">zip</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">),</span> <span class="n">c</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pgrid</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">),</span> <span class="n">c</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="zip">
+<h3><code class="docutils literal notranslate"><span class="pre">zip</span></code><a class="headerlink" href="#zip" title="Permalink to this headline">¶</a></h3>
+<p>When using <code class="docutils literal notranslate"><span class="pre">zip(a,b)</span></code>, make sure that <code class="docutils literal notranslate"><span class="pre">a</span></code> and <code class="docutils literal notranslate"><span class="pre">b</span></code> have the same length, else <code class="docutils literal notranslate"><span class="pre">zip</span></code>
+will return an iterator whose length is <code class="docutils literal notranslate"><span class="pre">min(len(a),</span> <span class="pre">len(b))</span></code>.</p>
+</div>
+</div>
 </div>
 <div class="section" id="the-database">
 <h1>The database<a class="headerlink" href="#the-database" title="Permalink to this headline">¶</a></h1>
@@ -500,6 +565,7 @@ convention which makes sense in the long run.</p>
     <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;calc/{pset_id}/output.txt&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">pset_id</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">_pset_id</span><span class="o">.</span><span class="n">values</span><span class="p">]</span>
 <span class="p">)</span>
 
+<span class="c1"># Add new column to database, print and write new eval database</span>
 <span class="n">df</span><span class="p">[</span><span class="s2">&quot;mean&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">arr</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
 <span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;mean&quot;</span><span class="p">,</span> <span class="s2">&quot;_pset_id&quot;</span><span class="p">]</span>
@@ -528,13 +594,14 @@ $ mv calc.bak_2021-03-19T2* calc
 </pre></div>
 </div>
 <p>For any non-trivial work, you won’t use an interactive session. Instead, you
-will have a driver script (say <code class="docutils literal notranslate"><span class="pre">input.py</span></code>) which defines <code class="docutils literal notranslate"><span class="pre">params</span></code> and starts
-<code class="docutils literal notranslate"><span class="pre">ps.run_local()</span></code>. Also in a common workflow, you won’t define <code class="docutils literal notranslate"><span class="pre">params</span></code> and run
-a study once. Instead you will first have an idea about which parameter values
-to scan. You will start with a coarse grid of parameters and then inspect the
-results and identify regions where you need more data (e.g. more dense
-sampling). Then you will modify <code class="docutils literal notranslate"><span class="pre">params</span></code> and run the study again. You will
-modify <code class="docutils literal notranslate"><span class="pre">input.py</span></code> multiple times, as you refine your study.</p>
+will have a driver script (say <code class="docutils literal notranslate"><span class="pre">input.py</span></code>, or a jupyter notebook, or …) which
+defines <code class="docutils literal notranslate"><span class="pre">params</span></code> and starts <code class="docutils literal notranslate"><span class="pre">ps.run_local()</span></code>. Also in a common workflow, you
+won’t define <code class="docutils literal notranslate"><span class="pre">params</span></code> and run a study once. Instead you will first have an idea
+about which parameter values to scan. You will start with a coarse grid of
+parameters and then inspect the results and identify regions where you need
+more data (e.g. more dense sampling). Then you will modify <code class="docutils literal notranslate"><span class="pre">params</span></code> and run the
+study again. You will modify <code class="docutils literal notranslate"><span class="pre">input.py</span></code> multiple times, as you refine your
+study.</p>
 </div>
 <div class="section" id="use-git">
 <h2>Use git<a class="headerlink" href="#use-git" title="Permalink to this headline">¶</a></h2>
@@ -685,10 +752,9 @@ and so forth.</p>
 and flexibility to, instead of running jobs with it, just <strong>create batch
 scripts using template files</strong>.</p>
 <p>You can use the proposed workflow below directly the on remote machine (need to
-install <code class="docutils literal notranslate"><span class="pre">psweep</span></code> there, might not be fun) or run it locally and use a
-copy-to-cluster workflow. Since we actually don’t start jobs or talk to the
-batch system, you have full control over every part of the workflow. We just
-automate the boring stuff.</p>
+install <code class="docutils literal notranslate"><span class="pre">psweep</span></code> there) or run it locally and use a copy-to-cluster workflow.
+Since we actually don’t start jobs or talk to the batch system, you have full
+control over every part of the workflow. We just automate the boring stuff.</p>
 <div class="section" id="workflow-summary">
 <h2>Workflow summary<a class="headerlink" href="#workflow-summary" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
@@ -925,6 +991,54 @@ $ cat _pics/foo.png
 </div>
 <p>will bring the content back to the working dir.</p>
 </div>
+</div>
+<div class="section" id="scope-and-related-projects">
+<h1>Scope and related projects<a class="headerlink" href="#scope-and-related-projects" title="Permalink to this headline">¶</a></h1>
+<p>This project aims to be easy to set up and use with as few dependencies and new
+concepts to learn as possible. We strive to use standard Python data structures
+(dicts) and functionality (itertools) as well as widely available third party
+packages (pandas). Users should be able to get going quickly without having to
+set up and learn a complex framework. Perhaps most importantly, this project is
+completely agnostic to the field of study, e.g. any problem that can be
+formulated as “let’s vary X and analyze the results”.</p>
+<p>Unsurprisingly, there is a huge pile of similar tools. This project is super
+small and as such of course lacks a lot of features that other packages offer.
+We just attempt to scratch some particular itches which we haven’t found to
+be covered in that combination by other tools, namely</p>
+<ul class="simple">
+<li><p>simulate runs</p></li>
+<li><p>backups</p></li>
+<li><p>git support</p></li>
+<li><p>simple local database (no db server to set up, no Mongo, etc)</p></li>
+<li><p>interactive (Python REPL) and script-driven runs</p></li>
+<li><p>local runs, also in parallel</p></li>
+<li><p>tooling for remote runs (template-based workflow)</p></li>
+<li><p>minimal naming conventions, rely on UUIDs</p></li>
+<li><p>no yaml-ish DSLs, just Python please, thank you :)</p></li>
+<li><p>no CLIs, just Python please, thank you :)</p></li>
+<li><p>no config files, just Python please, thank you :)</p></li>
+<li><p>not application specific (e.g. machine learning)</p></li>
+</ul>
+<p>Here is a list of related projects which offer some of the mechanisms
+implemented here.</p>
+<ul class="simple">
+<li><p>https://materialsproject.github.io/fireworks/</p></li>
+<li><p>https://luigi.readthedocs.io</p></li>
+<li><p>https://snakemake.readthedocs.io</p></li>
+<li><p>https://github.com/eviatarbach/parasweep</p></li>
+<li><p>https://github.com/SmokinCaterpillar/pypet</p></li>
+<li><p>https://github.com/pharmbio/sciluigi</p></li>
+<li><p>https://github.com/open-research/sumatra</p></li>
+<li><p>https://www.nist.gov/programs-projects/simulation-management-tools</p></li>
+<li><p>https://github.com/IDSIA/sacred</p></li>
+<li><p>https://www.wandb.com/</p></li>
+<li><p>https://github.com/maiot-io/zenml</p></li>
+<li><p>https://github.com/LLNL/maestrowf</p></li>
+<li><p>https://mlflow.org/</p></li>
+<li><p>https://metaflow.org/</p></li>
+<li><p>https://www.nextflow.io/</p></li>
+<li><p>https://dvc.org/</p></li>
+</ul>
 </div>
 
 

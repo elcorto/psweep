@@ -44,6 +44,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../written/content.html">About</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../written/content.html#getting-started">Getting started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../written/content.html#concepts">Concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../written/content.html#building-parameter-grids">Building parameter grids</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../written/content.html#the-database">The database</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../written/content.html#special-database-fields-and-repeated-runs">Special database fields and repeated runs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../written/content.html#best-practices">Best practices</a></li>
@@ -51,6 +52,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../written/content.html#install">Install</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../written/content.html#tests">Tests</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../written/content.html#special-topics">Special topics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../written/content.html#scope-and-related-projects">Scope and related projects</a></li>
 </ul>
 
 <div class="relations">
@@ -96,27 +98,8 @@
 <h1>psweep.psweep.pgrid<a class="headerlink" href="#psweep-psweep-pgrid" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
 <dt id="psweep.psweep.pgrid">
-<code class="sig-prename descclassname"><span class="pre">psweep.psweep.</span></code><code class="sig-name descname"><span class="pre">pgrid</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">plists</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/psweep/psweep.html#pgrid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psweep.psweep.pgrid" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convenience function for the most common loop: nested loops with
-<code class="docutils literal notranslate"><span class="pre">itertools.product</span></code>: <code class="docutils literal notranslate"><span class="pre">ps.itr2params(itertools.product(a,b,c,...))</span></code>.</p>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">plist</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">plist</span><span class="p">(</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">77</span><span class="p">,</span><span class="mi">88</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">c</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">plist</span><span class="p">(</span><span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;const&#39;</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># same as pgrid([a,b,c])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">pgrid</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">)</span>
-<span class="go">[{&#39;a&#39;: 1, &#39;b&#39;: 77, &#39;c&#39;: &#39;const&#39;},</span>
-<span class="go"> {&#39;a&#39;: 1, &#39;b&#39;: 88, &#39;c&#39;: &#39;const&#39;},</span>
-<span class="go"> {&#39;a&#39;: 2, &#39;b&#39;: 77, &#39;c&#39;: &#39;const&#39;},</span>
-<span class="go"> {&#39;a&#39;: 2, &#39;b&#39;: 88, &#39;c&#39;: &#39;const&#39;}]</span>
-</pre></div>
-</div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">pgrid</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">),</span><span class="n">c</span><span class="p">)</span>
-<span class="go">[{&#39;a&#39;: 1, &#39;b&#39;: 77, &#39;c&#39;: &#39;const&#39;},</span>
-<span class="go"> {&#39;a&#39;: 2, &#39;b&#39;: 88, &#39;c&#39;: &#39;const&#39;}]</span>
-</pre></div>
-</div>
-</dd></dl>
+<code class="sig-prename descclassname"><span class="pre">psweep.psweep.</span></code><code class="sig-name descname"><span class="pre">pgrid</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/psweep/psweep.html#pgrid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psweep.psweep.pgrid" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 </div>
 
