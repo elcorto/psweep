@@ -584,3 +584,17 @@ def test_itr():
     assert [1, 2] == func([1, 2])
     assert [[1, 2]] == func([[1, 2]])
     assert [1, 2] == func(gen([1, 2]))
+
+
+def test_filter_same_hash():
+    params = [
+        dict(a=1, b=2, c=3),
+        dict(a=1, b=2, c=3),
+        dict(a=1, b=2, c=444),
+    ]
+
+    params_filt = ps.filter_same_hash(params)
+    assert len(params_filt) == 2
+    for idx in [0,2]:
+        assert params[idx] in params_filt
+    print(params_filt)
