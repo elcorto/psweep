@@ -509,9 +509,19 @@ def test_pset_hash():
     assert ps.pset_hash(d1) == ps.pset_hash(dref)
     assert ps.pset_hash(d2) == ps.pset_hash(dref)
 
-    assert ps.pset_hash(dict(a=np.sin)) is np.nan
-    assert ps.pset_hash(dict(a=_Foo)) is np.nan
-    assert ps.pset_hash(dict(a=_Foo())) is np.nan
+    with pytest.raises(ps.PsweepHashError):
+        ps.pset_hash(dict(a=np.sin))
+        ps.pset_hash(dict(a=_Foo))
+        ps.pset_hash(dict(a=_Foo()))
+
+    assert ps.pset_hash(dict(a=np.sin), raise_error=False) is np.nan
+    assert ps.pset_hash(dict(a=_Foo), raise_error=False) is np.nan
+    assert ps.pset_hash(dict(a=_Foo()), raise_error=False) is np.nan
+
+    d_no_us = dict(a=1, b=2)
+    d_us = dict(a=1, b=2, _c=3)
+    assert ps.pset_hash(d_no_us) == ps.pset_hash(d_us)
+    assert ps.pset_hash(d_no_us) == ps.pset_hash(d_us, skip_special_cols=True)
 
 
 def test_param_build():
