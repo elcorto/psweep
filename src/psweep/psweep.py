@@ -27,6 +27,7 @@ pj = os.path.join
 # pandas defaults
 PANDAS_DEFAULT_ORIENT = "records"
 PANDAS_TIME_UNIT = "s"
+PSET_HASH_ALG = "sha1"
 
 GIT_ADD_ALL = "git add -A -v"
 
@@ -121,7 +122,16 @@ def file_read(fn: str):
         return fd.read()
 
 
-def pset_hash(dct: dict, method="sha1"):
+class PsweepHashError(TypeError):
+    pass
+
+
+def pset_hash(
+    dct: dict,
+    method=PSET_HASH_ALG,
+    raise_error=True,
+    skip_special_cols=True,
+):
     """Reproducible hash of a dict for usage in database (hash of a `pset`).
 
     We target "reproducible" hashes, i.e. not what Python's ``hash`` function
@@ -154,11 +164,19 @@ def pset_hash(dct: dict, method="sha1"):
     be the same. Better be safe and return NaN in that case.
     """
     try:
-        h = getattr(hashlib, method)()
-        h.update(json.dumps(dct, sort_keys=True).encode())
+        if skip_special_cols:
+            keys = [x for x in dct.keys() if not x.startswith("_")]
+            _dct = {kk: dct[kk] for kk in keys}
+        else:
+            _dct = dct
+        h = hashlib.new(method)
+        h.update(json.dumps(_dct, sort_keys=True).encode())
         return h.hexdigest()
-    except TypeError:
-        return np.nan
+    except TypeError as ex:
+        if raise_error:
+            raise PsweepHashError(f"Error in hash calculation of: {dct}") from ex
+        else:
+            return np.nan
 
 
 def check_calc_dir(calc_dir: str, df: pd.DataFrame):
@@ -511,13 +529,13 @@ def worker_wrapper(
     pset_id = str(uuid.uuid4())
     _pset = copy.deepcopy(pset)
     _time_utc = pd.Timestamp(time.time(), unit=PANDAS_TIME_UNIT)
-    hash_alg = "sha1"
+    hash_alg = PSET_HASH_ALG
     update = {
         "_run_id": run_id,
         "_pset_id": pset_id,
         "_calc_dir": calc_dir,
         "_time_utc": _time_utc,
-        f"_pset_{hash_alg}": pset_hash(pset, hash_alg),
+        f"_pset_{hash_alg}": pset_hash(pset, hash_alg, raise_error=False),
         "_pset_seq": pset_seq,
         "_run_seq": run_seq,
     }
