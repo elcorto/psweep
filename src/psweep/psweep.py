@@ -132,37 +132,47 @@ def pset_hash(
     raise_error=True,
     skip_special_cols=True,
 ):
-    """Reproducible hash of a dict for usage in database (hash of a `pset`).
+    """Reproducible hash of a dict for usage in database (hash of a `pset`). """
 
-    We target "reproducible" hashes, i.e. not what Python's ``hash`` function
-    does, for instance for two interpreter sessions::
-
-        $ python
-        >>> hash("12")
-        8013944793133897043
-
-        $ python
-        >>> hash("12")
-        4021864388667373027
-
-    We only try to hash a dict if it is json-serializable. Things which aren't
-    are also not hashable in a reproducible fashion, even if we could hash,
-    say, the pickled byte string of some object (e.g.
-    ``hash(pickle.dumps(obj))``), b/c that may contain a ref to its memory
-    location which is not what we're interested in. Similarly, also using
-    ``repr`` is not reproducible::
-
-        >>> class Foo:
-        ...     pass
-
-        >>> repr(Foo())
-        '<__main__.Foo object at 0x7fcc68aa9d60>'
-        >>> repr(Foo())
-        '<__main__.Foo object at 0x7fcc732034c0>'
-
-    even though for our purpose, we'd consider the two instances of ``Foo`` to
-    be the same. Better be safe and return NaN in that case.
-    """
+    # We target "reproducible" hashes, i.e. not what Python's ``hash`` function
+    # does, for instance for two interpreter sessions::
+    #
+    #     $ python
+    #     >>> hash("12")
+    #     8013944793133897043
+    #
+    #     $ python
+    #     >>> hash("12")
+    #     4021864388667373027
+    #
+    # We only try to hash a dict if it is json-serializable. Things which
+    # aren't are also not hashable in a reproducible fashion w/o spending much
+    # more work to solve the problem. We can't hash, say, the pickled byte
+    # string of some object (e.g. ``hash(pickle.dumps(obj))``), b/c that may
+    # contain a ref to its memory location which is not what we're interested
+    # in. Similarly, also using ``repr`` is not reproducible::
+    #
+    #     >>> class Foo:
+    #     ...     pass
+    #
+    #     >>> repr(Foo())
+    #     '<__main__.Foo object at 0x7fcc68aa9d60>'
+    #     >>> repr(Foo())
+    #     '<__main__.Foo object at 0x7fcc732034c0>'
+    #
+    # even though for our purpose, we'd consider the two instances of ``Foo`` to
+    # be the same. Better be safe and return NaN in that case.
+    #
+    # The same observations have been also made elsewhere [1,2]. Esp. [2]
+    # points to [3] which in turn mentions joblib.hashing.hash(). It's code
+    # shows how complex the problem is. We may try joblib's solution in the
+    # future should this feature become so important that we need to require
+    # hashes to work or else fail. ATM we treat pset hashes on a best effort
+    # basis b/c we don't have strong use cases for them just yet.
+    #
+    # [1] https://death.andgravity.com/stable-hashing
+    # [2] https://ourpython.com/python/deterministic-recursive-hashing-in-python
+    # [3] https://stackoverflow.com/a/52175075
     try:
         if skip_special_cols:
             keys = [x for x in dct.keys() if not x.startswith("_")]
