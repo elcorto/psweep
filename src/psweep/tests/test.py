@@ -595,6 +595,49 @@ def test_filter_same_hash():
 
     params_filt = ps.filter_same_hash(params)
     assert len(params_filt) == 2
-    for idx in [0,2]:
+    for idx in [0, 2]:
         assert params[idx] in params_filt
-    print(params_filt)
+
+    a = ps.plist("a", [np.sin])
+    with pytest.raises(ps.PsweepHashError):
+        ps.filter_same_hash(a, raise_error=True)
+    assert ps.filter_same_hash(a, raise_error=False) == a
+
+
+def test_stargrid():
+    a = ps.plist("a", [1, 2, 3])
+    b = ps.plist("b", [77, 88, 99])
+    c = ps.plist("c", [np.sin, np.cos, _Foo, _Foo()])
+    const = dict(a=1, b=77)
+
+    # API
+    ps.stargrid(const, [a, b])
+    ps.stargrid(const=const, vary=[a, b])
+
+    params = ps.stargrid(const, [a, b], filter_dups=False)
+    assert len(params) == 6
+    params = ps.stargrid(const, [a, b])
+    assert len(params) == 5
+    params = ps.stargrid(const, [c])
+    assert len(params) == len(c)
+    params = ps.stargrid(dict(), [a])
+    assert params == a
+
+    with pytest.raises(ps.PsweepHashError):
+        ps.filter_same_hash(
+            ps.stargrid(const, [a, c], filter_dups=False), raise_error=True
+        )
+
+    vary_labels = ["aa", "bb"]
+    params = ps.stargrid(const, [a, b], vary_labels=vary_labels)
+    for pset in params:
+        assert "_vary" in pset.keys()
+        assert pset["_vary"] in vary_labels
+
+    params = ps.stargrid(
+        const, [a, b], vary_labels=vary_labels, vary_label_col="study"
+    )
+    for pset in params:
+        assert "study" in pset.keys()
+        assert not "_vary" in pset.keys()
+        assert pset["study"] in vary_labels
