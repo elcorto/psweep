@@ -18,11 +18,11 @@
 # -- Project information -----------------------------------------------------
 
 project = "psweep"
-copyright = "2021, Steve Schmerler"
+copyright = "2022, Steve Schmerler"
 author = "Steve Schmerler"
 
 # The full version, including alpha/beta/rc tags
-release = "0.5.0"
+release = "0.5.1"
 
 
 # -- General configuration ---------------------------------------------------
