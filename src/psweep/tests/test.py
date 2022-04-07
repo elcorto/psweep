@@ -639,5 +639,5 @@ def test_stargrid():
     )
     for pset in params:
         assert "study" in pset.keys()
-        assert not "_vary" in pset.keys()
+        assert "_vary" not in pset.keys()
         assert pset["study"] in vary_labels
