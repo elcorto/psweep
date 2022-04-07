@@ -24,12 +24,12 @@ import pandas as pd  # type: ignore
 
 pj = os.path.join
 
-# pandas defaults
+# defaults, globals
 PANDAS_DEFAULT_ORIENT = "records"
 PANDAS_TIME_UNIT = "s"
 PSET_HASH_ALG = "sha1"
-
 GIT_ADD_ALL = "git add -A -v"
+
 
 # -----------------------------------------------------------------------------
 # helpers
@@ -133,7 +133,7 @@ def pset_hash(
     raise_error=True,
     skip_special_cols=True,
 ):
-    """Reproducible hash of a dict for usage in database (hash of a `pset`). """
+    """Reproducible hash of a dict for usage in database (hash of a `pset`)."""
 
     # We target "reproducible" hashes, i.e. not what Python's ``hash`` function
     # does, for instance for two interpreter sessions::
@@ -185,7 +185,9 @@ def pset_hash(
         return h.hexdigest()
     except TypeError as ex:
         if raise_error:
-            raise PsweepHashError(f"Error in hash calculation of: {dct}") from ex
+            raise PsweepHashError(
+                f"Error in hash calculation of: {dct}"
+            ) from ex
         else:
             return np.nan
 
