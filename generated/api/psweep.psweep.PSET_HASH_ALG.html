@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>psweep.psweep.pgrid &#8212; psweep 0.5.1 documentation</title>
+    <title>psweep.psweep.PSET_HASH_ALG &#8212; psweep 0.5.1 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css" />
     <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
@@ -15,8 +15,8 @@
     <script src="../../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="psweep.psweep.pickle_read" href="psweep.psweep.pickle_read.html" />
-    <link rel="prev" title="psweep.psweep.merge_dicts" href="psweep.psweep.merge_dicts.html" />
+    <link rel="next" title="psweep.psweep.PsweepHashError" href="psweep.psweep.PsweepHashError.html" />
+    <link rel="prev" title="psweep.psweep.PANDAS_TIME_UNIT" href="psweep.psweep.PANDAS_TIME_UNIT.html" />
    
   <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
   
@@ -62,8 +62,8 @@
   <li><a href="../../index.html">Documentation overview</a><ul>
   <li><a href="index.html">API Reference</a><ul>
   <li><a href="__sphinx_autodoc_module__psweep.psweep.html">psweep</a><ul>
-      <li>Previous: <a href="psweep.psweep.merge_dicts.html" title="previous chapter">psweep.psweep.merge_dicts</a></li>
-      <li>Next: <a href="psweep.psweep.pickle_read.html" title="next chapter">psweep.psweep.pickle_read</a></li>
+      <li>Previous: <a href="psweep.psweep.PANDAS_TIME_UNIT.html" title="previous chapter">psweep.psweep.PANDAS_TIME_UNIT</a></li>
+      <li>Next: <a href="psweep.psweep.PsweepHashError.html" title="next chapter">psweep.psweep.PsweepHashError</a></li>
   </ul></li>
   </ul></li>
   </ul></li>
@@ -95,30 +95,20 @@
 
           <div class="body" role="main">
             
-  <section id="psweep-psweep-pgrid">
-<h1>psweep.psweep.pgrid<a class="headerlink" href="#psweep-psweep-pgrid" title="Permalink to this headline">¶</a></h1>
-<dl class="py function">
-<dt class="sig sig-object py" id="psweep.psweep.pgrid">
-<span class="sig-prename descclassname"><span class="pre">psweep.psweep.</span></span><span class="sig-name descname"><span class="pre">pgrid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">plists</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/psweep/psweep.html#pgrid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psweep.psweep.pgrid" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convenience function for the most common loop: nested loops with
-<code class="docutils literal notranslate"><span class="pre">itertools.product</span></code>: <code class="docutils literal notranslate"><span class="pre">ps.itr2params(itertools.product(a,b,c,...))</span></code>.</p>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">plist</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">plist</span><span class="p">(</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">77</span><span class="p">,</span><span class="mi">88</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">c</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">plist</span><span class="p">(</span><span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;const&#39;</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># same as pgrid([a,b,c])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">pgrid</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">)</span>
-<span class="go">[{&#39;a&#39;: 1, &#39;b&#39;: 77, &#39;c&#39;: &#39;const&#39;},</span>
-<span class="go"> {&#39;a&#39;: 1, &#39;b&#39;: 88, &#39;c&#39;: &#39;const&#39;},</span>
-<span class="go"> {&#39;a&#39;: 2, &#39;b&#39;: 77, &#39;c&#39;: &#39;const&#39;},</span>
-<span class="go"> {&#39;a&#39;: 2, &#39;b&#39;: 88, &#39;c&#39;: &#39;const&#39;}]</span>
-</pre></div>
-</div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">pgrid</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">),</span><span class="n">c</span><span class="p">)</span>
-<span class="go">[{&#39;a&#39;: 1, &#39;b&#39;: 77, &#39;c&#39;: &#39;const&#39;},</span>
-<span class="go"> {&#39;a&#39;: 2, &#39;b&#39;: 88, &#39;c&#39;: &#39;const&#39;}]</span>
-</pre></div>
-</div>
+  <section id="psweep-psweep-pset-hash-alg">
+<h1>psweep.psweep.PSET_HASH_ALG<a class="headerlink" href="#psweep-psweep-pset-hash-alg" title="Permalink to this headline">¶</a></h1>
+<dl class="py data">
+<dt class="sig sig-object py" id="psweep.psweep.PSET_HASH_ALG">
+<span class="sig-prename descclassname"><span class="pre">psweep.psweep.</span></span><span class="sig-name descname"><span class="pre">PSET_HASH_ALG</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'sha1'</span></em><a class="headerlink" href="#psweep.psweep.PSET_HASH_ALG" title="Permalink to this definition">¶</a></dt>
+<dd><p>str(object=’’) -&gt; str
+str(bytes_or_buffer[, encoding[, errors]]) -&gt; str</p>
+<p>Create a new string object from the given object. If encoding or
+errors is specified, then the object must expose a data buffer
+that will be decoded using the given encoding and error handler.
+Otherwise, returns the result of object.__str__() (if defined)
+or repr(object).
+encoding defaults to sys.getdefaultencoding().
+errors defaults to ‘strict’.</p>
 </dd></dl>
 
 </section>
@@ -138,7 +128,7 @@
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
-      <a href="../../_sources/generated/api/psweep.psweep.pgrid.rst.txt"
+      <a href="../../_sources/generated/api/psweep.psweep.PSET_HASH_ALG.rst.txt"
           rel="nofollow">Page source</a>
     </div>
 
