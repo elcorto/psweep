@@ -249,8 +249,8 @@ def in_git_repo():
 
 
 def git_enter(use_git: bool, always_commit=False):
-    path = os.path.basename(fullpath(os.curdir))
     if use_git:
+        path = os.path.basename(fullpath(os.curdir))
         if not in_git_repo():
             if always_commit:
                 system(
@@ -269,8 +269,8 @@ def git_enter(use_git: bool, always_commit=False):
 
 
 def git_exit(use_git: bool, df: pd.DataFrame):
-    path = os.path.basename(fullpath(os.curdir))
     if use_git and (not git_clean()):
+        path = os.path.basename(fullpath(os.curdir))
         system(
             f"{GIT_ADD_ALL}; git commit -m 'psweep: {path}: run_id={df._run_id.values[-1]}'"
         )
