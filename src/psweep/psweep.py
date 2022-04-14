@@ -580,17 +580,14 @@ def pgrid(plists):
     return itr2params(itertools.product(*plists))
 
 
-def filter_same_hash(params: Sequence[dict], **kwds):
+def filter_same_hash(params: Sequence[dict], **kwds) -> Sequence[dict]:
     """Reduce params to unique psets.
 
     Parameters
     ----------
-    params : Sequence of dicts
-    kwds : passed to pset_hash()
-
-    Returns
-    -------
-    params_filt
+    params :
+    kwds :
+        passed to :func:`pset_hash`
     """
     msk = np.unique(
         [pset_hash(dct, **kwds) for dct in params], return_index=True
@@ -604,7 +601,7 @@ def stargrid(
     vary_labels: Sequence[str] = None,
     vary_label_col: str = "_vary",
     filter_dups=True,
-):
+) -> Sequence[dict]:
     """
     Helper to create a specific param sampling pattern.
 
@@ -763,18 +760,18 @@ def run_local(
     df : DataFrame
         append rows to this DataFrame, if None then either create new one or
         read existing database file from disk if found
-    poolsize : {bool, None}
-        | None : use serial execution
-        | int : use multiprocessing.Pool (even for ``poolsize=1``)
+    poolsize : {None, int}
+        * None : use serial execution
+        * int : use multiprocessing.Pool (even for ``poolsize=1``)
     save : bool
         save final DataFrame to ``<calc_dir>/database.pk`` (pickle format only)
     tmpsave : bool
         save results from each `pset` in `params` (the current DataFrame row) to
         ``<calc_dir>/tmpsave/<run_id>/<pset_id>.pk`` (pickle format only)
     verbose : {bool, sequence of str}
-        | bool : print the current DataFrame row
-        | sequence : list of DataFrame column names, print the row but only
-        | those columns
+        * bool : print the current DataFrame row
+        * sequence : list of DataFrame column names, print the row but only
+          those columns
     calc_dir : str
     simulate : bool
         run everything in ``<calc_dir>.simulate``, don't call `worker`, i.e. save
@@ -788,7 +785,7 @@ def run_local(
         Make backup of ``<calc_dir>`` to ``<calc_dir>.bak_<timestamp>_run_id_<_run_id>``
     git : bool
         Use ``git`` to commit all files written and changed by the current run
-        (`_run_id`). Make sure to create a `.gitignore` manually before if
+        (``_run_id``). Make sure to create a ``.gitignore`` manually before if
         needed.
     """
 
