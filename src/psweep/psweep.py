@@ -342,32 +342,97 @@ def df_read(fn: str, fmt="pickle", **kwds):
 
 def df_print(
     df: pd.DataFrame,
-    index=False,
-    special_cols=False,
-    cols: Sequence[str] = None,
+    index: bool = False,
+    special_cols: bool = False,
+    cols: Sequence[str] = [],
+    skip_cols: Sequence[str] = [],
 ):
-    """Print DataFrame, by default without the index and special fields such as
-    _pset_id.
+    """Print DataFrame, by default without the index and special columns such
+    as `_pset_id`.
 
-    Same logic as in bin/psweep-db2table but w/o tabulate support. Maybe
-    later.
+    Similar logic as in `bin/psweep-db2table`, w/o tabulate support but more
+    features (`skip_cols` for instance).
 
     Parameters
     ----------
     df : DataFrame
-    index : include DataFrame index
-    special_cols : include all special cols (_pset_id, ...)
-    cols : explicit list of cols, overrides special_cols
+    index :
+        include DataFrame index
+    special_cols :
+        include all special columns (`_pset_id` etc.)
+    cols :
+        explicit list of columns, overrides `special_cols` when special columns
+        are specified
+    skip_cols :
+        skip those columns instead of selecting them (like `cols` would), use
+        either this or `cols`; overrides `special_cols` when special columns
+        are specified
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> df=pd.DataFrame(dict(a=rand(3), b=rand(3), _c=rand(3)))
+
+    >>> df
+              a         b        _c
+    0  0.373534  0.304302  0.161799
+    1  0.698738  0.589642  0.557172
+    2  0.343316  0.186595  0.822023
+
+    >>> ps.df_print(df)
+           a        b
+    0.373534 0.304302
+    0.698738 0.589642
+    0.343316 0.186595
+
+    >>> ps.df_print(df, special_cols=True)
+           a        b       _c
+    0.373534 0.304302 0.161799
+    0.698738 0.589642 0.557172
+    0.343316 0.186595 0.822023
+
+    >>> ps.df_print(df, index=True)
+              a        b
+    0  0.373534 0.304302
+    1  0.698738 0.589642
+    2  0.343316 0.186595
+
+    >>> ps.df_print(df, cols=["a"])
+           a
+    0.373534
+    0.698738
+    0.343316
+
+    >>> ps.df_print(df, cols=["a"], special_cols=True)
+           a       _c
+    0.373534 0.161799
+    0.698738 0.557172
+    0.343316 0.822023
+
+    >>> ps.df_print(df, cols=["a", "_c"])
+           a       _c
+    0.373534 0.161799
+    0.698738 0.557172
+    0.343316 0.822023
+
+    >>> ps.df_print(df, skip_cols=["a"])
+           b
+    0.304302
+    0.589642
+    0.186595
     """
-    df2str = lambda df: df.to_string(index=index)
-    if cols is not None:
-        print(df2str(df[cols]))
+    _special_cols = set(x for x in df.columns if x.startswith("_"))
+    if len(cols) > 0:
+        if len(skip_cols) > 0:
+            raise ValueError("Use either skip_cols or cols")
+        disp_cols = set(cols) | (_special_cols if special_cols else set())
     else:
-        if special_cols:
-            print(df2str(df))
-        else:
-            _cols = set(x for x in df.columns if not x.startswith("_"))
-            print(df2str(df[_cols]))
+        disp_cols = set(df.columns) - (
+            set() if special_cols else _special_cols
+        )
+        if len(skip_cols) > 0:
+            disp_cols = disp_cols - set(skip_cols)
+    print(df[disp_cols].to_string(index=index))
 
 
 T = Union[pd.Series, pd.DataFrame, np.ndarray, List[bool]]
