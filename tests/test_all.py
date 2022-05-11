@@ -123,7 +123,7 @@ def test_shell_call():
 def test_run():
     with tempfile.TemporaryDirectory() as tmpdir:
         params = [{"a": 1}, {"a": 2}, {"a": 3}, {"a": 4}]
-        calc_dir = "{}/calc".format(tmpdir)
+        calc_dir = f"{tmpdir}/calc"
 
         # run two times, updating the database, the second time,
         # also write tmp results
@@ -151,16 +151,14 @@ def test_run():
             ]
         )
 
-        dbfn = "{}/database.pk".format(calc_dir)
+        dbfn = f"{calc_dir}/database.pk"
         assert os.path.exists(dbfn)
         assert df.equals(ps.df_read(dbfn))
 
         # tmp results of second run
         run_id = df._run_id.unique()[-1]
         for pset_id in df[df._run_id == run_id]._pset_id:
-            tmpsave_fn = "{calc_dir}/tmpsave/{run_id}/{pset_id}.pk".format(
-                calc_dir=calc_dir, run_id=run_id, pset_id=pset_id
-            )
+            tmpsave_fn = f"{calc_dir}/tmpsave/{run_id}/{pset_id}.pk"
             assert os.path.exists(tmpsave_fn)
 
 
@@ -168,15 +166,15 @@ def test_simulate():
     with tempfile.TemporaryDirectory() as tmpdir:
         params = [{"a": 1}, {"a": 2}, {"a": 3}, {"a": 4}]
         params_sim = [{"a": 88}, {"a": 99}]
-        calc_dir = "{}/calc".format(tmpdir)
+        calc_dir = f"{tmpdir}/calc"
         calc_dir_sim = calc_dir + ".simulate"
 
         df = ps.run_local(func, params, calc_dir=calc_dir)
         df_sim = ps.run_local(
             func, params_sim, calc_dir=calc_dir, simulate=True
         )
-        dbfn = "{}/database.pk".format(calc_dir)
-        dbfn_sim = "{}/database.pk".format(calc_dir_sim)
+        dbfn = f"{calc_dir}/database.pk"
+        dbfn_sim = f"{calc_dir_sim}/database.pk"
 
         assert len(df_sim) == 6
         assert len(df) == 4
@@ -221,10 +219,10 @@ def test_df_io():
                 ri(0, 100),
                 rs(5),
                 np.nan,
-                '"{}"'.format(rs(5)),
-                "'{}'".format(rs(5)),
-                (ri(0, 99), rn(), "{}".format(rs(5))),
-                [ri(0, 99), rn(), "{}".format(rs(5))],
+                f'"{rs(5)}"',
+                f"'{rs(5)}'",
+                (ri(0, 99), rn(), f"{rs(5)}"),
+                [ri(0, 99), rn(), f"{rs(5)}"],
                 rn(),
                 rn(5),
                 rn(5, 5),
@@ -271,8 +269,8 @@ def test_df_io():
 def test_save():
     with tempfile.TemporaryDirectory() as tmpdir:
         params = [{"a": 1}, {"a": 2}, {"a": 3}, {"a": 4}]
-        calc_dir = "{}/calc".format(tmpdir)
-        dbfn = "{}/database.pk".format(calc_dir)
+        calc_dir = f"{tmpdir}/calc"
+        dbfn = f"{calc_dir}/database.pk"
 
         ps.run_local(func, params, calc_dir=calc_dir, save=False)
         assert not os.path.exists(dbfn)
@@ -312,7 +310,7 @@ def test_merge_dicts():
 def test_scripts():
     with tempfile.TemporaryDirectory() as tmpdir:
         params = [{"a": 1}, {"a": 2}, {"a": 3}, {"a": 4}]
-        calc_dir = "{}/calc".format(tmpdir)
+        calc_dir = f"{tmpdir}/calc"
         ps.run_local(func, params, calc_dir=calc_dir)
 
         db = pj(calc_dir, "database.pk")
