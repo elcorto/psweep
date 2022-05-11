@@ -109,19 +109,19 @@ be processes as <code class="docutils literal notranslate"><span class="pre">pse
 <li><p><strong>params</strong> (<em>seq of dicts</em>) – each dict is a pset <code class="docutils literal notranslate"><span class="pre">{'a':</span> <span class="pre">1,</span> <span class="pre">'b':</span> <span class="pre">'foo',</span> <span class="pre">...}</span></code></p></li>
 <li><p><strong>df</strong> (<em>DataFrame</em>) – append rows to this DataFrame, if None then either create new one or
 read existing database file from disk if found</p></li>
-<li><p><strong>poolsize</strong> (<em>{bool</em><em>, </em><em>None}</em>) – <div class="line-block">
-<div class="line">None : use serial execution</div>
-<div class="line">int : use multiprocessing.Pool (even for <code class="docutils literal notranslate"><span class="pre">poolsize=1</span></code>)</div>
-</div>
+<li><p><strong>poolsize</strong> (<em>{None</em><em>, </em><em>int}</em>) – <ul>
+<li><p>None : use serial execution</p></li>
+<li><p>int : use multiprocessing.Pool (even for <code class="docutils literal notranslate"><span class="pre">poolsize=1</span></code>)</p></li>
+</ul>
 </p></li>
 <li><p><strong>save</strong> (<em>bool</em>) – save final DataFrame to <code class="docutils literal notranslate"><span class="pre">&lt;calc_dir&gt;/database.pk</span></code> (pickle format only)</p></li>
 <li><p><strong>tmpsave</strong> (<em>bool</em>) – save results from each <cite>pset</cite> in <cite>params</cite> (the current DataFrame row) to
 <code class="docutils literal notranslate"><span class="pre">&lt;calc_dir&gt;/tmpsave/&lt;run_id&gt;/&lt;pset_id&gt;.pk</span></code> (pickle format only)</p></li>
-<li><p><strong>verbose</strong> (<em>{bool</em><em>, </em><em>sequence of str}</em>) – <div class="line-block">
-<div class="line">bool : print the current DataFrame row</div>
-<div class="line">sequence : list of DataFrame column names, print the row but only</div>
-<div class="line">those columns</div>
-</div>
+<li><p><strong>verbose</strong> (<em>{bool</em><em>, </em><em>sequence of str}</em>) – <ul>
+<li><p>bool : print the current DataFrame row</p></li>
+<li><p>sequence : list of DataFrame column names, print the row but only
+those columns</p></li>
+</ul>
 </p></li>
 <li><p><strong>calc_dir</strong> (<em>str</em>) – </p></li>
 <li><p><strong>simulate</strong> (<em>bool</em>) – run everything in <code class="docutils literal notranslate"><span class="pre">&lt;calc_dir&gt;.simulate</span></code>, don’t call <cite>worker</cite>, i.e. save
@@ -131,7 +131,7 @@ useful to check if <cite>params</cite> are correct before starting a production 
 <li><p><strong>database_basename</strong> (<em>str</em>) – <code class="docutils literal notranslate"><span class="pre">&lt;database_dir&gt;/&lt;database_basename&gt;</span></code></p></li>
 <li><p><strong>backup</strong> (<em>bool</em>) – Make backup of <code class="docutils literal notranslate"><span class="pre">&lt;calc_dir&gt;</span></code> to <code class="docutils literal notranslate"><span class="pre">&lt;calc_dir&gt;.bak_&lt;timestamp&gt;_run_id_&lt;_run_id&gt;</span></code></p></li>
 <li><p><strong>git</strong> (<em>bool</em>) – Use <code class="docutils literal notranslate"><span class="pre">git</span></code> to commit all files written and changed by the current run
-(<cite>_run_id</cite>). Make sure to create a <cite>.gitignore</cite> manually before if
+(<code class="docutils literal notranslate"><span class="pre">_run_id</span></code>). Make sure to create a <code class="docutils literal notranslate"><span class="pre">.gitignore</span></code> manually before if
 needed.</p></li>
 </ul>
 </dd>

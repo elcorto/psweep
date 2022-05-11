@@ -99,21 +99,86 @@
 <h1>psweep.psweep.df_print<a class="headerlink" href="#psweep-psweep-df-print" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="psweep.psweep.df_print">
-<span class="sig-prename descclassname"><span class="pre">psweep.psweep.</span></span><span class="sig-name descname"><span class="pre">df_print</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">special_cols</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cols</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/psweep/psweep.html#df_print"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psweep.psweep.df_print" title="Permalink to this definition">¶</a></dt>
-<dd><p>Print DataFrame, by default without the index and special fields such as
-_pset_id.</p>
-<p>Same logic as in bin/psweep-db2table but w/o tabulate support. Maybe
-later.</p>
+<span class="sig-prename descclassname"><span class="pre">psweep.psweep.</span></span><span class="sig-name descname"><span class="pre">df_print</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">special_cols</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cols</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_cols</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/psweep/psweep.html#df_print"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psweep.psweep.df_print" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print DataFrame, by default without the index and special columns such
+as <cite>_pset_id</cite>.</p>
+<p>Similar logic as in <cite>bin/psweep-db2table</cite>, w/o tabulate support but more
+features (<cite>skip_cols</cite> for instance).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>df</strong> (<em>DataFrame</em>) – </p></li>
-<li><p><strong>index</strong> (<em>include DataFrame index</em>) – </p></li>
-<li><p><strong>special_cols</strong> (<em>include all special cols</em><em> (</em><em>_pset_id</em><em>, </em><em>...</em><em>)</em>) – </p></li>
-<li><p><strong>cols</strong> (<em>explicit list of cols</em><em>, </em><em>overrides special_cols</em>) – </p></li>
+<li><p><strong>index</strong> – include DataFrame index</p></li>
+<li><p><strong>special_cols</strong> – include all special columns (<cite>_pset_id</cite> etc.)</p></li>
+<li><p><strong>cols</strong> – explicit list of columns, overrides <cite>special_cols</cite> when special columns
+are specified</p></li>
+<li><p><strong>skip_cols</strong> – skip those columns instead of selecting them (like <cite>cols</cite> would), use
+either this or <cite>cols</cite>; overrides <cite>special_cols</cite> when special columns
+are specified</p></li>
 </ul>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="n">rand</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="n">b</span><span class="o">=</span><span class="n">rand</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="n">_c</span><span class="o">=</span><span class="n">rand</span><span class="p">(</span><span class="mi">3</span><span class="p">)))</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">df</span>
+<span class="go">          a         b        _c</span>
+<span class="go">0  0.373534  0.304302  0.161799</span>
+<span class="go">1  0.698738  0.589642  0.557172</span>
+<span class="go">2  0.343316  0.186595  0.822023</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">df_print</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="go">       a        b</span>
+<span class="go">0.373534 0.304302</span>
+<span class="go">0.698738 0.589642</span>
+<span class="go">0.343316 0.186595</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">df_print</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">special_cols</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="go">       a        b       _c</span>
+<span class="go">0.373534 0.304302 0.161799</span>
+<span class="go">0.698738 0.589642 0.557172</span>
+<span class="go">0.343316 0.186595 0.822023</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">df_print</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="go">          a        b</span>
+<span class="go">0  0.373534 0.304302</span>
+<span class="go">1  0.698738 0.589642</span>
+<span class="go">2  0.343316 0.186595</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">df_print</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">])</span>
+<span class="go">       a</span>
+<span class="go">0.373534</span>
+<span class="go">0.698738</span>
+<span class="go">0.343316</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">df_print</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">],</span> <span class="n">special_cols</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="go">       a       _c</span>
+<span class="go">0.373534 0.161799</span>
+<span class="go">0.698738 0.557172</span>
+<span class="go">0.343316 0.822023</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">df_print</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;_c&quot;</span><span class="p">])</span>
+<span class="go">       a       _c</span>
+<span class="go">0.373534 0.161799</span>
+<span class="go">0.698738 0.557172</span>
+<span class="go">0.343316 0.822023</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">df_print</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">skip_cols</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">])</span>
+<span class="go">       b</span>
+<span class="go">0.304302</span>
+<span class="go">0.589642</span>
+<span class="go">0.186595</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </section>
