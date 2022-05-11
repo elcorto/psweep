@@ -1,10 +1,7 @@
 name: tests
 
 on:
-  push:
-    branches:
-      - master
-      - feature-wip
+  push
 
 jobs:
   tests:
@@ -25,5 +22,5 @@ jobs:
           git config --global user.name "Gaylord Focker"
           git config --global user.email "gl@focker.com"
 
-          # Run parallel tests (-n flag).
-          pytest -n4 $(pwd)/src/psweep/tests/*.py
+          # Run parallel tests (-n flag). Detect all $(pwd)/tests/test_*.py
+          pytest -n4
