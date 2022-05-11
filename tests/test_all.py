@@ -39,7 +39,7 @@ def func(pset):
 
 
 def test_run_all_examples():
-    dr = os.path.abspath("{}/../../../examples".format(here))
+    dr = os.path.abspath(f"{here}/../examples")
     for basename in os.listdir(dr):
         path = pj(dr, basename)
         print(f"running example: {path}")
