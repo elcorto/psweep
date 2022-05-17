@@ -951,8 +951,7 @@ See also <https://github.com/elcorto/samplepkg>.
 # Tests
 
 ```sh
-cd src/psweep/tests
-pytest test.py
+$ pytest
 ```
 
 # Special topics
