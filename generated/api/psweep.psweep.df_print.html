@@ -104,13 +104,15 @@
 as <cite>_pset_id</cite>.</p>
 <p>Similar logic as in <cite>bin/psweep-db2table</cite>, w/o tabulate support but more
 features (<cite>skip_cols</cite> for instance).</p>
+<p>Column names are always sorted, so the order of names in e.g. <cite>cols</cite>
+doesn’t matter.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>df</strong> (<em>DataFrame</em>) – </p></li>
 <li><p><strong>index</strong> – include DataFrame index</p></li>
 <li><p><strong>special_cols</strong> – include all special columns (<cite>_pset_id</cite> etc.)</p></li>
-<li><p><strong>cols</strong> – explicit list of columns, overrides <cite>special_cols</cite> when special columns
+<li><p><strong>cols</strong> – explicit sequence of columns, overrides <cite>special_cols</cite> when special columns
 are specified</p></li>
 <li><p><strong>skip_cols</strong> – skip those columns instead of selecting them (like <cite>cols</cite> would), use
 either this or <cite>cols</cite>; overrides <cite>special_cols</cite> when special columns

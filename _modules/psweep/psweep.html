@@ -444,6 +444,9 @@
 <span class="sd">    Similar logic as in `bin/psweep-db2table`, w/o tabulate support but more</span>
 <span class="sd">    features (`skip_cols` for instance).</span>
 
+<span class="sd">    Column names are always sorted, so the order of names in e.g. `cols`</span>
+<span class="sd">    doesn&#39;t matter.</span>
+
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    df : DataFrame</span>
@@ -452,7 +455,7 @@
 <span class="sd">    special_cols :</span>
 <span class="sd">        include all special columns (`_pset_id` etc.)</span>
 <span class="sd">    cols :</span>
-<span class="sd">        explicit list of columns, overrides `special_cols` when special columns</span>
+<span class="sd">        explicit sequence of columns, overrides `special_cols` when special columns</span>
 <span class="sd">        are specified</span>
 <span class="sd">    skip_cols :</span>
 <span class="sd">        skip those columns instead of selecting them (like `cols` would), use</span>
@@ -523,6 +526,8 @@
         <span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">skip_cols</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">disp_cols</span> <span class="o">=</span> <span class="n">disp_cols</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">skip_cols</span><span class="p">)</span>
+    <span class="n">disp_cols</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">disp_cols</span><span class="p">)</span>
+    <span class="n">disp_cols</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">disp_cols</span><span class="p">]</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">))</span></div>
 
 
