@@ -144,7 +144,7 @@ def test_run():
                 "_run_id",
                 "_pset_seq",
                 "_run_seq",
-                "_pset_sha1",
+                "_pset_hash",
                 "_time_utc",
                 "_pset_runtime",
                 "a",
@@ -369,7 +369,7 @@ def test_pass_df_interactive():
         assert (dfa.result.values == dfb.result.values).all()
         assert (dfa._pset_seq.values == dfb._pset_seq.values).all()
         assert (dfa._run_seq.values == dfb._run_seq.values).all()
-        assert (dfa._pset_sha1.values == dfb._pset_sha1.values).all()
+        assert (dfa._pset_hash.values == dfb._pset_hash.values).all()
 
     with tempfile.TemporaryDirectory() as tmpdir:
         calc_dir = pj(tmpdir, "calc")
@@ -393,7 +393,7 @@ def test_pass_df_interactive():
         assert len(df2) == 2 * len(df1)
         assert (df2.a.values == np.tile(df1.a.values, 2)).all()
         assert (
-            df2._pset_sha1.values == np.tile(df1._pset_sha1.values, 2)
+            df2._pset_hash.values == np.tile(df1._pset_hash.values, 2)
         ).all()
 
         # df2 again, but now write to disk and read (ignore that run_local()

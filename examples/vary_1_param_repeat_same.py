@@ -22,7 +22,7 @@ if __name__ == "__main__":
         "_pset_id",
         "_run_seq",
         "_pset_seq",
-        "_pset_sha1",
+        "_pset_hash",
         "a",
         "result",
     ]

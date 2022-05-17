@@ -69,36 +69,36 @@ and a database of results (pandas DataFrame `df`, pickled file
 >>> print(df)
 
    a   b                               _run_id  \
-0  1  88  6ae5a6ae-73ce-4df7-9cfb-6ff4d59b1b80
-1  1  99  6ae5a6ae-73ce-4df7-9cfb-6ff4d59b1b80
-2  2  88  6ae5a6ae-73ce-4df7-9cfb-6ff4d59b1b80
-3  2  99  6ae5a6ae-73ce-4df7-9cfb-6ff4d59b1b80
-4  3  88  6ae5a6ae-73ce-4df7-9cfb-6ff4d59b1b80
-5  3  99  6ae5a6ae-73ce-4df7-9cfb-6ff4d59b1b80
+0  1  88  d3e44cd1-96a1-4825-b931-4e5113b433cb
+1  1  99  d3e44cd1-96a1-4825-b931-4e5113b433cb
+2  2  88  d3e44cd1-96a1-4825-b931-4e5113b433cb
+3  2  99  d3e44cd1-96a1-4825-b931-4e5113b433cb
+4  3  88  d3e44cd1-96a1-4825-b931-4e5113b433cb
+5  3  99  d3e44cd1-96a1-4825-b931-4e5113b433cb
 
                                _pset_id _calc_dir  \
-0  eea722cf-621a-4580-b524-945df05b4479      calc
-1  456ae9c9-28a2-4082-a6f8-1fc5c4c821c4      calc
-2  526630ab-392d-48a6-aee5-eb62a3268de3      calc
-3  03d8ee8e-c2d7-46ca-b137-d81d629f5b00      calc
-4  cbf4ffa2-3a5d-4cb3-8191-f3952765f168      calc
-5  c3dc8932-fbda-4f07-9b3b-e87d5657278e      calc
+0  4fe605c3-39a8-4fd4-8076-8b5d4a676657      calc
+1  809f4d31-f777-4912-8741-c5a2ed7a3803      calc
+2  ba4c1446-b390-4d5a-ad30-662a353e84e0      calc
+3  80acd6f8-c416-4c4f-8b8d-1668c6b3490e      calc
+4  79329ab7-9442-499e-b43b-a90b1a101eba      calc
+5  84a789b0-a2e9-4360-850f-739415de8c1d      calc
 
-                      _time_utc                                _pset_sha1  \
-0 2022-05-21 10:04:22.132614612  088056f830758f949823ddc52bf8527f3e727b45
-1 2022-05-21 10:04:22.135742664  365687b444190b7b4596c70cafab721d2c58e892
-2 2022-05-21 10:04:22.137930155  52434b66dd37763d09280480ff449d66ffcdcd4f
-3 2022-05-21 10:04:22.139992476  354460f2b5c2ad565155513f95c6dbc1181f0239
-4 2022-05-21 10:04:22.141798258  35af18a51c425b09097af78d55ebdd91588c6f3c
-5 2022-05-21 10:04:22.143785477  2e6c6c9a2b05115fced36edab5cafb038c926176
+                      _time_utc                                _pset_hash  \
+0 2022-08-16 07:21:41.182055473  2580bf27aca152e5427389214758e61ea0e544e0
+1 2022-08-16 07:21:41.184616089  f2f17559c39b416483251f097ac895945641ea3a
+2 2022-08-16 07:21:41.186779737  010552c86c69e723feafb1f2fdd5b7d7f7e46e32
+3 2022-08-16 07:21:41.188885450  b57c5feac0608a43a65518f01da5aaf20a493535
+4 2022-08-16 07:21:41.190981627  719b2a864450534f5b683a228de018bc71f4cf2d
+5 2022-08-16 07:21:41.193049431  54baeefd998f4d8a8c9524c50aa0d88407cabb46
 
-   _pset_seq  _run_seq      result  _pset_runtime
-0          0         0   11.762251       0.000010
-1          1         0   69.254010       0.000004
-2          2         0   46.521870       0.000003
-3          3         0  188.070468       0.000003
-4          4         0  128.944035       0.000003
-5          5         0   84.539573       0.000002
+   _pset_seq  _run_seq     result  _pset_runtime
+0          0         0  43.838220       0.000004
+1          1         0  62.688537       0.000003
+2          2         0  17.665135       0.000003
+3          3         0  65.960342       0.000005
+4          4         0  21.357208       0.000002
+5          5         0  71.136104       0.000003
 ```
 
 You see the columns `a` and `b`, the column `result` (returned by
@@ -109,7 +109,7 @@ _run_id
 _pset_id
 _run_seq
 _pset_seq
-_pset_sha1
+_pset_hash
 _pset_runtime
 _calc_dir
 _time_utc
@@ -120,7 +120,7 @@ UUID identifying this run, where by "run" we mean one loop over all parameter
 combinations. Inside that, each call `func(pset)` creates a UUID `_pset_id` and
 a new row in the DataFrame (the database). In addition we also add sequential
 integer IDs `_run_seq` and `_pset_seq` for convenience, as well as an
-additional hash `_pset_sha1` over the input dict (`pset` in the example) to
+additional hash `_pset_hash` over the input dict (`pset` in the example) to
 `func()`. `_pset_runtime` is the time of one `func()` call. `_pset_seq` is the
 same as the integer index `df.index`.
 
@@ -410,10 +410,10 @@ when you call `ps.run_local()` multiple times using *the exact same* `params`,
 
 which is perfectly fine, e.g. in cases where you just want to sample more data
 for the same psets in `params` over and over again. In this case, you will have
-as above two unique `_run_id`s but *two sets of the same* `_pset_sha1`.
+as above two unique `_run_id`s but *two sets of the same* `_pset_hash`.
 
 ```
-                             _run_id                              _pset_id  _run_seq  _pset_seq                                _pset_sha1  a    result
+                             _run_id                              _pset_id  _run_seq  _pset_seq                                _pset_hash  a    result
 8543fdad-4426-41cb-ab42-8a80b1bebbe2  08cb5f7c-8ce8-451f-846d-db5ac3bcc746         0          0  e4ad4daad53a2eec0313386ada88211e50d693bd  1  0.381589
 8543fdad-4426-41cb-ab42-8a80b1bebbe2  18da3840-d00e-4bdd-b29c-68be2adb164e         0          1  7b7ee754248759adcee9e62a4c1477ed1a8bb1ab  2  1.935220
 8543fdad-4426-41cb-ab42-8a80b1bebbe2  bcc47205-0919-4084-9f07-072eb56ed5fd         0          2  9e0e6d8a99c72daf40337183358cbef91bba7311  3  2.187107

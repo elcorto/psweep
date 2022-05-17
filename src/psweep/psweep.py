@@ -786,14 +786,13 @@ def worker_wrapper(
     assert calc_dir is not None
     pset_id = str(uuid.uuid4())
     _pset = copy.deepcopy(pset)
-    hash_alg = PSET_HASH_ALG
     time_start = pd.Timestamp(time.time(), unit=PANDAS_TIME_UNIT)
     update = {
         "_run_id": run_id,
         "_pset_id": pset_id,
         "_calc_dir": calc_dir,
         "_time_utc": time_start,
-        f"_pset_{hash_alg}": pset_hash(pset, hash_alg, raise_error=False),
+        "_pset_hash": pset_hash(pset, PSET_HASH_ALG, raise_error=False),
         "_pset_seq": pset_seq,
         "_run_seq": run_seq,
     }
