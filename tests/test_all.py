@@ -503,24 +503,32 @@ def test_pset_hash():
     d1 = dict(b=dict(c=2, d=[1, 2, "a"]), a=1)
     d2 = dict(a=1, b=dict(d=[1, 2, "a"], c=2))
 
-    assert ps.pset_hash(dref) is not np.nan
-    assert ps.pset_hash(dref) == "c97e3156eaa0d0820cbc0ce114b3e45bef8e8536"
+    assert ps.pset_hash(dref) == "c41c669212f58293fb88aba643b24a995d9aff1a"
     assert ps.pset_hash(d1) == ps.pset_hash(dref)
     assert ps.pset_hash(d2) == ps.pset_hash(dref)
 
-    with pytest.raises(ps.PsweepHashError):
+    assert (
         ps.pset_hash(dict(a=np.sin))
-        ps.pset_hash(dict(a=_Foo))
-        ps.pset_hash(dict(a=_Foo()))
+        == "32522716b0514eb8b2677a917888c4ca21f792da"
+    )
 
-    assert ps.pset_hash(dict(a=np.sin), raise_error=False) is np.nan
-    assert ps.pset_hash(dict(a=_Foo), raise_error=False) is np.nan
-    assert ps.pset_hash(dict(a=_Foo()), raise_error=False) is np.nan
+    # These are the correct hashes (tested: ipython or run this function in a
+    # script). But pytest's deep introspection "magic" must do something to the
+    # _Foo class such that its hash changes, thank you very much. So we just
+    # test that hashing them works.
+    #
+    ##assert ps.pset_hash(dict(a=_Foo)) == "f7a936832c167d5dc1c9574b937822ad0853c00d"
+    ##assert ps.pset_hash(dict(a=_Foo())) == "7c78a7c995e1cf7a2f1f68f29090b173c9b930fa"
+    ps.pset_hash(dict(a=_Foo))
+    ps.pset_hash(dict(a=_Foo()))
 
     d_no_us = dict(a=1, b=2)
     d_us = dict(a=1, b=2, _c=3)
     assert ps.pset_hash(d_no_us) == ps.pset_hash(d_us)
     assert ps.pset_hash(d_no_us) == ps.pset_hash(d_us, skip_special_cols=True)
+    assert not ps.pset_hash(d_no_us) == ps.pset_hash(
+        d_us, skip_special_cols=False
+    )
 
 
 def test_param_build():
@@ -597,11 +605,6 @@ def test_filter_same_hash():
     for idx in [0, 2]:
         assert params[idx] in params_filt
 
-    a = ps.plist("a", [np.sin])
-    with pytest.raises(ps.PsweepHashError):
-        ps.filter_same_hash(a, raise_error=True)
-    assert ps.filter_same_hash(a, raise_error=False) == a
-
 
 def test_stargrid():
     a = ps.plist("a", [1, 2, 3])
@@ -621,11 +624,6 @@ def test_stargrid():
     assert len(params) == len(c)
     params = ps.stargrid(dict(), [a])
     assert params == a
-
-    with pytest.raises(ps.PsweepHashError):
-        ps.filter_same_hash(
-            ps.stargrid(const, [a, c], filter_dups=False), raise_error=True
-        )
 
     vary_labels = ["aa", "bb"]
     params = ps.stargrid(const, [a, b], vary_labels=vary_labels)

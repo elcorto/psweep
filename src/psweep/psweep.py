@@ -2,9 +2,7 @@ from functools import partial, wraps
 from io import IOBase
 from typing import Any, Union, Sequence, Callable, Iterator
 import copy
-import hashlib
 import itertools
-import json
 import multiprocessing as mp
 import os
 import pickle
@@ -20,6 +18,8 @@ import sys
 
 import numpy as np
 import pandas as pd
+
+import joblib
 
 pj = os.path.join
 
@@ -145,12 +145,10 @@ def pset_hash(
     #     >>> hash("12")
     #     4021864388667373027
     #
-    # We only try to hash a dict if it is json-serializable. Things which
-    # aren't are also not hashable in a reproducible fashion w/o spending much
-    # more work to solve the problem. We can't hash, say, the pickled byte
-    # string of some object (e.g. ``hash(pickle.dumps(obj))``), b/c that may
-    # contain a ref to its memory location which is not what we're interested
-    # in. Similarly, also using ``repr`` is not reproducible::
+    # We can't hash, say, the pickled byte string of some object (e.g.
+    # ``hash(pickle.dumps(obj))``), b/c that may contain a ref to its memory
+    # location which is not what we're interested in. Similarly, also using
+    # ``repr`` is not reproducible::
     #
     #     >>> class Foo:
     #     ...     pass
@@ -161,14 +159,11 @@ def pset_hash(
     #     '<__main__.Foo object at 0x7fcc732034c0>'
     #
     # even though for our purpose, we'd consider the two instances of ``Foo`` to
-    # be the same. Better be safe and return NaN in that case.
+    # be the same.
     #
     # The same observations have been also made elsewhere [1,2]. Esp. [2]
     # points to [3] which in turn mentions joblib.hashing.hash(). It's code
-    # shows how complex the problem is. We may try joblib's solution in the
-    # future should this feature become so important that we need to require
-    # hashes to work or else fail. ATM we treat pset hashes on a best effort
-    # basis b/c we don't have strong use cases for them just yet.
+    # shows how complex the problem is, but so far this is our best bet.
     #
     # [1] https://death.andgravity.com/stable-hashing
     # [2] https://ourpython.com/python/deterministic-recursive-hashing-in-python
@@ -179,9 +174,11 @@ def pset_hash(
             _dct = {kk: dct[kk] for kk in keys}
         else:
             _dct = dct
-        h = hashlib.new(method)
-        h.update(json.dumps(_dct, sort_keys=True).encode())
-        return h.hexdigest()
+        return joblib.hash(_dct, hash_name=method)
+    # joblib can hash "anything" so we didn't come up with an input that
+    # actually fails to hash. As such, TypeError is just a guess here. But
+    # still we don't catch ValueError raised when an invalid hash_name is
+    # passed (anything other than md5 or sha1).
     except TypeError as ex:
         if raise_error:
             raise PsweepHashError(

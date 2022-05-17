@@ -2,3 +2,4 @@ pandas >= 0.19.2
 docopt
 tabulate >= 0.8.2
 pyyaml
+joblib
