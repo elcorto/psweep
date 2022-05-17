@@ -353,6 +353,9 @@ def df_print(
     Similar logic as in `bin/psweep-db2table`, w/o tabulate support but more
     features (`skip_cols` for instance).
 
+    Column names are always sorted, so the order of names in e.g. `cols`
+    doesn't matter.
+
     Parameters
     ----------
     df : DataFrame
@@ -361,7 +364,7 @@ def df_print(
     special_cols :
         include all special columns (`_pset_id` etc.)
     cols :
-        explicit list of columns, overrides `special_cols` when special columns
+        explicit sequence of columns, overrides `special_cols` when special columns
         are specified
     skip_cols :
         skip those columns instead of selecting them (like `cols` would), use
@@ -432,6 +435,8 @@ def df_print(
         )
         if len(skip_cols) > 0:
             disp_cols = disp_cols - set(skip_cols)
+    disp_cols = list(disp_cols)
+    disp_cols.sort()
     print(df[disp_cols].to_string(index=index))
 
 
