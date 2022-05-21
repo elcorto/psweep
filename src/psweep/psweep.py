@@ -228,6 +228,74 @@ def pickle_read(fn: str):
     return pickle.load(open(fn, "rb"))
 
 
+def logspace(
+    start, stop, num=50, offset=0, log_func: Callable = np.log10, **kwds
+):
+    """
+    Like ``numpy.logspace`` but `start` and `stop` are not exponents but the
+    actual bounds.
+
+    Control the strength of the log-scale by `offset`, where we use
+    ``np.logspace(np.log10(start + offset), np.log10(stop + offset)) -
+    offset``. `offset=0` is equal to ``np.logspace(np.log10(start),
+    np.log10(stop))``. Higher values result in more evenly spaced points.
+
+    Parameters
+    ----------
+    start, stop, num, **kwds :
+        same as in ``np.logspace``
+    offset :
+        Control strength of log-scale.
+    log_func :
+        Must match `base`. Default is ``base=10`` as in ``np.logspace`` and so
+        ``log_func=np.log10``. If you want a different `base`, also provide a
+        matching `log_func`.
+
+    Examples
+    --------
+    Effect of different `offset` values:
+
+    >>> from matplotlib import pyplot as plt
+    >>> from psweep import logspace
+    >>> import numpy as np
+
+    >>> for ii,off in enumerate([1e-16,1e-3, 1,2,3]):
+    ...     x=logspace(0, 2, 20, offset=off)
+    ...     plt.plot(x, np.ones_like(x)*ii, "o-", label=f"{off}")
+
+    >>> plt.legend()
+    """
+    base = kwds.pop("base", 10.0)
+    # fmt: off
+    assert np.allclose(log_func(base), 1.0), f"log_func and {base=} don't match"
+    # fmt: on
+    return (
+        np.logspace(
+            log_func(start + offset),
+            log_func(stop + offset),
+            num=num,
+            base=base,
+            **kwds,
+        )
+        - offset
+    )
+
+
+def intspace(*args, dtype=np.int64, **kwds):
+    """Like ``np.linspace`` but round to integers.
+
+    The length of the returned array may be lower than specified by `num` if
+    rounding to ints results in duplicates.
+
+    Parameters
+    ----------
+    *args, **kwds :
+        Same as ``np.linspace``
+    """
+    assert "dtype" not in kwds, "Got 'dtype' multiple times."
+    return np.unique(np.round(np.linspace(*args, **kwds)).astype(dtype))
+
+
 # -----------------------------------------------------------------------------
 # git
 # -----------------------------------------------------------------------------
