@@ -639,3 +639,42 @@ def test_stargrid():
         assert "study" in pset.keys()
         assert "_vary" not in pset.keys()
         assert pset["study"] in vary_labels
+
+
+def test_intspace():
+    assert (ps.intspace(0, 4, 5) == np.array(range(5))).all()
+    # array([0.  , 1.25, 2.5 , 3.75, 5.  ]) -> round to int
+    assert (ps.intspace(0, 5, 5) == np.array([0, 1, 2, 4, 5])).all()
+    # array([0, 1, 2, 3, 4, 5])
+    assert (ps.intspace(0, 5, 20) == np.array(range(6))).all()
+
+
+def test_logspace_defaults():
+    start = np.random.rand()
+    stop = 5 * start
+    log_func = np.log10
+    ref = np.logspace(log_func(start), log_func(stop))
+    np.testing.assert_allclose(ref, ps.logspace(start, stop))
+
+
+@pytest.mark.parametrize("log_func, base", [(np.log10, 10), (np.log, np.e)])
+def test_logspace_base_log_func(log_func, base):
+    start = np.random.rand()
+    stop = 5 * start
+    ref = np.logspace(log_func(start), log_func(stop), base=base, num=20)
+    # offset=0
+    np.testing.assert_allclose(
+        ref, ps.logspace(start, stop, num=20, base=base, log_func=log_func)
+    )
+
+
+@pytest.mark.parametrize("offset", [1, 2.345])
+def test_logspace_offset(offset):
+    start = np.random.rand()
+    stop = 5 * start
+    log_func = np.log10
+    ref = np.logspace(log_func(start), log_func(stop))
+    val = ps.logspace(start, stop, offset=offset)
+    np.testing.assert_allclose(val[0], start)
+    np.testing.assert_allclose(val[-1], stop)
+    assert not np.allclose(ref, val)
