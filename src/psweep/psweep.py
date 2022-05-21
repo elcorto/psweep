@@ -768,7 +768,7 @@ def worker_wrapper(
     pset: dict,
     worker: Callable,
     tmpsave: bool = False,
-    verbose: bool = False,
+    verbose: Union[bool, Sequence[str]] = None,
     run_id: str = None,
     calc_dir: str = None,
     simulate: bool = False,
