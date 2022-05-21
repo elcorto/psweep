@@ -779,27 +779,29 @@ def worker_wrapper(
     assert calc_dir is not None
     pset_id = str(uuid.uuid4())
     _pset = copy.deepcopy(pset)
-    _time_utc = pd.Timestamp(time.time(), unit=PANDAS_TIME_UNIT)
     hash_alg = PSET_HASH_ALG
+    time_start = pd.Timestamp(time.time(), unit=PANDAS_TIME_UNIT)
     update = {
         "_run_id": run_id,
         "_pset_id": pset_id,
         "_calc_dir": calc_dir,
-        "_time_utc": _time_utc,
+        "_time_utc": time_start,
         f"_pset_{hash_alg}": pset_hash(pset, hash_alg, raise_error=False),
         "_pset_seq": pset_seq,
         "_run_seq": run_seq,
     }
     _pset.update(update)
-    # for printing only
-    df_row = pd.DataFrame([_pset])
-    if isinstance(verbose, bool) and verbose:
-        print(df_row)
-    elif is_seq(verbose):
-        print(df_row[verbose])
+    if verbose is not None:
+        df_row_print = pd.DataFrame([_pset], index=[time_start])
+        if isinstance(verbose, bool) and verbose:
+            df_print(df_row_print, index=True)
+        elif is_seq(verbose):
+            df_print(df_row_print[verbose], index=True)
+    t0 = time.time()
     if not simulate:
         _pset.update(worker(_pset))
-    df_row = pd.DataFrame([_pset], index=[_time_utc])
+    _pset["_pset_runtime"] = time.time() - t0
+    df_row = pd.DataFrame([_pset])
     if tmpsave:
         fn = pj(calc_dir, "tmpsave", run_id, pset_id + ".pk")
         df_write(df_row, fn)
@@ -898,7 +900,7 @@ def run_local(
         run_seq_old = df._run_seq.values.max()
 
     if backup and len(df.index) > 0:
-        stamp = df.index.max().strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+        stamp = df._time_utc.max().strftime("%Y-%m-%dT%H:%M:%S.%fZ")
         dst = f"{calc_dir}.bak_{stamp}_run_id_{df._run_id.values[-1]}"
         assert not os.path.exists(dst), (
             "backup destination {dst} exists, seems like there has been no new "
@@ -942,7 +944,7 @@ def run_local(
             results = pool.map(_worker_wrapper_partial, params)
 
     for df_row in results:
-        df = df.append(df_row, sort=False)
+        df = pd.concat((df, df_row), sort=False, ignore_index=True)
 
     if save:
         df_write(df, database_fn)

@@ -146,6 +146,7 @@ def test_run():
                 "_run_seq",
                 "_pset_sha1",
                 "_time_utc",
+                "_pset_runtime",
                 "a",
                 "result",
             ]
