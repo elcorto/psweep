@@ -15,12 +15,11 @@ import subprocess
 import time
 import uuid
 import warnings
-import yaml  # type: ignore
+import yaml
 import sys
 
-# Using numpy type hints is complicated, so skip it for now.
-import numpy as np  # type: ignore
-import pandas as pd  # type: ignore
+import numpy as np
+import pandas as pd
 
 pj = os.path.join
 
