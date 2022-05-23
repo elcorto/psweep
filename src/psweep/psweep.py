@@ -1,6 +1,6 @@
 from functools import partial, wraps
 from io import IOBase
-from typing import Any, Optional, Union, Sequence, Callable, Iterator, List
+from typing import Any, Union, Sequence, Callable, Iterator
 import copy
 import hashlib
 import itertools
@@ -348,7 +348,7 @@ def git_exit(use_git: bool, df: pd.DataFrame):
 # -----------------------------------------------------------------------------
 
 
-def df_to_json(df: pd.DataFrame, **kwds) -> Optional[str]:
+def df_to_json(df: pd.DataFrame, **kwds) -> str:
     """Like `df.to_json` but with defaults for orient, date_unit, date_format,
     double_precision.
 
@@ -809,14 +809,14 @@ def worker_wrapper(
 def run_local(
     worker: Callable,
     params: Sequence[dict],
-    df: Optional[pd.DataFrame] = None,
-    poolsize: Optional[int] = None,
+    df: pd.DataFrame = None,
+    poolsize: int = None,
     save=True,
     tmpsave=False,
     verbose: Union[bool, Sequence[str]] = False,
     calc_dir="calc",
     simulate=False,
-    database_dir: Optional[str] = None,
+    database_dir: str = None,
     database_basename="database.pk",
     backup=False,
     git=False,
