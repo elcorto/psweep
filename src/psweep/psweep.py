@@ -507,10 +507,9 @@ def df_print(
     print(df[disp_cols].to_string(index=index))
 
 
-T = Union[pd.Series, pd.DataFrame, np.ndarray, List[bool]]
-
-
-def df_filter_conds(df: pd.DataFrame, conds: Sequence[T]) -> pd.DataFrame:
+def df_filter_conds(
+    df: pd.DataFrame, conds: Sequence[Sequence[bool]]
+) -> pd.DataFrame:
     """Filter DataFrame using bool arrays/Series/DataFrames in `conds`.
 
     Logical-and all bool sequences in `conds`. Same as
