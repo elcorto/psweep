@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>About &#8212; psweep 0.6.0 documentation</title>
+    <title>About &#8212; psweep 0.7.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -168,45 +168,38 @@ calculate and store the result of a calculation for each parameter combination.<
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s2">&quot;display.max_columns&quot;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
-<span class="go">                               a   b                               _run_id  \</span>
-<span class="go">2022-03-09 21:41:47.241659641  1  88  21f34c94-3dee-445f-8503-bc849d567afa</span>
-<span class="go">2022-03-09 21:41:47.242649794  1  99  21f34c94-3dee-445f-8503-bc849d567afa</span>
-<span class="go">2022-03-09 21:41:47.243408918  2  88  21f34c94-3dee-445f-8503-bc849d567afa</span>
-<span class="go">2022-03-09 21:41:47.244148254  2  99  21f34c94-3dee-445f-8503-bc849d567afa</span>
-<span class="go">2022-03-09 21:41:47.244868517  3  88  21f34c94-3dee-445f-8503-bc849d567afa</span>
-<span class="go">2022-03-09 21:41:47.245590210  3  99  21f34c94-3dee-445f-8503-bc849d567afa</span>
 
-<span class="go">                                                           _pset_id _calc_dir  \</span>
-<span class="go">2022-03-09 21:41:47.241659641  cfa0341b-ed2a-480e-bc64-3283fc7661db      calc</span>
-<span class="go">2022-03-09 21:41:47.242649794  52f8926d-7370-47ac-8442-d979cc979606      calc</span>
-<span class="go">2022-03-09 21:41:47.243408918  451bd57d-211b-4860-84ad-89636dc24f97      calc</span>
-<span class="go">2022-03-09 21:41:47.244148254  239adf42-30be-43d0-b980-50846da2e531      calc</span>
-<span class="go">2022-03-09 21:41:47.244868517  4148c499-2578-49c3-9d87-0fb8d50a02fe      calc</span>
-<span class="go">2022-03-09 21:41:47.245590210  f5238602-a3c6-4383-9057-64809e4aef04      calc</span>
+<span class="go">   a   b                               _run_id  \</span>
+<span class="go">0  1  88  6ae5a6ae-73ce-4df7-9cfb-6ff4d59b1b80</span>
+<span class="go">1  1  99  6ae5a6ae-73ce-4df7-9cfb-6ff4d59b1b80</span>
+<span class="go">2  2  88  6ae5a6ae-73ce-4df7-9cfb-6ff4d59b1b80</span>
+<span class="go">3  2  99  6ae5a6ae-73ce-4df7-9cfb-6ff4d59b1b80</span>
+<span class="go">4  3  88  6ae5a6ae-73ce-4df7-9cfb-6ff4d59b1b80</span>
+<span class="go">5  3  99  6ae5a6ae-73ce-4df7-9cfb-6ff4d59b1b80</span>
 
-<span class="go">                                                  _time_utc  \</span>
-<span class="go">2022-03-09 21:41:47.241659641 2022-03-09 21:41:47.241659641</span>
-<span class="go">2022-03-09 21:41:47.242649794 2022-03-09 21:41:47.242649794</span>
-<span class="go">2022-03-09 21:41:47.243408918 2022-03-09 21:41:47.243408918</span>
-<span class="go">2022-03-09 21:41:47.244148254 2022-03-09 21:41:47.244148254</span>
-<span class="go">2022-03-09 21:41:47.244868517 2022-03-09 21:41:47.244868517</span>
-<span class="go">2022-03-09 21:41:47.245590210 2022-03-09 21:41:47.245590210</span>
+<span class="go">                               _pset_id _calc_dir  \</span>
+<span class="go">0  eea722cf-621a-4580-b524-945df05b4479      calc</span>
+<span class="go">1  456ae9c9-28a2-4082-a6f8-1fc5c4c821c4      calc</span>
+<span class="go">2  526630ab-392d-48a6-aee5-eb62a3268de3      calc</span>
+<span class="go">3  03d8ee8e-c2d7-46ca-b137-d81d629f5b00      calc</span>
+<span class="go">4  cbf4ffa2-3a5d-4cb3-8191-f3952765f168      calc</span>
+<span class="go">5  c3dc8932-fbda-4f07-9b3b-e87d5657278e      calc</span>
 
-<span class="go">                                                             _pset_sha1  \</span>
-<span class="go">2022-03-09 21:41:47.241659641  088056f830758f949823ddc52bf8527f3e727b45</span>
-<span class="go">2022-03-09 21:41:47.242649794  365687b444190b7b4596c70cafab721d2c58e892</span>
-<span class="go">2022-03-09 21:41:47.243408918  52434b66dd37763d09280480ff449d66ffcdcd4f</span>
-<span class="go">2022-03-09 21:41:47.244148254  354460f2b5c2ad565155513f95c6dbc1181f0239</span>
-<span class="go">2022-03-09 21:41:47.244868517  35af18a51c425b09097af78d55ebdd91588c6f3c</span>
-<span class="go">2022-03-09 21:41:47.245590210  2e6c6c9a2b05115fced36edab5cafb038c926176</span>
+<span class="go">                      _time_utc                                _pset_sha1  \</span>
+<span class="go">0 2022-05-21 10:04:22.132614612  088056f830758f949823ddc52bf8527f3e727b45</span>
+<span class="go">1 2022-05-21 10:04:22.135742664  365687b444190b7b4596c70cafab721d2c58e892</span>
+<span class="go">2 2022-05-21 10:04:22.137930155  52434b66dd37763d09280480ff449d66ffcdcd4f</span>
+<span class="go">3 2022-05-21 10:04:22.139992476  354460f2b5c2ad565155513f95c6dbc1181f0239</span>
+<span class="go">4 2022-05-21 10:04:22.141798258  35af18a51c425b09097af78d55ebdd91588c6f3c</span>
+<span class="go">5 2022-05-21 10:04:22.143785477  2e6c6c9a2b05115fced36edab5cafb038c926176</span>
 
-<span class="go">                               _pset_seq  _run_seq      result</span>
-<span class="go">2022-03-09 21:41:47.241659641          0         0   49.657365</span>
-<span class="go">2022-03-09 21:41:47.242649794          1         0   92.940078</span>
-<span class="go">2022-03-09 21:41:47.243408918          2         0   65.836144</span>
-<span class="go">2022-03-09 21:41:47.244148254          3         0  193.589216</span>
-<span class="go">2022-03-09 21:41:47.244868517          4         0  193.032010</span>
-<span class="go">2022-03-09 21:41:47.245590210          5         0  159.747755</span>
+<span class="go">   _pset_seq  _run_seq      result  _pset_runtime</span>
+<span class="go">0          0         0   11.762251       0.000010</span>
+<span class="go">1          1         0   69.254010       0.000004</span>
+<span class="go">2          2         0   46.521870       0.000003</span>
+<span class="go">3          3         0  188.070468       0.000003</span>
+<span class="go">4          4         0  128.944035       0.000003</span>
+<span class="go">5          5         0   84.539573       0.000002</span>
 </pre></div>
 </div>
 <p>You see the columns <code class="docutils literal notranslate"><span class="pre">a</span></code> and <code class="docutils literal notranslate"><span class="pre">b</span></code>, the column <code class="docutils literal notranslate"><span class="pre">result</span></code> (returned by
@@ -216,18 +209,19 @@ calculate and store the result of a calculation for each parameter combination.<
 <span class="n">_run_seq</span>
 <span class="n">_pset_seq</span>
 <span class="n">_pset_sha1</span>
+<span class="n">_pset_runtime</span>
 <span class="n">_calc_dir</span>
 <span class="n">_time_utc</span>
 </pre></div>
 </div>
-<p>as well as the <code class="docutils literal notranslate"><span class="pre">df.index</span></code> also holding a time stamp.</p>
 <p>Observe that one call <code class="docutils literal notranslate"><span class="pre">ps.run_local(func,</span> <span class="pre">params)</span></code> creates one <code class="docutils literal notranslate"><span class="pre">_run_id</span></code> – a
 UUID identifying this run, where by “run” we mean one loop over all parameter
 combinations. Inside that, each call <code class="docutils literal notranslate"><span class="pre">func(pset)</span></code> creates a UUID <code class="docutils literal notranslate"><span class="pre">_pset_id</span></code> and
 a new row in the DataFrame (the database). In addition we also add sequential
 integer IDs <code class="docutils literal notranslate"><span class="pre">_run_seq</span></code> and <code class="docutils literal notranslate"><span class="pre">_pset_seq</span></code> for convenience, as well as an
 additional hash <code class="docutils literal notranslate"><span class="pre">_pset_sha1</span></code> over the input dict (<code class="docutils literal notranslate"><span class="pre">pset</span></code> in the example) to
-<code class="docutils literal notranslate"><span class="pre">func()</span></code>.</p>
+<code class="docutils literal notranslate"><span class="pre">func()</span></code>. <code class="docutils literal notranslate"><span class="pre">_pset_runtime</span></code> is the time of one <code class="docutils literal notranslate"><span class="pre">func()</span></code> call. <code class="docutils literal notranslate"><span class="pre">_pset_id</span></code> is the
+same as the index <code class="docutils literal notranslate"><span class="pre">df.index</span></code>.</p>
 </section>
 <section id="concepts">
 <h1>Concepts<a class="headerlink" href="#concepts" title="Permalink to this headline">¶</a></h1>

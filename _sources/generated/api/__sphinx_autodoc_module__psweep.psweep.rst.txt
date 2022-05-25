@@ -40,9 +40,11 @@ psweep
    git_enter
    git_exit
    in_git_repo
+   intspace
    is_seq
    itr
    itr2params
+   logspace
    makedirs
    merge_dicts
    pgrid

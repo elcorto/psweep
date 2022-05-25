@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>psweep &#8212; psweep 0.6.0 documentation</title>
+    <title>psweep &#8212; psweep 0.7.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css" />
     <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
@@ -173,14 +173,20 @@
 <tr class="row-even"><td><p><a class="reference internal" href="psweep.psweep.in_git_repo.html#psweep.psweep.in_git_repo" title="psweep.psweep.in_git_repo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">in_git_repo</span></code></a>()</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="psweep.psweep.is_seq.html#psweep.psweep.is_seq" title="psweep.psweep.is_seq"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_seq</span></code></a>(seq)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="psweep.psweep.intspace.html#psweep.psweep.intspace" title="psweep.psweep.intspace"><code class="xref py py-obj docutils literal notranslate"><span class="pre">intspace</span></code></a>(*args[, dtype])</p></td>
+<td><p>Like <code class="docutils literal notranslate"><span class="pre">np.linspace</span></code> but round to integers.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="psweep.psweep.is_seq.html#psweep.psweep.is_seq" title="psweep.psweep.is_seq"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_seq</span></code></a>(seq)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="psweep.psweep.itr.html#psweep.psweep.itr" title="psweep.psweep.itr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">itr</span></code></a>(func)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="psweep.psweep.itr.html#psweep.psweep.itr" title="psweep.psweep.itr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">itr</span></code></a>(func)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="psweep.psweep.itr2params.html#psweep.psweep.itr2params" title="psweep.psweep.itr2params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">itr2params</span></code></a>(loops)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="psweep.psweep.itr2params.html#psweep.psweep.itr2params" title="psweep.psweep.itr2params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">itr2params</span></code></a>(loops)</p></td>
 <td><p>Transform the (possibly nested) result of a loop over plists (or whatever has been used to create psets) to a proper list of psets by flattening and merging dicts.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="psweep.psweep.logspace.html#psweep.psweep.logspace" title="psweep.psweep.logspace"><code class="xref py py-obj docutils literal notranslate"><span class="pre">logspace</span></code></a>(start, stop[, num, offset, log_func])</p></td>
+<td><p>Like <code class="docutils literal notranslate"><span class="pre">numpy.logspace</span></code> but <cite>start</cite> and <cite>stop</cite> are not exponents but the actual bounds.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="psweep.psweep.makedirs.html#psweep.psweep.makedirs" title="psweep.psweep.makedirs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">makedirs</span></code></a>(path)</p></td>
 <td><p>Create <cite>path</cite> recursively, no questions asked.</p></td>
