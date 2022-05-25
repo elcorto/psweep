@@ -67,45 +67,38 @@ and a database of results (pandas DataFrame `df`, pickled file
 >>> import pandas as pd
 >>> pd.set_option("display.max_columns", None)
 >>> print(df)
-                               a   b                               _run_id  \
-2022-03-09 21:41:47.241659641  1  88  21f34c94-3dee-445f-8503-bc849d567afa
-2022-03-09 21:41:47.242649794  1  99  21f34c94-3dee-445f-8503-bc849d567afa
-2022-03-09 21:41:47.243408918  2  88  21f34c94-3dee-445f-8503-bc849d567afa
-2022-03-09 21:41:47.244148254  2  99  21f34c94-3dee-445f-8503-bc849d567afa
-2022-03-09 21:41:47.244868517  3  88  21f34c94-3dee-445f-8503-bc849d567afa
-2022-03-09 21:41:47.245590210  3  99  21f34c94-3dee-445f-8503-bc849d567afa
 
-                                                           _pset_id _calc_dir  \
-2022-03-09 21:41:47.241659641  cfa0341b-ed2a-480e-bc64-3283fc7661db      calc
-2022-03-09 21:41:47.242649794  52f8926d-7370-47ac-8442-d979cc979606      calc
-2022-03-09 21:41:47.243408918  451bd57d-211b-4860-84ad-89636dc24f97      calc
-2022-03-09 21:41:47.244148254  239adf42-30be-43d0-b980-50846da2e531      calc
-2022-03-09 21:41:47.244868517  4148c499-2578-49c3-9d87-0fb8d50a02fe      calc
-2022-03-09 21:41:47.245590210  f5238602-a3c6-4383-9057-64809e4aef04      calc
+   a   b                               _run_id  \
+0  1  88  6ae5a6ae-73ce-4df7-9cfb-6ff4d59b1b80
+1  1  99  6ae5a6ae-73ce-4df7-9cfb-6ff4d59b1b80
+2  2  88  6ae5a6ae-73ce-4df7-9cfb-6ff4d59b1b80
+3  2  99  6ae5a6ae-73ce-4df7-9cfb-6ff4d59b1b80
+4  3  88  6ae5a6ae-73ce-4df7-9cfb-6ff4d59b1b80
+5  3  99  6ae5a6ae-73ce-4df7-9cfb-6ff4d59b1b80
 
-                                                  _time_utc  \
-2022-03-09 21:41:47.241659641 2022-03-09 21:41:47.241659641
-2022-03-09 21:41:47.242649794 2022-03-09 21:41:47.242649794
-2022-03-09 21:41:47.243408918 2022-03-09 21:41:47.243408918
-2022-03-09 21:41:47.244148254 2022-03-09 21:41:47.244148254
-2022-03-09 21:41:47.244868517 2022-03-09 21:41:47.244868517
-2022-03-09 21:41:47.245590210 2022-03-09 21:41:47.245590210
+                               _pset_id _calc_dir  \
+0  eea722cf-621a-4580-b524-945df05b4479      calc
+1  456ae9c9-28a2-4082-a6f8-1fc5c4c821c4      calc
+2  526630ab-392d-48a6-aee5-eb62a3268de3      calc
+3  03d8ee8e-c2d7-46ca-b137-d81d629f5b00      calc
+4  cbf4ffa2-3a5d-4cb3-8191-f3952765f168      calc
+5  c3dc8932-fbda-4f07-9b3b-e87d5657278e      calc
 
-                                                             _pset_sha1  \
-2022-03-09 21:41:47.241659641  088056f830758f949823ddc52bf8527f3e727b45
-2022-03-09 21:41:47.242649794  365687b444190b7b4596c70cafab721d2c58e892
-2022-03-09 21:41:47.243408918  52434b66dd37763d09280480ff449d66ffcdcd4f
-2022-03-09 21:41:47.244148254  354460f2b5c2ad565155513f95c6dbc1181f0239
-2022-03-09 21:41:47.244868517  35af18a51c425b09097af78d55ebdd91588c6f3c
-2022-03-09 21:41:47.245590210  2e6c6c9a2b05115fced36edab5cafb038c926176
+                      _time_utc                                _pset_sha1  \
+0 2022-05-21 10:04:22.132614612  088056f830758f949823ddc52bf8527f3e727b45
+1 2022-05-21 10:04:22.135742664  365687b444190b7b4596c70cafab721d2c58e892
+2 2022-05-21 10:04:22.137930155  52434b66dd37763d09280480ff449d66ffcdcd4f
+3 2022-05-21 10:04:22.139992476  354460f2b5c2ad565155513f95c6dbc1181f0239
+4 2022-05-21 10:04:22.141798258  35af18a51c425b09097af78d55ebdd91588c6f3c
+5 2022-05-21 10:04:22.143785477  2e6c6c9a2b05115fced36edab5cafb038c926176
 
-                               _pset_seq  _run_seq      result
-2022-03-09 21:41:47.241659641          0         0   49.657365
-2022-03-09 21:41:47.242649794          1         0   92.940078
-2022-03-09 21:41:47.243408918          2         0   65.836144
-2022-03-09 21:41:47.244148254          3         0  193.589216
-2022-03-09 21:41:47.244868517          4         0  193.032010
-2022-03-09 21:41:47.245590210          5         0  159.747755
+   _pset_seq  _run_seq      result  _pset_runtime
+0          0         0   11.762251       0.000010
+1          1         0   69.254010       0.000004
+2          2         0   46.521870       0.000003
+3          3         0  188.070468       0.000003
+4          4         0  128.944035       0.000003
+5          5         0   84.539573       0.000002
 ```
 
 You see the columns `a` and `b`, the column `result` (returned by
@@ -117,11 +110,10 @@ _pset_id
 _run_seq
 _pset_seq
 _pset_sha1
+_pset_runtime
 _calc_dir
 _time_utc
 ```
-
-as well as the `df.index` also holding a time stamp.
 
 Observe that one call `ps.run_local(func, params)` creates one `_run_id` -- a
 UUID identifying this run, where by "run" we mean one loop over all parameter
@@ -129,7 +121,8 @@ combinations. Inside that, each call `func(pset)` creates a UUID `_pset_id` and
 a new row in the DataFrame (the database). In addition we also add sequential
 integer IDs `_run_seq` and `_pset_seq` for convenience, as well as an
 additional hash `_pset_sha1` over the input dict (`pset` in the example) to
-`func()`.
+`func()`. `_pset_runtime` is the time of one `func()` call. `_pset_id` is the
+same as the index `df.index`.
 
 
 # Concepts
