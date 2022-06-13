@@ -1,10 +1,10 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
     <title>About &#8212; psweep 0.7.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
@@ -12,6 +12,7 @@
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -93,7 +94,7 @@
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
 
 
 
@@ -114,7 +115,7 @@
 <img alt="GitHub Workflow Status" src="https://img.shields.io/github/workflow/status/elcorto/psweep/tests?label=tests" />
 <a class="reference external" href="https://zenodo.org/badge/latestdoi/92956212"><img alt="DOI" src="https://zenodo.org/badge/92956212.svg" /></a></p>
 <section id="about">
-<h1>About<a class="headerlink" href="#about" title="Permalink to this headline">¶</a></h1>
+<h1>About<a class="headerlink" href="#about" title="Permalink to this heading">¶</a></h1>
 <p>This package helps you to set up and run parameter studies.</p>
 <p>Mostly, you’ll start with a script and a for-loop and ask “why do I
 need a package for that”? Well, soon you’ll want housekeeping tools
@@ -138,7 +139,7 @@ blocks. All data structures are really simple (dicts), as are the
 provided functions. The database is a normal pandas DataFrame.</p>
 </section>
 <section id="getting-started">
-<h1>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h1>
+<h1>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this heading">¶</a></h1>
 <p>A simple example: Loop over two parameters <code class="docutils literal notranslate"><span class="pre">a</span></code> and <code class="docutils literal notranslate"><span class="pre">b</span></code> in a nested loop (grid),
 calculate and store the result of a calculation for each parameter combination.</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">random</span>
@@ -220,11 +221,11 @@ combinations. Inside that, each call <code class="docutils literal notranslate">
 a new row in the DataFrame (the database). In addition we also add sequential
 integer IDs <code class="docutils literal notranslate"><span class="pre">_run_seq</span></code> and <code class="docutils literal notranslate"><span class="pre">_pset_seq</span></code> for convenience, as well as an
 additional hash <code class="docutils literal notranslate"><span class="pre">_pset_sha1</span></code> over the input dict (<code class="docutils literal notranslate"><span class="pre">pset</span></code> in the example) to
-<code class="docutils literal notranslate"><span class="pre">func()</span></code>. <code class="docutils literal notranslate"><span class="pre">_pset_runtime</span></code> is the time of one <code class="docutils literal notranslate"><span class="pre">func()</span></code> call. <code class="docutils literal notranslate"><span class="pre">_pset_id</span></code> is the
-same as the index <code class="docutils literal notranslate"><span class="pre">df.index</span></code>.</p>
+<code class="docutils literal notranslate"><span class="pre">func()</span></code>. <code class="docutils literal notranslate"><span class="pre">_pset_runtime</span></code> is the time of one <code class="docutils literal notranslate"><span class="pre">func()</span></code> call. <code class="docutils literal notranslate"><span class="pre">_pset_seq</span></code> is the
+same as the integer index <code class="docutils literal notranslate"><span class="pre">df.index</span></code>.</p>
 </section>
 <section id="concepts">
-<h1>Concepts<a class="headerlink" href="#concepts" title="Permalink to this headline">¶</a></h1>
+<h1>Concepts<a class="headerlink" href="#concepts" title="Permalink to this heading">¶</a></h1>
 <p>The basic data structure for a param study is a list of “parameter sets” or
 short “psets”, each of which is a dict.</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">params</span> <span class="o">=</span> <span class="p">[{</span><span class="s2">&quot;a&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">:</span> <span class="mi">88</span><span class="p">},</span>  <span class="c1"># pset 1</span>
@@ -262,7 +263,7 @@ per pset). Using <code class="docutils literal notranslate"><span class="pre">ps
 <code class="docutils literal notranslate"><span class="pre">params</span></code> using <code class="docutils literal notranslate"><span class="pre">multiprocessing.Pool</span></code>.</p>
 </section>
 <section id="building-parameter-grids">
-<h1>Building parameter grids<a class="headerlink" href="#building-parameter-grids" title="Permalink to this headline">¶</a></h1>
+<h1>Building parameter grids<a class="headerlink" href="#building-parameter-grids" title="Permalink to this heading">¶</a></h1>
 <p>This package offers some very simple helper functions which assist in creating
 <code class="docutils literal notranslate"><span class="pre">params</span></code>. Basically, we define the to-be-varied parameters and then use
 something like <code class="docutils literal notranslate"><span class="pre">itertools.product()</span></code> to loop over them to create <code class="docutils literal notranslate"><span class="pre">params</span></code>,
@@ -364,9 +365,9 @@ a static <code class="docutils literal notranslate"><span class="pre">params</sp
 previous study, etc.</p>
 <p>The point is: you generate <code class="docutils literal notranslate"><span class="pre">params</span></code>, we run the study.</p>
 <section id="gotchas">
-<h2>Gotchas<a class="headerlink" href="#gotchas" title="Permalink to this headline">¶</a></h2>
+<h2>Gotchas<a class="headerlink" href="#gotchas" title="Permalink to this heading">¶</a></h2>
 <section id="pgrid">
-<h3><code class="docutils literal notranslate"><span class="pre">pgrid</span></code><a class="headerlink" href="#pgrid" title="Permalink to this headline">¶</a></h3>
+<h3><code class="docutils literal notranslate"><span class="pre">pgrid</span></code><a class="headerlink" href="#pgrid" title="Permalink to this heading">¶</a></h3>
 <p>tl;dr: <code class="docutils literal notranslate"><span class="pre">pgrid(a,b,...)</span></code> is a convenience API. It can’t handle all corner
 cases. If in doubt, use <code class="docutils literal notranslate"><span class="pre">pgrid([a,b,...])</span></code> (or even <code class="docutils literal notranslate"><span class="pre">itr2params(product(...))</span></code>
 directly).</p>
@@ -401,14 +402,14 @@ raise an error, just as in case <code class="docutils literal notranslate"><span
 </div>
 </section>
 <section id="zip">
-<h3><code class="docutils literal notranslate"><span class="pre">zip</span></code><a class="headerlink" href="#zip" title="Permalink to this headline">¶</a></h3>
+<h3><code class="docutils literal notranslate"><span class="pre">zip</span></code><a class="headerlink" href="#zip" title="Permalink to this heading">¶</a></h3>
 <p>When using <code class="docutils literal notranslate"><span class="pre">zip(a,b)</span></code>, make sure that <code class="docutils literal notranslate"><span class="pre">a</span></code> and <code class="docutils literal notranslate"><span class="pre">b</span></code> have the same length, else <code class="docutils literal notranslate"><span class="pre">zip</span></code>
 will return an iterator whose length is <code class="docutils literal notranslate"><span class="pre">min(len(a),</span> <span class="pre">len(b))</span></code>.</p>
 </section>
 </section>
 </section>
 <section id="the-database">
-<h1>The database<a class="headerlink" href="#the-database" title="Permalink to this headline">¶</a></h1>
+<h1>The database<a class="headerlink" href="#the-database" title="Permalink to this heading">¶</a></h1>
 <p>By default, <code class="docutils literal notranslate"><span class="pre">ps.run_local()</span></code> writes a database <code class="docutils literal notranslate"><span class="pre">calc/database.pk</span></code> (a pickled
 DataFrame) with the default <code class="docutils literal notranslate"><span class="pre">calc_dir='calc'</span></code>. You can turn that off using
 <code class="docutils literal notranslate"><span class="pre">save=False</span></code> if you want. If you run <code class="docutils literal notranslate"><span class="pre">ps.run_local()</span></code> again</p>
@@ -426,7 +427,7 @@ session when you pass in <code class="docutils literal notranslate"><span class=
 </div>
 </section>
 <section id="special-database-fields-and-repeated-runs">
-<h1>Special database fields and repeated runs<a class="headerlink" href="#special-database-fields-and-repeated-runs" title="Permalink to this headline">¶</a></h1>
+<h1>Special database fields and repeated runs<a class="headerlink" href="#special-database-fields-and-repeated-runs" title="Permalink to this heading">¶</a></h1>
 <p>See <code class="docutils literal notranslate"><span class="pre">examples/*repeat.py</span></code>.</p>
 <p>It is important to get the difference between the two special fields
 <code class="docutils literal notranslate"><span class="pre">_run_id</span></code> and <code class="docutils literal notranslate"><span class="pre">_pset_id</span></code>, the most important one being <code class="docutils literal notranslate"><span class="pre">_pset_id</span></code>.</p>
@@ -471,7 +472,7 @@ the same pset, e.g. an exact repetition of one experiment. But since we use
 UUIDs for <code class="docutils literal notranslate"><span class="pre">_pset_id</span></code>, those calculations can still be distinguished.</p>
 </section>
 <section id="best-practices">
-<h1>Best practices<a class="headerlink" href="#best-practices" title="Permalink to this headline">¶</a></h1>
+<h1>Best practices<a class="headerlink" href="#best-practices" title="Permalink to this heading">¶</a></h1>
 <p>The following workflows and practices come from experience. They are, if
 you will, the “framework” for how to do things. However, we decided to
 not codify any of these ideas but to only provide tools to make them
@@ -480,7 +481,7 @@ requirements and workflows.</p>
 <p>Please also have a look at the <code class="docutils literal notranslate"><span class="pre">examples/</span></code> dir where we document these
 and more common workflows.</p>
 <section id="save-data-on-disk-use-uuids">
-<h2>Save data on disk, use UUIDs<a class="headerlink" href="#save-data-on-disk-use-uuids" title="Permalink to this headline">¶</a></h2>
+<h2>Save data on disk, use UUIDs<a class="headerlink" href="#save-data-on-disk-use-uuids" title="Permalink to this heading">¶</a></h2>
 <p>Assume that you need to save results from a <code class="docutils literal notranslate"><span class="pre">func()</span></code> call not only in the
 returned dict from <code class="docutils literal notranslate"><span class="pre">func</span></code> (or even not at all!) but on disk, for instance when
 you call an external program which saves data on disk. Consider this toy
@@ -549,7 +550,7 @@ by a UUID that will never change. This is the only kind of naming
 convention which makes sense in the long run.</p>
 </section>
 <section id="post-processing">
-<h2>Post-processing<a class="headerlink" href="#post-processing" title="Permalink to this headline">¶</a></h2>
+<h2>Post-processing<a class="headerlink" href="#post-processing" title="Permalink to this heading">¶</a></h2>
 <p>An example of a simple post-processing script that reads data from disk
 (<code class="docutils literal notranslate"><span class="pre">examples/save_data_on_disk/20eval.py</span></code>):</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">df_read</span><span class="p">(</span><span class="s2">&quot;calc/database.pk&quot;</span><span class="p">)</span>
@@ -572,7 +573,7 @@ convention which makes sense in the long run.</p>
 </div>
 </section>
 <section id="iterative-extension-of-a-parameter-study">
-<h2>Iterative extension of a parameter study<a class="headerlink" href="#iterative-extension-of-a-parameter-study" title="Permalink to this headline">¶</a></h2>
+<h2>Iterative extension of a parameter study<a class="headerlink" href="#iterative-extension-of-a-parameter-study" title="Permalink to this heading">¶</a></h2>
 <p>See <code class="docutils literal notranslate"><span class="pre">examples/multiple_local_1d_scans/</span></code> and <code class="docutils literal notranslate"><span class="pre">examples/*repeat*</span></code>.</p>
 <p>You can backup old calc dirs when repeating calls to <code class="docutils literal notranslate"><span class="pre">ps.run_local()</span></code> using the
 <code class="docutils literal notranslate"><span class="pre">backup</span></code> keyword.</p>
@@ -600,7 +601,7 @@ study again. You will modify <code class="docutils literal notranslate"><span cl
 study.</p>
 </section>
 <section id="use-git">
-<h2>Use git<a class="headerlink" href="#use-git" title="Permalink to this headline">¶</a></h2>
+<h2>Use git<a class="headerlink" href="#use-git" title="Permalink to this heading">¶</a></h2>
 <p>Instead or in addition to using</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">run_local</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">backup</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 </pre></div>
@@ -631,7 +632,7 @@ message containing the current <code class="docutils literal notranslate"><span 
 </pre></div>
 </div>
 <section id="how-to-handle-large-files-when-using-git">
-<h3>How to handle large files when using git<a class="headerlink" href="#how-to-handle-large-files-when-using-git" title="Permalink to this headline">¶</a></h3>
+<h3>How to handle large files when using git<a class="headerlink" href="#how-to-handle-large-files-when-using-git" title="Permalink to this heading">¶</a></h3>
 <p>The first option is to <code class="docutils literal notranslate"><span class="pre">.gitignore</span></code> them. Another is to use
 <a class="reference external" href="https://git-lfs.github.com"><code class="docutils literal notranslate"><span class="pre">git-lfs</span></code></a> (see the section on that later). That way you track their
 changes but only store the most recent version. Or you leave those files on
@@ -642,7 +643,7 @@ building blocks.</p>
 </section>
 </section>
 <section id="simulate-dry-run-look-before-you-leap">
-<h2>Simulate / Dry-Run: look before you leap<a class="headerlink" href="#simulate-dry-run-look-before-you-leap" title="Permalink to this headline">¶</a></h2>
+<h2>Simulate / Dry-Run: look before you leap<a class="headerlink" href="#simulate-dry-run-look-before-you-leap" title="Permalink to this heading">¶</a></h2>
 <p>See <code class="docutils literal notranslate"><span class="pre">examples/vary_1_param_simulate.py</span></code>.</p>
 <p>When you fiddle with finding the next good <code class="docutils literal notranslate"><span class="pre">params</span></code> and even when using
 <code class="docutils literal notranslate"><span class="pre">backup</span></code> and/or <code class="docutils literal notranslate"><span class="pre">git</span></code>, appending to the old database might be
@@ -670,7 +671,7 @@ $ cp calc/database.pk calc.simulate/
 real run, but in a safe separate dir which you can delete later.</p>
 </section>
 <section id="advanced-give-runs-names-for-easy-post-processing">
-<h2>Advanced: Give runs names for easy post-processing<a class="headerlink" href="#advanced-give-runs-names-for-easy-post-processing" title="Permalink to this headline">¶</a></h2>
+<h2>Advanced: Give runs names for easy post-processing<a class="headerlink" href="#advanced-give-runs-names-for-easy-post-processing" title="Permalink to this heading">¶</a></h2>
 <p>See <code class="docutils literal notranslate"><span class="pre">examples/vary_1_param_study_column.py</span></code>.</p>
 <p>Post-processing is not the scope of the package. The database is a
 pandas DataFrame and that’s it. You can query it and use your full pandas
@@ -730,7 +731,7 @@ change the “study” column at any time, or delete it again.</p>
 </section>
 </section>
 <section id="remote-cluster-batch-runs">
-<h1>Remote cluster batch runs<a class="headerlink" href="#remote-cluster-batch-runs" title="Permalink to this headline">¶</a></h1>
+<h1>Remote cluster batch runs<a class="headerlink" href="#remote-cluster-batch-runs" title="Permalink to this heading">¶</a></h1>
 <p>We have experimental support for managing calculations on remote systems such
 as HPC clusters with a batch system like SLURM. It is basically a modernized
 and stripped-down version of
@@ -752,7 +753,7 @@ install <code class="docutils literal notranslate"><span class="pre">psweep</spa
 Since we actually don’t start jobs or talk to the batch system, you have full
 control over every part of the workflow. We just automate the boring stuff.</p>
 <section id="workflow-summary">
-<h2>Workflow summary<a class="headerlink" href="#workflow-summary" title="Permalink to this headline">¶</a></h2>
+<h2>Workflow summary<a class="headerlink" href="#workflow-summary" title="Permalink to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>define <code class="docutils literal notranslate"><span class="pre">params</span></code> to be varied as shown above (probably in a script, say
 <code class="docutils literal notranslate"><span class="pre">input.py</span></code>)</p></li>
@@ -819,7 +820,7 @@ commands still in there, but commented out</p></li>
 </ul>
 </section>
 <section id="templates-layout-and-written-files">
-<h2>Templates layout and written files<a class="headerlink" href="#templates-layout-and-written-files" title="Permalink to this headline">¶</a></h2>
+<h2>Templates layout and written files<a class="headerlink" href="#templates-layout-and-written-files" title="Permalink to this heading">¶</a></h2>
 <p>An example template dir, based on <code class="docutils literal notranslate"><span class="pre">examples/batch_with_git</span></code>:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>templates
 ├── calc
@@ -834,13 +835,13 @@ commands still in there, but commented out</p></li>
 </pre></div>
 </div>
 <section id="calc-templates">
-<h3>calc templates<a class="headerlink" href="#calc-templates" title="Permalink to this headline">¶</a></h3>
+<h3>calc templates<a class="headerlink" href="#calc-templates" title="Permalink to this heading">¶</a></h3>
 <p>Each file in <code class="docutils literal notranslate"><span class="pre">templates/calc</span></code> such as <code class="docutils literal notranslate"><span class="pre">run.py</span></code> will be treated as
 template, goes thru the file template machinery and ends up in
 <code class="docutils literal notranslate"><span class="pre">calc/&lt;_pset_id&gt;/</span></code>.</p>
 </section>
 <section id="machine-templates">
-<h3>machine templates<a class="headerlink" href="#machine-templates" title="Permalink to this headline">¶</a></h3>
+<h3>machine templates<a class="headerlink" href="#machine-templates" title="Permalink to this heading">¶</a></h3>
 <p>The example above has machine templates for 2 machines, “local” and a
 remote machine named “cluster”. <code class="docutils literal notranslate"><span class="pre">psweep</span></code> will generate <code class="docutils literal notranslate"><span class="pre">run_&lt;machine&gt;.sh</span></code>
 for both. Also you must provide a file <code class="docutils literal notranslate"><span class="pre">info.yaml</span></code> to store
@@ -903,7 +904,7 @@ calc/65b7b453-96ec-4694-a0c4-4f71c53d982a
 </section>
 </section>
 <section id="git-support">
-<h2>git support<a class="headerlink" href="#git-support" title="Permalink to this headline">¶</a></h2>
+<h2>git support<a class="headerlink" href="#git-support" title="Permalink to this heading">¶</a></h2>
 <p>Use <code class="docutils literal notranslate"><span class="pre">prep_batch(...,</span> <span class="pre">git=True)</span></code> to have some basic git support such as
 automatic commits in each call. It just uses <code class="docutils literal notranslate"><span class="pre">run_local(...,</span> <span class="pre">git=True)</span></code> when
 creating batch scripts, so all best practices for that apply here as well. In
@@ -913,7 +914,7 @@ for example.</p>
 </section>
 </section>
 <section id="install">
-<h1>Install<a class="headerlink" href="#install" title="Permalink to this headline">¶</a></h1>
+<h1>Install<a class="headerlink" href="#install" title="Permalink to this heading">¶</a></h1>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$ pip install psweep
 </pre></div>
 </div>
@@ -924,15 +925,15 @@ for example.</p>
 <p>See also <a class="reference external" href="https://github.com/elcorto/samplepkg">https://github.com/elcorto/samplepkg</a>.</p>
 </section>
 <section id="tests">
-<h1>Tests<a class="headerlink" href="#tests" title="Permalink to this headline">¶</a></h1>
+<h1>Tests<a class="headerlink" href="#tests" title="Permalink to this heading">¶</a></h1>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$ pytest
 </pre></div>
 </div>
 </section>
 <section id="special-topics">
-<h1>Special topics<a class="headerlink" href="#special-topics" title="Permalink to this headline">¶</a></h1>
+<h1>Special topics<a class="headerlink" href="#special-topics" title="Permalink to this heading">¶</a></h1>
 <section id="how-to-migrate-a-normal-git-repo-to-git-lfs">
-<h2>How to migrate a normal <code class="docutils literal notranslate"><span class="pre">git</span></code> repo to <code class="docutils literal notranslate"><span class="pre">git-lfs</span></code><a class="headerlink" href="#how-to-migrate-a-normal-git-repo-to-git-lfs" title="Permalink to this headline">¶</a></h2>
+<h2>How to migrate a normal <code class="docutils literal notranslate"><span class="pre">git</span></code> repo to <code class="docutils literal notranslate"><span class="pre">git-lfs</span></code><a class="headerlink" href="#how-to-migrate-a-normal-git-repo-to-git-lfs" title="Permalink to this heading">¶</a></h2>
 <p>First we’ll quickly mention how to set up LFS in a <em>new</em> repo. In this case we
 just need to configure <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">lfs</span></code> to track certain files. We’ll use dirs
 <code class="docutils literal notranslate"><span class="pre">_pics/</span></code> and <code class="docutils literal notranslate"><span class="pre">calc/</span></code> as examples.</p>
@@ -988,7 +989,7 @@ $ cat _pics/foo.png
 </section>
 </section>
 <section id="scope-and-related-projects">
-<h1>Scope and related projects<a class="headerlink" href="#scope-and-related-projects" title="Permalink to this headline">¶</a></h1>
+<h1>Scope and related projects<a class="headerlink" href="#scope-and-related-projects" title="Permalink to this heading">¶</a></h1>
 <p>This project aims to be easy to set up and use with as few dependencies and new
 concepts to learn as possible. We strive to use standard Python data structures
 (dicts) and functionality (itertools) as well as widely available third party
@@ -1047,7 +1048,7 @@ implemented here.</p>
       &copy;2022, Steve Schmerler.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.5.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.0.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
