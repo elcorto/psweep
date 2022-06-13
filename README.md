@@ -121,8 +121,8 @@ combinations. Inside that, each call `func(pset)` creates a UUID `_pset_id` and
 a new row in the DataFrame (the database). In addition we also add sequential
 integer IDs `_run_seq` and `_pset_seq` for convenience, as well as an
 additional hash `_pset_sha1` over the input dict (`pset` in the example) to
-`func()`. `_pset_runtime` is the time of one `func()` call. `_pset_id` is the
-same as the index `df.index`.
+`func()`. `_pset_runtime` is the time of one `func()` call. `_pset_seq` is the
+same as the integer index `df.index`.
 
 
 # Concepts
