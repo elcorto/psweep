@@ -1028,6 +1028,7 @@ def prep_batch(
     machine_templ_dir: str = "templates/machines",
     git: bool = False,
     backup: bool = False,
+    write_pset: bool = False,
 ) -> pd.DataFrame:
 
     """
@@ -1045,6 +1046,8 @@ def prep_batch(
                 pj(calc_dir, pset["_pset_id"], template.targetname),
                 template.fill(pset),
             )
+            if write_pset:
+                pickle_write(pj(calc_dir, pset["_pset_id"], "pset.pk"), pset)
         return {}
 
     df = run_local(worker, params, calc_dir=calc_dir, backup=backup, git=False)
