@@ -1060,7 +1060,7 @@ def prep_batch(
             if msk.any():
                 txt += "\n"
             txt += "\n".join(
-                f"{pfx}cd {pset_id}; {machine.subcmd} {machine.template.targetname}; cd $here  # run_seq={run_seq} pset_seq={pset_seq}"
+                f"{pfx}cd $here/{pset_id}; {machine.subcmd} {machine.template.targetname}  # run_seq={run_seq} pset_seq={pset_seq}"
                 for pset_id, pset_seq, run_seq in zip(
                     df[msk]._pset_id.values,
                     df[msk]._pset_seq.values,
@@ -1069,7 +1069,7 @@ def prep_batch(
             )
         file_write(
             f"{calc_dir}/run_{machine.name}.sh",
-            f"#!/bin/sh\n\nhere=$(pwd)\n{txt}\n",
+            f"#!/bin/sh\n\nhere=$(readlink -f $(dirname $0))\n{txt}\n",
         )
 
     git_exit(git, df)
