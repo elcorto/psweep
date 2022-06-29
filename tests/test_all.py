@@ -238,7 +238,7 @@ def test_df_io():
                     set(ri(0, 99, 10)),
                 ]
             row = pd.DataFrame([dict(zip(letters, vals))])
-            df = df.append(row, ignore_index=True)
+            df = pd.concat((df, row), ignore_index=True)
 
         if fmt == "json":
             for orient in [
