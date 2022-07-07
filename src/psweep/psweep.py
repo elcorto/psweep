@@ -370,19 +370,31 @@ def df_to_json(df: pd.DataFrame, **kwds) -> str:
     return df.to_json(**kwds)
 
 
-def df_write(df: pd.DataFrame, fn: str, fmt="pickle", **kwds) -> None:
+def df_write(fn: str, df: pd.DataFrame, fmt="pickle", **kwds) -> None:
     """Write DataFrame to disk.
 
     Parameters
     ----------
-    df : DataFrame
     fn :
         filename
+    df : DataFrame
     fmt :
         ``{'pickle', 'json'}``
     kwds :
         passed to ``pickle.dump()`` or :func:`df_to_json`
     """
+    _swapped_args_err_msg = (
+        "Deprecated API in df_write(), use df_write(filename, df)"
+    )
+    if isinstance(fn, pd.DataFrame) or isinstance(df, str):
+        if isinstance(fn, pd.DataFrame) and isinstance(df, str):
+            warnings.warn(_swapped_args_err_msg, DeprecationWarning)
+            tmp_fn = df
+            df = fn
+            fn = tmp_fn
+        else:
+            raise ValueError(_swapped_args_err_msg)
+
     makedirs(os.path.dirname(fn))
     if fmt == "pickle":
         with open(fn, "wb") as fd:
@@ -390,7 +402,7 @@ def df_write(df: pd.DataFrame, fn: str, fmt="pickle", **kwds) -> None:
     elif fmt == "json":
         df_to_json(df, path_or_buf=fn, **kwds)
     else:
-        raise Exception("unknown fmt: {}".format(fmt))
+        raise ValueError("unknown fmt: {}".format(fmt))
 
 
 def df_read(fn: str, fmt="pickle", **kwds):
@@ -404,7 +416,7 @@ def df_read(fn: str, fmt="pickle", **kwds):
             fn, precise_float=True, orient=orient, **kwds
         )
     else:
-        raise Exception("unknown fmt: {}".format(fmt))
+        raise ValueError("unknown fmt: {}".format(fmt))
 
 
 def df_print(
@@ -802,7 +814,7 @@ def worker_wrapper(
     df_row = pd.DataFrame([_pset])
     if tmpsave:
         fn = pj(calc_dir, "tmpsave", run_id, pset_id + ".pk")
-        df_write(df_row, fn)
+        df_write(fn, df_row)
     return df_row
 
 
@@ -945,7 +957,7 @@ def run_local(
         df = pd.concat((df, df_row), sort=False, ignore_index=True)
 
     if save:
-        df_write(df, database_fn)
+        df_write(database_fn, df)
 
     git_exit(git, df)
 

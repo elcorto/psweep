@@ -252,15 +252,15 @@ def test_df_io():
                 print("orient: ", orient)
                 with tempfile.NamedTemporaryFile() as fd:
                     if orient != "_default_":
-                        ps.df_write(df, fd.name, fmt=fmt, orient=orient)
+                        ps.df_write(fd.name, df, fmt=fmt, orient=orient)
                         read = ps.df_read(fd.name, fmt=fmt, orient=orient)
                     else:
-                        ps.df_write(df, fd.name, fmt=fmt)
+                        ps.df_write(fd.name, df, fmt=fmt)
                         read = ps.df_read(fd.name, fmt=fmt)
                     assert_frame_equal(df, read, check_exact=False)
         elif fmt == "pickle":
             with tempfile.NamedTemporaryFile() as fd:
-                ps.df_write(df, fd.name, fmt=fmt)
+                ps.df_write(fd.name, df, fmt=fmt)
                 read = ps.df_read(fd.name, fmt=fmt)
                 assert_frame_equal(df, read)
         else:
