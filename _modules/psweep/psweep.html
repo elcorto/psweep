@@ -1120,6 +1120,7 @@
     <span class="n">machine_templ_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;templates/machines&quot;</span><span class="p">,</span>
     <span class="n">git</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">backup</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">write_pset</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 
     <span class="sd">&quot;&quot;&quot;</span>
@@ -1137,6 +1138,8 @@
                 <span class="n">pj</span><span class="p">(</span><span class="n">calc_dir</span><span class="p">,</span> <span class="n">pset</span><span class="p">[</span><span class="s2">&quot;_pset_id&quot;</span><span class="p">],</span> <span class="n">template</span><span class="o">.</span><span class="n">targetname</span><span class="p">),</span>
                 <span class="n">template</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="n">pset</span><span class="p">),</span>
             <span class="p">)</span>
+            <span class="k">if</span> <span class="n">write_pset</span><span class="p">:</span>
+                <span class="n">pickle_write</span><span class="p">(</span><span class="n">pj</span><span class="p">(</span><span class="n">calc_dir</span><span class="p">,</span> <span class="n">pset</span><span class="p">[</span><span class="s2">&quot;_pset_id&quot;</span><span class="p">],</span> <span class="s2">&quot;pset.pk&quot;</span><span class="p">),</span> <span class="n">pset</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">{}</span>
 
     <span class="n">df</span> <span class="o">=</span> <span class="n">run_local</span><span class="p">(</span><span class="n">worker</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">calc_dir</span><span class="o">=</span><span class="n">calc_dir</span><span class="p">,</span> <span class="n">backup</span><span class="o">=</span><span class="n">backup</span><span class="p">,</span> <span class="n">git</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -1149,7 +1152,7 @@
             <span class="k">if</span> <span class="n">msk</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
                 <span class="n">txt</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
             <span class="n">txt</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-                <span class="n">f</span><span class="s2">&quot;</span><span class="si">{pfx}</span><span class="s2">cd </span><span class="si">{pset_id}</span><span class="s2">; </span><span class="si">{machine.subcmd}</span><span class="s2"> </span><span class="si">{machine.template.targetname}</span><span class="s2">; cd $here  # run_seq=</span><span class="si">{run_seq}</span><span class="s2"> pset_seq=</span><span class="si">{pset_seq}</span><span class="s2">&quot;</span>
+                <span class="n">f</span><span class="s2">&quot;</span><span class="si">{pfx}</span><span class="s2">cd $here/</span><span class="si">{pset_id}</span><span class="s2">; </span><span class="si">{machine.subcmd}</span><span class="s2"> </span><span class="si">{machine.template.targetname}</span><span class="s2">  # run_seq=</span><span class="si">{run_seq}</span><span class="s2"> pset_seq=</span><span class="si">{pset_seq}</span><span class="s2">&quot;</span>
                 <span class="k">for</span> <span class="n">pset_id</span><span class="p">,</span> <span class="n">pset_seq</span><span class="p">,</span> <span class="n">run_seq</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
                     <span class="n">df</span><span class="p">[</span><span class="n">msk</span><span class="p">]</span><span class="o">.</span><span class="n">_pset_id</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
                     <span class="n">df</span><span class="p">[</span><span class="n">msk</span><span class="p">]</span><span class="o">.</span><span class="n">_pset_seq</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
@@ -1158,7 +1161,7 @@
             <span class="p">)</span>
         <span class="n">file_write</span><span class="p">(</span>
             <span class="n">f</span><span class="s2">&quot;</span><span class="si">{calc_dir}</span><span class="s2">/run_</span><span class="si">{machine.name}</span><span class="s2">.sh&quot;</span><span class="p">,</span>
-            <span class="n">f</span><span class="s2">&quot;#!/bin/sh</span><span class="se">\n\n</span><span class="s2">here=$(pwd)</span><span class="se">\n</span><span class="si">{txt}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="n">f</span><span class="s2">&quot;#!/bin/sh</span><span class="se">\n\n</span><span class="s2">here=$(readlink -f $(dirname $0))</span><span class="se">\n</span><span class="si">{txt}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span>
         <span class="p">)</span>
 
     <span class="n">git_exit</span><span class="p">(</span><span class="n">git</span><span class="p">,</span> <span class="n">df</span><span class="p">)</span>
@@ -1176,7 +1179,7 @@
       &copy;2022, Steve Schmerler.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.0.1</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.0.2</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
     </div>
