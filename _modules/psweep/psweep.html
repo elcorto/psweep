@@ -462,19 +462,31 @@
     <span class="k">return</span> <span class="n">df</span><span class="o">.</span><span class="n">to_json</span><span class="p">(</span><span class="o">**</span><span class="n">kwds</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="df_write"><a class="viewcode-back" href="../../generated/api/psweep.psweep.df_write.html#psweep.psweep.df_write">[docs]</a><span class="k">def</span> <span class="nf">df_write</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">fn</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s2">&quot;pickle&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="df_write"><a class="viewcode-back" href="../../generated/api/psweep.psweep.df_write.html#psweep.psweep.df_write">[docs]</a><span class="k">def</span> <span class="nf">df_write</span><span class="p">(</span><span class="n">fn</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s2">&quot;pickle&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Write DataFrame to disk.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    df : DataFrame</span>
 <span class="sd">    fn :</span>
 <span class="sd">        filename</span>
+<span class="sd">    df : DataFrame</span>
 <span class="sd">    fmt :</span>
 <span class="sd">        ``{&#39;pickle&#39;, &#39;json&#39;}``</span>
 <span class="sd">    kwds :</span>
 <span class="sd">        passed to ``pickle.dump()`` or :func:`df_to_json`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_swapped_args_err_msg</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;Deprecated API in df_write(), use df_write(filename, df)&quot;</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="n">_swapped_args_err_msg</span><span class="p">,</span> <span class="ne">DeprecationWarning</span><span class="p">)</span>
+            <span class="n">tmp_fn</span> <span class="o">=</span> <span class="n">df</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="n">fn</span>
+            <span class="n">fn</span> <span class="o">=</span> <span class="n">tmp_fn</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">_swapped_args_err_msg</span><span class="p">)</span>
+
     <span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">fn</span><span class="p">))</span>
     <span class="k">if</span> <span class="n">fmt</span> <span class="o">==</span> <span class="s2">&quot;pickle&quot;</span><span class="p">:</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fd</span><span class="p">:</span>
@@ -482,7 +494,7 @@
     <span class="k">elif</span> <span class="n">fmt</span> <span class="o">==</span> <span class="s2">&quot;json&quot;</span><span class="p">:</span>
         <span class="n">df_to_json</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">path_or_buf</span><span class="o">=</span><span class="n">fn</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;unknown fmt: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fmt</span><span class="p">))</span></div>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;unknown fmt: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fmt</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="df_read"><a class="viewcode-back" href="../../generated/api/psweep.psweep.df_read.html#psweep.psweep.df_read">[docs]</a><span class="k">def</span> <span class="nf">df_read</span><span class="p">(</span><span class="n">fn</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s2">&quot;pickle&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">):</span>
@@ -496,7 +508,7 @@
             <span class="n">fn</span><span class="p">,</span> <span class="n">precise_float</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">orient</span><span class="o">=</span><span class="n">orient</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span>
         <span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;unknown fmt: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fmt</span><span class="p">))</span></div>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;unknown fmt: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fmt</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="df_print"><a class="viewcode-back" href="../../generated/api/psweep.psweep.df_print.html#psweep.psweep.df_print">[docs]</a><span class="k">def</span> <span class="nf">df_print</span><span class="p">(</span>
@@ -894,7 +906,7 @@
     <span class="n">df_row</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span><span class="n">_pset</span><span class="p">])</span>
     <span class="k">if</span> <span class="n">tmpsave</span><span class="p">:</span>
         <span class="n">fn</span> <span class="o">=</span> <span class="n">pj</span><span class="p">(</span><span class="n">calc_dir</span><span class="p">,</span> <span class="s2">&quot;tmpsave&quot;</span><span class="p">,</span> <span class="n">run_id</span><span class="p">,</span> <span class="n">pset_id</span> <span class="o">+</span> <span class="s2">&quot;.pk&quot;</span><span class="p">)</span>
-        <span class="n">df_write</span><span class="p">(</span><span class="n">df_row</span><span class="p">,</span> <span class="n">fn</span><span class="p">)</span>
+        <span class="n">df_write</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">df_row</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">df_row</span></div>
 
 
@@ -1037,7 +1049,7 @@
         <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">((</span><span class="n">df</span><span class="p">,</span> <span class="n">df_row</span><span class="p">),</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">save</span><span class="p">:</span>
-        <span class="n">df_write</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">database_fn</span><span class="p">)</span>
+        <span class="n">df_write</span><span class="p">(</span><span class="n">database_fn</span><span class="p">,</span> <span class="n">df</span><span class="p">)</span>
 
     <span class="n">git_exit</span><span class="p">(</span><span class="n">git</span><span class="p">,</span> <span class="n">df</span><span class="p">)</span>
 
