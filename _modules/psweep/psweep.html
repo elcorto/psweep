@@ -113,6 +113,8 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
+<span class="kn">import</span> <span class="nn">joblib</span>
+
 <span class="n">pj</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span>
 
 <span class="c1"># defaults, globals</span>
@@ -237,12 +239,10 @@
     <span class="c1">#     &gt;&gt;&gt; hash(&quot;12&quot;)</span>
     <span class="c1">#     4021864388667373027</span>
     <span class="c1">#</span>
-    <span class="c1"># We only try to hash a dict if it is json-serializable. Things which</span>
-    <span class="c1"># aren&#39;t are also not hashable in a reproducible fashion w/o spending much</span>
-    <span class="c1"># more work to solve the problem. We can&#39;t hash, say, the pickled byte</span>
-    <span class="c1"># string of some object (e.g. ``hash(pickle.dumps(obj))``), b/c that may</span>
-    <span class="c1"># contain a ref to its memory location which is not what we&#39;re interested</span>
-    <span class="c1"># in. Similarly, also using ``repr`` is not reproducible::</span>
+    <span class="c1"># We can&#39;t hash, say, the pickled byte string of some object (e.g.</span>
+    <span class="c1"># ``hash(pickle.dumps(obj))``), b/c that may contain a ref to its memory</span>
+    <span class="c1"># location which is not what we&#39;re interested in. Similarly, also using</span>
+    <span class="c1"># ``repr`` is not reproducible::</span>
     <span class="c1">#</span>
     <span class="c1">#     &gt;&gt;&gt; class Foo:</span>
     <span class="c1">#     ...     pass</span>
@@ -253,14 +253,11 @@
     <span class="c1">#     &#39;&lt;__main__.Foo object at 0x7fcc732034c0&gt;&#39;</span>
     <span class="c1">#</span>
     <span class="c1"># even though for our purpose, we&#39;d consider the two instances of ``Foo`` to</span>
-    <span class="c1"># be the same. Better be safe and return NaN in that case.</span>
+    <span class="c1"># be the same.</span>
     <span class="c1">#</span>
     <span class="c1"># The same observations have been also made elsewhere [1,2]. Esp. [2]</span>
     <span class="c1"># points to [3] which in turn mentions joblib.hashing.hash(). It&#39;s code</span>
-    <span class="c1"># shows how complex the problem is. We may try joblib&#39;s solution in the</span>
-    <span class="c1"># future should this feature become so important that we need to require</span>
-    <span class="c1"># hashes to work or else fail. ATM we treat pset hashes on a best effort</span>
-    <span class="c1"># basis b/c we don&#39;t have strong use cases for them just yet.</span>
+    <span class="c1"># shows how complex the problem is, but so far this is our best bet.</span>
     <span class="c1">#</span>
     <span class="c1"># [1] https://death.andgravity.com/stable-hashing</span>
     <span class="c1"># [2] https://ourpython.com/python/deterministic-recursive-hashing-in-python</span>
@@ -271,9 +268,11 @@
             <span class="n">_dct</span> <span class="o">=</span> <span class="p">{</span><span class="n">kk</span><span class="p">:</span> <span class="n">dct</span><span class="p">[</span><span class="n">kk</span><span class="p">]</span> <span class="k">for</span> <span class="n">kk</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">}</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">_dct</span> <span class="o">=</span> <span class="n">dct</span>
-        <span class="n">h</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">method</span><span class="p">)</span>
-        <span class="n">h</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">_dct</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span>
-        <span class="k">return</span> <span class="n">h</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">joblib</span><span class="o">.</span><span class="n">hash</span><span class="p">(</span><span class="n">_dct</span><span class="p">,</span> <span class="n">hash_name</span><span class="o">=</span><span class="n">method</span><span class="p">)</span>
+    <span class="c1"># joblib can hash &quot;anything&quot; so we didn&#39;t come up with an input that</span>
+    <span class="c1"># actually fails to hash. As such, TypeError is just a guess here. But</span>
+    <span class="c1"># still we don&#39;t catch ValueError raised when an invalid hash_name is</span>
+    <span class="c1"># passed (anything other than md5 or sha1).</span>
     <span class="k">except</span> <span class="ne">TypeError</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">raise_error</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">PsweepHashError</span><span class="p">(</span>
@@ -881,14 +880,13 @@
     <span class="k">assert</span> <span class="n">calc_dir</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
     <span class="n">pset_id</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">())</span>
     <span class="n">_pset</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">pset</span><span class="p">)</span>
-    <span class="n">hash_alg</span> <span class="o">=</span> <span class="n">PSET_HASH_ALG</span>
     <span class="n">time_start</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">(),</span> <span class="n">unit</span><span class="o">=</span><span class="n">PANDAS_TIME_UNIT</span><span class="p">)</span>
     <span class="n">update</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">&quot;_run_id&quot;</span><span class="p">:</span> <span class="n">run_id</span><span class="p">,</span>
         <span class="s2">&quot;_pset_id&quot;</span><span class="p">:</span> <span class="n">pset_id</span><span class="p">,</span>
         <span class="s2">&quot;_calc_dir&quot;</span><span class="p">:</span> <span class="n">calc_dir</span><span class="p">,</span>
         <span class="s2">&quot;_time_utc&quot;</span><span class="p">:</span> <span class="n">time_start</span><span class="p">,</span>
-        <span class="n">f</span><span class="s2">&quot;_pset_</span><span class="si">{hash_alg}</span><span class="s2">&quot;</span><span class="p">:</span> <span class="n">pset_hash</span><span class="p">(</span><span class="n">pset</span><span class="p">,</span> <span class="n">hash_alg</span><span class="p">,</span> <span class="n">raise_error</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+        <span class="s2">&quot;_pset_hash&quot;</span><span class="p">:</span> <span class="n">pset_hash</span><span class="p">(</span><span class="n">pset</span><span class="p">,</span> <span class="n">PSET_HASH_ALG</span><span class="p">,</span> <span class="n">raise_error</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
         <span class="s2">&quot;_pset_seq&quot;</span><span class="p">:</span> <span class="n">pset_seq</span><span class="p">,</span>
         <span class="s2">&quot;_run_seq&quot;</span><span class="p">:</span> <span class="n">run_seq</span><span class="p">,</span>
     <span class="p">}</span>
@@ -1191,7 +1189,7 @@
       &copy;2022, Steve Schmerler.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.0.2</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.1.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
     </div>
