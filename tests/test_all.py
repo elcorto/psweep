@@ -593,17 +593,35 @@ def test_itr():
     assert [1, 2] == func(gen([1, 2]))
 
 
-def test_filter_same_hash():
+def test_filter_params_unique():
     params = [
-        dict(a=1, b=2, c=3),
-        dict(a=1, b=2, c=3),
+        dict(a=1, b=2, c=3),  # same!
+        dict(a=1, b=2, c=3),  # same!
         dict(a=1, b=2, c=444),
     ]
 
-    params_filt = ps.filter_same_hash(params)
+    params_filt = ps.filter_params_unique(params)
     assert len(params_filt) == 2
     for idx in [0, 2]:
         assert params[idx] in params_filt
+
+
+def test_filter_params_dup_hash():
+    params = [
+        dict(a=1, b=2, c=3),  # same!
+        dict(a=1, b=2, c=3),  # same!
+        dict(a=1, b=2, c=333),
+        dict(a=1, b=2, c=444),
+    ]
+
+    hashes = [ps.pset_hash(pset) for pset in params]
+    params_filt = ps.filter_params_dup_hash(params, hashes)
+    assert len(params_filt) == 0
+
+    hashes = [ps.pset_hash(pset) for pset in params[:3]]
+    params_filt = ps.filter_params_dup_hash(params, hashes)
+    assert len(params_filt) == 1
+    assert params_filt[0] == params[-1]
 
 
 def test_stargrid():
