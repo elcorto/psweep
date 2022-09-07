@@ -130,13 +130,19 @@ def test_run():
         df = ps.run_local(func, params, calc_dir=calc_dir)
         assert len(df) == 4
         assert len(df._run_id.unique()) == 1
+        assert len(df._pset_id) == 4
         assert len(df._pset_id.unique()) == 4
+        assert len(df._pset_hash) == 4
+        assert len(df._pset_hash.unique()) == 4
         df = ps.run_local(
             func, params, calc_dir=calc_dir, poolsize=2, tmpsave=True
         )
         assert len(df) == 8
         assert len(df._run_id.unique()) == 2
+        assert len(df._pset_id) == 8
         assert len(df._pset_id.unique()) == 8
+        assert len(df._pset_hash) == 8
+        assert len(df._pset_hash.unique()) == 4
         assert set(df.columns) == set(
             [
                 "_calc_dir",
