@@ -696,6 +696,24 @@ def filter_same_hash(*args, **kwds):
     return filter_params_unique(*args, **kwds)
 
 
+def filter_params_dup_hash(
+    params: Sequence[dict], hashes: Sequence[str], **kwds
+) -> Sequence[dict]:
+    """Return params with psets whose hash is not in `hashes`.
+
+    Use pset["_pset_hash"]  if present, else calculate hash on the fly.
+
+    Parameters
+    ----------
+    params
+    hashes
+    kwds
+        passed to :func:`pset_hash`
+    """
+    get_hash = lambda pset: pset.get("_pset_hash", pset_hash(pset, **kwds))
+    return [pset for pset in params if not get_hash(pset) in hashes]
+
+
 def stargrid(
     const: dict,
     vary: Sequence[dict],
