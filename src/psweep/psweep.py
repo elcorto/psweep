@@ -168,17 +168,18 @@ def pset_hash(
     # [1] https://death.andgravity.com/stable-hashing
     # [2] https://ourpython.com/python/deterministic-recursive-hashing-in-python
     # [3] https://stackoverflow.com/a/52175075
-    try:
-        if skip_special_cols:
-            keys = [x for x in dct.keys() if not x.startswith("_")]
-            _dct = {kk: dct[kk] for kk in keys}
-        else:
-            _dct = dct
-        return joblib.hash(_dct, hash_name=method)
+    if skip_special_cols:
+        _dct = {
+            key: val for key, val in dct.items() if not key.startswith("_")
+        }
+    else:
+        _dct = dct
     # joblib can hash "anything" so we didn't come up with an input that
     # actually fails to hash. As such, TypeError is just a guess here. But
     # still we don't catch ValueError raised when an invalid hash_name is
     # passed (anything other than md5 or sha1).
+    try:
+        return joblib.hash(_dct, hash_name=method)
     except TypeError as ex:
         if raise_error:
             raise PsweepHashError(
