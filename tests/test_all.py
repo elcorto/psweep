@@ -7,6 +7,7 @@ import tempfile
 import pickle
 import subprocess
 from itertools import product
+from contextlib import contextmanager
 
 import pandas as pd
 import numpy as np
@@ -31,6 +32,11 @@ def func(pset):
     # float dtype. Else the column will be cast to float once we add NaNs,
     # which breaks df.equals(other_df) .
     return {"result": pset["a"] * 10.0}
+
+
+@contextmanager
+def NoOpCtx():
+    yield None
 
 
 # ----------------------------------------------------------------------------
@@ -167,6 +173,58 @@ def test_run():
         for pset_id in df[df._run_id == run_id]._pset_id:
             tmpsave_fn = f"{calc_dir}/tmpsave/{run_id}/{pset_id}.pk"
             assert os.path.exists(tmpsave_fn)
+
+
+@pytest.mark.parametrize("use_disk", [True, False])
+def test_run_skip_dups(use_disk):
+    params = [{"a": 1}, {"a": 2}, {"a": 3}, {"a": 4}]
+    Ctx = tempfile.TemporaryDirectory if use_disk else NoOpCtx
+    with Ctx() as tmpdir:
+        # calc_dir is passed but not used if save=use_disk=False, so it
+        # doesn't matter that in this case tmpdir=None and so
+        # calc_dir="None/calc" as long as it is a string. The dir doesn't have
+        # to exist.
+        calc_dir = f"{tmpdir}/calc"
+
+        df1 = ps.run_local(
+            func,
+            params,
+            calc_dir=calc_dir,
+            save=use_disk,
+        )
+        assert len(df1) == 4
+        assert len(df1._run_id.unique()) == 1
+        assert len(df1._pset_id.unique()) == 4
+
+        # Run again w/ same params, but now skip_dups=True. This
+        # will cause no psets to be run. That's why df2 is equal to df1.
+        df2 = ps.run_local(
+            func,
+            params,
+            calc_dir=calc_dir,
+            df=None if use_disk else df1,
+            save=use_disk,
+            skip_dups=True,
+        )
+        assert df2.equals(df1)
+
+        # Now use params where a subset is new (last 2 entries).
+        params = [{"a": 1}, {"a": 2}, {"a": 88}, {"a": 99}]
+        df3 = ps.run_local(
+            func,
+            params,
+            calc_dir=calc_dir,
+            df=None if use_disk else df2,
+            save=use_disk,
+            skip_dups=True,
+        )
+        assert len(df3) == 6
+        assert len(df3._run_id.unique()) == 2
+        assert len(df3._pset_id.unique()) == 6
+        assert (
+            df3._pset_hash.to_list()
+            == df1._pset_hash.to_list() + df3._pset_hash.to_list()[-2:]
+        )
 
 
 def test_simulate():
