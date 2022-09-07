@@ -1102,6 +1102,7 @@ def prep_batch(
     git: bool = False,
     backup: bool = False,
     write_pset: bool = False,
+    skip_dups: bool = False,
 ) -> pd.DataFrame:
 
     """
@@ -1123,7 +1124,14 @@ def prep_batch(
                 pickle_write(pj(calc_dir, pset["_pset_id"], "pset.pk"), pset)
         return {}
 
-    df = run_local(worker, params, calc_dir=calc_dir, backup=backup, git=False)
+    df = run_local(
+        worker,
+        params,
+        calc_dir=calc_dir,
+        backup=backup,
+        skip_dups=skip_dups,
+        git=False,
+    )
 
     msk_latest = df._run_seq == df._run_seq.values.max()
     msk_old = df._run_seq < df._run_seq.values.max()
