@@ -671,19 +671,28 @@ def pgrid(plists):
     return itr2params(itertools.product(*plists))
 
 
-def filter_same_hash(params: Sequence[dict], **kwds) -> Sequence[dict]:
+def filter_params_unique(params: Sequence[dict], **kwds) -> Sequence[dict]:
     """Reduce params to unique psets.
+
+    Use pset["_pset_hash"]  if present, else calculate hash on the fly.
 
     Parameters
     ----------
-    params :
-    kwds :
+    params
+    kwds
         passed to :func:`pset_hash`
     """
-    msk = np.unique(
-        [pset_hash(dct, **kwds) for dct in params], return_index=True
-    )[1]
+    get_hash = lambda pset: pset.get("_pset_hash", pset_hash(pset, **kwds))
+    msk = np.unique([get_hash(pset) for pset in params], return_index=True)[1]
     return [params[ii] for ii in np.sort(msk)]
+
+
+def filter_same_hash(*args, **kwds):
+    warnings.warn(
+        "filter_same_hash() was renamed to filter_params_unique()",
+        DeprecationWarning,
+    )
+    return filter_params_unique(*args, **kwds)
 
 
 def stargrid(
@@ -700,10 +709,10 @@ def stargrid(
     values (middle of the "star").
 
     When doing that, duplicate psets can occur. By default try to filter them
-    out (use filter_same_hash()) but ignore hash calculation errors and return
+    out (use filter_params_unique()) but ignore hash calculation errors and return
     non-reduced params in that case. If you want to fail at hash errors, use
 
-    >>> filter_same_hash(stargrid(..., filter_dups=False), raise_error=True)
+    >>> filter_params_unique(stargrid(..., filter_dups=False), raise_error=True)
 
     Examples
     --------
@@ -762,7 +771,7 @@ def stargrid(
 
     if filter_dups:
         try:
-            return filter_same_hash(
+            return filter_params_unique(
                 params, raise_error=True, skip_special_cols=True
             )
         except PsweepHashError:
