@@ -876,6 +876,7 @@ def run_local(
     database_basename="database.pk",
     backup=False,
     git=False,
+    skip_dups=False,
 ) -> pd.DataFrame:
     """
     Call `worker` for each `pset` in `params`. Populate a DataFrame with rows
@@ -924,6 +925,9 @@ def run_local(
         Use ``git`` to commit all files written and changed by the current run
         (``_run_id``). Make sure to create a ``.gitignore`` manually before if
         needed.
+    skip_dups : bool
+        Skip psets whose hash is already present in `df`. Useful when repeating
+        (parts of) a study.
     """
 
     database_dir = calc_dir if database_dir is None else database_dir
@@ -973,6 +977,9 @@ def run_local(
         shutil.copytree(calc_dir, dst)
 
     params = add_hashes(params)
+
+    if skip_dups and len(df) > 0:
+        params = filter_params_dup_hash(params, df._pset_hash.values)
 
     run_id = str(uuid.uuid4())
 
