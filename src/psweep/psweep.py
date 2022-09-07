@@ -188,6 +188,17 @@ def pset_hash(
             return np.nan
 
 
+def add_hashes(params: Sequence[dict]) -> Sequence[dict]:
+    """Calculate hash for each pset and set pset["_pset_hash"]. Return new
+    params list.
+    """
+    new_params = []
+    for pset in params:
+        pset["_pset_hash"] = pset_hash(pset)
+        new_params.append(pset)
+    return new_params
+
+
 def check_calc_dir(calc_dir: str, df: pd.DataFrame):
     """Check calc dir for consistency with database.
 
@@ -792,7 +803,6 @@ def worker_wrapper(
         "_pset_id": pset_id,
         "_calc_dir": calc_dir,
         "_time_utc": time_start,
-        "_pset_hash": pset_hash(pset, PSET_HASH_ALG, raise_error=False),
         "_pset_seq": pset_seq,
         "_run_seq": run_seq,
     }
@@ -915,6 +925,8 @@ def run_local(
             )
         )
         shutil.copytree(calc_dir, dst)
+
+    params = add_hashes(params)
 
     run_id = str(uuid.uuid4())
 
