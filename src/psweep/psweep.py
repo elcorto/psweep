@@ -240,24 +240,29 @@ def logspace(
     start, stop, num=50, offset=0, log_func: Callable = np.log10, **kwds
 ):
     """
-    Like ``numpy.logspace`` but `start` and `stop` are not exponents but the
-    actual bounds.
+    Like ``numpy.logspace`` but
 
-    Control the strength of the log-scale by `offset`, where we use
+    * `start` and `stop` are not exponents but the actual bounds
+    * tuneable log scale strength
+
+    Control the strength of the log scale by `offset`, where we use by default
+    ``log_func=np.log10`` and ``base=10`` and return
     ``np.logspace(np.log10(start + offset), np.log10(stop + offset)) -
     offset``. `offset=0` is equal to ``np.logspace(np.log10(start),
-    np.log10(stop))``. Higher values result in more evenly spaced points.
+    np.log10(stop))``. Higher `offset` values result in more evenly spaced
+    points.
 
     Parameters
     ----------
     start, stop, num, **kwds :
         same as in ``np.logspace``
     offset :
-        Control strength of log-scale.
+        Control strength of log scale.
     log_func :
-        Must match `base`. Default is ``base=10`` as in ``np.logspace`` and so
-        ``log_func=np.log10``. If you want a different `base`, also provide a
-        matching `log_func`.
+        Must match `base` (pass that as part of `**kwds`). Default is
+        ``base=10`` as in ``np.logspace`` and so ``log_func=np.log10``. If you
+        want a different `base`, also provide a matching `log_func`, e.g.
+        ``base=e, log_func=np.log``.
 
     Examples
     --------
@@ -266,11 +271,9 @@ def logspace(
     >>> from matplotlib import pyplot as plt
     >>> from psweep import logspace
     >>> import numpy as np
-
-    >>> for ii,off in enumerate([1e-16,1e-3, 1,2,3]):
-    ...     x=logspace(0, 2, 20, offset=off)
-    ...     plt.plot(x, np.ones_like(x)*ii, "o-", label=f"{off}")
-
+    >>> for ii, offset in enumerate([1e-16,1e-3, 1,2,3]):
+    ...     x=logspace(0, 2, 20, offset=offset)
+    ...     plt.plot(x, np.ones_like(x)*ii, "o-", label=f"{offset=}")
     >>> plt.legend()
     """
     base = kwds.pop("base", 10.0)
