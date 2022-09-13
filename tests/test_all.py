@@ -616,7 +616,7 @@ def test_stargrid():
     ps.stargrid(const, [a, b])
     ps.stargrid(const=const, vary=[a, b])
 
-    params = ps.stargrid(const, [a, b], filter_dups=False)
+    params = ps.stargrid(const, [a, b], skip_dups=False)
     assert len(params) == 6
     params = ps.stargrid(const, [a, b])
     assert len(params) == 5

@@ -700,7 +700,8 @@ def stargrid(
     vary: Sequence[dict],
     vary_labels: Sequence[str] = None,
     vary_label_col: str = "_vary",
-    filter_dups=True,
+    filter_dups=None,
+    skip_dups=True,
 ) -> Sequence[dict]:
     """
     Helper to create a specific param sampling pattern.
@@ -712,7 +713,7 @@ def stargrid(
     out (use filter_params_unique()) but ignore hash calculation errors and return
     non-reduced params in that case. If you want to fail at hash errors, use
 
-    >>> filter_params_unique(stargrid(..., filter_dups=False), raise_error=True)
+    >>> filter_params_unique(stargrid(..., skip_dups=False), raise_error=True)
 
     Examples
     --------
@@ -730,7 +731,7 @@ def stargrid(
      {'a': 1, 'b': 88, 'c': 11},
      {'a': 1, 'b': 99, 'c': 11}]
 
-    >>> ps.stargrid(const, vary=[a, b], filter_dups=False)
+    >>> ps.stargrid(const, vary=[a, b], skip_dups=False)
     [{'a': 1, 'b': 77, 'c': 11},
      {'a': 2, 'b': 77, 'c': 11},
      {'a': 3, 'b': 77, 'c': 11},
@@ -769,7 +770,12 @@ def stargrid(
                 _dct = dct
             params.append(merge_dicts(const, _dct))
 
-    if filter_dups:
+    if filter_dups is not None:
+        skip_dups = filter_dups
+        warnings.warn(
+            "filter_dups was renamed to skip_dups", DeprecationWarning
+        )
+    if skip_dups:
         try:
             return filter_params_unique(
                 params, raise_error=True, skip_special_cols=True
