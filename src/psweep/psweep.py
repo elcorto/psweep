@@ -827,6 +827,10 @@ def worker_wrapper(
     pset_seq=np.nan,
     run_seq: int = None,
 ):
+    """
+    Add special fields to pset. Call worker on exactly one pset. Return
+    DataFrame row built from ``pset.update(worker(pset))``.
+    """
     assert run_id is not None
     assert calc_dir is not None
     pset_id = str(uuid.uuid4())
@@ -874,6 +878,9 @@ def run_local(
     git=False,
 ) -> pd.DataFrame:
     """
+    Call `worker` for each `pset` in `params`. Populate a DataFrame with rows
+    from each call ``worker(pset)``.
+
     Parameters
     ----------
     worker : Callable
@@ -889,7 +896,9 @@ def run_local(
         * None : use serial execution
         * int : use multiprocessing.Pool (even for ``poolsize=1``)
     save : bool
-        save final DataFrame to ``<calc_dir>/database.pk`` (pickle format only)
+        save final DataFrame to ``<database_dir>/<database_basename>`` (pickle
+        format only), default: "calc/database.pk", see also `database_dir`,
+        `calc_dir` and `database_basename`
     tmpsave : bool
         save results from each `pset` in `params` (the current DataFrame row) to
         ``<calc_dir>/tmpsave/<run_id>/<pset_id>.pk`` (pickle format only)
@@ -898,6 +907,9 @@ def run_local(
         * sequence : list of DataFrame column names, print the row but only
           those columns
     calc_dir : str
+        Dir where calculation artifacts can be saved if needed, such as dirs
+        per pset ``<calc_dir>/<pset>``. Will be added to the database in
+        ``_calc_dir`` field.
     simulate : bool
         run everything in ``<calc_dir>.simulate``, don't call `worker`, i.e. save
         what the run would create, but without the results from `worker`,
@@ -905,7 +917,7 @@ def run_local(
     database_dir : str
         Path for the database. Default is ``<calc_dir>``.
     database_basename : str
-        ``<database_dir>/<database_basename>``
+        ``<database_dir>/<database_basename>``, default: "database.pk"
     backup : bool
         Make backup of ``<calc_dir>`` to ``<calc_dir>.bak_<timestamp>_run_id_<_run_id>``
     git : bool
