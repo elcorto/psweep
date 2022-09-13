@@ -101,12 +101,17 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="psweep.psweep.logspace">
 <span class="sig-prename descclassname"><span class="pre">psweep.psweep.</span></span><span class="sig-name descname"><span class="pre">logspace</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stop</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num=50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset=0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_func:</span> <span class="pre">~typing.Callable</span> <span class="pre">=</span> <span class="pre">&lt;ufunc</span> <span class="pre">'log10'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">**kwds</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/psweep/psweep.html#logspace"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psweep.psweep.logspace" title="Permalink to this definition">¶</a></dt>
-<dd><p>Like <code class="docutils literal notranslate"><span class="pre">numpy.logspace</span></code> but <cite>start</cite> and <cite>stop</cite> are not exponents but the
-actual bounds.</p>
-<p>Control the strength of the log-scale by <cite>offset</cite>, where we use
+<dd><p>Like <code class="docutils literal notranslate"><span class="pre">numpy.logspace</span></code> but</p>
+<ul class="simple">
+<li><p><cite>start</cite> and <cite>stop</cite> are not exponents but the actual bounds</p></li>
+<li><p>tuneable log scale strength</p></li>
+</ul>
+<p>Control the strength of the log scale by <cite>offset</cite>, where we use by default
+<code class="docutils literal notranslate"><span class="pre">log_func=np.log10</span></code> and <code class="docutils literal notranslate"><span class="pre">base=10</span></code> and return
 <code class="docutils literal notranslate"><span class="pre">np.logspace(np.log10(start</span> <span class="pre">+</span> <span class="pre">offset),</span> <span class="pre">np.log10(stop</span> <span class="pre">+</span> <span class="pre">offset))</span> <span class="pre">-</span>
 <span class="pre">offset</span></code>. <cite>offset=0</cite> is equal to <code class="docutils literal notranslate"><span class="pre">np.logspace(np.log10(start),</span>
-<span class="pre">np.log10(stop))</span></code>. Higher values result in more evenly spaced points.</p>
+<span class="pre">np.log10(stop))</span></code>. Higher <cite>offset</cite> values result in more evenly spaced
+points.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -114,10 +119,11 @@ actual bounds.</p>
 <li><p><strong>stop</strong> – same as in <code class="docutils literal notranslate"><span class="pre">np.logspace</span></code></p></li>
 <li><p><strong>num</strong> – same as in <code class="docutils literal notranslate"><span class="pre">np.logspace</span></code></p></li>
 <li><p><strong>**kwds</strong> – same as in <code class="docutils literal notranslate"><span class="pre">np.logspace</span></code></p></li>
-<li><p><strong>offset</strong> – Control strength of log-scale.</p></li>
-<li><p><strong>log_func</strong> – Must match <cite>base</cite>. Default is <code class="docutils literal notranslate"><span class="pre">base=10</span></code> as in <code class="docutils literal notranslate"><span class="pre">np.logspace</span></code> and so
-<code class="docutils literal notranslate"><span class="pre">log_func=np.log10</span></code>. If you want a different <cite>base</cite>, also provide a
-matching <cite>log_func</cite>.</p></li>
+<li><p><strong>offset</strong> – Control strength of log scale.</p></li>
+<li><p><strong>log_func</strong> – Must match <cite>base</cite> (pass that as part of <cite>**kwds</cite>). Default is
+<code class="docutils literal notranslate"><span class="pre">base=10</span></code> as in <code class="docutils literal notranslate"><span class="pre">np.logspace</span></code> and so <code class="docutils literal notranslate"><span class="pre">log_func=np.log10</span></code>. If you
+want a different <cite>base</cite>, also provide a matching <cite>log_func</cite>, e.g.
+<code class="docutils literal notranslate"><span class="pre">base=e,</span> <span class="pre">log_func=np.log</span></code>.</p></li>
 </ul>
 </dd>
 </dl>
@@ -126,14 +132,10 @@ matching <cite>log_func</cite>.</p></li>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">matplotlib</span> <span class="k">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">psweep</span> <span class="k">import</span> <span class="n">logspace</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-</pre></div>
-</div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">ii</span><span class="p">,</span><span class="n">off</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="mf">1e-16</span><span class="p">,</span><span class="mf">1e-3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]):</span>
-<span class="gp">... </span>    <span class="n">x</span><span class="o">=</span><span class="n">logspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="n">off</span><span class="p">)</span>
-<span class="gp">... </span>    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">*</span><span class="n">ii</span><span class="p">,</span> <span class="s2">&quot;o-&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">f</span><span class="s2">&quot;</span><span class="si">{off}</span><span class="s2">&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">ii</span><span class="p">,</span> <span class="n">offset</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="mf">1e-16</span><span class="p">,</span><span class="mf">1e-3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]):</span>
+<span class="gp">... </span>    <span class="n">x</span><span class="o">=</span><span class="n">logspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="n">offset</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">*</span><span class="n">ii</span><span class="p">,</span> <span class="s2">&quot;o-&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">f</span><span class="s2">&quot;{offset=}&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 </pre></div>
 </div>
 </dd></dl>

@@ -332,24 +332,29 @@
     <span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">log_func</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span>
 <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Like ``numpy.logspace`` but `start` and `stop` are not exponents but the</span>
-<span class="sd">    actual bounds.</span>
+<span class="sd">    Like ``numpy.logspace`` but</span>
 
-<span class="sd">    Control the strength of the log-scale by `offset`, where we use</span>
+<span class="sd">    * `start` and `stop` are not exponents but the actual bounds</span>
+<span class="sd">    * tuneable log scale strength</span>
+
+<span class="sd">    Control the strength of the log scale by `offset`, where we use by default</span>
+<span class="sd">    ``log_func=np.log10`` and ``base=10`` and return</span>
 <span class="sd">    ``np.logspace(np.log10(start + offset), np.log10(stop + offset)) -</span>
 <span class="sd">    offset``. `offset=0` is equal to ``np.logspace(np.log10(start),</span>
-<span class="sd">    np.log10(stop))``. Higher values result in more evenly spaced points.</span>
+<span class="sd">    np.log10(stop))``. Higher `offset` values result in more evenly spaced</span>
+<span class="sd">    points.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    start, stop, num, **kwds :</span>
 <span class="sd">        same as in ``np.logspace``</span>
 <span class="sd">    offset :</span>
-<span class="sd">        Control strength of log-scale.</span>
+<span class="sd">        Control strength of log scale.</span>
 <span class="sd">    log_func :</span>
-<span class="sd">        Must match `base`. Default is ``base=10`` as in ``np.logspace`` and so</span>
-<span class="sd">        ``log_func=np.log10``. If you want a different `base`, also provide a</span>
-<span class="sd">        matching `log_func`.</span>
+<span class="sd">        Must match `base` (pass that as part of `**kwds`). Default is</span>
+<span class="sd">        ``base=10`` as in ``np.logspace`` and so ``log_func=np.log10``. If you</span>
+<span class="sd">        want a different `base`, also provide a matching `log_func`, e.g.</span>
+<span class="sd">        ``base=e, log_func=np.log``.</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
@@ -358,11 +363,9 @@
 <span class="sd">    &gt;&gt;&gt; from matplotlib import pyplot as plt</span>
 <span class="sd">    &gt;&gt;&gt; from psweep import logspace</span>
 <span class="sd">    &gt;&gt;&gt; import numpy as np</span>
-
-<span class="sd">    &gt;&gt;&gt; for ii,off in enumerate([1e-16,1e-3, 1,2,3]):</span>
-<span class="sd">    ...     x=logspace(0, 2, 20, offset=off)</span>
-<span class="sd">    ...     plt.plot(x, np.ones_like(x)*ii, &quot;o-&quot;, label=f&quot;{off}&quot;)</span>
-
+<span class="sd">    &gt;&gt;&gt; for ii, offset in enumerate([1e-16,1e-3, 1,2,3]):</span>
+<span class="sd">    ...     x=logspace(0, 2, 20, offset=offset)</span>
+<span class="sd">    ...     plt.plot(x, np.ones_like(x)*ii, &quot;o-&quot;, label=f&quot;{offset=}&quot;)</span>
 <span class="sd">    &gt;&gt;&gt; plt.legend()</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">base</span> <span class="o">=</span> <span class="n">kwds</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;base&quot;</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">)</span>
