@@ -7,7 +7,7 @@ import tempfile
 import pickle
 import subprocess
 from itertools import product
-from contextlib import contextmanager
+from contextlib import nullcontext
 
 import pandas as pd
 import numpy as np
@@ -32,11 +32,6 @@ def func(pset):
     # float dtype. Else the column will be cast to float once we add NaNs,
     # which breaks df.equals(other_df) .
     return {"result": pset["a"] * 10.0}
-
-
-@contextmanager
-def NoOpCtx():
-    yield None
 
 
 # ----------------------------------------------------------------------------
@@ -178,7 +173,7 @@ def test_run():
 @pytest.mark.parametrize("use_disk", [True, False])
 def test_run_skip_dups(use_disk):
     params = [{"a": 1}, {"a": 2}, {"a": 3}, {"a": 4}]
-    Ctx = tempfile.TemporaryDirectory if use_disk else NoOpCtx
+    Ctx = tempfile.TemporaryDirectory if use_disk else nullcontext
     with Ctx() as tmpdir:
         # calc_dir is passed but not used if save=use_disk=False, so it
         # doesn't matter that in this case tmpdir=None and so
