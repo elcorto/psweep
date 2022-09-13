@@ -23,6 +23,7 @@ setup(
     package_dir={"": "src"},
     packages=find_packages(where="src"),
     install_requires=open("requirements.txt").read().splitlines(),
+    python_requires=">=3.8",
     scripts=["{}/{}".format(bindir, script) for script in os.listdir(bindir)],
     entry_points={
         "console_scripts": [
