@@ -20,6 +20,8 @@ This package deals with commonly encountered boilerplate tasks:
 * append new rows to the database when extending the study
 * simulate a parameter scan
 * `git` support to track progress of your work and recover from mistakes
+* optional: don't repeat already performed calculations based on parameter set
+  hashes
 * **experimental**: support for managing batch runs, e.g. on remote HPC
   systems, including `git` support
 
@@ -122,13 +124,14 @@ a new row in the DataFrame (the database). In addition we also add sequential
 integer IDs `_run_seq` and `_pset_seq` for convenience, as well as an
 additional hash `_pset_hash` over the input dict (`pset` in the example) to
 `func()`. `_pset_runtime` is the time of one `func()` call. `_pset_seq` is the
-same as the integer index `df.index`.
+same as the integer index `df.index`. Hashes are calculated using the excellent
+[joblib](https://joblib.readthedocs.io) package.
 
 
 # Concepts
 
 The basic data structure for a param study is a list of "parameter sets" or
-short "psets", each of which is a dict.
+short "`pset`s", each of which is a dict.
 
 
 ```py
@@ -166,10 +169,10 @@ you flexibility in what to return from `func`. In particular, you are free to
 also return an empty dict if you record results in another way (see the
 `save_data_on_disk` example later).
 
-The psets form the rows of a pandas `DataFrame`, which we use to store the
+The `pset`s form the rows of a pandas `DataFrame`, which we use to store the
 pset and the result from each `func(pset)`.
 
-The idea is now to run `func` in a loop over all psets in `params`. You do this
+The idea is now to run `func` in a loop over all `pset`s in `params`. You do this
 using the `ps.run_local()` helper function. The function adds some special
 columns such as `_run_id` (once per `ps.run_local()` call) or `_pset_id` (once
 per pset). Using `ps.run_local(... poolsize=...)` runs `func` in parallel on
@@ -181,7 +184,7 @@ This package offers some very simple helper functions which assist in creating
 `params`. Basically, we define the to-be-varied parameters and then use
 something like `itertools.product()` to loop over them to create `params`,
 which is passed to `ps.run_local()` to actually perform the loop over all
-psets.
+`pset`s.
 
 ```py
 >>> from itertools import product
@@ -207,7 +210,7 @@ psets.
 ```
 
 Here we used the helper function `itr2params()` which accepts an iterator
-that represents the loops over params. It merges dicts to psets and also deals
+that represents the loops over params. It merges dicts to `pset`s and also deals
 with nesting when using `zip()` (see below).
 
 The last pattern is so common that we have a short-cut function
@@ -269,6 +272,26 @@ If you want to add a parameter which is constant, use a list of length one.
  {'a': 2, 'b': 'yy', 'c': None, 'const': 1.23},
  {'a': 2, 'b': 'yy', 'c': 'Z',  'const': 1.23}]
 ```
+
+Besides `pgrid`, we have another convenience function `stargrid`, which creates
+a specific param sampling pattern, where we vary params in a "star" pattern
+(and not a full pgrid) around constant values (middle of the "star").
+
+```py
+>>> const=dict(a=1, b=77, c=11)
+>>> a=ps.plist("a", [1,2,3,4])
+>>> b=ps.plist("b", [77,88,99])
+>>> ps.stargrid(const, vary=[a, b])
+[{'a': 1, 'b': 77, 'c': 11},
+ {'a': 2, 'b': 77, 'c': 11},
+ {'a': 3, 'b': 77, 'c': 11},
+ {'a': 4, 'b': 77, 'c': 11},
+ {'a': 1, 'b': 88, 'c': 11},
+ {'a': 1, 'b': 99, 'c': 11}]
+```
+
+This is useful in cases where you know that parameters are independent and you
+want to do just a "line scan" for each parameter around known good values.
 
 So, as you can see, the general idea is that we do all the loops
 *before* running any workload, i.e. we assemble the parameter grid to be
@@ -370,7 +393,6 @@ session when you pass in `df` again, in which case we don't read it from disk:
 >>> df_run_0_and_1 = ps.run_local(func, other_params, save=False, df=df_run_0)
 ```
 
-
 # Special database fields and repeated runs
 
 See `examples/*repeat.py`.
@@ -409,7 +431,7 @@ when you call `ps.run_local()` multiple times using *the exact same* `params`,
 ```
 
 which is perfectly fine, e.g. in cases where you just want to sample more data
-for the same psets in `params` over and over again. In this case, you will have
+for the same `pset`s in `params` over and over again. In this case, you will have
 as above two unique `_run_id`s but *two sets of the same* `_pset_hash`.
 
 ```
@@ -425,6 +447,25 @@ as above two unique `_run_id`s but *two sets of the same* `_pset_hash`.
 This is a very powerful tool to filter the database for calculations that used
 the same pset, e.g. an exact repetition of one experiment. But since we use
 UUIDs for `_pset_id`, those calculations can still be distinguished.
+
+
+## Filter by `pset` hashes
+
+As mentioned, we create a hash for each `pset`, which is stored in the
+`_pset_hash` database column. This unlocks powerful database filter options.
+
+As shown above, when calling `run_local()` twice
+with the same `params` you get a second set of calculations. But suppose you
+have a script where you keep modifying the way you create `params` and you just
+want to add some more scans *without* removing the code that generated the old
+`params` that you already have in the database. In that case use
+
+```py
+>>> ps.run_local(func, params, skip_dups=True)
+```
+
+This will skip all `pset`s already in the database based on their hash and
+only add calculations for new `pset`s.
 
 
 # Best practices
@@ -669,7 +710,7 @@ See `examples/vary_1_param_study_column.py`.
 
 Post-processing is not the scope of the package. The database is a
 pandas DataFrame and that's it. You can query it and use your full pandas
-Ninja skills here, e.g. "give me all psets where parameter 'a' was
+Ninja skills here, e.g. "give me all `pset`s where parameter 'a' was
 between 10 and 100, while 'b' was constant, ...". You get the idea.
 
 To ease post-processing, it can be useful practice to add a constant parameter
@@ -688,7 +729,7 @@ parameter 'a' while keeping parameters 'b' and 'c' constant, you'll have 5
 
 This doesn't look like fun. It shows that the UUIDs (`_run_id` and
 `_pset_id`) are rarely meant to be used directly, but rather to
-programmatically link psets and runs to other data (as shown above in the
+programmatically link `pset`s and runs to other data (as shown above in the
 "Save data on disk" example). You can also use the integer IDs `_run_seq` and
 `_pset_seq` instead. But still, you need to know to which parameter values they
 correspond to.
@@ -776,7 +817,7 @@ control over every part of the workflow. We just automate the boring stuff.
   * read `templates/machines/<mycluster>/info.yaml`: machine-specific info
     (e.g. command to submit the `jobscript`)
   * define `func()` that will create a dir named `calc/<_pset_id>` for each
-    batch job, **replace placeholders** such as `$param_a` from psets
+    batch job, **replace placeholders** such as `$param_a` from `pset`s
     (including special ones such as `$_pset_id`)
   * call `run_local(func, params)`
   * create a script `calc/run_<mycluster>.sh` to submit all jobs
@@ -1042,6 +1083,7 @@ be covered in that combination by other tools, namely
 * local runs, also in parallel
 * tooling for remote runs (template-based workflow)
 * minimal naming conventions, rely on UUIDs
+* hash-based database filtering
 * no yaml-ish DSLs, just Python please, thank you :)
 * no CLIs, just Python please, thank you :)
 * no config files, just Python please, thank you :)
