@@ -50,7 +50,10 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="#the-database">The database</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#special-database-fields-and-repeated-runs">Special database fields and repeated runs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#special-database-fields-and-repeated-runs">Special database fields and repeated runs</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#filter-by-pset-hashes">Filter by <code class="docutils literal notranslate"><span class="pre">pset</span></code> hashes</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="#best-practices">Best practices</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#save-data-on-disk-use-uuids">Save data on disk, use UUIDs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#post-processing">Post-processing</a></li>
@@ -130,6 +133,8 @@ extend the study</p></li>
 <li><p>append new rows to the database when extending the study</p></li>
 <li><p>simulate a parameter scan</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">git</span></code> support to track progress of your work and recover from mistakes</p></li>
+<li><p>optional: don’t repeat already performed calculations based on parameter set
+hashes</p></li>
 <li><p><strong>experimental</strong>: support for managing batch runs, e.g. on remote HPC
 systems, including <code class="docutils literal notranslate"><span class="pre">git</span></code> support</p></li>
 </ul>
@@ -222,12 +227,13 @@ a new row in the DataFrame (the database). In addition we also add sequential
 integer IDs <code class="docutils literal notranslate"><span class="pre">_run_seq</span></code> and <code class="docutils literal notranslate"><span class="pre">_pset_seq</span></code> for convenience, as well as an
 additional hash <code class="docutils literal notranslate"><span class="pre">_pset_hash</span></code> over the input dict (<code class="docutils literal notranslate"><span class="pre">pset</span></code> in the example) to
 <code class="docutils literal notranslate"><span class="pre">func()</span></code>. <code class="docutils literal notranslate"><span class="pre">_pset_runtime</span></code> is the time of one <code class="docutils literal notranslate"><span class="pre">func()</span></code> call. <code class="docutils literal notranslate"><span class="pre">_pset_seq</span></code> is the
-same as the integer index <code class="docutils literal notranslate"><span class="pre">df.index</span></code>.</p>
+same as the integer index <code class="docutils literal notranslate"><span class="pre">df.index</span></code>. Hashes are calculated using the excellent
+<a class="reference external" href="https://joblib.readthedocs.io">joblib</a> package.</p>
 </section>
 <section id="concepts">
 <h1>Concepts<a class="headerlink" href="#concepts" title="Permalink to this heading">¶</a></h1>
 <p>The basic data structure for a param study is a list of “parameter sets” or
-short “psets”, each of which is a dict.</p>
+short “<code class="docutils literal notranslate"><span class="pre">pset</span></code>s”, each of which is a dict.</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">params</span> <span class="o">=</span> <span class="p">[{</span><span class="s2">&quot;a&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">:</span> <span class="mi">88</span><span class="p">},</span>  <span class="c1"># pset 1</span>
           <span class="p">{</span><span class="s2">&quot;a&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">:</span> <span class="mi">99</span><span class="p">},</span>  <span class="c1"># pset 2</span>
           <span class="o">...</span>                 <span class="c1"># ...</span>
@@ -254,9 +260,9 @@ dict, for example:</p>
 you flexibility in what to return from <code class="docutils literal notranslate"><span class="pre">func</span></code>. In particular, you are free to
 also return an empty dict if you record results in another way (see the
 <code class="docutils literal notranslate"><span class="pre">save_data_on_disk</span></code> example later).</p>
-<p>The psets form the rows of a pandas <code class="docutils literal notranslate"><span class="pre">DataFrame</span></code>, which we use to store the
+<p>The <code class="docutils literal notranslate"><span class="pre">pset</span></code>s form the rows of a pandas <code class="docutils literal notranslate"><span class="pre">DataFrame</span></code>, which we use to store the
 pset and the result from each <code class="docutils literal notranslate"><span class="pre">func(pset)</span></code>.</p>
-<p>The idea is now to run <code class="docutils literal notranslate"><span class="pre">func</span></code> in a loop over all psets in <code class="docutils literal notranslate"><span class="pre">params</span></code>. You do this
+<p>The idea is now to run <code class="docutils literal notranslate"><span class="pre">func</span></code> in a loop over all <code class="docutils literal notranslate"><span class="pre">pset</span></code>s in <code class="docutils literal notranslate"><span class="pre">params</span></code>. You do this
 using the <code class="docutils literal notranslate"><span class="pre">ps.run_local()</span></code> helper function. The function adds some special
 columns such as <code class="docutils literal notranslate"><span class="pre">_run_id</span></code> (once per <code class="docutils literal notranslate"><span class="pre">ps.run_local()</span></code> call) or <code class="docutils literal notranslate"><span class="pre">_pset_id</span></code> (once
 per pset). Using <code class="docutils literal notranslate"><span class="pre">ps.run_local(...</span> <span class="pre">poolsize=...)</span></code> runs <code class="docutils literal notranslate"><span class="pre">func</span></code> in parallel on
@@ -268,7 +274,7 @@ per pset). Using <code class="docutils literal notranslate"><span class="pre">ps
 <code class="docutils literal notranslate"><span class="pre">params</span></code>. Basically, we define the to-be-varied parameters and then use
 something like <code class="docutils literal notranslate"><span class="pre">itertools.product()</span></code> to loop over them to create <code class="docutils literal notranslate"><span class="pre">params</span></code>,
 which is passed to <code class="docutils literal notranslate"><span class="pre">ps.run_local()</span></code> to actually perform the loop over all
-psets.</p>
+<code class="docutils literal notranslate"><span class="pre">pset</span></code>s.</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">product</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">psweep</span> <span class="kn">as</span> <span class="nn">ps</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="o">=</span><span class="n">ps</span><span class="o">.</span><span class="n">plist</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
@@ -292,7 +298,7 @@ psets.</p>
 </pre></div>
 </div>
 <p>Here we used the helper function <code class="docutils literal notranslate"><span class="pre">itr2params()</span></code> which accepts an iterator
-that represents the loops over params. It merges dicts to psets and also deals
+that represents the loops over params. It merges dicts to <code class="docutils literal notranslate"><span class="pre">pset</span></code>s and also deals
 with nesting when using <code class="docutils literal notranslate"><span class="pre">zip()</span></code> (see below).</p>
 <p>The last pattern is so common that we have a short-cut function
 <code class="docutils literal notranslate"><span class="pre">pgrid()</span></code>, which basically does <code class="docutils literal notranslate"><span class="pre">itr2params(product(a,b))</span></code>.</p>
@@ -344,6 +350,23 @@ different lengths.</p>
 <span class="go"> {&#39;a&#39;: 2, &#39;b&#39;: &#39;yy&#39;, &#39;c&#39;: &#39;Z&#39;,  &#39;const&#39;: 1.23}]</span>
 </pre></div>
 </div>
+<p>Besides <code class="docutils literal notranslate"><span class="pre">pgrid</span></code>, we have another convenience function <code class="docutils literal notranslate"><span class="pre">stargrid</span></code>, which creates
+a specific param sampling pattern, where we vary params in a “star” pattern
+(and not a full pgrid) around constant values (middle of the “star”).</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">const</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">77</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="o">=</span><span class="n">ps</span><span class="o">.</span><span class="n">plist</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span><span class="o">=</span><span class="n">ps</span><span class="o">.</span><span class="n">plist</span><span class="p">(</span><span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mi">77</span><span class="p">,</span><span class="mi">88</span><span class="p">,</span><span class="mi">99</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">stargrid</span><span class="p">(</span><span class="n">const</span><span class="p">,</span> <span class="n">vary</span><span class="o">=</span><span class="p">[</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">])</span>
+<span class="go">[{&#39;a&#39;: 1, &#39;b&#39;: 77, &#39;c&#39;: 11},</span>
+<span class="go"> {&#39;a&#39;: 2, &#39;b&#39;: 77, &#39;c&#39;: 11},</span>
+<span class="go"> {&#39;a&#39;: 3, &#39;b&#39;: 77, &#39;c&#39;: 11},</span>
+<span class="go"> {&#39;a&#39;: 4, &#39;b&#39;: 77, &#39;c&#39;: 11},</span>
+<span class="go"> {&#39;a&#39;: 1, &#39;b&#39;: 88, &#39;c&#39;: 11},</span>
+<span class="go"> {&#39;a&#39;: 1, &#39;b&#39;: 99, &#39;c&#39;: 11}]</span>
+</pre></div>
+</div>
+<p>This is useful in cases where you know that parameters are independent and you
+want to do just a “line scan” for each parameter around known good values.</p>
 <p>So, as you can see, the general idea is that we do all the loops
 <em>before</em> running any workload, i.e. we assemble the parameter grid to be
 sampled before the actual calculations. This has proven to be very
@@ -456,7 +479,7 @@ when you call <code class="docutils literal notranslate"><span class="pre">ps.ru
 </pre></div>
 </div>
 <p>which is perfectly fine, e.g. in cases where you just want to sample more data
-for the same psets in <code class="docutils literal notranslate"><span class="pre">params</span></code> over and over again. In this case, you will have
+for the same <code class="docutils literal notranslate"><span class="pre">pset</span></code>s in <code class="docutils literal notranslate"><span class="pre">params</span></code> over and over again. In this case, you will have
 as above two unique <code class="docutils literal notranslate"><span class="pre">_run_id</span></code>s but <em>two sets of the same</em> <code class="docutils literal notranslate"><span class="pre">_pset_hash</span></code>.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>                             <span class="n">_run_id</span>                              <span class="n">_pset_id</span>  <span class="n">_run_seq</span>  <span class="n">_pset_seq</span>                                <span class="n">_pset_hash</span>  <span class="n">a</span>    <span class="n">result</span>
 <span class="mi">8543</span><span class="n">fdad</span><span class="o">-</span><span class="mi">4426</span><span class="o">-</span><span class="mi">41</span><span class="n">cb</span><span class="o">-</span><span class="n">ab42</span><span class="o">-</span><span class="mi">8</span><span class="n">a80b1bebbe2</span>  <span class="mi">08</span><span class="n">cb5f7c</span><span class="o">-</span><span class="mi">8</span><span class="n">ce8</span><span class="o">-</span><span class="mi">451</span><span class="n">f</span><span class="o">-</span><span class="mi">846</span><span class="n">d</span><span class="o">-</span><span class="n">db5ac3bcc746</span>         <span class="mi">0</span>          <span class="mi">0</span>  <span class="n">e4ad4daad53a2eec0313386ada88211e50d693bd</span>  <span class="mi">1</span>  <span class="mf">0.381589</span>
@@ -470,6 +493,21 @@ as above two unique <code class="docutils literal notranslate"><span class="pre"
 <p>This is a very powerful tool to filter the database for calculations that used
 the same pset, e.g. an exact repetition of one experiment. But since we use
 UUIDs for <code class="docutils literal notranslate"><span class="pre">_pset_id</span></code>, those calculations can still be distinguished.</p>
+<section id="filter-by-pset-hashes">
+<h2>Filter by <code class="docutils literal notranslate"><span class="pre">pset</span></code> hashes<a class="headerlink" href="#filter-by-pset-hashes" title="Permalink to this heading">¶</a></h2>
+<p>As mentioned, we create a hash for each <code class="docutils literal notranslate"><span class="pre">pset</span></code>, which is stored in the
+<code class="docutils literal notranslate"><span class="pre">_pset_hash</span></code> database column. This unlocks powerful database filter options.</p>
+<p>As shown above, when calling <code class="docutils literal notranslate"><span class="pre">run_local()</span></code> twice
+with the same <code class="docutils literal notranslate"><span class="pre">params</span></code> you get a second set of calculations. But suppose you
+have a script where you keep modifying the way you create <code class="docutils literal notranslate"><span class="pre">params</span></code> and you just
+want to add some more scans <em>without</em> removing the code that generated the old
+<code class="docutils literal notranslate"><span class="pre">params</span></code> that you already have in the database. In that case use</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">run_local</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">skip_dups</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This will skip all <code class="docutils literal notranslate"><span class="pre">pset</span></code>s already in the database based on their hash and
+only add calculations for new <code class="docutils literal notranslate"><span class="pre">pset</span></code>s.</p>
+</section>
 </section>
 <section id="best-practices">
 <h1>Best practices<a class="headerlink" href="#best-practices" title="Permalink to this heading">¶</a></h1>
@@ -675,7 +713,7 @@ real run, but in a safe separate dir which you can delete later.</p>
 <p>See <code class="docutils literal notranslate"><span class="pre">examples/vary_1_param_study_column.py</span></code>.</p>
 <p>Post-processing is not the scope of the package. The database is a
 pandas DataFrame and that’s it. You can query it and use your full pandas
-Ninja skills here, e.g. “give me all psets where parameter ‘a’ was
+Ninja skills here, e.g. “give me all <code class="docutils literal notranslate"><span class="pre">pset</span></code>s where parameter ‘a’ was
 between 10 and 100, while ‘b’ was constant, …”. You get the idea.</p>
 <p>To ease post-processing, it can be useful practice to add a constant parameter
 named “study” or “scan” to label a certain range of runs. If you, for instance,
@@ -691,7 +729,7 @@ parameter ‘a’ while keeping parameters ‘b’ and ‘c’ constant, you’l
 </div>
 <p>This doesn’t look like fun. It shows that the UUIDs (<code class="docutils literal notranslate"><span class="pre">_run_id</span></code> and
 <code class="docutils literal notranslate"><span class="pre">_pset_id</span></code>) are rarely meant to be used directly, but rather to
-programmatically link psets and runs to other data (as shown above in the
+programmatically link <code class="docutils literal notranslate"><span class="pre">pset</span></code>s and runs to other data (as shown above in the
 “Save data on disk” example). You can also use the integer IDs <code class="docutils literal notranslate"><span class="pre">_run_seq</span></code> and
 <code class="docutils literal notranslate"><span class="pre">_pset_seq</span></code> instead. But still, you need to know to which parameter values they
 correspond to.</p>
@@ -764,7 +802,7 @@ control over every part of the workflow. We just automate the boring stuff.</p>
 <li><p>read <code class="docutils literal notranslate"><span class="pre">templates/machines/&lt;mycluster&gt;/info.yaml</span></code>: machine-specific info
 (e.g. command to submit the <code class="docutils literal notranslate"><span class="pre">jobscript</span></code>)</p></li>
 <li><p>define <code class="docutils literal notranslate"><span class="pre">func()</span></code> that will create a dir named <code class="docutils literal notranslate"><span class="pre">calc/&lt;_pset_id&gt;</span></code> for each
-batch job, <strong>replace placeholders</strong> such as <code class="docutils literal notranslate"><span class="pre">$param_a</span></code> from psets
+batch job, <strong>replace placeholders</strong> such as <code class="docutils literal notranslate"><span class="pre">$param_a</span></code> from <code class="docutils literal notranslate"><span class="pre">pset</span></code>s
 (including special ones such as <code class="docutils literal notranslate"><span class="pre">$_pset_id</span></code>)</p></li>
 <li><p>call <code class="docutils literal notranslate"><span class="pre">run_local(func,</span> <span class="pre">params)</span></code></p></li>
 <li><p>create a script <code class="docutils literal notranslate"><span class="pre">calc/run_&lt;mycluster&gt;.sh</span></code> to submit all jobs</p></li>
