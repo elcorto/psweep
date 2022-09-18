@@ -1,0 +1,1954 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Manual</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="API Reference" href="../generated/api/index.html" />
+    <link rel="prev" title="psweep" href="../root.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="../_static/psweep-logo.png" class="logo" alt="logo">
+      
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../root.html">
+                    psweep
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Manual
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Manual
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  API docs
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../generated/api/index.html">
+   API Reference
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../generated/api/__sphinx_autodoc_module__psweep.cli.html">
+     cli
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+    <label for="toctree-checkbox-2">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../generated/api/psweep.cli.check_calc_dir.html">
+       psweep.cli.check_calc_dir
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../generated/api/__sphinx_autodoc_module__psweep.psweep.html">
+     psweep
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
+    <label for="toctree-checkbox-3">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../generated/api/psweep.psweep.FileTemplate.html">
+       psweep.psweep.FileTemplate
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../generated/api/psweep.psweep.GIT_ADD_ALL.html">
+       psweep.psweep.GIT_ADD_ALL
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../generated/api/psweep.psweep.Machine.html">
+       psweep.psweep.Machine
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../generated/api/psweep.psweep.PANDAS_DEFAULT_ORIENT.html">
+       psweep.psweep.PANDAS_DEFAULT_ORIENT
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../generated/api/psweep.psweep.PANDAS_TIME_UNIT.html">
+       psweep.psweep.PANDAS_TIME_UNIT
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../generated/api/psweep.psweep.PSET_HASH_ALG.html">
+       psweep.psweep.PSET_HASH_ALG
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../generated/api/psweep.psweep.PsweepHashError.html">
+       psweep.psweep.PsweepHashError
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../generated/api/psweep.psweep.add_hashes.html">
+       psweep.psweep.add_hashes
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../generated/api/psweep.psweep.check_calc_dir.html">
+       psweep.psweep.check_calc_dir
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../generated/api/psweep.psweep.df_filter_conds.html">
+       psweep.psweep.df_filter_conds
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../generated/api/psweep.psweep.df_print.html">
+       psweep.psweep.df_print
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../generated/api/psweep.psweep.df_read.html">
+       psweep.psweep.df_read
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../generated/api/psweep.psweep.df_to_json.html">
+       psweep.psweep.df_to_json
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../generated/api/psweep.psweep.df_write.html">
+       psweep.psweep.df_write
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../generated/api/psweep.psweep.file_read.html">
+       psweep.psweep.file_read
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../generated/api/psweep.psweep.file_write.html">
+       psweep.psweep.file_write
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../generated/api/psweep.psweep.filter_params_dup_hash.html">
+       psweep.psweep.filter_params_dup_hash
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../generated/api/psweep.psweep.filter_params_unique.html">
+       psweep.psweep.filter_params_unique
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../generated/api/psweep.psweep.filter_same_hash.html">
+       psweep.psweep.filter_same_hash
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../generated/api/psweep.psweep.flatten.html">
+       psweep.psweep.flatten
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../generated/api/psweep.psweep.fullpath.html">
+       psweep.psweep.fullpath
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../generated/api/psweep.psweep.gather_calc_templates.html">
+       psweep.psweep.gather_calc_templates
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../generated/api/psweep.psweep.gather_machines.html">
+       psweep.psweep.gather_machines
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../generated/api/psweep.psweep.git_clean.html">
+       psweep.psweep.git_clean
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../generated/api/psweep.psweep.git_enter.html">
+       psweep.psweep.git_enter
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../generated/api/psweep.psweep.git_exit.html">
+       psweep.psweep.git_exit
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../generated/api/psweep.psweep.in_git_repo.html">
+       psweep.psweep.in_git_repo
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../generated/api/psweep.psweep.intspace.html">
+       psweep.psweep.intspace
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../generated/api/psweep.psweep.is_seq.html">
+       psweep.psweep.is_seq
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../generated/api/psweep.psweep.itr.html">
+       psweep.psweep.itr
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../generated/api/psweep.psweep.itr2params.html">
+       psweep.psweep.itr2params
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../generated/api/psweep.psweep.logspace.html">
+       psweep.psweep.logspace
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../generated/api/psweep.psweep.makedirs.html">
+       psweep.psweep.makedirs
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../generated/api/psweep.psweep.merge_dicts.html">
+       psweep.psweep.merge_dicts
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../generated/api/psweep.psweep.pgrid.html">
+       psweep.psweep.pgrid
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../generated/api/psweep.psweep.pickle_read.html">
+       psweep.psweep.pickle_read
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../generated/api/psweep.psweep.pickle_write.html">
+       psweep.psweep.pickle_write
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../generated/api/psweep.psweep.plist.html">
+       psweep.psweep.plist
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../generated/api/psweep.psweep.prep_batch.html">
+       psweep.psweep.prep_batch
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../generated/api/psweep.psweep.pset_hash.html">
+       psweep.psweep.pset_hash
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../generated/api/psweep.psweep.run_local.html">
+       psweep.psweep.run_local
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../generated/api/psweep.psweep.stargrid.html">
+       psweep.psweep.stargrid
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../generated/api/psweep.psweep.system.html">
+       psweep.psweep.system
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../generated/api/psweep.psweep.worker_wrapper.html">
+       psweep.psweep.worker_wrapper
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+<a href="https://github.com/elcorto/psweep"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="bottom"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../_sources/written/manual.md"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.md</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#getting-started">
+   Getting started
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#concepts">
+   Concepts
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#building-parameter-grids">
+   Building parameter grids
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#gotchas">
+     Gotchas
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#pgrid">
+       <code class="docutils literal notranslate">
+        <span class="pre">
+         pgrid
+        </span>
+       </code>
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#zip">
+       <code class="docutils literal notranslate">
+        <span class="pre">
+         zip
+        </span>
+       </code>
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#the-database">
+   The database
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#special-database-fields-and-repeated-runs">
+   Special database fields and repeated runs
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#filter-by-pset-hashes">
+     Filter by
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       pset
+      </span>
+     </code>
+     hashes
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#best-practices">
+   Best practices
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#save-data-on-disk-use-uuids">
+     Save data on disk, use UUIDs
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#post-processing">
+     Post-processing
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#iterative-extension-of-a-parameter-study">
+     Iterative extension of a parameter study
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#use-git">
+     Use git
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#how-to-handle-large-files-when-using-git">
+       How to handle large files when using git
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#simulate-dry-run-look-before-you-leap">
+     Simulate / Dry-Run: look before you leap
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#advanced-give-runs-names-for-easy-post-processing">
+     Advanced: Give runs names for easy post-processing
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#remote-cluster-batch-runs">
+   Remote cluster batch runs
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#workflow-summary">
+     Workflow summary
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#templates-layout-and-written-files">
+     Templates layout and written files
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#calc-templates">
+       calc templates
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#machine-templates">
+       machine templates
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#git-support">
+     git support
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#install">
+   Install
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#tests">
+   Tests
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#special-topics">
+   Special topics
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#how-to-migrate-a-normal-git-repo-to-git-lfs">
+     How to migrate a normal
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       git
+      </span>
+     </code>
+     repo to
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       git-lfs
+      </span>
+     </code>
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#scope-and-related-projects">
+   Scope and related projects
+  </a>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>Manual</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#getting-started">
+   Getting started
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#concepts">
+   Concepts
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#building-parameter-grids">
+   Building parameter grids
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#gotchas">
+     Gotchas
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#pgrid">
+       <code class="docutils literal notranslate">
+        <span class="pre">
+         pgrid
+        </span>
+       </code>
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#zip">
+       <code class="docutils literal notranslate">
+        <span class="pre">
+         zip
+        </span>
+       </code>
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#the-database">
+   The database
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#special-database-fields-and-repeated-runs">
+   Special database fields and repeated runs
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#filter-by-pset-hashes">
+     Filter by
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       pset
+      </span>
+     </code>
+     hashes
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#best-practices">
+   Best practices
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#save-data-on-disk-use-uuids">
+     Save data on disk, use UUIDs
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#post-processing">
+     Post-processing
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#iterative-extension-of-a-parameter-study">
+     Iterative extension of a parameter study
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#use-git">
+     Use git
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#how-to-handle-large-files-when-using-git">
+       How to handle large files when using git
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#simulate-dry-run-look-before-you-leap">
+     Simulate / Dry-Run: look before you leap
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#advanced-give-runs-names-for-easy-post-processing">
+     Advanced: Give runs names for easy post-processing
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#remote-cluster-batch-runs">
+   Remote cluster batch runs
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#workflow-summary">
+     Workflow summary
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#templates-layout-and-written-files">
+     Templates layout and written files
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#calc-templates">
+       calc templates
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#machine-templates">
+       machine templates
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#git-support">
+     git support
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#install">
+   Install
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#tests">
+   Tests
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#special-topics">
+   Special topics
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#how-to-migrate-a-normal-git-repo-to-git-lfs">
+     How to migrate a normal
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       git
+      </span>
+     </code>
+     repo to
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       git-lfs
+      </span>
+     </code>
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#scope-and-related-projects">
+   Scope and related projects
+  </a>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section class="tex2jax_ignore mathjax_ignore" id="manual">
+<h1>Manual<a class="headerlink" href="#manual" title="Permalink to this headline">#</a></h1>
+<p>This package helps you to set up and run parameter studies.</p>
+<p>Mostly, you’ll start with a script and a for-loop and ask “why do I
+need a package for that”? Well, soon you’ll want housekeeping tools
+and a database for your runs and results. This package exists because
+sooner or later, everyone doing parameter scans arrives at roughly the
+same workflow and tools.</p>
+<p>This package deals with commonly encountered boilerplate tasks:</p>
+<ul class="simple">
+<li><p>write a database of parameters and results automatically</p></li>
+<li><p>make a backup of the database and all results when you repeat or
+extend the study</p></li>
+<li><p>append new rows to the database when extending the study</p></li>
+<li><p>simulate a parameter scan</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">git</span></code> support to track progress of your work and recover from mistakes</p></li>
+<li><p>optional: don’t repeat already performed calculations based on parameter set
+hashes</p></li>
+<li><p><strong>experimental</strong>: support for managing batch runs, e.g. on remote HPC
+systems, including <code class="docutils literal notranslate"><span class="pre">git</span></code> support</p></li>
+</ul>
+<p>Otherwise, the main goal is to not constrain your flexibility by
+building a complicated framework – we provide only very basic building
+blocks. All data structures are really simple (dicts), as are the
+provided functions. The database is a normal pandas DataFrame.</p>
+<section id="getting-started">
+<h2>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this headline">#</a></h2>
+<p>A simple example: Loop over two parameters <code class="docutils literal notranslate"><span class="pre">a</span></code> and <code class="docutils literal notranslate"><span class="pre">b</span></code> in a nested loop (grid),
+calculate and store the result of a calculation for each parameter combination.</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">random</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">psweep</span> <span class="k">as</span> <span class="nn">ps</span>
+
+
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="n">pset</span><span class="p">):</span>
+<span class="gp">... </span>   <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">*</span> <span class="n">pset</span><span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">pset</span><span class="p">[</span><span class="s2">&quot;b&quot;</span><span class="p">]}</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">plist</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">plist</span><span class="p">(</span><span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mi">88</span><span class="p">,</span><span class="mi">99</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">params</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">pgrid</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">run_local</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">pgrid</span></code> produces a list <code class="docutils literal notranslate"><span class="pre">params</span></code> of parameter sets (dicts <code class="docutils literal notranslate"><span class="pre">{'a':</span> <span class="pre">...,</span> <span class="pre">'b':</span> <span class="pre">...}</span></code>) to loop over:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="mi">88</span><span class="p">},</span>
+ <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="mi">99</span><span class="p">},</span>
+ <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="mi">88</span><span class="p">},</span>
+ <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="mi">99</span><span class="p">},</span>
+ <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="mi">88</span><span class="p">},</span>
+ <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="mi">99</span><span class="p">}]</span>
+</pre></div>
+</div>
+<p>and a database of results (pandas DataFrame <code class="docutils literal notranslate"><span class="pre">df</span></code>, pickled file
+<code class="docutils literal notranslate"><span class="pre">calc/database.pk</span></code> by default):</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s2">&quot;display.max_columns&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+<span class="go">   a   b                               _run_id  \</span>
+<span class="go">0  1  88  d3e44cd1-96a1-4825-b931-4e5113b433cb</span>
+<span class="go">1  1  99  d3e44cd1-96a1-4825-b931-4e5113b433cb</span>
+<span class="go">2  2  88  d3e44cd1-96a1-4825-b931-4e5113b433cb</span>
+<span class="go">3  2  99  d3e44cd1-96a1-4825-b931-4e5113b433cb</span>
+<span class="go">4  3  88  d3e44cd1-96a1-4825-b931-4e5113b433cb</span>
+<span class="go">5  3  99  d3e44cd1-96a1-4825-b931-4e5113b433cb</span>
+
+<span class="go">                               _pset_id _calc_dir  \</span>
+<span class="go">0  4fe605c3-39a8-4fd4-8076-8b5d4a676657      calc</span>
+<span class="go">1  809f4d31-f777-4912-8741-c5a2ed7a3803      calc</span>
+<span class="go">2  ba4c1446-b390-4d5a-ad30-662a353e84e0      calc</span>
+<span class="go">3  80acd6f8-c416-4c4f-8b8d-1668c6b3490e      calc</span>
+<span class="go">4  79329ab7-9442-499e-b43b-a90b1a101eba      calc</span>
+<span class="go">5  84a789b0-a2e9-4360-850f-739415de8c1d      calc</span>
+
+<span class="go">                      _time_utc                                _pset_hash  \</span>
+<span class="go">0 2022-08-16 07:21:41.182055473  2580bf27aca152e5427389214758e61ea0e544e0</span>
+<span class="go">1 2022-08-16 07:21:41.184616089  f2f17559c39b416483251f097ac895945641ea3a</span>
+<span class="go">2 2022-08-16 07:21:41.186779737  010552c86c69e723feafb1f2fdd5b7d7f7e46e32</span>
+<span class="go">3 2022-08-16 07:21:41.188885450  b57c5feac0608a43a65518f01da5aaf20a493535</span>
+<span class="go">4 2022-08-16 07:21:41.190981627  719b2a864450534f5b683a228de018bc71f4cf2d</span>
+<span class="go">5 2022-08-16 07:21:41.193049431  54baeefd998f4d8a8c9524c50aa0d88407cabb46</span>
+
+<span class="go">   _pset_seq  _run_seq     result  _pset_runtime</span>
+<span class="go">0          0         0  43.838220       0.000004</span>
+<span class="go">1          1         0  62.688537       0.000003</span>
+<span class="go">2          2         0  17.665135       0.000003</span>
+<span class="go">3          3         0  65.960342       0.000005</span>
+<span class="go">4          4         0  21.357208       0.000002</span>
+<span class="go">5          5         0  71.136104       0.000003</span>
+</pre></div>
+</div>
+<p>You see the columns <code class="docutils literal notranslate"><span class="pre">a</span></code> and <code class="docutils literal notranslate"><span class="pre">b</span></code>, the column <code class="docutils literal notranslate"><span class="pre">result</span></code> (returned by
+<code class="docutils literal notranslate"><span class="pre">func</span></code>) and a number of reserved fields for book-keeping such as</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">_run_id</span>
+<span class="n">_pset_id</span>
+<span class="n">_run_seq</span>
+<span class="n">_pset_seq</span>
+<span class="n">_pset_hash</span>
+<span class="n">_pset_runtime</span>
+<span class="n">_calc_dir</span>
+<span class="n">_time_utc</span>
+</pre></div>
+</div>
+<p>Observe that one call <code class="docutils literal notranslate"><span class="pre">ps.run_local(func,</span> <span class="pre">params)</span></code> creates one <code class="docutils literal notranslate"><span class="pre">_run_id</span></code> – a
+UUID identifying this run, where by “run” we mean one loop over all parameter
+combinations. Inside that, each call <code class="docutils literal notranslate"><span class="pre">func(pset)</span></code> creates a UUID <code class="docutils literal notranslate"><span class="pre">_pset_id</span></code> and
+a new row in the DataFrame (the database). In addition we also add sequential
+integer IDs <code class="docutils literal notranslate"><span class="pre">_run_seq</span></code> and <code class="docutils literal notranslate"><span class="pre">_pset_seq</span></code> for convenience, as well as an
+additional hash <code class="docutils literal notranslate"><span class="pre">_pset_hash</span></code> over the input dict (<code class="docutils literal notranslate"><span class="pre">pset</span></code> in the example) to
+<code class="docutils literal notranslate"><span class="pre">func()</span></code>. <code class="docutils literal notranslate"><span class="pre">_pset_runtime</span></code> is the time of one <code class="docutils literal notranslate"><span class="pre">func()</span></code> call. <code class="docutils literal notranslate"><span class="pre">_pset_seq</span></code> is the
+same as the integer index <code class="docutils literal notranslate"><span class="pre">df.index</span></code>. Hashes are calculated using the excellent
+<a class="reference external" href="https://joblib.readthedocs.io">joblib</a> package.</p>
+</section>
+<section id="concepts">
+<h2>Concepts<a class="headerlink" href="#concepts" title="Permalink to this headline">#</a></h2>
+<p>The basic data structure for a param study is a list of “parameter sets” or
+short “<code class="docutils literal notranslate"><span class="pre">pset</span></code>s”, each of which is a dict.</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">params</span> <span class="o">=</span> <span class="p">[{</span><span class="s2">&quot;a&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">:</span> <span class="mi">88</span><span class="p">},</span>  <span class="c1"># pset 1</span>
+          <span class="p">{</span><span class="s2">&quot;a&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">:</span> <span class="mi">99</span><span class="p">},</span>  <span class="c1"># pset 2</span>
+          <span class="o">...</span>                 <span class="c1"># ...</span>
+         <span class="p">]</span>
+</pre></div>
+</div>
+<p>Each pset contains values of parameters which are varied during the parameter
+study.</p>
+<p>You need to define a callback function <code class="docutils literal notranslate"><span class="pre">func</span></code>, which takes exactly one
+pset such as:</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="mi">88</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>and runs the workload for that pset. <code class="docutils literal notranslate"><span class="pre">func</span></code> must return a
+dict, for example:</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;result&#39;</span><span class="p">:</span> <span class="mf">1.234</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>or an updated ‘pset’:</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="mi">88</span><span class="p">,</span> <span class="s1">&#39;result&#39;</span><span class="p">:</span> <span class="mf">1.234</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>We always merge (<code class="docutils literal notranslate"><span class="pre">dict.update()</span></code>) the result of <code class="docutils literal notranslate"><span class="pre">func</span></code> with the pset, which gives
+you flexibility in what to return from <code class="docutils literal notranslate"><span class="pre">func</span></code>. In particular, you are free to
+also return an empty dict if you record results in another way (see the
+<code class="docutils literal notranslate"><span class="pre">save_data_on_disk</span></code> example later).</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">pset</span></code>s form the rows of a pandas <code class="docutils literal notranslate"><span class="pre">DataFrame</span></code>, which we use to store the
+pset and the result from each <code class="docutils literal notranslate"><span class="pre">func(pset)</span></code>.</p>
+<p>The idea is now to run <code class="docutils literal notranslate"><span class="pre">func</span></code> in a loop over all <code class="docutils literal notranslate"><span class="pre">pset</span></code>s in <code class="docutils literal notranslate"><span class="pre">params</span></code>. You do this
+using the <code class="docutils literal notranslate"><span class="pre">ps.run_local()</span></code> helper function. The function adds some special
+columns such as <code class="docutils literal notranslate"><span class="pre">_run_id</span></code> (once per <code class="docutils literal notranslate"><span class="pre">ps.run_local()</span></code> call) or <code class="docutils literal notranslate"><span class="pre">_pset_id</span></code> (once
+per pset). Using <code class="docutils literal notranslate"><span class="pre">ps.run_local(...</span> <span class="pre">poolsize=...)</span></code> runs <code class="docutils literal notranslate"><span class="pre">func</span></code> in parallel on
+<code class="docutils literal notranslate"><span class="pre">params</span></code> using <code class="docutils literal notranslate"><span class="pre">multiprocessing.Pool</span></code>.</p>
+</section>
+<section id="building-parameter-grids">
+<h2>Building parameter grids<a class="headerlink" href="#building-parameter-grids" title="Permalink to this headline">#</a></h2>
+<p>This package offers some very simple helper functions which assist in creating
+<code class="docutils literal notranslate"><span class="pre">params</span></code>. Basically, we define the to-be-varied parameters and then use
+something like <code class="docutils literal notranslate"><span class="pre">itertools.product()</span></code> to loop over them to create <code class="docutils literal notranslate"><span class="pre">params</span></code>,
+which is passed to <code class="docutils literal notranslate"><span class="pre">ps.run_local()</span></code> to actually perform the loop over all
+<code class="docutils literal notranslate"><span class="pre">pset</span></code>s.</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">product</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">psweep</span> <span class="k">as</span> <span class="nn">ps</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="o">=</span><span class="n">ps</span><span class="o">.</span><span class="n">plist</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span><span class="o">=</span><span class="n">ps</span><span class="o">.</span><span class="n">plist</span><span class="p">(</span><span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;xx&quot;</span><span class="p">,</span> <span class="s2">&quot;yy&quot;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span>
+<span class="go">[{&#39;a&#39;: 1}, {&#39;a&#39;: 2}]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span>
+<span class="go">[{&#39;b&#39;: &#39;xx&#39;}, {&#39;b&#39;: &#39;yy&#39;}]</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">product</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">))</span>
+<span class="go">[({&#39;a&#39;: 1}, {&#39;b&#39;: &#39;xx&#39;}),</span>
+<span class="go"> ({&#39;a&#39;: 1}, {&#39;b&#39;: &#39;yy&#39;}),</span>
+<span class="go"> ({&#39;a&#39;: 2}, {&#39;b&#39;: &#39;xx&#39;}),</span>
+<span class="go"> ({&#39;a&#39;: 2}, {&#39;b&#39;: &#39;yy&#39;})]</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">itr2params</span><span class="p">(</span><span class="n">product</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">))</span>
+<span class="go">[{&#39;a&#39;: 1, &#39;b&#39;: &#39;xx&#39;},</span>
+<span class="go"> {&#39;a&#39;: 1, &#39;b&#39;: &#39;yy&#39;},</span>
+<span class="go"> {&#39;a&#39;: 2, &#39;b&#39;: &#39;xx&#39;},</span>
+<span class="go"> {&#39;a&#39;: 2, &#39;b&#39;: &#39;yy&#39;}]</span>
+</pre></div>
+</div>
+<p>Here we used the helper function <code class="docutils literal notranslate"><span class="pre">itr2params()</span></code> which accepts an iterator
+that represents the loops over params. It merges dicts to <code class="docutils literal notranslate"><span class="pre">pset</span></code>s and also deals
+with nesting when using <code class="docutils literal notranslate"><span class="pre">zip()</span></code> (see below).</p>
+<p>The last pattern is so common that we have a short-cut function
+<code class="docutils literal notranslate"><span class="pre">pgrid()</span></code>, which basically does <code class="docutils literal notranslate"><span class="pre">itr2params(product(a,b))</span></code>.</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">pgrid</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">)</span>
+<span class="go">[{&#39;a&#39;: 1, &#39;b&#39;: &#39;xx&#39;},</span>
+<span class="go"> {&#39;a&#39;: 1, &#39;b&#39;: &#39;yy&#39;},</span>
+<span class="go"> {&#39;a&#39;: 2, &#39;b&#39;: &#39;xx&#39;},</span>
+<span class="go"> {&#39;a&#39;: 2, &#39;b&#39;: &#39;yy&#39;}]</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">pgrid()</span></code> accepts either a sequence or individual args (but please
+check the “pgrid gotchas” section below for some corner cases).</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">pgrid</span><span class="p">([</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">pgrid</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>So the logic of the param study is entirely contained in the creation of
+<code class="docutils literal notranslate"><span class="pre">params</span></code>. For instance, if parameters shall be varied together (say <code class="docutils literal notranslate"><span class="pre">a</span></code> and
+<code class="docutils literal notranslate"><span class="pre">b</span></code>), then use <code class="docutils literal notranslate"><span class="pre">zip</span></code>. The nesting from <code class="docutils literal notranslate"><span class="pre">zip()</span></code> is flattened in <code class="docutils literal notranslate"><span class="pre">itr2params()</span></code>
+and <code class="docutils literal notranslate"><span class="pre">pgrid()</span></code>.</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1">##ps.itr2params(zip(a, b))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">pgrid</span><span class="p">([</span><span class="nb">zip</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)])</span>
+<span class="go">[{&#39;a&#39;: 1, &#39;b&#39;: &#39;xx&#39;},</span>
+<span class="go"> {&#39;a&#39;: 2, &#39;b&#39;: &#39;yy&#39;}]</span>
+</pre></div>
+</div>
+<p>Let’s add a third parameter to vary. Of course, in general, plists can have
+different lengths.</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">c</span><span class="o">=</span><span class="n">ps</span><span class="o">.</span><span class="n">plist</span><span class="p">(</span><span class="s2">&quot;c&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mi">88</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;Z&quot;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1">##ps.itr2params(product(zip(a, b), c))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1">##ps.pgrid([zip(a, b), c])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">pgrid</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">),</span> <span class="n">c</span><span class="p">)</span>
+<span class="go">[{&#39;a&#39;: 1, &#39;b&#39;: &#39;xx&#39;, &#39;c&#39;: 88},</span>
+<span class="go"> {&#39;a&#39;: 1, &#39;b&#39;: &#39;xx&#39;, &#39;c&#39;: None},</span>
+<span class="go"> {&#39;a&#39;: 1, &#39;b&#39;: &#39;xx&#39;, &#39;c&#39;: &#39;Z&#39;},</span>
+<span class="go"> {&#39;a&#39;: 2, &#39;b&#39;: &#39;yy&#39;, &#39;c&#39;: 88},</span>
+<span class="go"> {&#39;a&#39;: 2, &#39;b&#39;: &#39;yy&#39;, &#39;c&#39;: None},</span>
+<span class="go"> {&#39;a&#39;: 2, &#39;b&#39;: &#39;yy&#39;, &#39;c&#39;: &#39;Z&#39;}]</span>
+</pre></div>
+</div>
+<p>If you want to add a parameter which is constant, use a list of length one.</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">const</span><span class="o">=</span><span class="n">ps</span><span class="o">.</span><span class="n">plist</span><span class="p">(</span><span class="s2">&quot;const&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mf">1.23</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">pgrid</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">),</span> <span class="n">c</span><span class="p">,</span> <span class="n">const</span><span class="p">)</span>
+<span class="go">[{&#39;a&#39;: 1, &#39;b&#39;: &#39;xx&#39;, &#39;c&#39;: 88,   &#39;const&#39;: 1.23},</span>
+<span class="go"> {&#39;a&#39;: 1, &#39;b&#39;: &#39;xx&#39;, &#39;c&#39;: None, &#39;const&#39;: 1.23},</span>
+<span class="go"> {&#39;a&#39;: 1, &#39;b&#39;: &#39;xx&#39;, &#39;c&#39;: &#39;Z&#39;,  &#39;const&#39;: 1.23},</span>
+<span class="go"> {&#39;a&#39;: 2, &#39;b&#39;: &#39;yy&#39;, &#39;c&#39;: 88,   &#39;const&#39;: 1.23},</span>
+<span class="go"> {&#39;a&#39;: 2, &#39;b&#39;: &#39;yy&#39;, &#39;c&#39;: None, &#39;const&#39;: 1.23},</span>
+<span class="go"> {&#39;a&#39;: 2, &#39;b&#39;: &#39;yy&#39;, &#39;c&#39;: &#39;Z&#39;,  &#39;const&#39;: 1.23}]</span>
+</pre></div>
+</div>
+<p>Besides <code class="docutils literal notranslate"><span class="pre">pgrid</span></code>, we have another convenience function <code class="docutils literal notranslate"><span class="pre">stargrid</span></code>, which creates
+a specific param sampling pattern, where we vary params in a “star” pattern
+(and not a full pgrid) around constant values (middle of the “star”).</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">const</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">77</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="o">=</span><span class="n">ps</span><span class="o">.</span><span class="n">plist</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span><span class="o">=</span><span class="n">ps</span><span class="o">.</span><span class="n">plist</span><span class="p">(</span><span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mi">77</span><span class="p">,</span><span class="mi">88</span><span class="p">,</span><span class="mi">99</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">stargrid</span><span class="p">(</span><span class="n">const</span><span class="p">,</span> <span class="n">vary</span><span class="o">=</span><span class="p">[</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">])</span>
+<span class="go">[{&#39;a&#39;: 1, &#39;b&#39;: 77, &#39;c&#39;: 11},</span>
+<span class="go"> {&#39;a&#39;: 2, &#39;b&#39;: 77, &#39;c&#39;: 11},</span>
+<span class="go"> {&#39;a&#39;: 3, &#39;b&#39;: 77, &#39;c&#39;: 11},</span>
+<span class="go"> {&#39;a&#39;: 4, &#39;b&#39;: 77, &#39;c&#39;: 11},</span>
+<span class="go"> {&#39;a&#39;: 1, &#39;b&#39;: 88, &#39;c&#39;: 11},</span>
+<span class="go"> {&#39;a&#39;: 1, &#39;b&#39;: 99, &#39;c&#39;: 11}]</span>
+</pre></div>
+</div>
+<p>This is useful in cases where you know that parameters are independent and you
+want to do just a “line scan” for each parameter around known good values.</p>
+<p>So, as you can see, the general idea is that we do all the loops
+<em>before</em> running any workload, i.e. we assemble the parameter grid to be
+sampled before the actual calculations. This has proven to be very
+practical as it helps detecting errors early.</p>
+<p>You are, by the way, of course not restricted to use simple nested loops
+over parameters using <code class="docutils literal notranslate"><span class="pre">pgrid()</span></code> (which uses <code class="docutils literal notranslate"><span class="pre">itertools.product()</span></code>). You
+are totally free in how to create <code class="docutils literal notranslate"><span class="pre">params</span></code>, be it using other fancy
+stuff from <code class="docutils literal notranslate"><span class="pre">itertools</span></code> or explicit loops. Of course you can also define
+a static <code class="docutils literal notranslate"><span class="pre">params</span></code> list</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">params</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>    <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="s1">&#39;xx&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>    <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="s1">&#39;yy&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">:</span> <span class="mf">1.234</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="s1">&#39;xx&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">:</span> <span class="s1">&#39;X&#39;</span><span class="p">},</span>
+    <span class="o">...</span>
+    <span class="p">]</span>
+</pre></div>
+</div>
+<p>or read <code class="docutils literal notranslate"><span class="pre">params</span></code> in from an external source such as a database from a
+previous study, etc.</p>
+<p>The point is: you generate <code class="docutils literal notranslate"><span class="pre">params</span></code>, we run the study.</p>
+<section id="gotchas">
+<h3>Gotchas<a class="headerlink" href="#gotchas" title="Permalink to this headline">#</a></h3>
+<section id="pgrid">
+<h4><code class="docutils literal notranslate"><span class="pre">pgrid</span></code><a class="headerlink" href="#pgrid" title="Permalink to this headline">#</a></h4>
+<p>tl;dr: <code class="docutils literal notranslate"><span class="pre">pgrid(a,b,...)</span></code> is a convenience API. It can’t handle all corner
+cases. If in doubt, use <code class="docutils literal notranslate"><span class="pre">pgrid([a,b,...])</span></code> (or even <code class="docutils literal notranslate"><span class="pre">itr2params(product(...))</span></code>
+directly).</p>
+<p>Note that for a single param we have</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="o">=</span><span class="n">ps</span><span class="o">.</span><span class="n">plist</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span>
+<span class="go">[{&#39;a&#39;: 1}, {&#39;a&#39;: 2}]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">pgrid</span><span class="p">([</span><span class="n">a</span><span class="p">])</span>
+<span class="go">[{&#39;a&#39;: 1}, {&#39;a&#39;: 2}]</span>
+</pre></div>
+</div>
+<p>i.e. the loop from <code class="docutils literal notranslate"><span class="pre">itertools.product()</span></code> is over <code class="docutils literal notranslate"><span class="pre">[a]</span></code> which returns <code class="docutils literal notranslate"><span class="pre">a</span></code>
+itself. You can leave off <code class="docutils literal notranslate"><span class="pre">[...]</span></code> if you have at least two args, say <code class="docutils literal notranslate"><span class="pre">a</span></code> and
+<code class="docutils literal notranslate"><span class="pre">b</span></code> as in</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pgrid</span><span class="p">([</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pgrid</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>For a single arg calling <code class="docutils literal notranslate"><span class="pre">pgrid(a)</span></code> is wrong since then <code class="docutils literal notranslate"><span class="pre">itertools.product()</span></code>
+will be called on the entries of <code class="docutils literal notranslate"><span class="pre">a</span></code> which is not what you want. In fact doing
+so will raise an error.</p>
+<p>Also, in case</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pgrid</span><span class="p">([</span><span class="nb">zip</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">)])</span>
+</pre></div>
+</div>
+<p>the list <code class="docutils literal notranslate"><span class="pre">[zip(a,b)]</span></code> is what you want to loop over and <code class="docutils literal notranslate"><span class="pre">pgrid(zip(a,b))</span></code> will
+raise an error, just as in case <code class="docutils literal notranslate"><span class="pre">pgrid(a)</span></code> above.</p>
+<p>And as before, if you have more plists, then <code class="docutils literal notranslate"><span class="pre">[...]</span></code> is optional, e.g.</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pgrid</span><span class="p">([</span><span class="nb">zip</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">),</span> <span class="n">c</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pgrid</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">),</span> <span class="n">c</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="zip">
+<h4><code class="docutils literal notranslate"><span class="pre">zip</span></code><a class="headerlink" href="#zip" title="Permalink to this headline">#</a></h4>
+<p>When using <code class="docutils literal notranslate"><span class="pre">zip(a,b)</span></code>, make sure that <code class="docutils literal notranslate"><span class="pre">a</span></code> and <code class="docutils literal notranslate"><span class="pre">b</span></code> have the same length, else <code class="docutils literal notranslate"><span class="pre">zip</span></code>
+will return an iterator whose length is <code class="docutils literal notranslate"><span class="pre">min(len(a),</span> <span class="pre">len(b))</span></code>.</p>
+</section>
+</section>
+</section>
+<section id="the-database">
+<h2>The database<a class="headerlink" href="#the-database" title="Permalink to this headline">#</a></h2>
+<p>By default, <code class="docutils literal notranslate"><span class="pre">ps.run_local()</span></code> writes a database <code class="docutils literal notranslate"><span class="pre">calc/database.pk</span></code> (a pickled
+DataFrame) with the default <code class="docutils literal notranslate"><span class="pre">calc_dir='calc'</span></code>. You can turn that off using
+<code class="docutils literal notranslate"><span class="pre">save=False</span></code> if you want. If you run <code class="docutils literal notranslate"><span class="pre">ps.run_local()</span></code> again</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">run_local</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">run_local</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">other_params</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>it will read and append to that file. The same happens in an interactive
+session when you pass in <code class="docutils literal notranslate"><span class="pre">df</span></code> again, in which case we don’t read it from disk:</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="c1"># default is df=None -&gt; create empty df</span>
+<span class="c1"># save=False: don&#39;t write db to disk, optional</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">df_run_0</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">run_local</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">save</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">df_run_0_and_1</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">run_local</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">other_params</span><span class="p">,</span> <span class="n">save</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">df</span><span class="o">=</span><span class="n">df_run_0</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="special-database-fields-and-repeated-runs">
+<h2>Special database fields and repeated runs<a class="headerlink" href="#special-database-fields-and-repeated-runs" title="Permalink to this headline">#</a></h2>
+<p>See <code class="docutils literal notranslate"><span class="pre">examples/*repeat.py</span></code>.</p>
+<p>It is important to get the difference between the two special fields
+<code class="docutils literal notranslate"><span class="pre">_run_id</span></code> and <code class="docutils literal notranslate"><span class="pre">_pset_id</span></code>, the most important one being <code class="docutils literal notranslate"><span class="pre">_pset_id</span></code>.</p>
+<p>Both are random UUIDs. They are used to uniquely identify things.</p>
+<p>Once per <code class="docutils literal notranslate"><span class="pre">ps.run_local()</span></code> call, a <code class="docutils literal notranslate"><span class="pre">_run_id</span></code> and <code class="docutils literal notranslate"><span class="pre">_run_seq</span></code> is created. Which
+means that when you call <code class="docutils literal notranslate"><span class="pre">ps.run_local()</span></code> multiple times <em>using the same
+database</em> as just shown, you will see multiple (in this case two) <code class="docutils literal notranslate"><span class="pre">_run_id</span></code>
+and <code class="docutils literal notranslate"><span class="pre">_run_seq</span></code> values.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>                             <span class="n">_run_id</span>                              <span class="n">_pset_id</span>  <span class="n">_run_seq</span>  <span class="n">_pset_seq</span>
+<span class="mi">8543</span><span class="n">fdad</span><span class="o">-</span><span class="mi">4426</span><span class="o">-</span><span class="mi">41</span><span class="n">cb</span><span class="o">-</span><span class="n">ab42</span><span class="o">-</span><span class="mi">8</span><span class="n">a80b1bebbe2</span>  <span class="mi">08</span><span class="n">cb5f7c</span><span class="o">-</span><span class="mi">8</span><span class="n">ce8</span><span class="o">-</span><span class="mi">451</span><span class="n">f</span><span class="o">-</span><span class="mi">846</span><span class="n">d</span><span class="o">-</span><span class="n">db5ac3bcc746</span>         <span class="mi">0</span>          <span class="mi">0</span>
+<span class="mi">8543</span><span class="n">fdad</span><span class="o">-</span><span class="mi">4426</span><span class="o">-</span><span class="mi">41</span><span class="n">cb</span><span class="o">-</span><span class="n">ab42</span><span class="o">-</span><span class="mi">8</span><span class="n">a80b1bebbe2</span>  <span class="mi">18</span><span class="n">da3840</span><span class="o">-</span><span class="n">d00e</span><span class="o">-</span><span class="mi">4</span><span class="n">bdd</span><span class="o">-</span><span class="n">b29c</span><span class="o">-</span><span class="mi">68</span><span class="n">be2adb164e</span>         <span class="mi">0</span>          <span class="mi">1</span>
+<span class="mi">8543</span><span class="n">fdad</span><span class="o">-</span><span class="mi">4426</span><span class="o">-</span><span class="mi">41</span><span class="n">cb</span><span class="o">-</span><span class="n">ab42</span><span class="o">-</span><span class="mi">8</span><span class="n">a80b1bebbe2</span>  <span class="n">bcc47205</span><span class="o">-</span><span class="mi">0919</span><span class="o">-</span><span class="mi">4084</span><span class="o">-</span><span class="mi">9</span><span class="n">f07</span><span class="o">-</span><span class="mi">072</span><span class="n">eb56ed5fd</span>         <span class="mi">0</span>          <span class="mi">2</span>
+<span class="mi">969592</span><span class="n">bc</span><span class="o">-</span><span class="mf">65e6</span><span class="o">-</span><span class="mi">4315</span><span class="o">-</span><span class="mf">9e6</span><span class="n">b</span><span class="o">-</span><span class="mi">5</span><span class="n">d64b6eaa0b3</span>  <span class="mi">809064</span><span class="n">d6</span><span class="o">-</span><span class="n">c7aa</span><span class="o">-</span><span class="mf">4e43</span><span class="o">-</span><span class="mi">81</span><span class="n">ea</span><span class="o">-</span><span class="n">cebfd4f85a12</span>         <span class="mi">1</span>          <span class="mi">3</span>
+<span class="mi">969592</span><span class="n">bc</span><span class="o">-</span><span class="mf">65e6</span><span class="o">-</span><span class="mi">4315</span><span class="o">-</span><span class="mf">9e6</span><span class="n">b</span><span class="o">-</span><span class="mi">5</span><span class="n">d64b6eaa0b3</span>  <span class="n">ef5f06d4</span><span class="o">-</span><span class="mi">8906</span><span class="o">-</span><span class="mi">4605</span><span class="o">-</span><span class="mi">99</span><span class="n">cb</span><span class="o">-</span><span class="mi">2</span><span class="n">a9550fdd8de</span>         <span class="mi">1</span>          <span class="mi">4</span>
+<span class="mi">969592</span><span class="n">bc</span><span class="o">-</span><span class="mf">65e6</span><span class="o">-</span><span class="mi">4315</span><span class="o">-</span><span class="mf">9e6</span><span class="n">b</span><span class="o">-</span><span class="mi">5</span><span class="n">d64b6eaa0b3</span>  <span class="mi">162</span><span class="n">a7b8c</span><span class="o">-</span><span class="mi">3</span><span class="n">ab5</span><span class="o">-</span><span class="mi">41</span><span class="n">bb</span><span class="o">-</span><span class="mi">92</span><span class="n">cd</span><span class="o">-</span><span class="mf">1e5</span><span class="n">d0db0842f</span>         <span class="mi">1</span>          <span class="mi">5</span>
+</pre></div>
+</div>
+<p>Each <code class="docutils literal notranslate"><span class="pre">ps.run_local()</span></code> call in turn calls <code class="docutils literal notranslate"><span class="pre">func(pset)</span></code> for each pset in <code class="docutils literal notranslate"><span class="pre">params</span></code>.
+Each <code class="docutils literal notranslate"><span class="pre">func</span></code> invocation creates a unique <code class="docutils literal notranslate"><span class="pre">_pset_id</span></code> and increment the integer
+counter <code class="docutils literal notranslate"><span class="pre">_pset_seq</span></code>. Thus, we have a very simple, yet powerful one-to-one
+mapping and a way to refer to a specific pset.</p>
+<p>An interesting special case (see <code class="docutils literal notranslate"><span class="pre">examples/vary_1_param_repeat_same.py</span></code>) is
+when you call <code class="docutils literal notranslate"><span class="pre">ps.run_local()</span></code> multiple times using <em>the exact same</em> <code class="docutils literal notranslate"><span class="pre">params</span></code>,</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">run_local</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">run_local</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>which is perfectly fine, e.g. in cases where you just want to sample more data
+for the same <code class="docutils literal notranslate"><span class="pre">pset</span></code>s in <code class="docutils literal notranslate"><span class="pre">params</span></code> over and over again. In this case, you will have
+as above two unique <code class="docutils literal notranslate"><span class="pre">_run_id</span></code>s but <em>two sets of the same</em> <code class="docutils literal notranslate"><span class="pre">_pset_hash</span></code>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>                             <span class="n">_run_id</span>                              <span class="n">_pset_id</span>  <span class="n">_run_seq</span>  <span class="n">_pset_seq</span>                                <span class="n">_pset_hash</span>  <span class="n">a</span>    <span class="n">result</span>
+<span class="mi">8543</span><span class="n">fdad</span><span class="o">-</span><span class="mi">4426</span><span class="o">-</span><span class="mi">41</span><span class="n">cb</span><span class="o">-</span><span class="n">ab42</span><span class="o">-</span><span class="mi">8</span><span class="n">a80b1bebbe2</span>  <span class="mi">08</span><span class="n">cb5f7c</span><span class="o">-</span><span class="mi">8</span><span class="n">ce8</span><span class="o">-</span><span class="mi">451</span><span class="n">f</span><span class="o">-</span><span class="mi">846</span><span class="n">d</span><span class="o">-</span><span class="n">db5ac3bcc746</span>         <span class="mi">0</span>          <span class="mi">0</span>  <span class="n">e4ad4daad53a2eec0313386ada88211e50d693bd</span>  <span class="mi">1</span>  <span class="mf">0.381589</span>
+<span class="mi">8543</span><span class="n">fdad</span><span class="o">-</span><span class="mi">4426</span><span class="o">-</span><span class="mi">41</span><span class="n">cb</span><span class="o">-</span><span class="n">ab42</span><span class="o">-</span><span class="mi">8</span><span class="n">a80b1bebbe2</span>  <span class="mi">18</span><span class="n">da3840</span><span class="o">-</span><span class="n">d00e</span><span class="o">-</span><span class="mi">4</span><span class="n">bdd</span><span class="o">-</span><span class="n">b29c</span><span class="o">-</span><span class="mi">68</span><span class="n">be2adb164e</span>         <span class="mi">0</span>          <span class="mi">1</span>  <span class="mi">7</span><span class="n">b7ee754248759adcee9e62a4c1477ed1a8bb1ab</span>  <span class="mi">2</span>  <span class="mf">1.935220</span>
+<span class="mi">8543</span><span class="n">fdad</span><span class="o">-</span><span class="mi">4426</span><span class="o">-</span><span class="mi">41</span><span class="n">cb</span><span class="o">-</span><span class="n">ab42</span><span class="o">-</span><span class="mi">8</span><span class="n">a80b1bebbe2</span>  <span class="n">bcc47205</span><span class="o">-</span><span class="mi">0919</span><span class="o">-</span><span class="mi">4084</span><span class="o">-</span><span class="mi">9</span><span class="n">f07</span><span class="o">-</span><span class="mi">072</span><span class="n">eb56ed5fd</span>         <span class="mi">0</span>          <span class="mi">2</span>  <span class="mf">9e0</span><span class="n">e6d8a99c72daf40337183358cbef91bba7311</span>  <span class="mi">3</span>  <span class="mf">2.187107</span>
+<span class="mi">969592</span><span class="n">bc</span><span class="o">-</span><span class="mf">65e6</span><span class="o">-</span><span class="mi">4315</span><span class="o">-</span><span class="mf">9e6</span><span class="n">b</span><span class="o">-</span><span class="mi">5</span><span class="n">d64b6eaa0b3</span>  <span class="mi">809064</span><span class="n">d6</span><span class="o">-</span><span class="n">c7aa</span><span class="o">-</span><span class="mf">4e43</span><span class="o">-</span><span class="mi">81</span><span class="n">ea</span><span class="o">-</span><span class="n">cebfd4f85a12</span>         <span class="mi">1</span>          <span class="mi">3</span>  <span class="n">e4ad4daad53a2eec0313386ada88211e50d693bd</span>  <span class="mi">1</span>  <span class="mf">0.590200</span>
+<span class="mi">969592</span><span class="n">bc</span><span class="o">-</span><span class="mf">65e6</span><span class="o">-</span><span class="mi">4315</span><span class="o">-</span><span class="mf">9e6</span><span class="n">b</span><span class="o">-</span><span class="mi">5</span><span class="n">d64b6eaa0b3</span>  <span class="n">ef5f06d4</span><span class="o">-</span><span class="mi">8906</span><span class="o">-</span><span class="mi">4605</span><span class="o">-</span><span class="mi">99</span><span class="n">cb</span><span class="o">-</span><span class="mi">2</span><span class="n">a9550fdd8de</span>         <span class="mi">1</span>          <span class="mi">4</span>  <span class="mi">7</span><span class="n">b7ee754248759adcee9e62a4c1477ed1a8bb1ab</span>  <span class="mi">2</span>  <span class="mf">1.322758</span>
+<span class="mi">969592</span><span class="n">bc</span><span class="o">-</span><span class="mf">65e6</span><span class="o">-</span><span class="mi">4315</span><span class="o">-</span><span class="mf">9e6</span><span class="n">b</span><span class="o">-</span><span class="mi">5</span><span class="n">d64b6eaa0b3</span>  <span class="mi">162</span><span class="n">a7b8c</span><span class="o">-</span><span class="mi">3</span><span class="n">ab5</span><span class="o">-</span><span class="mi">41</span><span class="n">bb</span><span class="o">-</span><span class="mi">92</span><span class="n">cd</span><span class="o">-</span><span class="mf">1e5</span><span class="n">d0db0842f</span>         <span class="mi">1</span>          <span class="mi">5</span>  <span class="mf">9e0</span><span class="n">e6d8a99c72daf40337183358cbef91bba7311</span>  <span class="mi">3</span>  <span class="mf">1.639455</span>
+</pre></div>
+</div>
+<p>This is a very powerful tool to filter the database for calculations that used
+the same pset, e.g. an exact repetition of one experiment. But since we use
+UUIDs for <code class="docutils literal notranslate"><span class="pre">_pset_id</span></code>, those calculations can still be distinguished.</p>
+<section id="filter-by-pset-hashes">
+<h3>Filter by <code class="docutils literal notranslate"><span class="pre">pset</span></code> hashes<a class="headerlink" href="#filter-by-pset-hashes" title="Permalink to this headline">#</a></h3>
+<p>As mentioned, we create a hash for each <code class="docutils literal notranslate"><span class="pre">pset</span></code>, which is stored in the
+<code class="docutils literal notranslate"><span class="pre">_pset_hash</span></code> database column. This unlocks powerful database filter options.</p>
+<p>As shown above, when calling <code class="docutils literal notranslate"><span class="pre">run_local()</span></code> twice
+with the same <code class="docutils literal notranslate"><span class="pre">params</span></code> you get a second set of calculations. But suppose you
+have a script where you keep modifying the way you create <code class="docutils literal notranslate"><span class="pre">params</span></code> and you just
+want to add some more scans <em>without</em> removing the code that generated the old
+<code class="docutils literal notranslate"><span class="pre">params</span></code> that you already have in the database. In that case use</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">run_local</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">skip_dups</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This will skip all <code class="docutils literal notranslate"><span class="pre">pset</span></code>s already in the database based on their hash and
+only add calculations for new <code class="docutils literal notranslate"><span class="pre">pset</span></code>s.</p>
+</section>
+</section>
+<section id="best-practices">
+<h2>Best practices<a class="headerlink" href="#best-practices" title="Permalink to this headline">#</a></h2>
+<p>The following workflows and practices come from experience. They are, if
+you will, the “framework” for how to do things. However, we decided to
+not codify any of these ideas but to only provide tools to make them
+happen easily, because you will probably have quite different
+requirements and workflows.</p>
+<p>Please also have a look at the <code class="docutils literal notranslate"><span class="pre">examples/</span></code> dir where we document these
+and more common workflows.</p>
+<section id="save-data-on-disk-use-uuids">
+<h3>Save data on disk, use UUIDs<a class="headerlink" href="#save-data-on-disk-use-uuids" title="Permalink to this headline">#</a></h3>
+<p>Assume that you need to save results from a <code class="docutils literal notranslate"><span class="pre">func()</span></code> call not only in the
+returned dict from <code class="docutils literal notranslate"><span class="pre">func</span></code> (or even not at all!) but on disk, for instance when
+you call an external program which saves data on disk. Consider this toy
+example (<code class="docutils literal notranslate"><span class="pre">examples/save_data_on_disk/10run.py</span></code>):</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/env python3</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">import</span> <span class="nn">psweep</span> <span class="k">as</span> <span class="nn">ps</span>
+
+
+<span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="n">pset</span><span class="p">):</span>
+    <span class="n">fn</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">pset</span><span class="p">[</span><span class="s2">&quot;_calc_dir&quot;</span><span class="p">],</span> <span class="n">pset</span><span class="p">[</span><span class="s2">&quot;_pset_id&quot;</span><span class="p">],</span> <span class="s2">&quot;output.txt&quot;</span><span class="p">)</span>
+    <span class="n">cmd</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;mkdir -p $(dirname </span><span class="si">{</span><span class="n">fn</span><span class="si">}</span><span class="s2">); &quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;echo </span><span class="si">{</span><span class="n">pset</span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">pset</span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">]</span><span class="o">*</span><span class="mi">2</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">pset</span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">]</span><span class="o">*</span><span class="mi">4</span><span class="si">}</span><span class="s2"> &gt; </span><span class="si">{</span><span class="n">fn</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="p">)</span>
+    <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;cmd&quot;</span><span class="p">:</span> <span class="n">cmd</span><span class="p">}</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">plist</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">])</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">run_local</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>In this case, you call an external program (here a dummy shell command) which
+saves its output on disk. Note that we don’t return any output from the
+external command in <code class="docutils literal notranslate"><span class="pre">func</span></code>’s <code class="docutils literal notranslate"><span class="pre">return</span></code> statement. We only update the database
+row added for each call to <code class="docutils literal notranslate"><span class="pre">func</span></code> by returning a dict <code class="docutils literal notranslate"><span class="pre">{&quot;cmd&quot;:</span> <span class="pre">cmd}</span></code> with the
+shell <code class="docutils literal notranslate"><span class="pre">cmd</span></code> we call in order to have that in the database.</p>
+<p>Also note how we use the special fields <code class="docutils literal notranslate"><span class="pre">_pset_id</span></code> and <code class="docutils literal notranslate"><span class="pre">_calc_dir</span></code>, which are
+added in <code class="docutils literal notranslate"><span class="pre">ps.run_local()</span></code> to <code class="docutils literal notranslate"><span class="pre">pset</span></code> <em>before</em> <code class="docutils literal notranslate"><span class="pre">func</span></code> is called.</p>
+<p>After the run, we have four dirs for each pset, each simply named with
+<code class="docutils literal notranslate"><span class="pre">_pset_id</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>calc
+├── 63b5daae-1b37-47e9-a11c-463fb4934d14
+│   └── output.txt
+├── 657cb9f9-8720-4d4c-8ff1-d7ddc7897700
+│   └── output.txt
+├── d7849792-622d-4479-aec6-329ed8bedd9b
+│   └── output.txt
+├── de8ac159-b5d0-4df6-9e4b-22ebf78bf9b0
+│   └── output.txt
+└── database.pk
+</pre></div>
+</div>
+<p>This is a useful pattern. History has shown that in the end, most naming
+conventions start simple but turn out to be inflexible and hard to adapt
+later on. I have seen people write scripts which create things like:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>calc/param_a=1.2_param_b=66.77
+calc/param_a=3.4_param_b=88.99
+</pre></div>
+</div>
+<p>i.e. encode the parameter values in path names, because they don’t have
+a database. Good luck parsing that. I don’t say this cannot be done –
+sure it can (in fact the example above easy to parse). It is just not
+fun – and there is no need to. What if you need to add a “column”
+for parameter ‘c’ later? Impossible (well, painful at least). This
+approach makes sense for very quick throw-away test runs, but gets out
+of hand quickly.</p>
+<p>Since we have a database, we can simply drop all data in
+<code class="docutils literal notranslate"><span class="pre">calc/&lt;_pset_id&gt;</span></code> and be done with it. Each parameter set is identified
+by a UUID that will never change. This is the only kind of naming
+convention which makes sense in the long run.</p>
+</section>
+<section id="post-processing">
+<h3>Post-processing<a class="headerlink" href="#post-processing" title="Permalink to this headline">#</a></h3>
+<p>An example of a simple post-processing script that reads data from disk
+(<code class="docutils literal notranslate"><span class="pre">examples/save_data_on_disk/20eval.py</span></code>):</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">df_read</span><span class="p">(</span><span class="s2">&quot;calc/database.pk&quot;</span><span class="p">)</span>
+
+<span class="c1"># Filter database</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">a</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">df</span><span class="o">.</span><span class="n">a</span><span class="o">.</span><span class="n">isna</span><span class="p">()]</span>
+
+<span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+    <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;calc/</span><span class="si">{</span><span class="n">pset_id</span><span class="si">}</span><span class="s2">/output.txt&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">pset_id</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">_pset_id</span><span class="o">.</span><span class="n">values</span><span class="p">]</span>
+<span class="p">)</span>
+
+<span class="c1"># Add new column to database, print and write new eval database</span>
+<span class="n">df</span><span class="p">[</span><span class="s2">&quot;mean&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">arr</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;mean&quot;</span><span class="p">,</span> <span class="s2">&quot;_pset_id&quot;</span><span class="p">]</span>
+<span class="n">ps</span><span class="o">.</span><span class="n">df_print</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">cols</span><span class="p">])</span>
+
+<span class="n">ps</span><span class="o">.</span><span class="n">df_write</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s2">&quot;calc/database_eval.pk&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="iterative-extension-of-a-parameter-study">
+<h3>Iterative extension of a parameter study<a class="headerlink" href="#iterative-extension-of-a-parameter-study" title="Permalink to this headline">#</a></h3>
+<p>See <code class="docutils literal notranslate"><span class="pre">examples/multiple_local_1d_scans/</span></code> and <code class="docutils literal notranslate"><span class="pre">examples/*repeat*</span></code>.</p>
+<p>You can backup old calc dirs when repeating calls to <code class="docutils literal notranslate"><span class="pre">ps.run_local()</span></code> using the
+<code class="docutils literal notranslate"><span class="pre">backup</span></code> keyword.</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">run_local</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">backup</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This will save a copy of the old <code class="docutils literal notranslate"><span class="pre">calc_dir</span></code> to something like</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">calc</span><span class="o">.</span><span class="n">bak_2021</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">19</span><span class="n">T23</span><span class="p">:</span><span class="mi">20</span><span class="p">:</span><span class="mf">33.621004</span><span class="n">Z_run_id_d309c2c6</span><span class="o">-</span><span class="n">e4ba</span><span class="o">-</span><span class="mi">4</span><span class="n">ef4</span><span class="o">-</span><span class="mi">934</span><span class="n">c</span><span class="o">-</span><span class="mi">2</span><span class="n">a4b2df07941</span>
+</pre></div>
+</div>
+<p>That way, you can track old states of the overall study, and recover from
+mistakes, e.g. by just</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$ rm -r calc
+$ mv calc.bak_2021-03-19T2* calc
+</pre></div>
+</div>
+<p>For any non-trivial work, you won’t use an interactive session. Instead, you
+will have a driver script (say <code class="docutils literal notranslate"><span class="pre">input.py</span></code>, or a jupyter notebook, or …) which
+defines <code class="docutils literal notranslate"><span class="pre">params</span></code> and starts <code class="docutils literal notranslate"><span class="pre">ps.run_local()</span></code>. Also in a common workflow, you
+won’t define <code class="docutils literal notranslate"><span class="pre">params</span></code> and run a study once. Instead you will first have an idea
+about which parameter values to scan. You will start with a coarse grid of
+parameters and then inspect the results and identify regions where you need
+more data (e.g. more dense sampling). Then you will modify <code class="docutils literal notranslate"><span class="pre">params</span></code> and run the
+study again. You will modify <code class="docutils literal notranslate"><span class="pre">input.py</span></code> multiple times, as you refine your
+study.</p>
+</section>
+<section id="use-git">
+<h3>Use git<a class="headerlink" href="#use-git" title="Permalink to this headline">#</a></h3>
+<p>Instead or in addition to using</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">run_local</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">backup</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>we recommend a <code class="docutils literal notranslate"><span class="pre">git</span></code>-based workflow to at least track changes to <code class="docutils literal notranslate"><span class="pre">input.py</span></code>
+(instead of manually creating backups such as <code class="docutils literal notranslate"><span class="pre">input.py.0</span></code>, <code class="docutils literal notranslate"><span class="pre">input.py.1</span></code>, …). You
+can manually <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">commit</span></code> at any point of course, or use</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">run_local</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">git</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This will commit any changes made to e.g. <code class="docutils literal notranslate"><span class="pre">input.py</span></code> itself and create a commit
+message containing the current <code class="docutils literal notranslate"><span class="pre">_run_id</span></code> such as</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">psweep</span><span class="p">:</span> <span class="n">batch_with_git</span><span class="p">:</span> <span class="n">run_id</span><span class="o">=</span><span class="mi">68</span><span class="n">f5d9b7</span><span class="o">-</span><span class="n">efa6</span><span class="o">-</span><span class="mi">4</span><span class="n">ed8</span><span class="o">-</span><span class="mi">9384</span><span class="o">-</span><span class="mi">4</span><span class="n">ffccab6f7c5</span>
+</pre></div>
+</div>
+<p>We <strong>strongly recommend</strong> to create a <code class="docutils literal notranslate"><span class="pre">.gitignore</span></code> such as</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## ignore backups</span>
+<span class="n">calc</span><span class="o">.</span><span class="n">bak</span><span class="o">*</span>
+
+<span class="c1"># ignore simulate runs</span>
+<span class="n">calc</span><span class="o">.</span><span class="n">simulate</span>
+
+<span class="c1"># ignore the whole calc/ dir, track only scripts</span>
+<span class="c1">##calc/</span>
+
+<span class="c1"># or just ignore potentially big files coming from a simulation you run</span>
+<span class="n">calc</span><span class="o">/*/*.</span><span class="n">bin</span>
+</pre></div>
+</div>
+<section id="how-to-handle-large-files-when-using-git">
+<h4>How to handle large files when using git<a class="headerlink" href="#how-to-handle-large-files-when-using-git" title="Permalink to this headline">#</a></h4>
+<p>The first option is to <code class="docutils literal notranslate"><span class="pre">.gitignore</span></code> them. Another is to use
+<a class="reference external" href="https://git-lfs.github.com"><code class="docutils literal notranslate"><span class="pre">git-lfs</span></code></a> (see the section on that later). That way you track their
+changes but only store the most recent version. Or you leave those files on
+another local or remote storage and store only the path to them (and maybe a
+hash) in the database. It’s up to you.</p>
+<p>Again, we don’t enforce a specific workflow but instead just provide basic
+building blocks.</p>
+</section>
+</section>
+<section id="simulate-dry-run-look-before-you-leap">
+<h3>Simulate / Dry-Run: look before you leap<a class="headerlink" href="#simulate-dry-run-look-before-you-leap" title="Permalink to this headline">#</a></h3>
+<p>See <code class="docutils literal notranslate"><span class="pre">examples/vary_1_param_simulate.py</span></code>.</p>
+<p>When you fiddle with finding the next good <code class="docutils literal notranslate"><span class="pre">params</span></code> and even when using
+<code class="docutils literal notranslate"><span class="pre">backup</span></code> and/or <code class="docutils literal notranslate"><span class="pre">git</span></code>, appending to the old database might be
+a hassle if you find that you made a mistake when setting up <code class="docutils literal notranslate"><span class="pre">params</span></code>.
+You need to abort the current run, copy the backup over or use <code class="docutils literal notranslate"><span class="pre">git</span></code> to go
+back.</p>
+<p>Instead, while you tinker with <code class="docutils literal notranslate"><span class="pre">params</span></code>, use another
+<code class="docutils literal notranslate"><span class="pre">calc_dir</span></code>, e.g.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="c1"># only needed so that we can copy the old database over</span>
+$ mkdir -p calc.simulate
+$ cp calc/database.pk calc.simulate/
+</pre></div>
+</div>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">run_local</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">calc_dir</span><span class="o">=</span><span class="s1">&#39;calc.simulate&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>But what’s even better: keep everything as it is and just set
+<code class="docutils literal notranslate"><span class="pre">simulate=True</span></code>, which performs exactly the two steps above.</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">run_local</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">simulate</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>It will copy only the database, not all the (possible large) data in <code class="docutils literal notranslate"><span class="pre">calc/</span></code> to
+<code class="docutils literal notranslate"><span class="pre">calc.simulate/</span></code> and run the study there. Additionally , it <em>will not call</em> call
+<code class="docutils literal notranslate"><span class="pre">func()</span></code> to run any workload. So you still append to your old database as in a
+real run, but in a safe separate dir which you can delete later.</p>
+</section>
+<section id="advanced-give-runs-names-for-easy-post-processing">
+<h3>Advanced: Give runs names for easy post-processing<a class="headerlink" href="#advanced-give-runs-names-for-easy-post-processing" title="Permalink to this headline">#</a></h3>
+<p>See <code class="docutils literal notranslate"><span class="pre">examples/vary_1_param_study_column.py</span></code>.</p>
+<p>Post-processing is not the scope of the package. The database is a
+pandas DataFrame and that’s it. You can query it and use your full pandas
+Ninja skills here, e.g. “give me all <code class="docutils literal notranslate"><span class="pre">pset</span></code>s where parameter ‘a’ was
+between 10 and 100, while ‘b’ was constant, …”. You get the idea.</p>
+<p>To ease post-processing, it can be useful practice to add a constant parameter
+named “study” or “scan” to label a certain range of runs. If you, for instance,
+have 5 runs (meaning 5 calls to <code class="docutils literal notranslate"><span class="pre">ps.run_local()</span></code>) where you scan values for
+parameter ‘a’ while keeping parameters ‘b’ and ‘c’ constant, you’ll have 5
+<code class="docutils literal notranslate"><span class="pre">_run_id</span></code> values. When querying the database later, you could limit by
+<code class="docutils literal notranslate"><span class="pre">_run_id</span></code> if you know the values:</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">df_filtered</span> <span class="o">=</span> <span class="n">df</span><span class="p">[(</span><span class="n">df</span><span class="o">.</span><span class="n">_run_id</span><span class="o">==</span><span class="s1">&#39;afa03dab-071e-472d-a396-37096580bfee&#39;</span><span class="p">)</span> <span class="o">|</span>
+<span class="go">                     (df._run_id==&#39;e813db52-7fb9-4777-a4c8-2ce0dddc283c&#39;) |</span>
+<span class="go">                     ...</span>
+<span class="go">                     ]</span>
+</pre></div>
+</div>
+<p>This doesn’t look like fun. It shows that the UUIDs (<code class="docutils literal notranslate"><span class="pre">_run_id</span></code> and
+<code class="docutils literal notranslate"><span class="pre">_pset_id</span></code>) are rarely meant to be used directly, but rather to
+programmatically link <code class="docutils literal notranslate"><span class="pre">pset</span></code>s and runs to other data (as shown above in the
+“Save data on disk” example). You can also use the integer IDs <code class="docutils literal notranslate"><span class="pre">_run_seq</span></code> and
+<code class="docutils literal notranslate"><span class="pre">_pset_seq</span></code> instead. But still, you need to know to which parameter values they
+correspond to.</p>
+<p>When possible, you could limit by the constant values of the other parameters:</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">df_filtered</span> <span class="o">=</span> <span class="n">df</span><span class="p">[(</span><span class="n">df</span><span class="o">.</span><span class="n">b</span><span class="o">==</span><span class="mi">10</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">c</span><span class="o">==</span><span class="s1">&#39;foo&#39;</span><span class="p">)]</span>
+</pre></div>
+</div>
+<p>Much better! This is what most post-processing scripts will do. In fact, we
+have a shortcut function</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">conds</span> <span class="o">=</span> <span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">b</span><span class="o">==</span><span class="mi">10</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">c</span><span class="o">==</span><span class="s1">&#39;foo&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df_filtered</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">df_filter_conds</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">conds</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>which is useful in post-processing scripts where <code class="docutils literal notranslate"><span class="pre">conds</span></code> is
+created programmatically.</p>
+<p>But when you have a column “study” which has the value <code class="docutils literal notranslate"><span class="pre">'a'</span></code> all the
+time, it is just</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">study</span><span class="o">==</span><span class="s1">&#39;a&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>You can do more powerful things with this approach. For instance, say
+you vary parameters ‘a’ and ‘b’, then you could name the “study”
+field ‘scan=a:b’ and encode which parameters (thus column names) you
+have varied. Later in the post-processing</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">study</span> <span class="o">=</span> <span class="s1">&#39;scan=a:b&#39;</span>
+<span class="go"># cols = [&#39;a&#39;, &#39;b&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cols</span> <span class="o">=</span> <span class="n">study</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;=&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">values</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">cols</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+</pre></div>
+</div>
+<p>So in this case, a naming convention <em>is</em> useful in order to bypass
+possibly complex database queries. But it is still flexible – you can
+change the “study” column at any time, or delete it again.</p>
+<p>Pro tip: You can manipulate the database at any later point and add the
+“study” column after all runs have been done.</p>
+<p>Super Pro tip: Make a backup of the database first!</p>
+</section>
+</section>
+<section id="remote-cluster-batch-runs">
+<h2>Remote cluster batch runs<a class="headerlink" href="#remote-cluster-batch-runs" title="Permalink to this headline">#</a></h2>
+<p>We have experimental support for managing calculations on remote systems such
+as HPC clusters with a batch system like SLURM. It is basically a modernized
+and stripped-down version of
+<a class="reference external" href="https://elcorto.github.io/pwtools/written/background/param_study.html"><code class="docutils literal notranslate"><span class="pre">pwtools.batch</span></code></a>.
+Note that we don’t use any method like DRMAA to automatically dispatch jobs to
+clusters. We just write out a shell script to submit jobs, simple. Our design
+revolves around maximal user control of each step of the workflow.</p>
+<p>The central function to use is <code class="docutils literal notranslate"><span class="pre">ps.prep_batch()</span></code>. See <code class="docutils literal notranslate"><span class="pre">examples/batch_with_git</span></code>
+for a full example.</p>
+<p>The workflow is based on <strong>template files</strong>. In the templates, we use (for now)
+the standard library’s <code class="docutils literal notranslate"><span class="pre">string.Template</span></code>, where each <code class="docutils literal notranslate"><span class="pre">$foo</span></code> is replaced by a
+value contained in a pset, so <code class="docutils literal notranslate"><span class="pre">$param_a</span></code>, <code class="docutils literal notranslate"><span class="pre">$param_b</span></code>, as well as <code class="docutils literal notranslate"><span class="pre">$_pset_id</span></code>
+and so forth.</p>
+<p>We piggy-back on the <code class="docutils literal notranslate"><span class="pre">run_local()</span></code> workflow from above to use all it’s power
+and flexibility to, instead of running jobs with it, just <strong>create batch
+scripts using template files</strong>.</p>
+<p>You can use the proposed workflow below directly the on remote machine (need to
+install <code class="docutils literal notranslate"><span class="pre">psweep</span></code> there) or run it locally and use a copy-to-cluster workflow.
+Since we actually don’t start jobs or talk to the batch system, you have full
+control over every part of the workflow. We just automate the boring stuff.</p>
+<section id="workflow-summary">
+<h3>Workflow summary<a class="headerlink" href="#workflow-summary" title="Permalink to this headline">#</a></h3>
+<ul class="simple">
+<li><p>define <code class="docutils literal notranslate"><span class="pre">params</span></code> to be varied as shown above (probably in a script, say
+<code class="docutils literal notranslate"><span class="pre">input.py</span></code>)</p></li>
+<li><p>in that script, call <code class="docutils literal notranslate"><span class="pre">ps.prep_batch(params)</span></code>, which does</p>
+<ul>
+<li><p>use <code class="docutils literal notranslate"><span class="pre">templates/calc/*</span></code>: scripts that you want to run in each batch job</p></li>
+<li><p>use <code class="docutils literal notranslate"><span class="pre">templates/machines/&lt;mycluster&gt;/jobscript</span></code>: batch job script</p></li>
+<li><p>read <code class="docutils literal notranslate"><span class="pre">templates/machines/&lt;mycluster&gt;/info.yaml</span></code>: machine-specific info
+(e.g. command to submit the <code class="docutils literal notranslate"><span class="pre">jobscript</span></code>)</p></li>
+<li><p>define <code class="docutils literal notranslate"><span class="pre">func()</span></code> that will create a dir named <code class="docutils literal notranslate"><span class="pre">calc/&lt;_pset_id&gt;</span></code> for each
+batch job, <strong>replace placeholders</strong> such as <code class="docutils literal notranslate"><span class="pre">$param_a</span></code> from <code class="docutils literal notranslate"><span class="pre">pset</span></code>s
+(including special ones such as <code class="docutils literal notranslate"><span class="pre">$_pset_id</span></code>)</p></li>
+<li><p>call <code class="docutils literal notranslate"><span class="pre">run_local(func,</span> <span class="pre">params)</span></code></p></li>
+<li><p>create a script <code class="docutils literal notranslate"><span class="pre">calc/run_&lt;mycluster&gt;.sh</span></code> to submit all jobs</p></li>
+</ul>
+</li>
+</ul>
+<p>Thus, we replace running jobs directly (i.e. what <code class="docutils literal notranslate"><span class="pre">ps.run_local()</span></code> would do)
+with:</p>
+<ul class="simple">
+<li><p>use <code class="docutils literal notranslate"><span class="pre">prep_batch(params,</span> <span class="pre">...)</span></code> instead of <code class="docutils literal notranslate"><span class="pre">run_local(params,</span> <span class="pre">...)</span></code></p></li>
+<li><p>if running locally</p>
+<ul>
+<li><p>use <code class="docutils literal notranslate"><span class="pre">scp</span></code> or <code class="docutils literal notranslate"><span class="pre">rsync</span></code> or the helper script <code class="docutils literal notranslate"><span class="pre">bin/psweep-push</span> <span class="pre">&lt;mycluster&gt;</span></code> (uses
+<code class="docutils literal notranslate"><span class="pre">rsync</span></code>) to copy <code class="docutils literal notranslate"><span class="pre">calc/</span></code> to a cluster</p></li>
+<li><p>ssh to cluster</p></li>
+</ul>
+</li>
+<li><p>execute <code class="docutils literal notranslate"><span class="pre">calc/run_&lt;mycluster&gt;.sh</span></code>, wait …</p></li>
+<li><p>if running locally</p>
+<ul>
+<li><p>use <code class="docutils literal notranslate"><span class="pre">scp</span></code> or <code class="docutils literal notranslate"><span class="pre">rsync</span></code> or the helper script use <code class="docutils literal notranslate"><span class="pre">bin/psweep-pull</span> <span class="pre">&lt;mycluster&gt;</span></code>
+(uses <code class="docutils literal notranslate"><span class="pre">rsync</span></code>) to copy results back</p></li>
+</ul>
+</li>
+</ul>
+<p>Now suppose that each of our batch jobs produces an output file, then we have
+the same post-processing setup as in <code class="docutils literal notranslate"><span class="pre">save_data_on_disk</span></code>, namely</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>calc
+├── 63b5daae-1b37-47e9-a11c-463fb4934d14
+│   └── output.txt
+├── 657cb9f9-8720-4d4c-8ff1-d7ddc7897700
+│   └── output.txt
+├── d7849792-622d-4479-aec6-329ed8bedd9b
+│   └── output.txt
+├── de8ac159-b5d0-4df6-9e4b-22ebf78bf9b0
+│   └── output.txt
+└── database.pk
+</pre></div>
+</div>
+<p>Post-processing is (almost) as before:</p>
+<ul class="simple">
+<li><p>analyze results, run post-processing script(s) on <code class="docutils literal notranslate"><span class="pre">calc/database.pk</span></code>, read in
+<code class="docutils literal notranslate"><span class="pre">output.txt</span></code> for each <code class="docutils literal notranslate"><span class="pre">_pset_id</span></code></p></li>
+<li><p>when extending the study (modify <code class="docutils literal notranslate"><span class="pre">params</span></code>, call <code class="docutils literal notranslate"><span class="pre">input.py</span></code> again which calls
+<code class="docutils literal notranslate"><span class="pre">prep_batch(params)</span></code>), we use the same features shown above</p>
+<ul>
+<li><p>append to database</p></li>
+<li><p>create new unique <code class="docutils literal notranslate"><span class="pre">calc/&lt;_pset_id&gt;</span></code> without overwriting anything</p></li>
+<li><p><strong>additionally</strong>: write a new <code class="docutils literal notranslate"><span class="pre">calc/run_&lt;mycluster&gt;.sh</span></code> with old submit
+commands still in there, but commented out</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="templates-layout-and-written-files">
+<h3>Templates layout and written files<a class="headerlink" href="#templates-layout-and-written-files" title="Permalink to this headline">#</a></h3>
+<p>An example template dir, based on <code class="docutils literal notranslate"><span class="pre">examples/batch_with_git</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>templates
+├── calc
+│   └── run.py
+└── machines
+    ├── cluster
+    │   ├── info.yaml
+    │   └── jobscript
+    └── local
+        ├── info.yaml
+        └── jobscript
+</pre></div>
+</div>
+<section id="calc-templates">
+<h4>calc templates<a class="headerlink" href="#calc-templates" title="Permalink to this headline">#</a></h4>
+<p>Each file in <code class="docutils literal notranslate"><span class="pre">templates/calc</span></code> such as <code class="docutils literal notranslate"><span class="pre">run.py</span></code> will be treated as
+template, goes thru the file template machinery and ends up in
+<code class="docutils literal notranslate"><span class="pre">calc/&lt;_pset_id&gt;/</span></code>.</p>
+</section>
+<section id="machine-templates">
+<h4>machine templates<a class="headerlink" href="#machine-templates" title="Permalink to this headline">#</a></h4>
+<p>The example above has machine templates for 2 machines, “local” and a
+remote machine named “cluster”. <code class="docutils literal notranslate"><span class="pre">psweep</span></code> will generate <code class="docutils literal notranslate"><span class="pre">run_&lt;machine&gt;.sh</span></code>
+for both. Also you must provide a file <code class="docutils literal notranslate"><span class="pre">info.yaml</span></code> to store
+machine-specific info. ATM this is only <code class="docutils literal notranslate"><span class="pre">subcmd</span></code>, e.g.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># templates/machines/cluster/info.yaml</span><span class="w"></span>
+<span class="nn">---</span><span class="w"></span>
+<span class="nt">subcmd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sbatch</span><span class="w"></span>
+</pre></div>
+</div>
+<p>All other SLURM stuff can go into <code class="docutils literal notranslate"><span class="pre">templates/machines/cluster/jobscript</span></code>, e.g.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="c1">#SBATCH --time 00:20:00</span>
+<span class="c1">#SBATCH -o out.job</span>
+<span class="c1">#SBATCH -J foo_${_pset_seq}_${_pset_id}</span>
+<span class="c1">#SBATCH -p bar</span>
+<span class="c1">#SBATCH -A baz</span>
+
+<span class="c1"># Because we use Python&#39;s string.Template, we need to escape the dollar char</span>
+<span class="c1"># with two.</span>
+<span class="nb">echo</span> <span class="s2">&quot;hostname=</span><span class="nv">$$</span><span class="s2">(hostname)&quot;</span>
+
+module purge
+
+module load bzzrrr/1.2.3
+module load python
+
+python3 run.py
+</pre></div>
+</div>
+<p>For the “local” machine we’d just use <code class="docutils literal notranslate"><span class="pre">sh</span></code> (or <code class="docutils literal notranslate"><span class="pre">bash</span></code> or …) as “submit
+command”.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># templates/machines/local/info.yaml</span><span class="w"></span>
+<span class="nn">---</span><span class="w"></span>
+<span class="nt">subcmd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sh</span><span class="w"></span>
+</pre></div>
+</div>
+<p>The files written are:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>run_cluster.sh                              # submit script for each machine
+run_local.sh
+
+calc/3c4efcb7-e37e-4ffe-800d-b05db171b41b   # one dir per pset
+├── jobscript_cluster                       # jobscript for each machine
+├── jobscript_local
+└── run.py                                  # from templates/calc/run.py
+calc/11967c0d-7ce6-404f-aae6-2b0ea74beefa
+├── jobscript_cluster
+├── jobscript_local
+└── run.py
+calc/65b7b453-96ec-4694-a0c4-4f71c53d982a
+...
+</pre></div>
+</div>
+<p>In each <code class="docutils literal notranslate"><span class="pre">run_&lt;machine&gt;.sh</span></code> we use the <code class="docutils literal notranslate"><span class="pre">subcmd</span></code> from <code class="docutils literal notranslate"><span class="pre">info.yaml</span></code>.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/sh</span>
+<span class="nv">here</span><span class="o">=</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>
+<span class="nb">cd</span> 3c4efcb7-e37e-4ffe-800d-b05db171b41b<span class="p">;</span> sbatch jobscript_cluster<span class="p">;</span> <span class="nb">cd</span> <span class="nv">$here</span>  <span class="c1"># run_seq=0 pset_seq=0</span>
+<span class="nb">cd</span> 11967c0d-7ce6-404f-aae6-2b0ea74beefa<span class="p">;</span> sbatch jobscript_cluster<span class="p">;</span> <span class="nb">cd</span> <span class="nv">$here</span>  <span class="c1"># run_seq=0 pset_seq=1</span>
+...
+</pre></div>
+</div>
+</section>
+</section>
+<section id="git-support">
+<h3>git support<a class="headerlink" href="#git-support" title="Permalink to this headline">#</a></h3>
+<p>Use <code class="docutils literal notranslate"><span class="pre">prep_batch(...,</span> <span class="pre">git=True)</span></code> to have some basic git support such as
+automatic commits in each call. It just uses <code class="docutils literal notranslate"><span class="pre">run_local(...,</span> <span class="pre">git=True)</span></code> when
+creating batch scripts, so all best practices for that apply here as well. In
+particular, make sure to create <code class="docutils literal notranslate"><span class="pre">.gitignore</span></code> first, else we’ll track <code class="docutils literal notranslate"><span class="pre">calc/</span></code> as
+well, which you may safely do when data in <code class="docutils literal notranslate"><span class="pre">calc</span></code> is small. Else use <code class="docutils literal notranslate"><span class="pre">git-lfs</span></code>,
+for example.</p>
+</section>
+</section>
+<section id="install">
+<h2>Install<a class="headerlink" href="#install" title="Permalink to this headline">#</a></h2>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$ pip install psweep
+</pre></div>
+</div>
+<p>Dev install of this repo:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$ pip install -e .
+</pre></div>
+</div>
+<p>See also <a class="reference external" href="https://github.com/elcorto/samplepkg">https://github.com/elcorto/samplepkg</a>.</p>
+</section>
+<section id="tests">
+<h2>Tests<a class="headerlink" href="#tests" title="Permalink to this headline">#</a></h2>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$ pytest
+</pre></div>
+</div>
+</section>
+<section id="special-topics">
+<h2>Special topics<a class="headerlink" href="#special-topics" title="Permalink to this headline">#</a></h2>
+<section id="how-to-migrate-a-normal-git-repo-to-git-lfs">
+<h3>How to migrate a normal <code class="docutils literal notranslate"><span class="pre">git</span></code> repo to <code class="docutils literal notranslate"><span class="pre">git-lfs</span></code><a class="headerlink" href="#how-to-migrate-a-normal-git-repo-to-git-lfs" title="Permalink to this headline">#</a></h3>
+<p>First we’ll quickly mention how to set up LFS in a <em>new</em> repo. In this case we
+just need to configure <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">lfs</span></code> to track certain files. We’ll use dirs
+<code class="docutils literal notranslate"><span class="pre">_pics/</span></code> and <code class="docutils literal notranslate"><span class="pre">calc/</span></code> as examples.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$ git lfs track <span class="s2">&quot;_pics/**&quot;</span> <span class="s2">&quot;calc/**&quot;</span>
+</pre></div>
+</div>
+<p>where <code class="docutils literal notranslate"><span class="pre">**</span></code> means recursive. This will write the config to <code class="docutils literal notranslate"><span class="pre">.gitattributes</span></code>.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$ cat .gitattributes
+_pics/** <span class="nv">filter</span><span class="o">=</span>lfs <span class="nv">diff</span><span class="o">=</span>lfs <span class="nv">merge</span><span class="o">=</span>lfs -text
+calc/** <span class="nv">filter</span><span class="o">=</span>lfs <span class="nv">diff</span><span class="o">=</span>lfs <span class="nv">merge</span><span class="o">=</span>lfs -text
+</pre></div>
+</div>
+<p>Please refer to the <a class="reference external" href="https://git-lfs.github.com">git lfs docs</a> for more info.</p>
+<p>Note: LFS can be tricky to get right the first time around. We actually
+recommend to fork the upstream repo, call that remote something like
+<code class="docutils literal notranslate"><span class="pre">lfsremote</span></code> and experiment with that before force-pushing LFS content to
+<code class="docutils literal notranslate"><span class="pre">origin</span></code>. Anyhow, let’s continue.</p>
+<p>Now we like to migrate an existing git repo to LFS. Here we don’t need to call
+<code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">lfs</span> <span class="pre">track</span></code> because we’ll use <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">lfs</span> <span class="pre">migrate</span> <span class="pre">import</span></code> to convert the repo.
+We will use the <code class="docutils literal notranslate"><span class="pre">-I/--include=</span></code> option to specify which files we would like to
+convert to LFS. Those patterns will end up in <code class="docutils literal notranslate"><span class="pre">.gitattributes</span></code> and the file
+will even be created of not present already.</p>
+<p>We found that only one <code class="docutils literal notranslate"><span class="pre">-I/--include=</span></code> at a time works, but we can separate
+patterns by “,” to include multiple ones.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$ git lfs migrate import -I <span class="s1">&#39;_pics/**,calc/**&#39;</span> --include-ref<span class="o">=</span>master
+
+$ cat .gitattributes
+_pics/** <span class="nv">filter</span><span class="o">=</span>lfs <span class="nv">diff</span><span class="o">=</span>lfs <span class="nv">merge</span><span class="o">=</span>lfs -text
+calc/** <span class="nv">filter</span><span class="o">=</span>lfs <span class="nv">diff</span><span class="o">=</span>lfs <span class="nv">merge</span><span class="o">=</span>lfs -text
+</pre></div>
+</div>
+<p>Now after the migrate, all LFS files in the working tree (files on disk) have
+been converted from their real content to text stub files.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$ cat _pics/foo.png
+version https://git-lfs.github.com/spec/v1
+oid sha256:de0a80ff0fa13a3e8cf8662c073ce76bfc986b64b3c079072202ecff411188ba
+size <span class="m">28339</span>
+</pre></div>
+</div>
+<p>The following will not change that.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$ git push lfsremote master -f
+$ git lfs fetch lfsremote --all
+</pre></div>
+</div>
+<p>Their real content is however still contained in the <code class="docutils literal notranslate"><span class="pre">.git</span></code> dir. A simple</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$ git lfs checkout .
+
+$ cat _pics/foo.png
+&lt;&lt;binary foo&gt;&gt;
+</pre></div>
+</div>
+<p>will bring the content back to the working dir.</p>
+</section>
+</section>
+<section id="scope-and-related-projects">
+<h2>Scope and related projects<a class="headerlink" href="#scope-and-related-projects" title="Permalink to this headline">#</a></h2>
+<p>This project aims to be easy to set up and use with as few dependencies and new
+concepts to learn as possible. We strive to use standard Python data structures
+(dicts) and functionality (itertools) as well as widely available third party
+packages (pandas). Users should be able to get going quickly without having to
+set up and learn a complex framework. Perhaps most importantly, this project is
+completely agnostic to the field of study, e.g. any problem that can be
+formulated as “let’s vary X and analyze the results”.</p>
+<p>Unsurprisingly, there is a huge pile of similar tools. This project is super
+small and as such of course lacks a lot of features that other packages offer.
+We just attempt to scratch some particular itches which we haven’t found to
+be covered in that combination by other tools, namely</p>
+<ul class="simple">
+<li><p>simulate runs</p></li>
+<li><p>backups</p></li>
+<li><p>git support</p></li>
+<li><p>simple local database (no db server to set up, no Mongo, etc)</p></li>
+<li><p>interactive (Python REPL) and script-driven runs</p></li>
+<li><p>local runs, also in parallel</p></li>
+<li><p>tooling for remote runs (template-based workflow)</p></li>
+<li><p>minimal naming conventions, rely on UUIDs</p></li>
+<li><p>hash-based database filtering</p></li>
+<li><p>no yaml-ish DSLs, just Python please, thank you :)</p></li>
+<li><p>no CLIs, just Python please, thank you :)</p></li>
+<li><p>no config files, just Python please, thank you :)</p></li>
+<li><p>not application specific (e.g. machine learning)</p></li>
+</ul>
+<p>Here is a list of related projects which offer some of the mechanisms
+implemented here.</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://materialsproject.github.io/fireworks/">https://materialsproject.github.io/fireworks/</a></p></li>
+<li><p><a class="reference external" href="https://luigi.readthedocs.io">https://luigi.readthedocs.io</a></p></li>
+<li><p><a class="reference external" href="https://snakemake.readthedocs.io">https://snakemake.readthedocs.io</a></p></li>
+<li><p><a class="reference external" href="https://github.com/eviatarbach/parasweep">https://github.com/eviatarbach/parasweep</a></p></li>
+<li><p><a class="reference external" href="https://github.com/SmokinCaterpillar/pypet">https://github.com/SmokinCaterpillar/pypet</a></p></li>
+<li><p><a class="reference external" href="https://github.com/pharmbio/sciluigi">https://github.com/pharmbio/sciluigi</a></p></li>
+<li><p><a class="reference external" href="https://github.com/open-research/sumatra">https://github.com/open-research/sumatra</a></p></li>
+<li><p><a class="reference external" href="https://www.nist.gov/programs-projects/simulation-management-tools">https://www.nist.gov/programs-projects/simulation-management-tools</a></p></li>
+<li><p><a class="reference external" href="https://github.com/IDSIA/sacred">https://github.com/IDSIA/sacred</a></p></li>
+<li><p><a class="reference external" href="https://www.wandb.com/">https://www.wandb.com/</a></p></li>
+<li><p><a class="reference external" href="https://github.com/maiot-io/zenml">https://github.com/maiot-io/zenml</a></p></li>
+<li><p><a class="reference external" href="https://github.com/LLNL/maestrowf">https://github.com/LLNL/maestrowf</a></p></li>
+<li><p><a class="reference external" href="https://mlflow.org/">https://mlflow.org/</a></p></li>
+<li><p><a class="reference external" href="https://metaflow.org/">https://metaflow.org/</a></p></li>
+<li><p><a class="reference external" href="https://www.nextflow.io/">https://www.nextflow.io/</a></p></li>
+<li><p><a class="reference external" href="https://dvc.org/">https://dvc.org/</a></p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./written"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="../root.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title"><code class="docutils literal notranslate"><span class="pre">psweep</span></code></p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="../generated/api/index.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">API Reference</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By Steve Schmerler<br/>
+  
+      &copy; Copyright 2022.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>
