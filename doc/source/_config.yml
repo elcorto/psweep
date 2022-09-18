@@ -1,0 +1,47 @@
+title:
+author: Steve Schmerler
+copyright: "2022"
+logo: psweep-logo.png
+
+repository:
+  url: https://github.com/elcorto/psweep
+  path_to_book: source
+  branch: master
+
+html:
+  use_issues_button: False
+  use_repository_button: True
+
+
+##execute:
+##  execute_notebooks: force
+
+##parse:
+##  myst_enable_extensions:
+##    - amsmath
+
+
+sphinx:
+  extra_extensions:
+  - 'sphinx.ext.autodoc'
+  - 'sphinx.ext.napoleon'
+  - 'sphinx.ext.viewcode'
+  - 'sphinx.ext.autodoc'
+  - 'sphinx.ext.autosummary'
+  - 'sphinx_autodoc_typehints'
+  config:
+    autosummary_generate: True
+    add_module_names: True
+    napoleon_numpy_docstring: True
+    napoleon_google_docstring: False
+    autodoc_default_options: {
+      "members": True,
+      "show-inheritance": True,
+      "inherited-members": True,
+      "no-special-members": True,
+      }
+##    mathjax_config:
+##      tex:
+##        macros:
+##          "ve": ["\\boldsymbol{\\mathit{#1}}", 1]
+##          "ma": ["\\boldsymbol{#1}", 1]

@@ -3,7 +3,8 @@ name: docs
 on:
   workflow_run:
     workflows: ["tests"]
-    branches: [master]
+    branches:
+      - master
     types:
       - completed
 
@@ -14,6 +15,11 @@ jobs:
 
       - name: checkout
         uses: actions/checkout@v2
+
+      - name: pysetup
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.10"
 
       - name: build
         run: |
@@ -29,4 +35,4 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           # base dir is checkout: /path/to/psweep
-          publish_dir: doc/build/html
+          publish_dir: doc/source/_build/html

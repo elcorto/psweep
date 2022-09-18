@@ -1,7 +1,7 @@
-sphinx
-
-# For inclusion of README.md
-myst-parser
+jupyter-book
+sphinx-autodoc-typehints
 
 # For doc/generate-doc.sh
 git+https://github.com/elcorto/sphinx-autodoc
+
+# vim: ft=conf

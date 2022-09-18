@@ -2,7 +2,19 @@ __pycache__/
 *.swp
 *.egg-info
 *.bak
+
+# python setup build
 build/
 dist/
+
+# plain Sphinx
 doc/build
+
+# JupyterBook
+doc/source/_build
+
+# API docs from https://github.com/elcorto/sphinx-autodoc
 doc/source/generated
+
+
+# vim: ft=conf

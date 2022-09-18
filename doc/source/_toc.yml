@@ -1,0 +1,11 @@
+format: jb-book
+root: root
+
+parts:
+  - caption: Manual
+    chapters:
+    - file: written/manual.md
+  - caption: API docs
+    maxdepth: 2
+    chapters:
+    - file: generated/api/index.rst
