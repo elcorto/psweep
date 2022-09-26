@@ -754,3 +754,33 @@ def test_logspace_offset(offset):
     np.testing.assert_allclose(val[0], start)
     np.testing.assert_allclose(val[-1], stop)
     assert not np.allclose(ref, val)
+
+
+def test_prep_batch():
+    a = ps.plist("param_a", [1, 2, 3])
+    b = ps.plist("param_b", ["xx", "yy"])
+    params = ps.pgrid(a, b)
+    template_dir = f"{here}/../examples/batch_with_git/templates"
+    with tempfile.TemporaryDirectory() as tmpdir:
+        df = ps.prep_batch(
+            params,
+            calc_dir=f"{tmpdir}/calc",
+            calc_templ_dir=f"{template_dir}/calc",
+            machine_templ_dir=f"{template_dir}/machines",
+            database_dir=f"{tmpdir}/db",
+            write_pset=True,
+        )
+        print(system(f"tree {tmpdir}"))
+
+        assert os.path.exists(f"{tmpdir}/db/database.pk")
+        assert os.path.exists(f"{tmpdir}/calc/run_local.sh")
+        assert os.path.exists(f"{tmpdir}/calc/run_cluster.sh")
+
+        for pset_id in df._pset_id.values:
+            for name in [
+                "run.py",
+                "pset.pk",
+                "jobscript_local",
+                "jobscript_cluster",
+            ]:
+                assert os.path.exists(f"{tmpdir}/calc/{pset_id}/{name}")

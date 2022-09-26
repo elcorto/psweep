@@ -1099,19 +1099,38 @@ def gather_machines(machine_templ_dir):
 #
 def prep_batch(
     params: Sequence[dict],
-    calc_dir: str = "calc",
+    *,
     calc_templ_dir: str = "templates/calc",
     machine_templ_dir: str = "templates/machines",
     git: bool = False,
-    backup: bool = False,
     write_pset: bool = False,
-    skip_dups: bool = False,
+    **kwds,
 ) -> pd.DataFrame:
 
     """
     Write files based on templates.
+
+    Parameters
+    ----------
+    params
+        See :func:`run_local`
+    calc_templ_dir, machine_templ_dir
+        Dir with templates.
+    git
+        Use git to commit local changes.
+    write_pset
+        Write ``<calc_dir>/<psets>/pset.pk``.
+    **kwds
+        Passed to :func:`run_local`.
+
+    Returns
+    -------
+    df
+        The database build from `params`.
     """
     git_enter(git)
+
+    calc_dir = kwds.get("calc_dir", "calc")
 
     calc_templates = gather_calc_templates(calc_templ_dir)
     machines = gather_machines(machine_templ_dir)
@@ -1130,10 +1149,8 @@ def prep_batch(
     df = run_local(
         worker,
         params,
-        calc_dir=calc_dir,
-        backup=backup,
-        skip_dups=skip_dups,
         git=False,
+        **kwds,
     )
 
     msk_latest = df._run_seq == df._run_seq.values.max()
