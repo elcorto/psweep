@@ -1361,16 +1361,16 @@ title="Source repository"
     <span class="n">params</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">dict</span><span class="p">],</span>
     <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">poolsize</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">save</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-    <span class="n">tmpsave</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">save</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">tmpsave</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">verbose</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-    <span class="n">calc_dir</span><span class="o">=</span><span class="s2">&quot;calc&quot;</span><span class="p">,</span>
-    <span class="n">simulate</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">calc_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;calc&quot;</span><span class="p">,</span>
+    <span class="n">simulate</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">database_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">database_basename</span><span class="o">=</span><span class="s2">&quot;database.pk&quot;</span><span class="p">,</span>
-    <span class="n">backup</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-    <span class="n">git</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-    <span class="n">skip_dups</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">database_basename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;database.pk&quot;</span><span class="p">,</span>
+    <span class="n">backup</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">git</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">skip_dups</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Call `worker` for each `pset` in `params`. Populate a DataFrame with rows</span>
@@ -1378,50 +1378,56 @@ title="Source repository"
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    worker : Callable</span>
+<span class="sd">    worker</span>
 <span class="sd">        must accept one parameter: `pset` (a dict ``{&#39;a&#39;: 1, &#39;b&#39;: &#39;foo&#39;,</span>
 <span class="sd">        ...}``), return either an update to `pset` or a new dict, result will</span>
 <span class="sd">        be processes as ``pset.update(worker(pset))``</span>
-<span class="sd">    params : seq of dicts</span>
+<span class="sd">    params</span>
 <span class="sd">        each dict is a pset ``{&#39;a&#39;: 1, &#39;b&#39;: &#39;foo&#39;, ...}``</span>
-<span class="sd">    df : DataFrame</span>
+<span class="sd">    df</span>
 <span class="sd">        append rows to this DataFrame, if None then either create new one or</span>
 <span class="sd">        read existing database file from disk if found</span>
-<span class="sd">    poolsize : {None, int}</span>
+<span class="sd">    poolsize</span>
 <span class="sd">        * None : use serial execution</span>
 <span class="sd">        * int : use multiprocessing.Pool (even for ``poolsize=1``)</span>
-<span class="sd">    save : bool</span>
+<span class="sd">    save</span>
 <span class="sd">        save final DataFrame to ``&lt;database_dir&gt;/&lt;database_basename&gt;`` (pickle</span>
 <span class="sd">        format only), default: &quot;calc/database.pk&quot;, see also `database_dir`,</span>
 <span class="sd">        `calc_dir` and `database_basename`</span>
-<span class="sd">    tmpsave : bool</span>
+<span class="sd">    tmpsave</span>
 <span class="sd">        save results from each `pset` in `params` (the current DataFrame row) to</span>
 <span class="sd">        ``&lt;calc_dir&gt;/tmpsave/&lt;run_id&gt;/&lt;pset_id&gt;.pk`` (pickle format only)</span>
-<span class="sd">    verbose : {bool, sequence of str}</span>
+<span class="sd">    verbose</span>
 <span class="sd">        * bool : print the current DataFrame row</span>
 <span class="sd">        * sequence : list of DataFrame column names, print the row but only</span>
 <span class="sd">          those columns</span>
-<span class="sd">    calc_dir : str</span>
+<span class="sd">    calc_dir</span>
 <span class="sd">        Dir where calculation artifacts can be saved if needed, such as dirs</span>
 <span class="sd">        per pset ``&lt;calc_dir&gt;/&lt;pset&gt;``. Will be added to the database in</span>
 <span class="sd">        ``_calc_dir`` field.</span>
-<span class="sd">    simulate : bool</span>
+<span class="sd">    simulate</span>
 <span class="sd">        run everything in ``&lt;calc_dir&gt;.simulate``, don&#39;t call `worker`, i.e. save</span>
 <span class="sd">        what the run would create, but without the results from `worker`,</span>
 <span class="sd">        useful to check if `params` are correct before starting a production run</span>
-<span class="sd">    database_dir : str</span>
+<span class="sd">    database_dir</span>
 <span class="sd">        Path for the database. Default is ``&lt;calc_dir&gt;``.</span>
-<span class="sd">    database_basename : str</span>
+<span class="sd">    database_basename</span>
 <span class="sd">        ``&lt;database_dir&gt;/&lt;database_basename&gt;``, default: &quot;database.pk&quot;</span>
-<span class="sd">    backup : bool</span>
+<span class="sd">    backup</span>
 <span class="sd">        Make backup of ``&lt;calc_dir&gt;`` to ``&lt;calc_dir&gt;.bak_&lt;timestamp&gt;_run_id_&lt;_run_id&gt;``</span>
-<span class="sd">    git : bool</span>
+<span class="sd">    git</span>
 <span class="sd">        Use ``git`` to commit all files written and changed by the current run</span>
 <span class="sd">        (``_run_id``). Make sure to create a ``.gitignore`` manually before if</span>
 <span class="sd">        needed.</span>
-<span class="sd">    skip_dups : bool</span>
+<span class="sd">    skip_dups</span>
 <span class="sd">        Skip psets whose hash is already present in `df`. Useful when repeating</span>
 <span class="sd">        (parts of) a study.</span>
+
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    df</span>
+<span class="sd">        The database build from `params`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">database_dir</span> <span class="o">=</span> <span class="n">calc_dir</span> <span class="k">if</span> <span class="n">database_dir</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">database_dir</span>
@@ -1590,19 +1596,38 @@ title="Source repository"
 <span class="c1">#</span>
 <div class="viewcode-block" id="prep_batch"><a class="viewcode-back" href="../../generated/api/psweep.psweep.prep_batch.html#psweep.psweep.prep_batch">[docs]</a><span class="k">def</span> <span class="nf">prep_batch</span><span class="p">(</span>
     <span class="n">params</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">dict</span><span class="p">],</span>
-    <span class="n">calc_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;calc&quot;</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
     <span class="n">calc_templ_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;templates/calc&quot;</span><span class="p">,</span>
     <span class="n">machine_templ_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;templates/machines&quot;</span><span class="p">,</span>
     <span class="n">git</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-    <span class="n">backup</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">write_pset</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-    <span class="n">skip_dups</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwds</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Write files based on templates.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    params</span>
+<span class="sd">        See :func:`run_local`</span>
+<span class="sd">    calc_templ_dir, machine_templ_dir</span>
+<span class="sd">        Dir with templates.</span>
+<span class="sd">    git</span>
+<span class="sd">        Use git to commit local changes.</span>
+<span class="sd">    write_pset</span>
+<span class="sd">        Write ``&lt;calc_dir&gt;/&lt;psets&gt;/pset.pk``.</span>
+<span class="sd">    **kwds</span>
+<span class="sd">        Passed to :func:`run_local`.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    df</span>
+<span class="sd">        The database build from `params`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">git_enter</span><span class="p">(</span><span class="n">git</span><span class="p">)</span>
+
+    <span class="n">calc_dir</span> <span class="o">=</span> <span class="n">kwds</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;calc_dir&quot;</span><span class="p">,</span> <span class="s2">&quot;calc&quot;</span><span class="p">)</span>
 
     <span class="n">calc_templates</span> <span class="o">=</span> <span class="n">gather_calc_templates</span><span class="p">(</span><span class="n">calc_templ_dir</span><span class="p">)</span>
     <span class="n">machines</span> <span class="o">=</span> <span class="n">gather_machines</span><span class="p">(</span><span class="n">machine_templ_dir</span><span class="p">)</span>
@@ -1621,10 +1646,8 @@ title="Source repository"
     <span class="n">df</span> <span class="o">=</span> <span class="n">run_local</span><span class="p">(</span>
         <span class="n">worker</span><span class="p">,</span>
         <span class="n">params</span><span class="p">,</span>
-        <span class="n">calc_dir</span><span class="o">=</span><span class="n">calc_dir</span><span class="p">,</span>
-        <span class="n">backup</span><span class="o">=</span><span class="n">backup</span><span class="p">,</span>
-        <span class="n">skip_dups</span><span class="o">=</span><span class="n">skip_dups</span><span class="p">,</span>
         <span class="n">git</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwds</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="n">msk_latest</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">_run_seq</span> <span class="o">==</span> <span class="n">df</span><span class="o">.</span><span class="n">_run_seq</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
