@@ -870,16 +870,16 @@ def run_local(
     params: Sequence[dict],
     df: pd.DataFrame = None,
     poolsize: int = None,
-    save=True,
-    tmpsave=False,
+    save: bool = True,
+    tmpsave: bool = False,
     verbose: Union[bool, Sequence[str]] = False,
-    calc_dir="calc",
-    simulate=False,
+    calc_dir: str = "calc",
+    simulate: bool = False,
     database_dir: str = None,
-    database_basename="database.pk",
-    backup=False,
-    git=False,
-    skip_dups=False,
+    database_basename: str = "database.pk",
+    backup: bool = False,
+    git: bool = False,
+    skip_dups: bool = False,
 ) -> pd.DataFrame:
     """
     Call `worker` for each `pset` in `params`. Populate a DataFrame with rows
@@ -887,50 +887,56 @@ def run_local(
 
     Parameters
     ----------
-    worker : Callable
+    worker
         must accept one parameter: `pset` (a dict ``{'a': 1, 'b': 'foo',
         ...}``), return either an update to `pset` or a new dict, result will
         be processes as ``pset.update(worker(pset))``
-    params : seq of dicts
+    params
         each dict is a pset ``{'a': 1, 'b': 'foo', ...}``
-    df : DataFrame
+    df
         append rows to this DataFrame, if None then either create new one or
         read existing database file from disk if found
-    poolsize : {None, int}
+    poolsize
         * None : use serial execution
         * int : use multiprocessing.Pool (even for ``poolsize=1``)
-    save : bool
+    save
         save final DataFrame to ``<database_dir>/<database_basename>`` (pickle
         format only), default: "calc/database.pk", see also `database_dir`,
         `calc_dir` and `database_basename`
-    tmpsave : bool
+    tmpsave
         save results from each `pset` in `params` (the current DataFrame row) to
         ``<calc_dir>/tmpsave/<run_id>/<pset_id>.pk`` (pickle format only)
-    verbose : {bool, sequence of str}
+    verbose
         * bool : print the current DataFrame row
         * sequence : list of DataFrame column names, print the row but only
           those columns
-    calc_dir : str
+    calc_dir
         Dir where calculation artifacts can be saved if needed, such as dirs
         per pset ``<calc_dir>/<pset>``. Will be added to the database in
         ``_calc_dir`` field.
-    simulate : bool
+    simulate
         run everything in ``<calc_dir>.simulate``, don't call `worker`, i.e. save
         what the run would create, but without the results from `worker`,
         useful to check if `params` are correct before starting a production run
-    database_dir : str
+    database_dir
         Path for the database. Default is ``<calc_dir>``.
-    database_basename : str
+    database_basename
         ``<database_dir>/<database_basename>``, default: "database.pk"
-    backup : bool
+    backup
         Make backup of ``<calc_dir>`` to ``<calc_dir>.bak_<timestamp>_run_id_<_run_id>``
-    git : bool
+    git
         Use ``git`` to commit all files written and changed by the current run
         (``_run_id``). Make sure to create a ``.gitignore`` manually before if
         needed.
-    skip_dups : bool
+    skip_dups
         Skip psets whose hash is already present in `df`. Useful when repeating
         (parts of) a study.
+
+
+    Returns
+    -------
+    df
+        The database build from `params`.
     """
 
     database_dir = calc_dir if database_dir is None else database_dir
