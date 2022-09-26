@@ -34,6 +34,8 @@ sphinx:
     add_module_names: True
     napoleon_numpy_docstring: True
     napoleon_google_docstring: False
+    napoleon_use_rtype: False
+    typehints_use_rtype: True
     autodoc_default_options: {
       "members": True,
       "show-inheritance": True,
