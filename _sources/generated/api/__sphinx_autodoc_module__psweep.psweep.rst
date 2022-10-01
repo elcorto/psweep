@@ -34,7 +34,6 @@ psweep
    file_write
    filter_params_dup_hash
    filter_params_unique
-   filter_same_hash
    flatten
    fullpath
    gather_calc_templates
