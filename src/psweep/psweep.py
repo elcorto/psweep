@@ -395,18 +395,6 @@ def df_write(fn: str, df: pd.DataFrame, fmt="pickle", **kwds) -> None:
     kwds :
         passed to ``pickle.dump()`` or :func:`df_to_json`
     """
-    _swapped_args_err_msg = (
-        "Deprecated API in df_write(), use df_write(filename, df)"
-    )
-    if isinstance(fn, pd.DataFrame) or isinstance(df, str):
-        if isinstance(fn, pd.DataFrame) and isinstance(df, str):
-            warnings.warn(_swapped_args_err_msg, DeprecationWarning)
-            tmp_fn = df
-            df = fn
-            fn = tmp_fn
-        else:
-            raise ValueError(_swapped_args_err_msg)
-
     makedirs(os.path.dirname(fn))
     if fmt == "pickle":
         with open(fn, "wb") as fd:
@@ -691,14 +679,6 @@ def filter_params_unique(params: Sequence[dict], **kwds) -> Sequence[dict]:
     return [params[ii] for ii in np.sort(msk)]
 
 
-def filter_same_hash(*args, **kwds):
-    warnings.warn(
-        "filter_same_hash() was renamed to filter_params_unique()",
-        DeprecationWarning,
-    )
-    return filter_params_unique(*args, **kwds)
-
-
 def filter_params_dup_hash(
     params: Sequence[dict], hashes: Sequence[str], **kwds
 ) -> Sequence[dict]:
@@ -722,7 +702,6 @@ def stargrid(
     vary: Sequence[dict],
     vary_labels: Sequence[str] = None,
     vary_label_col: str = "_vary",
-    filter_dups=None,
     skip_dups=True,
 ) -> Sequence[dict]:
     """
@@ -792,11 +771,6 @@ def stargrid(
                 _dct = dct
             params.append(merge_dicts(const, _dct))
 
-    if filter_dups is not None:
-        skip_dups = filter_dups
-        warnings.warn(
-            "filter_dups was renamed to skip_dups", DeprecationWarning
-        )
     if skip_dups:
         try:
             return filter_params_unique(

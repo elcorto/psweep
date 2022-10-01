@@ -15,4 +15,4 @@ if __name__ == "__main__":
     cols = ["param_a", "param_b", "mean"]
     ps.df_print(df[cols])
 
-    ps.df_write(df, "calc/database_eval.pk")
+    ps.df_write("calc/database_eval.pk", df)

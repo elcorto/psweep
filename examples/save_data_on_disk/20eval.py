@@ -23,4 +23,4 @@ if __name__ == "__main__":
     cols = ["a", "mean", "_pset_id"]
     ps.df_print(df[cols])
 
-    ps.df_write(df, "calc/database_eval.pk")
+    ps.df_write("calc/database_eval.pk", df)
