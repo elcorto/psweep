@@ -465,13 +465,17 @@ def test_pass_df_interactive():
 def test_df_filter_conds():
     df = pd.DataFrame({"a": np.arange(10), "b": np.arange(10) + 4})
 
-    _msks = [df.a > 3, df.b < 9, df.a % 2 == 0]
-    df_ref = df[_msks[0] & _msks[1] & _msks[2]]
-    # use instantiated sequence _msks
-    assert df_ref.equals(ps.df_filter_conds(df, _msks))
+    # logical and
+    conds = [df.a > 3, df.b < 9, df.a % 2 == 0]
+    df_ref = df[conds[0] & conds[1] & conds[2]]
+    assert df_ref.equals(ps.df_filter_conds(df, conds))
     for filt in [lambda x: x, lambda x: x.to_numpy(), lambda x: x.to_list()]:
         # use iterator map(...)
-        assert df_ref.equals(ps.df_filter_conds(df, map(filt, _msks)))
+        assert df_ref.equals(ps.df_filter_conds(df, map(filt, conds)))
+
+    # logical or. For the conds above, OR-ing them happens to result in the
+    # original df w/o and reduction.
+    assert df.equals(ps.df_filter_conds(df, conds, op="or"))
 
 
 class _Foo:

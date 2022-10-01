@@ -520,11 +520,14 @@ def df_print(
 
 
 def df_filter_conds(
-    df: pd.DataFrame, conds: Sequence[Sequence[bool]]
+    df: pd.DataFrame,
+    conds: Sequence[Sequence[bool]],
+    op: str = "and",
 ) -> pd.DataFrame:
     """Filter DataFrame using bool arrays/Series/DataFrames in `conds`.
 
-    Logical-and all bool sequences in `conds`. Same as
+    Fuse all bool sequences in `conds` using `op`. For instance, if
+    ``op="and"``, then we logical-and them, which is equal to
 
     >>> df[conds[0] & conds[1] & conds[2] & ...]
 
@@ -533,9 +536,13 @@ def df_filter_conds(
 
     Parameters
     ----------
-    df : DataFrame
-    conds :
-        sequence of bool masks, each of length `len(df)`
+    df
+        DataFrame
+    conds
+        Sequence of bool masks, each of length `len(df)`.
+    op
+        Bool operator, used as ``numpy.logical_{op}``, e.g. "and", "or",
+        "xor".
 
     Returns
     -------
@@ -565,7 +572,10 @@ def df_filter_conds(
     if len(cc) == 1:
         msk = cc[0]
     else:
-        msk = np.logical_and.reduce(cc)
+        assert op in (
+            op_allowed := ["and", "or", "xor"]
+        ), f"{op=} not one of {op_allowed}"
+        msk = getattr(np, f"logical_{op}").reduce(cc)
     return df[msk]
 
 
