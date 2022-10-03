@@ -1006,11 +1006,14 @@ title="Source repository"
 
 
 <div class="viewcode-block" id="df_filter_conds"><a class="viewcode-back" href="../../generated/api/psweep.psweep.df_filter_conds.html#psweep.psweep.df_filter_conds">[docs]</a><span class="k">def</span> <span class="nf">df_filter_conds</span><span class="p">(</span>
-    <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">conds</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="nb">bool</span><span class="p">]]</span>
+    <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">conds</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="nb">bool</span><span class="p">]],</span>
+    <span class="n">op</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;and&quot;</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Filter DataFrame using bool arrays/Series/DataFrames in `conds`.</span>
 
-<span class="sd">    Logical-and all bool sequences in `conds`. Same as</span>
+<span class="sd">    Fuse all bool sequences in `conds` using `op`. For instance, if</span>
+<span class="sd">    ``op=&quot;and&quot;``, then we logical-and them, which is equal to</span>
 
 <span class="sd">    &gt;&gt;&gt; df[conds[0] &amp; conds[1] &amp; conds[2] &amp; ...]</span>
 
@@ -1019,9 +1022,13 @@ title="Source repository"
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    df : DataFrame</span>
-<span class="sd">    conds :</span>
-<span class="sd">        sequence of bool masks, each of length `len(df)`</span>
+<span class="sd">    df</span>
+<span class="sd">        DataFrame</span>
+<span class="sd">    conds</span>
+<span class="sd">        Sequence of bool masks, each of length `len(df)`.</span>
+<span class="sd">    op</span>
+<span class="sd">        Bool operator, used as ``numpy.logical_{op}``, e.g. &quot;and&quot;, &quot;or&quot;,</span>
+<span class="sd">        &quot;xor&quot;.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -1051,7 +1058,10 @@ title="Source repository"
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cc</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
         <span class="n">msk</span> <span class="o">=</span> <span class="n">cc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">msk</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="o">.</span><span class="n">reduce</span><span class="p">(</span><span class="n">cc</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">op</span> <span class="ow">in</span> <span class="p">(</span>
+            <span class="n">op_allowed</span> <span class="o">:=</span> <span class="p">[</span><span class="s2">&quot;and&quot;</span><span class="p">,</span> <span class="s2">&quot;or&quot;</span><span class="p">,</span> <span class="s2">&quot;xor&quot;</span><span class="p">]</span>
+        <span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">op</span><span class="si">=}</span><span class="s2"> not one of </span><span class="si">{</span><span class="n">op_allowed</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">msk</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">np</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;logical_</span><span class="si">{</span><span class="n">op</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">reduce</span><span class="p">(</span><span class="n">cc</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">df</span><span class="p">[</span><span class="n">msk</span><span class="p">]</span></div>
 
 

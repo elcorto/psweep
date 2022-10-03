@@ -536,9 +536,10 @@ title="Print to PDF"
 <h1>psweep.psweep.df_filter_conds<a class="headerlink" href="#psweep-psweep-df-filter-conds" title="Permalink to this headline">#</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="psweep.psweep.df_filter_conds">
-<span class="sig-prename descclassname"><span class="pre">psweep.psweep.</span></span><span class="sig-name descname"><span class="pre">df_filter_conds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conds</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/psweep/psweep.html#df_filter_conds"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psweep.psweep.df_filter_conds" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">psweep.psweep.</span></span><span class="sig-name descname"><span class="pre">df_filter_conds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">op</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'and'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/psweep/psweep.html#df_filter_conds"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psweep.psweep.df_filter_conds" title="Permalink to this definition">#</a></dt>
 <dd><p>Filter DataFrame using bool arrays/Series/DataFrames in <cite>conds</cite>.</p>
-<p>Logical-and all bool sequences in <cite>conds</cite>. Same as</p>
+<p>Fuse all bool sequences in <cite>conds</cite> using <cite>op</cite>. For instance, if
+<code class="docutils literal notranslate"><span class="pre">op=&quot;and&quot;</span></code>, then we logical-and them, which is equal to</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">df</span><span class="p">[</span><span class="n">conds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&amp;</span> <span class="n">conds</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&amp;</span> <span class="n">conds</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">&amp;</span> <span class="o">...</span><span class="p">]</span>
 </pre></div>
 </div>
@@ -547,8 +548,10 @@ would need to be changed by hand if <cite>conds</cite> changes.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>df</strong> (<em>DataFrame</em>) – </p></li>
-<li><p><strong>conds</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>]]) – sequence of bool masks, each of length <cite>len(df)</cite></p></li>
+<li><p><strong>df</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – DataFrame</p></li>
+<li><p><strong>conds</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>]]) – Sequence of bool masks, each of length <cite>len(df)</cite>.</p></li>
+<li><p><strong>op</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Bool operator, used as <code class="docutils literal notranslate"><span class="pre">numpy.logical_{op}</span></code>, e.g. “and”, “or”,
+“xor”.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type</dt>
