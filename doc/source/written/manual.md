@@ -1103,5 +1103,6 @@ implemented here.
 * https://metaflow.org/
 * https://www.nextflow.io/
 * https://dvc.org/
+* https://apps.fz-juelich.de/jsc/jube/jube2/docu/index.html
 
 [git-lfs]: https://git-lfs.github.com
