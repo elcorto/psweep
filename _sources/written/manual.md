@@ -963,26 +963,6 @@ particular, make sure to create `.gitignore` first, else we'll track `calc/` as
 well, which you may safely do when data in `calc` is small. Else use `git-lfs`,
 for example.
 
-## Install
-
-```sh
-$ pip install psweep
-```
-
-Dev install of this repo:
-
-```sh
-$ pip install -e .
-```
-
-See also <https://github.com/elcorto/samplepkg>.
-
-## Tests
-
-```sh
-$ pytest
-```
-
 ## Special topics
 
 ### How to migrate a normal `git` repo to `git-lfs`
@@ -1103,5 +1083,6 @@ implemented here.
 * https://metaflow.org/
 * https://www.nextflow.io/
 * https://dvc.org/
+* https://apps.fz-juelich.de/jsc/jube/jube2/docu/index.html
 
 [git-lfs]: https://git-lfs.github.com
