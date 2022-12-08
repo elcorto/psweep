@@ -1,11 +1,14 @@
 format: jb-book
 root: root
 
+
+# We could do w/o the caption: but only then can we use maxdepth: .
 parts:
-  - caption: Manual
+  - caption:
+    maxdepth: 2
     chapters:
     - file: written/manual.md
-  - caption: API docs
-    maxdepth: 2
+  - caption:
+    maxdepth: 1
     chapters:
     - file: generated/api/index.rst
