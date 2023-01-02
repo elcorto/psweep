@@ -1,5 +1,5 @@
 [![pypi](https://img.shields.io/pypi/v/psweep?color=blue)](https://pypi.org/project/psweep)
-![GitHub Workflow Status](https://img.shields.io/github/workflow/status/elcorto/psweep/tests?label=tests)
+![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/elcorto/psweep/tests.yml?branch=master&label=tests)
 [![DOI](https://zenodo.org/badge/92956212.svg)](https://zenodo.org/badge/latestdoi/92956212)
 
 ![](doc/source/psweep-logo.png)
