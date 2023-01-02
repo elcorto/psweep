@@ -512,7 +512,7 @@ title="Source repository"
 
 
 <div class="viewcode-block" id="system"><a class="viewcode-back" href="../../generated/api/psweep.psweep.system.html#psweep.psweep.system">[docs]</a><span class="k">def</span> <span class="nf">system</span><span class="p">(</span><span class="n">cmd</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">CompletedProcess</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Call shell command.</span>
 
 <span class="sd">    Parameters</span>
@@ -538,7 +538,7 @@ title="Source repository"
 
 <span class="c1"># https://github.com/elcorto/pwtools</span>
 <div class="viewcode-block" id="makedirs"><a class="viewcode-back" href="../../generated/api/psweep.psweep.makedirs.html#psweep.psweep.makedirs">[docs]</a><span class="k">def</span> <span class="nf">makedirs</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Create `path` recursively, no questions asked.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create `path` recursively, no questions asked.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">path</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
         <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 
@@ -608,7 +608,7 @@ title="Source repository"
     <span class="n">raise_error</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="n">skip_special_cols</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
 <span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Reproducible hash of a dict for usage in database (hash of a `pset`).&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Reproducible hash of a dict for usage in database (hash of a `pset`).&quot;&quot;&quot;</span>
 
     <span class="c1"># We target &quot;reproducible&quot; hashes, i.e. not what Python&#39;s ``hash`` function</span>
     <span class="c1"># does, for instance for two interpreter sessions::</span>
@@ -666,7 +666,7 @@ title="Source repository"
 
 
 <div class="viewcode-block" id="add_hashes"><a class="viewcode-back" href="../../generated/api/psweep.psweep.add_hashes.html#psweep.psweep.add_hashes">[docs]</a><span class="k">def</span> <span class="nf">add_hashes</span><span class="p">(</span><span class="n">params</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">dict</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
-    <span class="sd">&quot;&quot;&quot;Calculate hash for each pset and set pset[&quot;_pset_hash&quot;]. Return new</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate hash for each pset and set pset[&quot;_pset_hash&quot;]. Return new</span>
 <span class="sd">    params list.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">new_params</span> <span class="o">=</span> <span class="p">[]</span>
@@ -677,7 +677,7 @@ title="Source repository"
 
 
 <div class="viewcode-block" id="check_calc_dir"><a class="viewcode-back" href="../../generated/api/psweep.psweep.check_calc_dir.html#psweep.psweep.check_calc_dir">[docs]</a><span class="k">def</span> <span class="nf">check_calc_dir</span><span class="p">(</span><span class="n">calc_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Check calc dir for consistency with database.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check calc dir for consistency with database.</span>
 
 <span class="sd">    Assuming dirs are named::</span>
 
@@ -715,7 +715,7 @@ title="Source repository"
 <div class="viewcode-block" id="logspace"><a class="viewcode-back" href="../../generated/api/psweep.psweep.logspace.html#psweep.psweep.logspace">[docs]</a><span class="k">def</span> <span class="nf">logspace</span><span class="p">(</span>
     <span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">log_func</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span>
 <span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Like ``numpy.logspace`` but</span>
 
 <span class="sd">    * `start` and `stop` are not exponents but the actual bounds</span>
@@ -769,7 +769,7 @@ title="Source repository"
 
 
 <div class="viewcode-block" id="intspace"><a class="viewcode-back" href="../../generated/api/psweep.psweep.intspace.html#psweep.psweep.intspace">[docs]</a><span class="k">def</span> <span class="nf">intspace</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Like ``np.linspace`` but round to integers.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Like ``np.linspace`` but round to integers.</span>
 
 <span class="sd">    The length of the returned array may be lower than specified by `num` if</span>
 <span class="sd">    rounding to ints results in duplicates.</span>
@@ -837,7 +837,7 @@ title="Source repository"
 
 
 <div class="viewcode-block" id="df_to_json"><a class="viewcode-back" href="../../generated/api/psweep.psweep.df_to_json.html#psweep.psweep.df_to_json">[docs]</a><span class="k">def</span> <span class="nf">df_to_json</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Like `df.to_json` but with defaults for orient, date_unit, date_format,</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Like `df.to_json` but with defaults for orient, date_unit, date_format,</span>
 <span class="sd">    double_precision.</span>
 
 <span class="sd">    Parameters</span>
@@ -859,7 +859,7 @@ title="Source repository"
 
 
 <div class="viewcode-block" id="df_write"><a class="viewcode-back" href="../../generated/api/psweep.psweep.df_write.html#psweep.psweep.df_write">[docs]</a><span class="k">def</span> <span class="nf">df_write</span><span class="p">(</span><span class="n">fn</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s2">&quot;pickle&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Write DataFrame to disk.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Write DataFrame to disk.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -882,7 +882,7 @@ title="Source repository"
 
 
 <div class="viewcode-block" id="df_read"><a class="viewcode-back" href="../../generated/api/psweep.psweep.df_read.html#psweep.psweep.df_read">[docs]</a><span class="k">def</span> <span class="nf">df_read</span><span class="p">(</span><span class="n">fn</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s2">&quot;pickle&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Read DataFrame from file `fn`. See :func:`df_write`.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Read DataFrame from file `fn`. See :func:`df_write`.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">fmt</span> <span class="o">==</span> <span class="s2">&quot;pickle&quot;</span><span class="p">:</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fd</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">fd</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span>
@@ -902,7 +902,7 @@ title="Source repository"
     <span class="n">cols</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span>
     <span class="n">skip_cols</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span>
 <span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Print DataFrame, by default without the index and special columns such</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Print DataFrame, by default without the index and special columns such</span>
 <span class="sd">    as `_pset_id`.</span>
 
 <span class="sd">    Similar logic as in `bin/psweep-db2table`, w/o tabulate support but more</span>
@@ -1000,7 +1000,7 @@ title="Source repository"
     <span class="n">conds</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="nb">bool</span><span class="p">]],</span>
     <span class="n">op</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;and&quot;</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Filter DataFrame using bool arrays/Series/DataFrames in `conds`.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Filter DataFrame using bool arrays/Series/DataFrames in `conds`.</span>
 
 <span class="sd">    Fuse all bool sequences in `conds` using `op`. For instance, if</span>
 <span class="sd">    ``op=&quot;and&quot;``, then we logical-and them, which is equal to</span>
@@ -1061,7 +1061,7 @@ title="Source repository"
 
 
 <div class="viewcode-block" id="plist"><a class="viewcode-back" href="../../generated/api/psweep.psweep.plist.html#psweep.psweep.plist">[docs]</a><span class="k">def</span> <span class="nf">plist</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">seq</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Any</span><span class="p">]):</span>
-    <span class="sd">&quot;&quot;&quot;Create a list of single-item dicts holding the parameter name and a</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a list of single-item dicts holding the parameter name and a</span>
 <span class="sd">    value.</span>
 
 <span class="sd">    &gt;&gt;&gt; plist(&#39;a&#39;, [1,2,3])</span>
@@ -1072,7 +1072,7 @@ title="Source repository"
 
 <div class="viewcode-block" id="merge_dicts"><a class="viewcode-back" href="../../generated/api/psweep.psweep.merge_dicts.html#psweep.psweep.merge_dicts">[docs]</a><span class="nd">@itr</span>
 <span class="k">def</span> <span class="nf">merge_dicts</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">dict</span><span class="p">]):</span>
-    <span class="sd">&quot;&quot;&quot;Start with an empty dict and update with each arg dict</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Start with an empty dict and update with each arg dict</span>
 <span class="sd">    left-to-right.&quot;&quot;&quot;</span>
     <span class="n">dct</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">assert</span> <span class="n">is_seq</span><span class="p">(</span><span class="n">args</span><span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;input </span><span class="si">{</span><span class="n">args</span><span class="si">=}</span><span class="s2"> is no sequence&quot;</span>
@@ -1083,7 +1083,7 @@ title="Source repository"
 
 
 <div class="viewcode-block" id="itr2params"><a class="viewcode-back" href="../../generated/api/psweep.psweep.itr2params.html#psweep.psweep.itr2params">[docs]</a><span class="k">def</span> <span class="nf">itr2params</span><span class="p">(</span><span class="n">loops</span><span class="p">:</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Any</span><span class="p">]):</span>
-    <span class="sd">&quot;&quot;&quot;Transform the (possibly nested) result of a loop over plists (or</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Transform the (possibly nested) result of a loop over plists (or</span>
 <span class="sd">    whatever has been used to create psets) to a proper list of psets</span>
 <span class="sd">    by flattening and merging dicts.</span>
 
@@ -1126,7 +1126,7 @@ title="Source repository"
 
 <div class="viewcode-block" id="pgrid"><a class="viewcode-back" href="../../generated/api/psweep.psweep.pgrid.html#psweep.psweep.pgrid">[docs]</a><span class="nd">@itr</span>
 <span class="k">def</span> <span class="nf">pgrid</span><span class="p">(</span><span class="n">plists</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Convenience function for the most common loop: nested loops with</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convenience function for the most common loop: nested loops with</span>
 <span class="sd">    ``itertools.product``: ``ps.itr2params(itertools.product(a,b,c,...))``.</span>
 
 <span class="sd">    Examples</span>
@@ -1150,7 +1150,7 @@ title="Source repository"
 
 
 <div class="viewcode-block" id="filter_params_unique"><a class="viewcode-back" href="../../generated/api/psweep.psweep.filter_params_unique.html#psweep.psweep.filter_params_unique">[docs]</a><span class="k">def</span> <span class="nf">filter_params_unique</span><span class="p">(</span><span class="n">params</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">dict</span><span class="p">],</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
-    <span class="sd">&quot;&quot;&quot;Reduce params to unique psets.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Reduce params to unique psets.</span>
 
 <span class="sd">    Use pset[&quot;_pset_hash&quot;]  if present, else calculate hash on the fly.</span>
 
@@ -1168,7 +1168,7 @@ title="Source repository"
 <div class="viewcode-block" id="filter_params_dup_hash"><a class="viewcode-back" href="../../generated/api/psweep.psweep.filter_params_dup_hash.html#psweep.psweep.filter_params_dup_hash">[docs]</a><span class="k">def</span> <span class="nf">filter_params_dup_hash</span><span class="p">(</span>
     <span class="n">params</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">dict</span><span class="p">],</span> <span class="n">hashes</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="o">**</span><span class="n">kwds</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
-    <span class="sd">&quot;&quot;&quot;Return params with psets whose hash is not in `hashes`.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return params with psets whose hash is not in `hashes`.</span>
 
 <span class="sd">    Use pset[&quot;_pset_hash&quot;]  if present, else calculate hash on the fly.</span>
 
@@ -1190,7 +1190,7 @@ title="Source repository"
     <span class="n">vary_label_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;_vary&quot;</span><span class="p">,</span>
     <span class="n">skip_dups</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Helper to create a specific param sampling pattern.</span>
 
 <span class="sd">    Vary params in a &quot;star&quot; pattern (and not a full pgrid) around constant</span>
@@ -1290,7 +1290,7 @@ title="Source repository"
     <span class="n">pset_seq</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
     <span class="n">run_seq</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Add special fields to pset. Call worker on exactly one pset. Return</span>
 <span class="sd">    DataFrame row built from ``pset.update(worker(pset))``.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -1341,7 +1341,7 @@ title="Source repository"
     <span class="n">git</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">skip_dups</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Call `worker` for each `pset` in `params`. Populate a DataFrame with rows</span>
 <span class="sd">    from each call ``worker(pset)``.</span>
 
@@ -1501,7 +1501,7 @@ title="Source repository"
 
 <div class="viewcode-block" id="Machine"><a class="viewcode-back" href="../../generated/api/psweep.psweep.Machine.html#psweep.psweep.Machine">[docs]</a><span class="k">class</span> <span class="nc">Machine</span><span class="p">:</span>
 <div class="viewcode-block" id="Machine.__init__"><a class="viewcode-back" href="../../generated/api/psweep.psweep.Machine.html#psweep.psweep.Machine.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">machine_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">jobscript_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;jobscript&quot;</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Expected templates layout::</span>
 
 <span class="sd">            templates/machines/&lt;name&gt;/info.yaml</span>
@@ -1573,7 +1573,7 @@ title="Source repository"
     <span class="o">**</span><span class="n">kwds</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Write files based on templates.</span>
 
 <span class="sd">    Parameters</span>

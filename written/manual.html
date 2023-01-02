@@ -1397,8 +1397,8 @@ convention which makes sense in the long run.</p>
 </div>
 <p>That way, you can track old states of the overall study, and recover from
 mistakes, e.g. by just</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$ rm -r calc
-$ mv calc.bak_2021-03-19T2* calc
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>rm<span class="w"> </span>-r<span class="w"> </span>calc
+$<span class="w"> </span>mv<span class="w"> </span>calc.bak_2021-03-19T2*<span class="w"> </span>calc
 </pre></div>
 </div>
 <p>For any non-trivial work, you won’t use an interactive session. Instead, you
@@ -1464,8 +1464,8 @@ back.</p>
 <p>Instead, while you tinker with <code class="docutils literal notranslate"><span class="pre">params</span></code>, use another
 <code class="docutils literal notranslate"><span class="pre">calc_dir</span></code>, e.g.</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="c1"># only needed so that we can copy the old database over</span>
-$ mkdir -p calc.simulate
-$ cp calc/database.pk calc.simulate/
+$<span class="w"> </span>mkdir<span class="w"> </span>-p<span class="w"> </span>calc.simulate
+$<span class="w"> </span>cp<span class="w"> </span>calc/database.pk<span class="w"> </span>calc.simulate/
 </pre></div>
 </div>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">run_local</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">calc_dir</span><span class="o">=</span><span class="s1">&#39;calc.simulate&#39;</span><span class="p">)</span>
@@ -1657,9 +1657,9 @@ template, goes thru the file template machinery and ends up in
 remote machine named “cluster”. <code class="docutils literal notranslate"><span class="pre">psweep</span></code> will generate <code class="docutils literal notranslate"><span class="pre">run_&lt;machine&gt;.sh</span></code>
 for both. Also you must provide a file <code class="docutils literal notranslate"><span class="pre">info.yaml</span></code> to store
 machine-specific info. ATM this is only <code class="docutils literal notranslate"><span class="pre">subcmd</span></code>, e.g.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># templates/machines/cluster/info.yaml</span><span class="w"></span>
-<span class="nn">---</span><span class="w"></span>
-<span class="nt">subcmd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sbatch</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># templates/machines/cluster/info.yaml</span>
+<span class="nn">---</span>
+<span class="nt">subcmd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sbatch</span>
 </pre></div>
 </div>
 <p>All other SLURM stuff can go into <code class="docutils literal notranslate"><span class="pre">templates/machines/cluster/jobscript</span></code>, e.g.</p>
@@ -1671,21 +1671,21 @@ machine-specific info. ATM this is only <code class="docutils literal notranslat
 
 <span class="c1"># Because we use Python&#39;s string.Template, we need to escape the dollar char</span>
 <span class="c1"># with two.</span>
-<span class="nb">echo</span> <span class="s2">&quot;hostname=</span><span class="nv">$$</span><span class="s2">(hostname)&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;hostname=</span><span class="nv">$$</span><span class="s2">(hostname)&quot;</span>
 
-module purge
+module<span class="w"> </span>purge
 
-module load bzzrrr/1.2.3
-module load python
+module<span class="w"> </span>load<span class="w"> </span>bzzrrr/1.2.3
+module<span class="w"> </span>load<span class="w"> </span>python
 
-python3 run.py
+python3<span class="w"> </span>run.py
 </pre></div>
 </div>
 <p>For the “local” machine we’d just use <code class="docutils literal notranslate"><span class="pre">sh</span></code> (or <code class="docutils literal notranslate"><span class="pre">bash</span></code> or …) as “submit
 command”.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># templates/machines/local/info.yaml</span><span class="w"></span>
-<span class="nn">---</span><span class="w"></span>
-<span class="nt">subcmd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sh</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># templates/machines/local/info.yaml</span>
+<span class="nn">---</span>
+<span class="nt">subcmd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sh</span>
 </pre></div>
 </div>
 <p>The files written are:</p>
@@ -1707,8 +1707,8 @@ calc/65b7b453-96ec-4694-a0c4-4f71c53d982a
 <p>In each <code class="docutils literal notranslate"><span class="pre">run_&lt;machine&gt;.sh</span></code> we use the <code class="docutils literal notranslate"><span class="pre">subcmd</span></code> from <code class="docutils literal notranslate"><span class="pre">info.yaml</span></code>.</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/sh</span>
 <span class="nv">here</span><span class="o">=</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>
-<span class="nb">cd</span> 3c4efcb7-e37e-4ffe-800d-b05db171b41b<span class="p">;</span> sbatch jobscript_cluster<span class="p">;</span> <span class="nb">cd</span> <span class="nv">$here</span>  <span class="c1"># run_seq=0 pset_seq=0</span>
-<span class="nb">cd</span> 11967c0d-7ce6-404f-aae6-2b0ea74beefa<span class="p">;</span> sbatch jobscript_cluster<span class="p">;</span> <span class="nb">cd</span> <span class="nv">$here</span>  <span class="c1"># run_seq=0 pset_seq=1</span>
+<span class="nb">cd</span><span class="w"> </span>3c4efcb7-e37e-4ffe-800d-b05db171b41b<span class="p">;</span><span class="w"> </span>sbatch<span class="w"> </span>jobscript_cluster<span class="p">;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span><span class="nv">$here</span><span class="w">  </span><span class="c1"># run_seq=0 pset_seq=0</span>
+<span class="nb">cd</span><span class="w"> </span>11967c0d-7ce6-404f-aae6-2b0ea74beefa<span class="p">;</span><span class="w"> </span>sbatch<span class="w"> </span>jobscript_cluster<span class="p">;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span><span class="nv">$here</span><span class="w">  </span><span class="c1"># run_seq=0 pset_seq=1</span>
 ...
 </pre></div>
 </div>
@@ -1731,13 +1731,13 @@ for example.</p>
 <p>First we’ll quickly mention how to set up LFS in a <em>new</em> repo. In this case we
 just need to configure <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">lfs</span></code> to track certain files. We’ll use dirs
 <code class="docutils literal notranslate"><span class="pre">_pics/</span></code> and <code class="docutils literal notranslate"><span class="pre">calc/</span></code> as examples.</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$ git lfs track <span class="s2">&quot;_pics/**&quot;</span> <span class="s2">&quot;calc/**&quot;</span>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>git<span class="w"> </span>lfs<span class="w"> </span>track<span class="w"> </span><span class="s2">&quot;_pics/**&quot;</span><span class="w"> </span><span class="s2">&quot;calc/**&quot;</span>
 </pre></div>
 </div>
 <p>where <code class="docutils literal notranslate"><span class="pre">**</span></code> means recursive. This will write the config to <code class="docutils literal notranslate"><span class="pre">.gitattributes</span></code>.</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$ cat .gitattributes
-_pics/** <span class="nv">filter</span><span class="o">=</span>lfs <span class="nv">diff</span><span class="o">=</span>lfs <span class="nv">merge</span><span class="o">=</span>lfs -text
-calc/** <span class="nv">filter</span><span class="o">=</span>lfs <span class="nv">diff</span><span class="o">=</span>lfs <span class="nv">merge</span><span class="o">=</span>lfs -text
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>cat<span class="w"> </span>.gitattributes
+_pics/**<span class="w"> </span><span class="nv">filter</span><span class="o">=</span>lfs<span class="w"> </span><span class="nv">diff</span><span class="o">=</span>lfs<span class="w"> </span><span class="nv">merge</span><span class="o">=</span>lfs<span class="w"> </span>-text
+calc/**<span class="w"> </span><span class="nv">filter</span><span class="o">=</span>lfs<span class="w"> </span><span class="nv">diff</span><span class="o">=</span>lfs<span class="w"> </span><span class="nv">merge</span><span class="o">=</span>lfs<span class="w"> </span>-text
 </pre></div>
 </div>
 <p>Please refer to the <a class="reference external" href="https://git-lfs.github.com">git lfs docs</a> for more info.</p>
@@ -1752,31 +1752,31 @@ convert to LFS. Those patterns will end up in <code class="docutils literal notr
 will even be created of not present already.</p>
 <p>We found that only one <code class="docutils literal notranslate"><span class="pre">-I/--include=</span></code> at a time works, but we can separate
 patterns by “,” to include multiple ones.</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$ git lfs migrate import -I <span class="s1">&#39;_pics/**,calc/**&#39;</span> --include-ref<span class="o">=</span>master
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>git<span class="w"> </span>lfs<span class="w"> </span>migrate<span class="w"> </span>import<span class="w"> </span>-I<span class="w"> </span><span class="s1">&#39;_pics/**,calc/**&#39;</span><span class="w"> </span>--include-ref<span class="o">=</span>master
 
-$ cat .gitattributes
-_pics/** <span class="nv">filter</span><span class="o">=</span>lfs <span class="nv">diff</span><span class="o">=</span>lfs <span class="nv">merge</span><span class="o">=</span>lfs -text
-calc/** <span class="nv">filter</span><span class="o">=</span>lfs <span class="nv">diff</span><span class="o">=</span>lfs <span class="nv">merge</span><span class="o">=</span>lfs -text
+$<span class="w"> </span>cat<span class="w"> </span>.gitattributes
+_pics/**<span class="w"> </span><span class="nv">filter</span><span class="o">=</span>lfs<span class="w"> </span><span class="nv">diff</span><span class="o">=</span>lfs<span class="w"> </span><span class="nv">merge</span><span class="o">=</span>lfs<span class="w"> </span>-text
+calc/**<span class="w"> </span><span class="nv">filter</span><span class="o">=</span>lfs<span class="w"> </span><span class="nv">diff</span><span class="o">=</span>lfs<span class="w"> </span><span class="nv">merge</span><span class="o">=</span>lfs<span class="w"> </span>-text
 </pre></div>
 </div>
 <p>Now after the migrate, all LFS files in the working tree (files on disk) have
 been converted from their real content to text stub files.</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$ cat _pics/foo.png
-version https://git-lfs.github.com/spec/v1
-oid sha256:de0a80ff0fa13a3e8cf8662c073ce76bfc986b64b3c079072202ecff411188ba
-size <span class="m">28339</span>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>cat<span class="w"> </span>_pics/foo.png
+version<span class="w"> </span>https://git-lfs.github.com/spec/v1
+oid<span class="w"> </span>sha256:de0a80ff0fa13a3e8cf8662c073ce76bfc986b64b3c079072202ecff411188ba
+size<span class="w"> </span><span class="m">28339</span>
 </pre></div>
 </div>
 <p>The following will not change that.</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$ git push lfsremote master -f
-$ git lfs fetch lfsremote --all
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>git<span class="w"> </span>push<span class="w"> </span>lfsremote<span class="w"> </span>master<span class="w"> </span>-f
+$<span class="w"> </span>git<span class="w"> </span>lfs<span class="w"> </span>fetch<span class="w"> </span>lfsremote<span class="w"> </span>--all
 </pre></div>
 </div>
 <p>Their real content is however still contained in the <code class="docutils literal notranslate"><span class="pre">.git</span></code> dir. A simple</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$ git lfs checkout .
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>git<span class="w"> </span>lfs<span class="w"> </span>checkout<span class="w"> </span>.
 
-$ cat _pics/foo.png
-&lt;&lt;binary foo&gt;&gt;
+$<span class="w"> </span>cat<span class="w"> </span>_pics/foo.png
+&lt;&lt;binary<span class="w"> </span>foo&gt;&gt;
 </pre></div>
 </div>
 <p>will bring the content back to the working dir.</p>
