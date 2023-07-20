@@ -15,6 +15,7 @@ import uuid
 import warnings
 import yaml
 import sys
+import platform
 
 import numpy as np
 import pandas as pd
@@ -830,6 +831,7 @@ def worker_wrapper(
         "_time_utc": time_start,
         "_pset_seq": pset_seq,
         "_run_seq": run_seq,
+        "_exec_host": platform.node(),
     }
     _pset.update(update)
     if verbose is not None:

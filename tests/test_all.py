@@ -154,6 +154,7 @@ def test_run():
                 "_pset_hash",
                 "_time_utc",
                 "_pset_runtime",
+                "_exec_host",
                 "a",
                 "result",
             ]
