@@ -18,8 +18,7 @@ jobs:
 
       - name: install
         run: |
-          pip install -r requirements_test.txt
-          pip install -e .
+          pip install -e ".[test]"
 
       - name: run tests
         run: |
