@@ -856,6 +856,7 @@ def run(
     params: Sequence[dict],
     df: pd.DataFrame = None,
     poolsize: int = None,
+    dask_client = None,
     save: bool = True,
     tmpsave: bool = False,
     verbose: Union[bool, Sequence[str]] = False,
@@ -885,6 +886,8 @@ def run(
     poolsize
         * None : use serial execution
         * int : use multiprocessing.Pool (even for ``poolsize=1``)
+    dask_client
+        A dask client. Use this or ``poolsize``.
     save
         save final DataFrame to ``<database_dir>/<database_basename>`` (pickle
         format only), default: "calc/database.pk", see also `database_dir`,
@@ -988,7 +991,7 @@ def run(
         simulate=simulate,
     )
 
-    if poolsize is None:
+    if (poolsize is None) and (dask_client is None):
         results = [
             worker_wrapper_partial(
                 pset=pset,
@@ -998,16 +1001,23 @@ def run(
             for ii, pset in enumerate(params)
         ]
     else:
+        assert [poolsize, dask_client].count(None) == 1, (
+            "Use either poolsize or dask_client."
+        )
         # Can't use lambda here b/c pool.map() still can't pickle local scope
         # lambdas. That's why we emulate
         #   pool.map(lambda pset: worker_wrapper_partial(pset, run_seq=...,
         #            params)
         # with nested partial(). Cool, eh?
-        _worker_wrapper_partial = partial(
+        worker_wrapper_partial_pool = partial(
             worker_wrapper_partial, run_seq=run_seq_old + 1
         )
-        with mp.Pool(poolsize) as pool:
-            results = pool.map(_worker_wrapper_partial, params)
+        if dask_client is None:
+            with mp.Pool(poolsize) as pool:
+                results = pool.map(worker_wrapper_partial_pool, params)
+        else:
+            futures = dask_client.map(worker_wrapper_partial_pool, params)
+            results = dask_client.gather(futures)
 
     for df_row in results:
         df = pd.concat((df, df_row), sort=False, ignore_index=True)
@@ -1102,7 +1112,6 @@ def prep_batch(
     write_pset: bool = False,
     **kwds,
 ) -> pd.DataFrame:
-
     """
     Write files based on templates.
 
