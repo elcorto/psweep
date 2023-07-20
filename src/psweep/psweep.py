@@ -851,7 +851,7 @@ def worker_wrapper(
     return df_row
 
 
-def run_local(
+def run(
     worker: Callable,
     params: Sequence[dict],
     df: pd.DataFrame = None,
@@ -1020,6 +1020,10 @@ def run_local(
     return df
 
 
+def run_local(*args, **kwds):
+    warnings.warn("run_local() has been renamed to run()", DeprecationWarning)
+    return run(*args, **kwds)
+
 # -----------------------------------------------------------------------------
 # HPC cluster batch runs
 # -----------------------------------------------------------------------------
@@ -1083,10 +1087,10 @@ def gather_machines(machine_templ_dir):
     ]
 
 
-# If we ever add a "simulate" kwd here: don't pass that thru to run_local() b/c
+# If we ever add a "simulate" kwd here: don't pass that thru to run() b/c
 # there this prevents worker() from being executed, but that's what we always
 # want here since it writes only input files. Instead, just set calc_dir =
-# calc_dir_sim and copy the database as in run_local() and go. Don't copy the
+# calc_dir_sim and copy the database as in run() and go. Don't copy the
 # run_*.sh scripts b/c they are generated afresh anyway.
 #
 def prep_batch(
@@ -1105,7 +1109,7 @@ def prep_batch(
     Parameters
     ----------
     params
-        See :func:`run_local`
+        See :func:`run`
     calc_templ_dir, machine_templ_dir
         Dir with templates.
     git
@@ -1113,7 +1117,7 @@ def prep_batch(
     write_pset
         Write ``<calc_dir>/<psets>/pset.pk``.
     **kwds
-        Passed to :func:`run_local`.
+        Passed to :func:`run`.
 
     Returns
     -------
@@ -1138,7 +1142,7 @@ def prep_batch(
                 pickle_write(pj(calc_dir, pset["_pset_id"], "pset.pk"), pset)
         return {}
 
-    df = run_local(
+    df = run(
         worker,
         params,
         git=False,

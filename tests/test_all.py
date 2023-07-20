@@ -128,14 +128,14 @@ def test_run():
 
         # run two times, updating the database, the second time,
         # also write tmp results
-        df = ps.run_local(func, params, calc_dir=calc_dir)
+        df = ps.run(func, params, calc_dir=calc_dir)
         assert len(df) == 4
         assert len(df._run_id.unique()) == 1
         assert len(df._pset_id) == 4
         assert len(df._pset_id.unique()) == 4
         assert len(df._pset_hash) == 4
         assert len(df._pset_hash.unique()) == 4
-        df = ps.run_local(
+        df = ps.run(
             func, params, calc_dir=calc_dir, poolsize=2, tmpsave=True
         )
         assert len(df) == 8
@@ -182,7 +182,7 @@ def test_run_skip_dups(use_disk):
         # to exist.
         calc_dir = f"{tmpdir}/calc"
 
-        df1 = ps.run_local(
+        df1 = ps.run(
             func,
             params,
             calc_dir=calc_dir,
@@ -194,7 +194,7 @@ def test_run_skip_dups(use_disk):
 
         # Run again w/ same params, but now skip_dups=True. This
         # will cause no psets to be run. That's why df2 is equal to df1.
-        df2 = ps.run_local(
+        df2 = ps.run(
             func,
             params,
             calc_dir=calc_dir,
@@ -206,7 +206,7 @@ def test_run_skip_dups(use_disk):
 
         # Now use params where a subset is new (last 2 entries).
         params = [{"a": 1}, {"a": 2}, {"a": 88}, {"a": 99}]
-        df3 = ps.run_local(
+        df3 = ps.run(
             func,
             params,
             calc_dir=calc_dir,
@@ -230,8 +230,8 @@ def test_simulate():
         calc_dir = f"{tmpdir}/calc"
         calc_dir_sim = calc_dir + ".simulate"
 
-        df = ps.run_local(func, params, calc_dir=calc_dir)
-        df_sim = ps.run_local(
+        df = ps.run(func, params, calc_dir=calc_dir)
+        df_sim = ps.run(
             func, params_sim, calc_dir=calc_dir, simulate=True
         )
         dbfn = f"{calc_dir}/database.pk"
@@ -247,7 +247,7 @@ def test_simulate():
         assert df.iloc[:4].equals(df_sim.iloc[:4])
         assert np.isnan(df_sim.result.values[-2:]).all()
 
-        df2 = ps.run_local(func, params_sim, calc_dir=calc_dir)
+        df2 = ps.run(func, params_sim, calc_dir=calc_dir)
         assert len(df2) == 6
         assert df.iloc[:4].equals(df2.iloc[:4])
         assert (df2.result.values[-2:] == np.array([880.0, 990.0])).all()
@@ -333,11 +333,11 @@ def test_save():
         calc_dir = f"{tmpdir}/calc"
         dbfn = f"{calc_dir}/database.pk"
 
-        ps.run_local(func, params, calc_dir=calc_dir, save=False)
+        ps.run(func, params, calc_dir=calc_dir, save=False)
         assert not os.path.exists(dbfn)
         assert os.listdir(tmpdir) == []
 
-        ps.run_local(func, params, calc_dir=calc_dir, save=True)
+        ps.run(func, params, calc_dir=calc_dir, save=True)
         assert os.path.exists(dbfn)
         assert os.listdir(tmpdir) != []
 
@@ -372,7 +372,7 @@ def test_scripts():
     with tempfile.TemporaryDirectory() as tmpdir:
         params = [{"a": 1}, {"a": 2}, {"a": 3}, {"a": 4}]
         calc_dir = f"{tmpdir}/calc"
-        ps.run_local(func, params, calc_dir=calc_dir)
+        ps.run(func, params, calc_dir=calc_dir)
 
         db = pj(calc_dir, "database.pk")
         print(system(f"psweep-db2json -o columns {db}"))
@@ -394,13 +394,13 @@ def test_backup():
         params = [{"a": 1}, {"a": 2}, {"a": 3}, {"a": 4}]
 
         # First run. backup does nothing yet
-        df0 = ps.run_local(func, params, calc_dir=calc_dir)
+        df0 = ps.run(func, params, calc_dir=calc_dir)
         unq = df0._run_id.unique()
         assert len(unq) == 1
         run_id_0 = unq[0]
 
         # Second run. This time, test backup.
-        df1 = ps.run_local(func, params, calc_dir=calc_dir, backup=True)
+        df1 = ps.run(func, params, calc_dir=calc_dir, backup=True)
         rex = re.compile(r"calc.bak_[0-9-]+T[0-9:\.]+Z_run_id.+")
         found = False
         files = os.listdir(tmpdir)
@@ -436,19 +436,19 @@ def test_pass_df_interactive():
         params = ps.plist("a", [1, 2, 3, 4])
 
         # no db disk write for now, test passing in no df, df=None and empty df
-        df1_1 = ps.run_local(func, params, calc_dir=calc_dir, save=False)
-        df1_2 = ps.run_local(
+        df1_1 = ps.run(func, params, calc_dir=calc_dir, save=False)
+        df1_2 = ps.run(
             func, params, calc_dir=calc_dir, save=False, df=None
         )
         df_cmp(df1_1, df1_2)
-        df1_3 = ps.run_local(
+        df1_3 = ps.run(
             func, params, calc_dir=calc_dir, save=False, df=pd.DataFrame()
         )
         df_cmp(df1_1, df1_3)
 
         # still no disk write, pass in df1 and extend
         df1 = df1_3
-        df2 = ps.run_local(func, params, calc_dir=calc_dir, save=False, df=df1)
+        df2 = ps.run(func, params, calc_dir=calc_dir, save=False, df=df1)
         assert not os.path.exists(pj(tmpdir, "calc"))
         assert len(df2) == 2 * len(df1)
         assert (df2.a.values == np.tile(df1.a.values, 2)).all()
@@ -456,9 +456,9 @@ def test_pass_df_interactive():
             df2._pset_hash.values == np.tile(df1._pset_hash.values, 2)
         ).all()
 
-        # df2 again, but now write to disk and read (ignore that run_local()
+        # df2 again, but now write to disk and read (ignore that run()
         # also returns it)
-        ps.run_local(func, params, calc_dir=calc_dir, df=df1)
+        ps.run(func, params, calc_dir=calc_dir, df=df1)
         df2_disk = ps.df_read(pj(calc_dir, "database.pk"))
         df_cmp(df2, df2_disk)
 
