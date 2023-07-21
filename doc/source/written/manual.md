@@ -18,8 +18,8 @@ This package deals with commonly encountered boilerplate tasks:
 * `git` support to track progress of your work and recover from mistakes
 * optional: don't repeat already performed calculations based on parameter set
   hashes
-* **experimental**: support for managing batch runs, e.g. on remote HPC
-  systems, including `git` support
+* support for managing batch runs, e.g. on remote HPC
+  systems (using a template file workflow), including `git` support
 
 Otherwise, the main goal is to not constrain your flexibility by
 building a complicated framework -- we provide only very basic building
@@ -42,7 +42,7 @@ calculate and store the result of a calculation for each parameter combination.
 >>> a = ps.plist("a", [1,2,3])
 >>> b = ps.plist("b", [88,99])
 >>> params = ps.pgrid(a,b)
->>> df = ps.run_local(func, params)
+>>> df = ps.run(func, params)
 ```
 
 `pgrid` produces a list `params` of parameter sets (dicts `{'a': ..., 'b':
@@ -65,37 +65,37 @@ and a database of results (pandas DataFrame `df`, pickled file
 >>> pd.set_option("display.max_columns", None)
 >>> print(df)
 
-   a   b                               _run_id  \
-0  1  88  d3e44cd1-96a1-4825-b931-4e5113b433cb
-1  1  99  d3e44cd1-96a1-4825-b931-4e5113b433cb
-2  2  88  d3e44cd1-96a1-4825-b931-4e5113b433cb
-3  2  99  d3e44cd1-96a1-4825-b931-4e5113b433cb
-4  3  88  d3e44cd1-96a1-4825-b931-4e5113b433cb
-5  3  99  d3e44cd1-96a1-4825-b931-4e5113b433cb
+   a   b                                _pset_hash  \
+0  1  88  2580bf27aca152e5427389214758e61ea0e544e0
+1  1  99  f2f17559c39b416483251f097ac895945641ea3a
+2  2  88  010552c86c69e723feafb1f2fdd5b7d7f7e46e32
+3  2  99  b57c5feac0608a43a65518f01da5aaf20a493535
+4  3  88  719b2a864450534f5b683a228de018bc71f4cf2d
+5  3  99  54baeefd998f4d8a8c9524c50aa0d88407cabb46
 
-                               _pset_id _calc_dir  \
-0  4fe605c3-39a8-4fd4-8076-8b5d4a676657      calc
-1  809f4d31-f777-4912-8741-c5a2ed7a3803      calc
-2  ba4c1446-b390-4d5a-ad30-662a353e84e0      calc
-3  80acd6f8-c416-4c4f-8b8d-1668c6b3490e      calc
-4  79329ab7-9442-499e-b43b-a90b1a101eba      calc
-5  84a789b0-a2e9-4360-850f-739415de8c1d      calc
+                                _run_id                              _pset_id  \
+0  ab95c9a9-05ba-4619-b060-d3a81feeee40  d47ae513-9d70-4844-87f7-f821c9ac124b
+1  ab95c9a9-05ba-4619-b060-d3a81feeee40  6cd79932-4dc2-4e16-b98a-dcc17c188796
+2  ab95c9a9-05ba-4619-b060-d3a81feeee40  b1420236-86cb-4c37-8a07-ba625ee90c4f
+3  ab95c9a9-05ba-4619-b060-d3a81feeee40  5d0165d8-2099-4ad3-92ac-d1d6b08d7125
+4  ab95c9a9-05ba-4619-b060-d3a81feeee40  19500d3e-3b37-4815-8cd9-d0c3405269a3
+5  ab95c9a9-05ba-4619-b060-d3a81feeee40  8f3c8e8c-77a3-42c1-9ab1-7e6a67eb8845
 
-                      _time_utc                                _pset_hash  \
-0 2022-08-16 07:21:41.182055473  2580bf27aca152e5427389214758e61ea0e544e0
-1 2022-08-16 07:21:41.184616089  f2f17559c39b416483251f097ac895945641ea3a
-2 2022-08-16 07:21:41.186779737  010552c86c69e723feafb1f2fdd5b7d7f7e46e32
-3 2022-08-16 07:21:41.188885450  b57c5feac0608a43a65518f01da5aaf20a493535
-4 2022-08-16 07:21:41.190981627  719b2a864450534f5b683a228de018bc71f4cf2d
-5 2022-08-16 07:21:41.193049431  54baeefd998f4d8a8c9524c50aa0d88407cabb46
+  _calc_dir                     _time_utc  _pset_seq  _run_seq _exec_host  \
+0      calc 2023-01-20 19:54:09.541669130          0         0    deskbot
+1      calc 2023-01-20 19:54:09.543383598          1         0    deskbot
+2      calc 2023-01-20 19:54:09.544652700          2         0    deskbot
+3      calc 2023-01-20 19:54:09.545840979          3         0    deskbot
+4      calc 2023-01-20 19:54:09.546977043          4         0    deskbot
+5      calc 2023-01-20 19:54:09.548082113          5         0    deskbot
 
-   _pset_seq  _run_seq     result  _pset_runtime
-0          0         0  43.838220       0.000004
-1          1         0  62.688537       0.000003
-2          2         0  17.665135       0.000003
-3          3         0  65.960342       0.000005
-4          4         0  21.357208       0.000002
-5          5         0  71.136104       0.000003
+       result  _pset_runtime
+0    3.629665       0.000004
+1   59.093600       0.000002
+2   84.056801       0.000002
+3   79.200365       0.000002
+4  240.718717       0.000002
+5   37.220296       0.000002
 ```
 
 You see the columns `a` and `b`, the column `result` (returned by
@@ -110,9 +110,10 @@ _pset_hash
 _pset_runtime
 _calc_dir
 _time_utc
+_exec_host
 ```
 
-Observe that one call `ps.run_local(func, params)` creates one `_run_id` -- a
+Observe that one call `ps.run(func, params)` creates one `_run_id` -- a
 UUID identifying this run, where by "run" we mean one loop over all parameter
 combinations. Inside that, each call `func(pset)` creates a UUID `_pset_id` and
 a new row in the DataFrame (the database). In addition we also add sequential
@@ -168,9 +169,9 @@ The `pset`s form the rows of a pandas `DataFrame`, which we use to store the
 pset and the result from each `func(pset)`.
 
 The idea is now to run `func` in a loop over all `pset`s in `params`. You do this
-using the `ps.run_local()` helper function. The function adds some special
-columns such as `_run_id` (once per `ps.run_local()` call) or `_pset_id` (once
-per pset). Using `ps.run_local(... poolsize=...)` runs `func` in parallel on
+using the `ps.run()` helper function. The function adds some special
+columns such as `_run_id` (once per `ps.run()` call) or `_pset_id` (once
+per pset). Using `ps.run(... poolsize=...)` runs `func` in parallel on
 `params` using `multiprocessing.Pool`.
 
 ## Building parameter grids
@@ -178,7 +179,7 @@ per pset). Using `ps.run_local(... poolsize=...)` runs `func` in parallel on
 This package offers some very simple helper functions which assist in creating
 `params`. Basically, we define the to-be-varied parameters and then use
 something like `itertools.product()` to loop over them to create `params`,
-which is passed to `ps.run_local()` to actually perform the loop over all
+which is passed to `ps.run()` to actually perform the loop over all
 `pset`s.
 
 ```py
@@ -369,13 +370,13 @@ will return an iterator whose length is `min(len(a), len(b))`.
 
 ## The database
 
-By default, `ps.run_local()` writes a database `calc/database.pk` (a pickled
+By default, `ps.run()` writes a database `calc/database.pk` (a pickled
 DataFrame) with the default `calc_dir='calc'`. You can turn that off using
-`save=False` if you want. If you run `ps.run_local()` again
+`save=False` if you want. If you run `ps.run()` again
 
 ```py
->>> ps.run_local(func, params)
->>> ps.run_local(func, other_params)
+>>> ps.run(func, params)
+>>> ps.run(func, other_params)
 ```
 
 it will read and append to that file. The same happens in an interactive
@@ -384,8 +385,8 @@ session when you pass in `df` again, in which case we don't read it from disk:
 ```py
 # default is df=None -> create empty df
 # save=False: don't write db to disk, optional
->>> df_run_0 = ps.run_local(func, params, save=False)
->>> df_run_0_and_1 = ps.run_local(func, other_params, save=False, df=df_run_0)
+>>> df_run_0 = ps.run(func, params, save=False)
+>>> df_run_0_and_1 = ps.run(func, other_params, save=False, df=df_run_0)
 ```
 
 ## Special database fields and repeated runs
@@ -397,8 +398,8 @@ It is important to get the difference between the two special fields
 
 Both are random UUIDs. They are used to uniquely identify things.
 
-Once per `ps.run_local()` call, a `_run_id` and `_run_seq` is created. Which
-means that when you call `ps.run_local()` multiple times *using the same
+Once per `ps.run()` call, a `_run_id` and `_run_seq` is created. Which
+means that when you call `ps.run()` multiple times *using the same
 database* as just shown, you will see multiple (in this case two) `_run_id`
 and `_run_seq` values.
 
@@ -412,17 +413,17 @@ and `_run_seq` values.
 969592bc-65e6-4315-9e6b-5d64b6eaa0b3  162a7b8c-3ab5-41bb-92cd-1e5d0db0842f         1          5
 ```
 
-Each `ps.run_local()` call in turn calls `func(pset)` for each pset in `params`.
+Each `ps.run()` call in turn calls `func(pset)` for each pset in `params`.
 Each `func` invocation creates a unique `_pset_id` and increment the integer
 counter `_pset_seq`. Thus, we have a very simple, yet powerful one-to-one
 mapping and a way to refer to a specific pset.
 
 An interesting special case (see `examples/vary_1_param_repeat_same.py`) is
-when you call `ps.run_local()` multiple times using *the exact same* `params`,
+when you call `ps.run()` multiple times using *the exact same* `params`,
 
 ```py
->>> ps.run_local(func, params)
->>> ps.run_local(func, params)
+>>> ps.run(func, params)
+>>> ps.run(func, params)
 ```
 
 which is perfectly fine, e.g. in cases where you just want to sample more data
@@ -449,14 +450,14 @@ UUIDs for `_pset_id`, those calculations can still be distinguished.
 As mentioned, we create a hash for each `pset`, which is stored in the
 `_pset_hash` database column. This unlocks powerful database filter options.
 
-As shown above, when calling `run_local()` twice
+As shown above, when calling `run()` twice
 with the same `params` you get a second set of calculations. But suppose you
 have a script where you keep modifying the way you create `params` and you just
 want to add some more scans *without* removing the code that generated the old
 `params` that you already have in the database. In that case use
 
 ```py
->>> ps.run_local(func, params, skip_dups=True)
+>>> ps.run(func, params, skip_dups=True)
 ```
 
 This will skip all `pset`s already in the database based on their hash and
@@ -502,7 +503,7 @@ def func(pset):
 
 if __name__ == "__main__":
     params = ps.plist("a", [1, 2, 3, 4])
-    df = ps.run_local(func, params)
+    df = ps.run(func, params)
     print(df)
 ```
 
@@ -513,7 +514,7 @@ row added for each call to `func` by returning a dict `{"cmd": cmd}` with the
 shell `cmd` we call in order to have that in the database.
 
 Also note how we use the special fields `_pset_id` and `_calc_dir`, which are
-added in `ps.run_local()` to `pset` *before* `func` is called.
+added in `ps.run()` to `pset` *before* `func` is called.
 
 After the run, we have four dirs for each pset, each simply named with
 `_pset_id`:
@@ -581,11 +582,11 @@ ps.df_write(df, "calc/database_eval.pk")
 
 See `examples/multiple_local_1d_scans/` and `examples/*repeat*`.
 
-You can backup old calc dirs when repeating calls to `ps.run_local()` using the
+You can backup old calc dirs when repeating calls to `ps.run()` using the
 `backup` keyword.
 
 ```py
-df = ps.run_local(func, params, backup=True)
+df = ps.run(func, params, backup=True)
 ```
 
 This will save a copy of the old `calc_dir` to something like
@@ -604,7 +605,7 @@ $ mv calc.bak_2021-03-19T2* calc
 
 For any non-trivial work, you won't use an interactive session. Instead, you
 will have a driver script (say `input.py`, or a jupyter notebook, or ...) which
-defines `params` and starts `ps.run_local()`. Also in a common workflow, you
+defines `params` and starts `ps.run()`. Also in a common workflow, you
 won't define `params` and run a study once. Instead you will first have an idea
 about which parameter values to scan. You will start with a coarse grid of
 parameters and then inspect the results and identify regions where you need
@@ -618,7 +619,7 @@ study.
 Instead or in addition to using
 
 ```py
->>> ps.run_local(..., backup=True)
+>>> ps.run(..., backup=True)
 ```
 
 we recommend a `git`-based workflow to at least track changes to `input.py`
@@ -626,7 +627,7 @@ we recommend a `git`-based workflow to at least track changes to `input.py`
 can manually `git commit` at any point of course, or use
 
 ```py
->>> ps.run_local(..., git=True)
+>>> ps.run(..., git=True)
 ```
 
 This will commit any changes made to e.g. `input.py` itself and create a commit
@@ -683,14 +684,14 @@ $ cp calc/database.pk calc.simulate/
 ```
 
 ```py
-df = ps.run_local(func, params, calc_dir='calc.simulate')
+df = ps.run(func, params, calc_dir='calc.simulate')
 ```
 
 But what's even better: keep everything as it is and just set
 `simulate=True`, which performs exactly the two steps above.
 
 ```py
-df = ps.run_local(func, params, simulate=True)
+df = ps.run(func, params, simulate=True)
 ```
 
 It will copy only the database, not all the (possible large) data in `calc/` to
@@ -710,7 +711,7 @@ between 10 and 100, while 'b' was constant, ...". You get the idea.
 
 To ease post-processing, it can be useful practice to add a constant parameter
 named "study" or "scan" to label a certain range of runs. If you, for instance,
-have 5 runs (meaning 5 calls to `ps.run_local()`) where you scan values for
+have 5 runs (meaning 5 calls to `ps.run()`) where you scan values for
 parameter 'a' while keeping parameters 'b' and 'c' constant, you'll have 5
 `_run_id` values. When querying the database later, you could limit by
 `_run_id` if you know the values:
@@ -777,7 +778,7 @@ Super Pro tip: Make a backup of the database first!
 
 ## Remote cluster batch runs
 
-We have experimental support for managing calculations on remote systems such
+We have support for managing calculations on remote systems such
 as HPC clusters with a batch system like SLURM. It is basically a modernized
 and stripped-down version of
 [`pwtools.batch`](https://elcorto.github.io/pwtools/written/background/param_study.html).
@@ -793,7 +794,7 @@ the standard library's `string.Template`, where each `$foo` is replaced by a
 value contained in a pset, so `$param_a`, `$param_b`, as well as `$_pset_id`
 and so forth.
 
-We piggy-back on the `run_local()` workflow from above to use all it's power
+We piggy-back on the `run()` workflow from above to use all it's power
 and flexibility to, instead of running jobs with it, just **create batch
 scripts using template files**.
 
@@ -806,7 +807,8 @@ control over every part of the workflow. We just automate the boring stuff.
 
 * define `params` to be varied as shown above (probably in a script, say
   `input.py`)
-* in that script, call `ps.prep_batch(params)`, which does
+* in that script, call `ps.prep_batch(params)` (instead of `run(params, ...)`);
+  this then performs these steps
   * use `templates/calc/*`: scripts that you want to run in each batch job
   * use `templates/machines/<mycluster>/jobscript`: batch job script
   * read `templates/machines/<mycluster>/info.yaml`: machine-specific info
@@ -814,17 +816,12 @@ control over every part of the workflow. We just automate the boring stuff.
   * define `func()` that will create a dir named `calc/<_pset_id>` for each
     batch job, **replace placeholders** such as `$param_a` from `pset`s
     (including special ones such as `$_pset_id`)
-  * call `run_local(func, params)`
+  * call `run(func, params)`
   * create a script `calc/run_<mycluster>.sh` to submit all jobs
-
-Thus, we replace running jobs directly (i.e. what `ps.run_local()` would do)
-with:
-
-* use `prep_batch(params, ...)` instead of `run_local(params, ...)`
 * if running locally
   * use `scp` or `rsync` or the helper script `bin/psweep-push <mycluster>` (uses
     `rsync`) to copy `calc/` to a cluster
-  * ssh to cluster
+* ssh to cluster
 * execute `calc/run_<mycluster>.sh`, wait ...
 * if running locally
   * use `scp` or `rsync` or the helper script use `bin/psweep-pull <mycluster>`
@@ -957,11 +954,74 @@ cd 11967c0d-7ce6-404f-aae6-2b0ea74beefa; sbatch jobscript_cluster; cd $here  # r
 ### git support
 
 Use `prep_batch(..., git=True)` to have some basic git support such as
-automatic commits in each call. It just uses `run_local(..., git=True)` when
+automatic commits in each call. It just uses `run(..., git=True)` when
 creating batch scripts, so all best practices for that apply here as well. In
 particular, make sure to create `.gitignore` first, else we'll track `calc/` as
 well, which you may safely do when data in `calc` is small. Else use `git-lfs`,
 for example.
+
+### Limitations
+
+The template workflow will create one batch job per `pset`. If the workload in
+`run.py` is small, then this creates some overhead. Use this only if you have
+sizable workloads. For many small lightweight workloads, better start one batch
+job manually (ideally on a node with many cores), replace `run.py`'s content
+with a function `func(pset)` and then use something like `ps.run(func, params,
+poolsize=n_cores)` in that job.
+
+The communication of the `pset` content via filling templates is suited for
+non-Python workloads, such as simulation software with text input files and no
+Python interface, for instance
+
+
+`templates/calc/input_file`:
+
+```
+# Input file for super fast bzzrrr simulation code.
+
+param_a = $param_a
+param_b = $param_b
+```
+
+`templates/machines/cluster/jobscript`:
+
+```sh
+#!/bin/bash
+
+#SBATCH --time 00:20:00
+#SBATCH -o out.job
+#SBATCH -J foo_${_pset_seq}_${_pset_id}
+#SBATCH -p bar
+#SBATCH -A baz
+#SBATCH -n 1 -c 8
+
+module purge
+module load bzzrrr/1.2.3
+
+mpirun -np 8 bzzrrr input_file
+```
+
+For Python workloads (the one we have in
+`examples/batch_with_git/templates/calc/run.py`), using placeholders like
+`$param_a` is actually a bit of an anti-pattern, since we would ideally like to
+pass the `pset` to the workload using Python. You can partially solve this by
+using `prep_batch(..., write_pset=True)` which writes
+`<calc_dir>/<pset_id>/pset.pk`. In `run.py` you can then do
+
+```py
+def func(pset):
+    ... here be code ...
+    return result
+
+# write <calc_dir>/<pset_id>/result.pk
+ps.pickle_write("result.pk", func(ps.pickle_read("pset.pk")))
+```
+
+But this is still not very pythonic, since we communicate by writing
+(potentially many) small files, namely `run.py`, `pset.pk`,
+`jobscript_<cluster>` for each `<calc_dir>/<pset_id>/` dir. Also, in
+the example above, `run.py` would be the exact same file for each job.
+
 
 ## Special topics
 
@@ -1037,18 +1097,15 @@ will bring the content back to the working dir.
 
 ## Scope and related projects
 
-This project aims to be easy to set up and use with as few dependencies and new
-concepts to learn as possible. We strive to use standard Python data structures
-(dicts) and functionality (itertools) as well as widely available third party
-packages (pandas). Users should be able to get going quickly without having to
-set up and learn a complex framework. Perhaps most importantly, this project is
-completely agnostic to the field of study, e.g. any problem that can be
-formulated as "let's vary X and analyze the results".
+This project aims to be agnostic to the field of study. We target problems that
+can be formulated as **computational experiments**: "let's vary X,Y and
+analyze the results".
 
 Unsurprisingly, there is a huge pile of similar tools. This project is super
 small and as such of course lacks a lot of features that other packages offer.
-We just attempt to scratch some particular itches which we haven't found to
-be covered in that combination by other tools, namely
+In particular we are not a workflow engine, a tool that lets you define chains
+of interdependent tasks. We just attempt to scratch some particular itches
+which we haven't found to be covered in that combination by other tools, namely
 
 * simulate runs
 * backups
