@@ -1115,7 +1115,7 @@ def prep_batch(
     git
         Use git to commit local changes.
     write_pset
-        Write ``<calc_dir>/<psets>/pset.pk``.
+        Write ``<calc_dir>/<pset_id>/pset.pk``.
     **kwds
         Passed to :func:`run`.
 
