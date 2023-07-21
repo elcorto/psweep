@@ -1,7 +1,9 @@
 name: tests
 
 on:
-  push
+  push:
+    branches:
+      - main
 
 jobs:
   tests:
