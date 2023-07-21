@@ -8,6 +8,14 @@ description = "loop like a pro, make parameter studies fun"
 readme = "README.md"
 license = {file = "LICENSE"}
 requires-python = ">=3.8"
+keywords = [
+    "computational-experiment",
+    "parameter-sweep",
+    "parameter-scan",
+    "parameter-study",
+    "pandas",
+    "database",
+]
 
 dependencies = [
     "numpy",
