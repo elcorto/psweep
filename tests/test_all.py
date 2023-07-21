@@ -135,9 +135,7 @@ def test_run():
         assert len(df._pset_id.unique()) == 4
         assert len(df._pset_hash) == 4
         assert len(df._pset_hash.unique()) == 4
-        df = ps.run(
-            func, params, calc_dir=calc_dir, poolsize=2, tmpsave=True
-        )
+        df = ps.run(func, params, calc_dir=calc_dir, poolsize=2, tmpsave=True)
         assert len(df) == 8
         assert len(df._run_id.unique()) == 2
         assert len(df._pset_id) == 8
@@ -231,9 +229,7 @@ def test_simulate():
         calc_dir_sim = calc_dir + ".simulate"
 
         df = ps.run(func, params, calc_dir=calc_dir)
-        df_sim = ps.run(
-            func, params_sim, calc_dir=calc_dir, simulate=True
-        )
+        df_sim = ps.run(func, params_sim, calc_dir=calc_dir, simulate=True)
         dbfn = f"{calc_dir}/database.pk"
         dbfn_sim = f"{calc_dir_sim}/database.pk"
 
@@ -270,8 +266,10 @@ def test_df_io():
     letters = string.ascii_letters
     ri = np.random.randint
     rn = np.random.rand
+
     # random string
-    rs = lambda n: "".join(letters[ii] for ii in ri(0, len(letters), n))
+    def rs(n):
+        return "".join(letters[ii] for ii in ri(0, len(letters), n))
 
     for fmt in ["pickle", "json"]:
         df = pd.DataFrame()
@@ -437,9 +435,7 @@ def test_pass_df_interactive():
 
         # no db disk write for now, test passing in no df, df=None and empty df
         df1_1 = ps.run(func, params, calc_dir=calc_dir, save=False)
-        df1_2 = ps.run(
-            func, params, calc_dir=calc_dir, save=False, df=None
-        )
+        df1_2 = ps.run(func, params, calc_dir=calc_dir, save=False, df=None)
         df_cmp(df1_1, df1_2)
         df1_3 = ps.run(
             func, params, calc_dir=calc_dir, save=False, df=pd.DataFrame()
@@ -581,8 +577,14 @@ def test_pset_hash():
     # _Foo class such that its hash changes, thank you very much. So we just
     # test that hashing them works.
     #
-    ##assert ps.pset_hash(dict(a=_Foo)) == "f7a936832c167d5dc1c9574b937822ad0853c00d"
-    ##assert ps.pset_hash(dict(a=_Foo())) == "7c78a7c995e1cf7a2f1f68f29090b173c9b930fa"
+    ##assert (
+    ##    ps.pset_hash(dict(a=_Foo))
+    ##    == "f7a936832c167d5dc1c9574b937822ad0853c00d"
+    ##)
+    ##assert (
+    ##    ps.pset_hash(dict(a=_Foo()))
+    ##    == "7c78a7c995e1cf7a2f1f68f29090b173c9b930fa"
+    ##)
     ps.pset_hash(dict(a=_Foo))
     ps.pset_hash(dict(a=_Foo()))
 
