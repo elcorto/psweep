@@ -46,6 +46,16 @@ doc = [
     "sphinx-autodoc @ git+https://github.com/elcorto/sphinx-autodoc",
 ]
 
+dask = [
+    "dask",
+
+    # e.g. dask_jobqueue.SLURMCluster
+    "dask-jobqueue",
+
+    # dask.distributed, for Client and LocalCluster
+    "distributed",
+]
+
 
 [project.scripts]
 psweep-checkdir = "psweep.cli:check_calc_dir"
