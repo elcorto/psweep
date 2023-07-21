@@ -1,0 +1,81 @@
+[project]
+name = "psweep"
+version = "0.10.0"
+authors = [
+    {name = "Steve Schmerler", email = "git@elcorto.com"}
+]
+description = "loop like a pro, make parameter studies fun"
+readme = "README.md"
+license = {file = "LICENSE"}
+requires-python = ">=3.8"
+
+dependencies = [
+    "numpy",
+    "pandas >= 0.19.2",
+    "pyyaml",
+    "joblib",
+
+    # For bin/psweep-db2* scripts
+    "docopt",
+    "tabulate >= 0.8.2",
+]
+
+
+[project.optional-dependencies]
+test = [
+    "pytest",
+    "pytest-xdist",
+]
+
+# Once black and ruff can reliably ignore files.
+##dev = ["pre-commit"]
+
+doc = [
+    "jupyter-book",
+    "sphinx-autodoc-typehints",
+
+    # For doc/generate-doc.sh
+    "sphinx-autodoc @ git+https://github.com/elcorto/sphinx-autodoc",
+]
+
+
+[project.scripts]
+psweep-checkdir = "psweep.cli:check_calc_dir"
+
+
+# https://setuptools.pypa.io/en/latest/userguide/pyproject_config.html
+[tool.setuptools]
+script-files = [
+    "bin/psweep-db2json",
+    "bin/psweep-db2table",
+    "bin/psweep-pull",
+    "bin/psweep-push",
+]
+
+
+# These tools get in the way sometimes. extend-exclude doesn't work, fix later.
+# In examples/batch_with_git/templates/calc/run.py we have place holders $foo
+# that break parsing.
+[tool.black]
+line-length = 79
+##extend-exclude = """
+##(
+##    ^/examples/batch_with_git/templates/calc/run.py
+##)
+##"""
+
+[tool.ruff]
+line-length = 79
+##extend-exclude = [
+##    "examples/batch_with_git/templates/calc/run.py",
+##]
+
+
+[tool.mypy]
+ignore_missing_imports = true
+implicit_optional = true
+
+
+[build-system]
+requires = ["setuptools>=66.1", "wheel"]
+build-backend = "setuptools.build_meta"

@@ -1,7 +1,0 @@
-pytest
-
-# Run tests in parallel. Not relevant for CI systems in general, but we do it
-# anyway to make sure that it works (needed for fast local testing of course).
-pytest-xdist
-
-# vim:ft=conf
