@@ -55,6 +55,7 @@ psweep
    plist
    prep_batch
    pset_hash
+   run
    run_local
    stargrid
    system

@@ -205,6 +205,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.plist.html">psweep.psweep.plist</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.prep_batch.html">psweep.psweep.prep_batch</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.pset_hash.html">psweep.psweep.pset_hash</a></li>
+<li class="toctree-l3"><a class="reference internal" href="psweep.psweep.run.html">psweep.psweep.run</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.run_local.html">psweep.psweep.run_local</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.stargrid.html">psweep.psweep.stargrid</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.system.html">psweep.psweep.system</a></li>
@@ -512,16 +513,19 @@ document.write(`
 <tr class="row-odd"><td><p><a class="reference internal" href="psweep.psweep.pset_hash.html#psweep.psweep.pset_hash" title="psweep.psweep.pset_hash"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pset_hash</span></code></a>(dct[, method, raise_error, ...])</p></td>
 <td><p>Reproducible hash of a dict for usage in database (hash of a <cite>pset</cite>).</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="psweep.psweep.run_local.html#psweep.psweep.run_local" title="psweep.psweep.run_local"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_local</span></code></a>(worker, params[, df, poolsize, ...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="psweep.psweep.run.html#psweep.psweep.run" title="psweep.psweep.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code></a>(worker, params[, df, poolsize, save, ...])</p></td>
 <td><p>Call <cite>worker</cite> for each <cite>pset</cite> in <cite>params</cite>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="psweep.psweep.stargrid.html#psweep.psweep.stargrid" title="psweep.psweep.stargrid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">stargrid</span></code></a>(const, vary[, vary_labels, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="psweep.psweep.run_local.html#psweep.psweep.run_local" title="psweep.psweep.run_local"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_local</span></code></a>(*args, **kwds)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="psweep.psweep.stargrid.html#psweep.psweep.stargrid" title="psweep.psweep.stargrid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">stargrid</span></code></a>(const, vary[, vary_labels, ...])</p></td>
 <td><p>Helper to create a specific param sampling pattern.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="psweep.psweep.system.html#psweep.psweep.system" title="psweep.psweep.system"><code class="xref py py-obj docutils literal notranslate"><span class="pre">system</span></code></a>(cmd, **kwds)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="psweep.psweep.system.html#psweep.psweep.system" title="psweep.psweep.system"><code class="xref py py-obj docutils literal notranslate"><span class="pre">system</span></code></a>(cmd, **kwds)</p></td>
 <td><p>Call shell command.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="psweep.psweep.worker_wrapper.html#psweep.psweep.worker_wrapper" title="psweep.psweep.worker_wrapper"><code class="xref py py-obj docutils literal notranslate"><span class="pre">worker_wrapper</span></code></a>(pset, worker[, tmpsave, ...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="psweep.psweep.worker_wrapper.html#psweep.psweep.worker_wrapper" title="psweep.psweep.worker_wrapper"><code class="xref py py-obj docutils literal notranslate"><span class="pre">worker_wrapper</span></code></a>(pset, worker[, tmpsave, ...])</p></td>
 <td><p>Add special fields to pset.</p></td>
 </tr>
 </tbody>

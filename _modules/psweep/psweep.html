@@ -202,6 +202,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.plist.html">psweep.psweep.plist</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.prep_batch.html">psweep.psweep.prep_batch</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.pset_hash.html">psweep.psweep.pset_hash</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.run.html">psweep.psweep.run</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.run_local.html">psweep.psweep.run_local</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.stargrid.html">psweep.psweep.stargrid</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.system.html">psweep.psweep.system</a></li>
@@ -343,6 +344,7 @@ document.write(`
 <span class="kn">import</span> <span class="nn">warnings</span>
 <span class="kn">import</span> <span class="nn">yaml</span>
 <span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">platform</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
@@ -1158,6 +1160,7 @@ document.write(`
         <span class="s2">&quot;_time_utc&quot;</span><span class="p">:</span> <span class="n">time_start</span><span class="p">,</span>
         <span class="s2">&quot;_pset_seq&quot;</span><span class="p">:</span> <span class="n">pset_seq</span><span class="p">,</span>
         <span class="s2">&quot;_run_seq&quot;</span><span class="p">:</span> <span class="n">run_seq</span><span class="p">,</span>
+        <span class="s2">&quot;_exec_host&quot;</span><span class="p">:</span> <span class="n">platform</span><span class="o">.</span><span class="n">node</span><span class="p">(),</span>
     <span class="p">}</span>
     <span class="n">_pset</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">update</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">verbose</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -1177,7 +1180,7 @@ document.write(`
     <span class="k">return</span> <span class="n">df_row</span></div>
 
 
-<div class="viewcode-block" id="run_local"><a class="viewcode-back" href="../../generated/api/psweep.psweep.run_local.html#psweep.psweep.run_local">[docs]</a><span class="k">def</span> <span class="nf">run_local</span><span class="p">(</span>
+<div class="viewcode-block" id="run"><a class="viewcode-back" href="../../generated/api/psweep.psweep.run.html#psweep.psweep.run">[docs]</a><span class="k">def</span> <span class="nf">run</span><span class="p">(</span>
     <span class="n">worker</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span>
     <span class="n">params</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">dict</span><span class="p">],</span>
     <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -1346,6 +1349,10 @@ document.write(`
     <span class="k">return</span> <span class="n">df</span></div>
 
 
+<div class="viewcode-block" id="run_local"><a class="viewcode-back" href="../../generated/api/psweep.psweep.run_local.html#psweep.psweep.run_local">[docs]</a><span class="k">def</span> <span class="nf">run_local</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">):</span>
+    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;run_local() has been renamed to run()&quot;</span><span class="p">,</span> <span class="ne">DeprecationWarning</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">run</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span></div>
+
 <span class="c1"># -----------------------------------------------------------------------------</span>
 <span class="c1"># HPC cluster batch runs</span>
 <span class="c1"># -----------------------------------------------------------------------------</span>
@@ -1409,10 +1416,10 @@ document.write(`
     <span class="p">]</span></div>
 
 
-<span class="c1"># If we ever add a &quot;simulate&quot; kwd here: don&#39;t pass that thru to run_local() b/c</span>
+<span class="c1"># If we ever add a &quot;simulate&quot; kwd here: don&#39;t pass that thru to run() b/c</span>
 <span class="c1"># there this prevents worker() from being executed, but that&#39;s what we always</span>
 <span class="c1"># want here since it writes only input files. Instead, just set calc_dir =</span>
-<span class="c1"># calc_dir_sim and copy the database as in run_local() and go. Don&#39;t copy the</span>
+<span class="c1"># calc_dir_sim and copy the database as in run() and go. Don&#39;t copy the</span>
 <span class="c1"># run_*.sh scripts b/c they are generated afresh anyway.</span>
 <span class="c1">#</span>
 <div class="viewcode-block" id="prep_batch"><a class="viewcode-back" href="../../generated/api/psweep.psweep.prep_batch.html#psweep.psweep.prep_batch">[docs]</a><span class="k">def</span> <span class="nf">prep_batch</span><span class="p">(</span>
@@ -1431,7 +1438,7 @@ document.write(`
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    params</span>
-<span class="sd">        See :func:`run_local`</span>
+<span class="sd">        See :func:`run`</span>
 <span class="sd">    calc_templ_dir, machine_templ_dir</span>
 <span class="sd">        Dir with templates.</span>
 <span class="sd">    git</span>
@@ -1439,7 +1446,7 @@ document.write(`
 <span class="sd">    write_pset</span>
 <span class="sd">        Write ``&lt;calc_dir&gt;/&lt;psets&gt;/pset.pk``.</span>
 <span class="sd">    **kwds</span>
-<span class="sd">        Passed to :func:`run_local`.</span>
+<span class="sd">        Passed to :func:`run`.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -1464,7 +1471,7 @@ document.write(`
                 <span class="n">pickle_write</span><span class="p">(</span><span class="n">pj</span><span class="p">(</span><span class="n">calc_dir</span><span class="p">,</span> <span class="n">pset</span><span class="p">[</span><span class="s2">&quot;_pset_id&quot;</span><span class="p">],</span> <span class="s2">&quot;pset.pk&quot;</span><span class="p">),</span> <span class="n">pset</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">{}</span>
 
-    <span class="n">df</span> <span class="o">=</span> <span class="n">run_local</span><span class="p">(</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">run</span><span class="p">(</span>
         <span class="n">worker</span><span class="p">,</span>
         <span class="n">params</span><span class="p">,</span>
         <span class="n">git</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
