@@ -8,6 +8,7 @@ import pickle
 import subprocess
 from itertools import product
 from contextlib import nullcontext
+import importlib
 
 import pandas as pd
 import numpy as np
@@ -793,3 +794,17 @@ def test_prep_batch():
                 "jobscript_cluster",
             ]:
                 assert os.path.exists(f"{tmpdir}/calc/{pset_id}/{name}")
+
+
+@pytest.mark.skipif(
+    importlib.util.find_spec("dask.distributed") is None,
+    reason="dask.distributed not found",
+)
+def test_dask_local_cluster():
+    from dask.distributed import Client, LocalCluster
+
+    cluster = LocalCluster()
+    client = Client(cluster)
+
+    params = ps.plist("a", [1, 2, 3])
+    ps.run(func_a, params, dask_client=client, save=False)
