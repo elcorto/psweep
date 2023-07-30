@@ -42,9 +42,9 @@ def system(cmd: str, **kwds) -> subprocess.CompletedProcess:
 
     Parameters
     ----------
-    cmd :
+    cmd
         shell command
-    kwds :
+    kwds
         keywords passed to `subprocess.run`
     """
     try:
@@ -301,7 +301,7 @@ def intspace(*args, dtype=np.int64, **kwds):
 
     Parameters
     ----------
-    *args, **kwds :
+    *args, **kwds
         Same as ``np.linspace``
     """
     assert "dtype" not in kwds, "Got 'dtype' multiple times."
@@ -367,8 +367,9 @@ def df_to_json(df: pd.DataFrame, **kwds) -> str:
 
     Parameters
     ----------
-    df : DataFrame
-    kwds :
+    df
+        DataFrame to convert
+    kwds
         passed to :meth:`df.to_json`
     """
     defaults = dict(
@@ -388,12 +389,13 @@ def df_write(fn: str, df: pd.DataFrame, fmt="pickle", **kwds) -> None:
 
     Parameters
     ----------
-    fn :
+    fn
         filename
-    df : DataFrame
-    fmt :
+    df
+        DataFrame to write
+    fmt
         ``{'pickle', 'json'}``
-    kwds :
+    kwds
         passed to ``pickle.dump()`` or :func:`df_to_json`
     """
     makedirs(os.path.dirname(fn))
@@ -438,15 +440,15 @@ def df_print(
 
     Parameters
     ----------
-    df : DataFrame
-    index :
+    df
+    index
         include DataFrame index
-    special_cols :
+    special_cols
         include all special columns (`_pset_id` etc.)
-    cols :
+    cols
         explicit sequence of columns, overrides `special_cols` when special columns
         are specified
-    skip_cols :
+    skip_cols
         skip those columns instead of selecting them (like `cols` would), use
         either this or `cols`; overrides `special_cols` when special columns
         are specified
@@ -856,7 +858,7 @@ def run(
     params: Sequence[dict],
     df: pd.DataFrame = None,
     poolsize: int = None,
-    dask_client = None,
+    dask_client=None,
     save: bool = True,
     tmpsave: bool = False,
     verbose: Union[bool, Sequence[str]] = False,
@@ -1001,9 +1003,9 @@ def run(
             for ii, pset in enumerate(params)
         ]
     else:
-        assert [poolsize, dask_client].count(None) == 1, (
-            "Use either poolsize or dask_client."
-        )
+        assert [poolsize, dask_client].count(
+            None
+        ) == 1, "Use either poolsize or dask_client."
         # Can't use lambda here b/c pool.map() still can't pickle local scope
         # lambdas. That's why we emulate
         #   pool.map(lambda pset: worker_wrapper_partial(pset, run_seq=...,
@@ -1033,6 +1035,7 @@ def run(
 def run_local(*args, **kwds):
     warnings.warn("run_local() has been renamed to run()", DeprecationWarning)
     return run(*args, **kwds)
+
 
 # -----------------------------------------------------------------------------
 # HPC cluster batch runs
