@@ -1076,7 +1076,7 @@ implemented here.
 * https://github.com/open-research/sumatra
 * https://www.nist.gov/programs-projects/simulation-management-tools
 * https://github.com/IDSIA/sacred
-* https://www.wandb.com/
+* https://www.wandb.ai/
 * https://github.com/maiot-io/zenml
 * https://github.com/LLNL/maestrowf
 * https://mlflow.org/
@@ -1084,5 +1084,6 @@ implemented here.
 * https://www.nextflow.io/
 * https://dvc.org/
 * https://apps.fz-juelich.de/jsc/jube/jube2/docu/index.html
+* https://www.prefect.io/
 
 [git-lfs]: https://git-lfs.github.com
