@@ -18,13 +18,19 @@ This package deals with commonly encountered boilerplate tasks:
 * `git` support to track progress of your work and recover from mistakes
 * optional: don't repeat already performed calculations based on parameter set
   hashes
-* support for managing batch runs, e.g. on remote HPC
-  systems (using a template file workflow), including `git` support
+* support for managing batch runs, e.g. on remote HPC infrastructure, using
+  either [`dask.distributed`][dask_dist] or a template file workflow
 
 Otherwise, the main goal is to not constrain your flexibility by
 building a complicated framework -- we provide only very basic building
 blocks. All data structures are really simple (dicts), as are the
-provided functions. The database is a normal pandas DataFrame.
+provided functions. The database is a normal `pandas` DataFrame.
+
+```{note}
+We assume that you run experiments on a local machine (laptop, workstation).
+See the [section on distributed computing](distributed) for how you can scale
+out to more advanced compute infrastructure.
+```
 
 ## Getting started
 
@@ -45,7 +51,7 @@ calculate and store the result of a calculation for each parameter combination.
 >>> df = ps.run(func, params)
 ```
 
-`pgrid` produces a list `params` of parameter sets (dicts `{'a': ..., 'b':
+`pgrid()` produces a list `params` of parameter sets (dicts `{'a': ..., 'b':
 ...}`) to loop over:
 
 ```
@@ -57,8 +63,8 @@ calculate and store the result of a calculation for each parameter combination.
  {'a': 3, 'b': 99}]
 ```
 
-and a database of results (pandas DataFrame `df`, pickled file
-`calc/database.pk` by default):
+`run()` returns a database of results (`pandas` DataFrame `df`) and saves a
+pickled file `calc/database.pk` by default:
 
 ```py
 >>> import pandas as pd
@@ -165,7 +171,7 @@ you flexibility in what to return from `func`. In particular, you are free to
 also return an empty dict if you record results in another way (see the
 `save_data_on_disk` example later).
 
-The `pset`s form the rows of a pandas `DataFrame`, which we use to store the
+The `pset`s form the rows of a `pandas` DataFrame, which we use to store the
 pset and the result from each `func(pset)`.
 
 The idea is now to run `func` in a loop over all `pset`s in `params`. You do this
@@ -269,9 +275,9 @@ If you want to add a parameter which is constant, use a list of length one.
  {'a': 2, 'b': 'yy', 'c': 'Z',  'const': 1.23}]
 ```
 
-Besides `pgrid`, we have another convenience function `stargrid`, which creates
-a specific param sampling pattern, where we vary params in a "star" pattern
-(and not a full pgrid) around constant values (middle of the "star").
+Besides `pgrid()`, we have another convenience function `stargrid()`, which
+creates a specific param sampling pattern, where we vary params in a "star"
+pattern (and not a full pgrid) around constant values (middle of the "star").
 
 ```py
 >>> const=dict(a=1, b=77, c=11)
@@ -427,8 +433,9 @@ when you call `ps.run()` multiple times using *the exact same* `params`,
 ```
 
 which is perfectly fine, e.g. in cases where you just want to sample more data
-for the same `pset`s in `params` over and over again. In this case, you will have
-as above two unique `_run_id`s but *two sets of the same* `_pset_hash`.
+for the same `pset`s in `params` over and over again. In this case, you will
+have as above two unique `_run_id`s, unique `_pset_id`s, but *two sets of the
+same* `_pset_hash`.
 
 ```
                              _run_id                              _pset_id  _run_seq  _pset_seq                                _pset_hash  a    result
@@ -634,7 +641,7 @@ This will commit any changes made to e.g. `input.py` itself and create a commit
 message containing the current `_run_id` such as
 
 ```
-psweep: batch_with_git: run_id=68f5d9b7-efa6-4ed8-9384-4ffccab6f7c5
+psweep: batch_templates_git: run_id=68f5d9b7-efa6-4ed8-9384-4ffccab6f7c5
 ```
 
 We **strongly recommend** to create a `.gitignore` such as
@@ -705,7 +712,7 @@ real run, but in a safe separate dir which you can delete later.
 See `examples/vary_1_param_study_column.py`.
 
 Post-processing is not the scope of the package. The database is a
-pandas DataFrame and that's it. You can query it and use your full pandas
+`pandas` DataFrame and that's it. You can query it and use your full `pandas`
 Ninja skills here, e.g. "give me all `pset`s where parameter 'a' was
 between 10 and 100, while 'b' was constant, ...". You get the idea.
 
@@ -775,40 +782,221 @@ Pro tip: You can manipulate the database at any later point and add the
 
 Super Pro tip: Make a backup of the database first!
 
-
-## Remote cluster batch runs
+(distributed)=
+## Running on (HPC) compute infrastructure
 
 We have support for managing calculations on remote systems such
-as HPC clusters with a batch system like SLURM. It is basically a modernized
+as HPC clusters with a batch system like SLURM.
+
+You can use `dask` tooling or a template-based workflow. Both have their
+pros and cons, but try `dask` first.
+
+### `dask`
+
+Overview of `dask`'s architecture (from [the `dask`
+docs](https://docs.dask.org/en/stable/deploying.html)).
+
+```{figure} https://docs.dask.org/en/stable/_images/dask-cluster-manager.svg
+:width: 80%
+:align: center
+```
+
+#### Overview
+
+The `dask` ecosystem provides [`dask.distributed`][dask_dist] which
+lets you spin up a dask cluster on distributed infrastructure.
+[`dask_jobqueue`][dask_jq] supports doing this on HPC machines.
+
+With these tools, you have fine-grained control over how many batch jobs you
+start. This is useful for cases where you have many small workloads (each
+`func(pset)` runs only a few seconds, say). Then one batch job per `pset` would
+be overhead and using many dask workers living in only a few (or one!) batch
+job is more efficient.
+
+From the `psweep` side of things, you just need to provide a `dask` client (see
+below) and that's it. The challenge is to determine how to distribute the work
+and to define a matching `dask` client, which depends entirely on the type of
+workload and the compute infrastructure you wish to run on.
+
+See `examples/batch_dask/slurm_cluster_settings.py` for a detailed example
+which covers the most important `SLURMCluster` settings.
+
+#### API
+
+The `psweep` API to use `dask` is just `df=ps.run(..., dask_client=client)`.
+
+```py
+from dask.distributed import Client, LocalCluster
+
+# The type of cluster depends on your compute infastructure. Replace
+# LocalCluster with e.g. dask_jobqueue.SLURMCluster.
+cluster = LocalCluster()
+client = Client(cluster)
+
+# The same as always, only pass dask_client in addition
+ps.run(..., dask_client=client)
+```
+
+`LocalCluster` uses all cores by default, which has the same effect as using
+
+```py
+from multiprocessing import cpu_count
+
+ps.run(..., poolsize=cpu_count())
+```
+
+but using `dask` instead of `multiprocessing`.
+
+If you run on a chunky workstation with many cores instead of a full-on HPC
+machine, you may still want to use `dask` + `LocalCluster` instead of
+`multiprocessing` since then you can access `dask`'s dashboard (see below).
+Also check [this tutorial](https://www.youtube.com/watch?v=N_GqzcuGLCY) and
+others by Matthew Rocklin.
+
+#### Example
+
+The example below uses the SLURM workload manager typically found in HPC
+centers.
+
+Create a script that
+
+* spins up a dask cluster on your (HPC) infrastructure (`SLURMCluster`), this
+  is the only additional step compared to running locally
+* defines parameters to sweep over, runs workloads and collects results in a
+  database (`ps.pgrid(...)`, `ps.run(...)`)
+
+`run_psweep.py`
+
+```{literalinclude} ../../../examples/batch_dask/run_psweep.py
+```
+
+To start calculations
+
+ * run `python run_psweep.py` directly from the HPC cluster head
+   node (if the cluster is yours and/or there is not runtime quota on the head
+   node) or better yet
+ * create a SLURM job script, say `dask_control.job`, that starts a dask
+   control process, in our case this is `python run_psweep.py`, run `sbatch
+   dask_control.job`, make sure that this job has large time limit; see example
+   below (recommended)
+
+`dask_control.job`
+
+```{literalinclude} ../../../examples/batch_dask/dask_control.job
+   :language: sh
+```
+
+After submitting the job, the SLURM `squeue` output could look like this:
+
+```sh
+hpc$ sbatch dask_control.job
+hpc$ squeue -l -u $USER -O JobID,Name,NumNodes,NumTasks,NumCPUs,TimeLimit,State,ReasonList
+
+JOBID     NAME         NODES  TASKS  CPUS  TIME_LIMIT  STATE    NODELIST(REASON)
+6278655   dask_control 1      1      2     2-00:00:00  RUNNING  node042
+6278656   dask-worker  1      1      10    10:00       RUNNING  node123
+6278657   dask-worker  1      1      10    10:00       RUNNING  node124
+```
+
+The `dask_control` process runs on `node042` while the two jobs that hold
+the dask cluster with 10 dask workers each run `node123` and `node124`.
+
+#### Access to the `dask` dashboard
+
+`dask` has a [nice dashboard](https://docs.dask.org/en/stable/dashboard.html)
+to visualize the state of all workers. Say you set the dashboard port to 3333
+in `SLURMCluster`. If the `dask_control` process runs on the head node, you
+only need to forward that port to your local machine (`mybox`):
+
+```sh
+mybox$ ssh -L 2222:localhost:3333 hpc.machine.edu
+mybox$ browser localhost:2222
+```
+
+If `dask_control` runs on a compute node, you may need a second tunnel:
+
+```sh
+mybox$ ssh -L 2222:localhost:3333 hpc.machine.edu
+hpc$ ssh -L 3333:localhost:3333 node42
+mybox$ browser localhost:2222
+```
+
+#### Jupyter
+
+Many HPC centers offer a [JupyterHub](https://jupyter.org/hub) service, where a
+small batch job is started that runs a JupyterLab. When using that, you can
+skip the `dask_control` batch job part and run the content of `run_psweep.py`
+in Jupyter. JupyterLab also has [an
+extension](https://github.com/dask/dask-labextension) that gives you access to
+the dask dashboard and more.
+
+
+#### Pros and Cons
+
+```{admonition} Pros
+:class: hint
+
+* Simple API, almost the same workflow as if running locally.
+* You can run on all the different compute infrastructures that
+  `dask.distributed` (+ `dask_jobqueue`) support, such as Kubernetes.
+* `dask`'s JupyterLab integration.
+```
+
+```{admonition} Cons
+:class: attention
+
+* Assigning different resources (GPUs or not, large or small memory) to different
+  dask workers is hard or even not possible with `dask_jobqueue` since the
+  design assumes that you create one `FooCluster` with fixed resource
+  specifications. See these discussions for more:
+  https://github.com/dask/dask-jobqueue/issues/378
+  https://github.com/dask/dask-jobqueue/issues/378.
+* HPC cluster time limits might be a problem if some jobs are waiting in the
+  queue for a long time and meanwhile the `dask_control` batch job gets
+  terminated due to its time limit. The latter should be set to the longest
+  available on the system, e.g. if you have a queue for long-running jobs, use
+  that.
+* More software to install: On the HPC machine, you need `psweep`,
+  `dask.distributed` and `dask_jobqueue`.
+```
+
+### Templates
+
+This template-based workflow is basically a modernized
 and stripped-down version of
 [`pwtools.batch`](https://elcorto.github.io/pwtools/written/background/param_study.html).
 Note that we don't use any method like DRMAA to automatically dispatch jobs to
-clusters. We just write out a shell script to submit jobs, simple. Our design
+clusters. Instead we write out a shell script to submit jobs. The design
 revolves around maximal user control of each step of the workflow.
 
-The central function to use is `ps.prep_batch()`. See `examples/batch_with_git`
+```{note}
+This workflow, while being the most general, might not be ideal for all
+workloads. See the [Pros and Cons](template-pro-con) section below.
+
+```
+
+The central function to use is `ps.prep_batch()`. See `examples/batch_templates`
 for a full example.
 
-The workflow is based on **template files**. In the templates, we use (for now)
+The workflow is based on **template files**. In the templates, we use
 the standard library's `string.Template`, where each `$foo` is replaced by a
 value contained in a pset, so `$param_a`, `$param_b`, as well as `$_pset_id`
 and so forth.
 
-We piggy-back on the `run()` workflow from above to use all it's power
-and flexibility to, instead of running jobs with it, just **create batch
-scripts using template files**.
+We piggy-back on the `run()` workflow from above to, instead of running jobs
+with it, just **create batch scripts using template files**.
 
-You can use the proposed workflow below directly the on remote machine (need to
+You can use the proposed workflow below directly on the remote machine (need to
 install `psweep` there) or run it locally and use a copy-to-cluster workflow.
 Since we actually don't start jobs or talk to the batch system, you have full
 control over every part of the workflow. We just automate the boring stuff.
 
-### Workflow summary
+#### Workflow summary
 
 * define `params` to be varied as shown above (probably in a script, say
   `input.py`)
-* in that script, call `ps.prep_batch(params)` (instead of `run(params, ...)`);
-  this then performs these steps
+* in that script, call `ps.prep_batch(params)` (instead of `run(..., params)`);
+  this performs these steps for you
   * use `templates/calc/*`: scripts that you want to run in each batch job
   * use `templates/machines/<mycluster>/jobscript`: batch job script
   * read `templates/machines/<mycluster>/info.yaml`: machine-specific info
@@ -855,9 +1043,9 @@ Post-processing is (almost) as before:
     commands still in there, but commented out
 
 
-### Templates layout and written files
+#### Templates layout and written files
 
-An example template dir, based on ``examples/batch_with_git``:
+An example template dir, based on ``examples/batch_templates``:
 
 ```
 templates
@@ -872,13 +1060,13 @@ templates
         └── jobscript
 ```
 
-#### calc templates
+##### calc templates
 
 Each file in `templates/calc` such as `run.py` will be treated as
 template, goes thru the file template machinery and ends up in
 `calc/<_pset_id>/`.
 
-#### machine templates
+##### machine templates
 
 The example above has machine templates for 2 machines, "local" and a
 remote machine named "cluster". `psweep` will generate `run_<machine>.sh`
@@ -951,7 +1139,7 @@ cd 11967c0d-7ce6-404f-aae6-2b0ea74beefa; sbatch jobscript_cluster; cd $here  # r
 ...
 ```
 
-### git support
+#### git support
 
 Use `prep_batch(..., git=True)` to have some basic git support such as
 automatic commits in each call. It just uses `run(..., git=True)` when
@@ -960,7 +1148,37 @@ particular, make sure to create `.gitignore` first, else we'll track `calc/` as
 well, which you may safely do when data in `calc` is small. Else use `git-lfs`,
 for example.
 
-### Limitations
+(template-pro-con)=
+#### Pros and Cons
+
+```{admonition} Pros
+:class: hint
+* Works for all workloads, also ones with no Python interface; for instance you
+  can sweep over SLURM settings easily (number of cores, memory, GPU yes or
+  no, ...).
+* No `dask_control` process. Once you submitt jobs and assuming that each job
+  has a time limit that is large enough, jobs may wait in the queue for days.
+  The workflow leverages the more non-interactive nature of HPC systems.
+  You can once in a while run a post-processing script and collect
+  results that are already written (e.g. `<calc_dir>/<pset_id>/result.pk`) and
+  start to analyse this (partial) data.
+* Uses only batch system tooling, so essentially shell scripts. If you copy
+  (`rsync`!) generated files to and from the HPC machine, you don't even need to
+  install `psweep` there.
+```
+
+```{admonition} Cons
+:class: attention
+
+* More manual multi-step workflow comparted to local and `dask` where we can
+  just do `df=ps.run(...)` and have results in `df`.
+* Always one batch job per `pset`.
+* The workflow is suited for more experienced HPC users. You may need to work
+  a bit more directly with your batch system (`squeue`, `scancel`, ... in case
+  of SLURM). Also some shell scripting skills are useful.
+
+More details, tips and tricks below.
+```
 
 The template workflow will create one batch job per `pset`. If the workload in
 `run.py` is small, then this creates some overhead. Use this only if you have
@@ -1002,26 +1220,50 @@ mpirun -np 8 bzzrrr input_file
 ```
 
 For Python workloads (the one we have in
-`examples/batch_with_git/templates/calc/run.py`), using placeholders like
+`examples/batch_templates/templates/calc/run.py`), using placeholders like
 `$param_a` is actually a bit of an anti-pattern, since we would ideally like to
-pass the `pset` to the workload using Python. You can partially solve this by
-using `prep_batch(..., write_pset=True)` which writes
+pass the `pset` to the workload using Python. With templates, we can use
+`prep_batch(..., write_pset=True)` which writes
 `<calc_dir>/<pset_id>/pset.pk`. In `run.py` you can then do
 
 ```py
+import psweep as ps
+
 def func(pset):
     ... here be code ...
     return result
+
+# Even better (less code):
+##from my_utils_module import func
 
 # write <calc_dir>/<pset_id>/result.pk
 ps.pickle_write("result.pk", func(ps.pickle_read("pset.pk")))
 ```
 
-But this is still not very pythonic, since we communicate by writing
-(potentially many) small files, namely `run.py`, `pset.pk`,
-`jobscript_<cluster>` for each `<calc_dir>/<pset_id>/` dir. Also, in
-the example above, `run.py` would be the exact same file for each job.
+Note that from all the `<calc_dir>/<pset_id>/result.pk` files, you can actually
+reconstruct a `database_eval.pk` since each `result.pk` is a dict with results,
+so a row in the DataFrame.
 
+```py
+df_input = ps.df_read("calc/database.pk")
+
+dicts = [
+    ps.pickle_read(f"calc/{pset_id}/result.pk") for pset_id in
+    df_input._pset_id.values
+    ]
+
+df_eval = pd.DataFrame(dicts)
+ps.df_write(df_eval, "db/database_eval.pk")
+```
+
+This is not ideal since we communicate by writing (potentially
+many) small files, namely `run.py`, `pset.pk`, `result.pk`
+`jobscript_<cluster>` for each `<calc_dir>/<pset_id>/` dir. Also, in the
+example above, `run.py` would be the exact same file for each job.
+
+So we recommend to use the `dask` workflow if you can and use templates as a
+fallback solution, for instance if `dask_jobqueue` doesn't have
+something that matches your compute infrastructure.
 
 ## Special topics
 
@@ -1113,7 +1355,7 @@ which we haven't found to be covered in that combination by other tools, namely
 * simple local database (no db server to set up, no Mongo, etc)
 * interactive (Python REPL) and script-driven runs
 * local runs, also in parallel
-* tooling for remote runs (template-based workflow)
+* tooling for remote runs (on HPC and other infrastructure)
 * minimal naming conventions, rely on UUIDs
 * hash-based database filtering
 * no yaml-ish DSLs, just Python please, thank you :)
@@ -1145,3 +1387,6 @@ implemented here.
 * https://hydra.cc/
 
 [git-lfs]: https://git-lfs.github.com
+[dask]: https://dask.org
+[dask_dist]: https://distributed.dask.org
+[dask_jq]: https://jobqueue.dask.org
