@@ -1085,5 +1085,6 @@ implemented here.
 * https://dvc.org/
 * https://apps.fz-juelich.de/jsc/jube/jube2/docu/index.html
 * https://www.prefect.io/
+* https://hydra.cc/
 
 [git-lfs]: https://git-lfs.github.com
