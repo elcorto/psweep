@@ -17,6 +17,21 @@ Dev install of this repo:
 $ pip install -e .
 ```
 
+To install testing tools, use
+
+```sh
+$ pip install -e ".[test]"
+```
+
+To also install `dask` tools which we support (`dask.distributed` Client) but
+are not hard dependencies, use
+
+```sh
+$ pip install -e ".[dask]"
+# or to install test and dask deps
+##$ pip install -e ".[test,dask]"
+```
+
 See also <https://github.com/elcorto/samplepkg>.
 
 **Tests**
