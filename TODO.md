@@ -27,5 +27,3 @@
 * Check for existing run_id and pset_id in db. It may be very
   unlikely but we don't check for that!
   pset_id: serial: pass df or list of existing pset_ids to worker??
-
-* make test_run_all_examples run in parallel

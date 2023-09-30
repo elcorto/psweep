@@ -35,28 +35,42 @@ def func_a(pset):
     return {"result": pset["a"] * 10.0}
 
 
+def find_examples(skip=["batch_dask"]):
+    found_paths = []
+    dr = os.path.abspath(f"{here}/../examples")
+    for basename in os.listdir(dr):
+        do_skip = False
+        path = pj(dr, basename)
+        for pattern in skip:
+            if pattern in basename:
+                print(f"skipping {path} because of skip {pattern=}")
+                do_skip = True
+                break
+        if not do_skip:
+            found_paths.append(path)
+    return found_paths
+
+
 # ----------------------------------------------------------------------------
 # test function
 # ----------------------------------------------------------------------------
 
 
-def test_run_all_examples():
-    dr = os.path.abspath(f"{here}/../examples")
-    for basename in os.listdir(dr):
-        path = pj(dr, basename)
-        print(f"running example: {path}")
-        if basename.endswith(".py"):
-            with tempfile.TemporaryDirectory() as tmpdir:
-                cmd = f"""
-                    cp {path} {tmpdir}/ && cd {tmpdir} && \
-                    python3 {path}
-                """
-                print(system(cmd))
-        elif os.path.isdir(path):
-            with tempfile.TemporaryDirectory() as tmpdir:
-                shutil.copytree(path, tmpdir, dirs_exist_ok=True)
-                cmd = f"cd {tmpdir} &&./run_example.sh &&./clean.sh"
-                print(system(cmd))
+@pytest.mark.parametrize("path", find_examples())
+def test_run_all_examples(path):
+    print(f"running example: {path}")
+    if path.endswith(".py"):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            cmd = f"""
+                cp {path} {tmpdir}/ && cd {tmpdir} && \
+                python3 {path}
+            """
+            print(system(cmd))
+    elif os.path.isdir(path):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            shutil.copytree(path, tmpdir, dirs_exist_ok=True)
+            cmd = f"cd {tmpdir} &&./run_example.sh &&./clean.sh"
+            print(system(cmd))
 
 
 def test_shell_call_fail():
@@ -796,6 +810,10 @@ def test_prep_batch():
                 assert os.path.exists(f"{tmpdir}/calc/{pset_id}/{name}")
 
 
+@pytest.mark.skipif(
+    importlib.util.find_spec("dask") is None,
+    reason="dask not found",
+)
 @pytest.mark.skipif(
     importlib.util.find_spec("dask.distributed") is None,
     reason="dask.distributed not found",
