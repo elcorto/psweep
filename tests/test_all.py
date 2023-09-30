@@ -810,13 +810,45 @@ def test_prep_batch():
                 assert os.path.exists(f"{tmpdir}/calc/{pset_id}/{name}")
 
 
+# We can't use
+#
+#   @pytest.mark.skipif(
+#       importlib.util.find_spec("dask.distributed") is None,
+#       reason="dask.distributed not found",
+#   )
+#
+# If both dask and distributed (import as dask.distributed) are *not*
+# installed, find_spec("dask.distributed") errors out saying that dask is not
+# installed. This is because (from the docs):
+#
+#   importlib.util.find_spec(name, package=None)
+#
+#   If name is for a submodule (contains a dot), the parent module is
+#   automatically imported.
+#
+# OK, so instead of testing if dask is installed, it just tries to import it.
+#
+# We can't solve this by using a second skipif to test for dask first.
+#
+#   @pytest.mark.skipif(
+#       importlib.util.find_spec("dask") is None,
+#       reason="dask not found",
+#   )
+#   @pytest.mark.skipif(
+#       importlib.util.find_spec("dask.distributed") is None,
+#       reason="dask.distributed not found",
+#   )
+#
+# This doesn't work because pytest seems to always test both skipifs, no matter
+# which wrapper comes first, so the order is irrelevant.
+#
+# The only solution we have so far is the one below. Since "foo or bar" is
+# evaluated left-to-right, we first check if dask is installed and stop if not.
+#
 @pytest.mark.skipif(
-    importlib.util.find_spec("dask") is None,
-    reason="dask not found",
-)
-@pytest.mark.skipif(
-    importlib.util.find_spec("dask.distributed") is None,
-    reason="dask.distributed not found",
+    (importlib.util.find_spec("dask") is None)
+    or (importlib.util.find_spec("dask.distributed") is None),
+    reason="dask or dask.distributed not found",
 )
 def test_dask_local_cluster():
     from dask.distributed import Client, LocalCluster
