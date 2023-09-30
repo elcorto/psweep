@@ -84,6 +84,7 @@ line-length = 79
 
 [tool.ruff]
 line-length = 79
+ignore = ["E501", "E731"]
 ##extend-exclude = [
 ##    "examples/batch_with_git/templates/calc/run.py",
 ##]

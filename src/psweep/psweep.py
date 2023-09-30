@@ -126,6 +126,15 @@ def file_read(fn: str):
         return fd.read()
 
 
+def pickle_write(fn: str, obj):
+    with open(fn, "wb") as fd:
+        pickle.dump(obj, fd)
+
+
+def pickle_read(fn: str):
+    return pickle.load(open(fn, "rb"))
+
+
 class PsweepHashError(TypeError):
     pass
 
@@ -162,8 +171,8 @@ def pset_hash(
     #     >>> repr(Foo())
     #     '<__main__.Foo object at 0x7fcc732034c0>'
     #
-    # even though for our purpose, we'd consider the two instances of ``Foo`` to
-    # be the same.
+    # even though for our purpose, we'd consider the two instances of ``Foo``
+    # to be the same.
     #
     # The same observations have been also made elsewhere [1,2]. Esp. [2]
     # points to [3] which in turn mentions joblib.hashing.hash(). It's code
@@ -229,15 +238,6 @@ def check_calc_dir(calc_dir: str, df: pd.DataFrame):
         db_not_disk=pset_ids_db - pset_ids_disk,
         disk_not_db=pset_ids_disk - pset_ids_db,
     )
-
-
-def pickle_write(fn: str, obj):
-    with open(fn, "wb") as fd:
-        pickle.dump(obj, fd)
-
-
-def pickle_read(fn: str):
-    return pickle.load(open(fn, "rb"))
 
 
 def logspace(
@@ -710,7 +710,7 @@ def filter_params_dup_hash(
         passed to :func:`pset_hash`
     """
     get_hash = lambda pset: pset.get("_pset_hash", pset_hash(pset, **kwds))
-    return [pset for pset in params if not get_hash(pset) in hashes]
+    return [pset for pset in params if get_hash(pset) not in hashes]
 
 
 def stargrid(
@@ -1041,7 +1041,7 @@ def run_local(*args, **kwds):
 
 
 # -----------------------------------------------------------------------------
-# HPC cluster batch runs
+# (HPC cluster) batch runs using file templates
 # -----------------------------------------------------------------------------
 
 
@@ -1054,8 +1054,6 @@ class Machine:
             ^^^^^^^^^^^^^^^^^^^^^^^^^------------- machine_dir
             templates/machines/<name>/jobscript
                                       ^^^^^^^^^--- template.basename
-
-
         """
         self.name = os.path.basename(os.path.normpath(machine_dir))
         self.template = FileTemplate(
