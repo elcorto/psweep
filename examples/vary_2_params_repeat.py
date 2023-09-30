@@ -14,14 +14,14 @@ if __name__ == "__main__":
         ps.plist("b", [8, 9]),
     )
     # First run.
-    df = ps.run_local(func, params)
+    df = ps.run(func, params)
 
     # Second run.
     params = ps.pgrid(
         ps.plist("a", [11, 22, 33]),
         ps.plist("b", [88, 99]),
     )
-    df = ps.run_local(func, params)
+    df = ps.run(func, params)
     cols = [
         "_run_id",
         "_pset_id",

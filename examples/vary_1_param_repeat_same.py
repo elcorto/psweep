@@ -12,10 +12,10 @@ if __name__ == "__main__":
     params = ps.plist("a", [1, 2, 3])
 
     # First run.
-    ps.run_local(func, params)
+    ps.run(func, params)
 
     # Second run.
-    df = ps.run_local(func, params)
+    df = ps.run(func, params)
 
     cols = [
         "_run_id",

@@ -27,5 +27,5 @@ if __name__ == "__main__":
         disp_cols.append(study)
 
     disp_cols += ["_run_id", "study"]
-    df = ps.run_local(func, params, verbose=disp_cols, backup=True)
+    df = ps.run(func, params, verbose=disp_cols, backup=True)
     print(df[disp_cols + ["result"]])
