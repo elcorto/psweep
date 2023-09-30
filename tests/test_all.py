@@ -858,3 +858,9 @@ def test_dask_local_cluster():
 
     params = ps.plist("a", [1, 2, 3])
     ps.run(func_a, params, dask_client=client, save=False)
+
+
+def test_run_local_deprecated():
+    params = ps.plist("a", [1, 2, 3])
+    with pytest.deprecated_call():
+        ps.run_local(func_a, params, save=False)
