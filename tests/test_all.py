@@ -58,6 +58,8 @@ def find_examples(skip=["batch_dask"]):
 
 @pytest.mark.parametrize("path", find_examples())
 def test_run_all_examples(path):
+    # Running examples via shell will swallow all warnings, but hey, one
+    # problem at a time.
     print(f"running example: {path}")
     if path.endswith(".py"):
         with tempfile.TemporaryDirectory() as tmpdir:
@@ -860,6 +862,16 @@ def test_dask_local_cluster():
     ps.run(func_a, params, dask_client=client, save=False)
 
 
+# Python normally ignores DeprecationWarning and it has to be enabled via
+#
+#   warnings.simplefilter("default")
+#
+# or "python -Wdefault" (-Wd for short).
+#
+# However, the test below passes (so DeprecationWarning gets triggered) even if
+# we do NOT use either. Must be hidden pytest magic again. If we run a script
+# where we call ps.run_local() or use an interactive shell, there is no
+# DeprecationWarning unless enabled explicitly.
 def test_run_local_deprecated():
     params = ps.plist("a", [1, 2, 3])
     with pytest.deprecated_call():

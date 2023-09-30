@@ -30,6 +30,9 @@ PANDAS_TIME_UNIT = "s"
 PSET_HASH_ALG = "sha1"
 GIT_ADD_ALL = "git add -A -v"
 
+# Make DeprecationWarning visible to users by default.
+warnings.simplefilter("default")
+
 
 # -----------------------------------------------------------------------------
 # helpers
