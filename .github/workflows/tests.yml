@@ -4,7 +4,9 @@ on:
   push:
     branches:
       - main
-      - feature-dask
+  pull_request:
+    branches:
+      - main
 
 jobs:
   tests:
