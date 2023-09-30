@@ -38,7 +38,7 @@ sh run_local.sh
 # example automatically, we use an existing script and overwrite 10input.py to
 # create some changes to the file we can track with git.
 cd ..
-cp _10input_run2.py 10input.py
+cp 15input.py 10input.py
 
 git add -A
 git commit -m "psweep manual: modify 10input.py"

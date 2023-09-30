@@ -784,7 +784,7 @@ def test_prep_batch():
     a = ps.plist("param_a", [1, 2, 3])
     b = ps.plist("param_b", ["xx", "yy"])
     params = ps.pgrid(a, b)
-    template_dir = f"{here}/../examples/batch_with_git/templates"
+    template_dir = f"{here}/../examples/batch_templates_git/templates"
     with tempfile.TemporaryDirectory() as tmpdir:
         df = ps.prep_batch(
             params,
