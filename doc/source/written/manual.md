@@ -555,7 +555,7 @@ approach makes sense for very quick throw-away test runs, but gets out
 of hand quickly.
 
 Since we have a database, we can simply drop all data in
-`calc/<_pset_id>` and be done with it. Each parameter set is identified
+`calc/<pset_id>` and be done with it. Each parameter set is identified
 by a UUID that will never change. This is the only kind of naming
 convention which makes sense in the long run.
 
@@ -1001,7 +1001,7 @@ control over every part of the workflow. We just automate the boring stuff.
   * use `templates/machines/<mycluster>/jobscript`: batch job script
   * read `templates/machines/<mycluster>/info.yaml`: machine-specific info
     (e.g. command to submit the `jobscript`)
-  * define `func()` that will create a dir named `calc/<_pset_id>` for each
+  * define `func()` that will create a dir named `calc/<pset_id>` for each
     batch job, **replace placeholders** such as `$param_a` from `pset`s
     (including special ones such as `$_pset_id`)
   * call `run(func, params)`
@@ -1038,7 +1038,7 @@ Post-processing is (almost) as before:
 * when extending the study (modify `params`, call `input.py` again which calls
   `prep_batch(params)`), we use the same features shown above
   * append to database
-  * create new unique `calc/<_pset_id>` without overwriting anything
+  * create new unique `calc/<pset_id>` without overwriting anything
   * **additionally**: write a new `calc/run_<mycluster>.sh` with old submit
     commands still in there, but commented out
 
@@ -1064,7 +1064,7 @@ templates
 
 Each file in `templates/calc` such as `run.py` will be treated as
 template, goes thru the file template machinery and ends up in
-`calc/<_pset_id>/`.
+`calc/<pset_id>/`.
 
 ##### machine templates
 

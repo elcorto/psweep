@@ -77,6 +77,11 @@ def fullpath(path: str) -> str:
 
 
 def itr(func: Callable) -> Callable:
+    """Wrap `func` to allow pasing args not as sequence.
+
+    Assuming ``func()`` requires a sequence as input: ``func([a,b,c])``, allow
+    passing ``func(a,b,c)``.
+    """
     @wraps(func)
     def wrapper(*args):
         # (arg1,)
@@ -655,9 +660,27 @@ def itr2params(loops: Iterator[Any]):
 
 
 @itr
-def pgrid(plists):
+def pgrid(plists: Sequence[Sequence[dict]]) -> Sequence[dict]:
     """Convenience function for the most common loop: nested loops with
     ``itertools.product``: ``ps.itr2params(itertools.product(a,b,c,...))``.
+
+    Parameters
+    ----------
+    plists
+        List of :func:`plist()` results. If more than one, you can also provide
+        plists as args, so ``pgrid(a,b,c)`` instead of ``pgrid([a,b,c])``.
+
+    Notes
+    -----
+    For a single plist arg, you have to use ``pgrid([a])``. ``pgrid(a)`` won't
+    work. However, this edge case (passing one plist to pgrid) is not super
+    useful, since
+
+    >>> a=ps.plist("a", [1,2,3])
+    >>> a
+    [{'a': 1}, {'a': 2}, {'a': 3}]
+    >>> ps.pgrid([a])
+    [{'a': 1}, {'a': 2}, {'a': 3}]
 
     Examples
     --------
@@ -766,6 +789,14 @@ def stargrid(
      {'a': 1, 'b': 99, 'c': 11, '_vary': 'b'}]
 
     >>> ps.stargrid(const, vary=[ps.itr2params(zip(a,c)),b], vary_labels=["a+c", "b"])
+    [{'a': 1, 'b': 77, 'c': 11, '_vary': 'a+c'},
+     {'a': 2, 'b': 77, 'c': 22, '_vary': 'a+c'},
+     {'a': 3, 'b': 77, 'c': 33, '_vary': 'a+c'},
+     {'a': 4, 'b': 77, 'c': 44, '_vary': 'a+c'},
+     {'a': 1, 'b': 88, 'c': 11, '_vary': 'b'},
+     {'a': 1, 'b': 99, 'c': 11, '_vary': 'b'}]
+
+    >>> ps.stargrid(const, vary=[ps.pgrid([zip(a,c)]),b], vary_labels=["a+c", "b"])
     [{'a': 1, 'b': 77, 'c': 11, '_vary': 'a+c'},
      {'a': 2, 'b': 77, 'c': 22, '_vary': 'a+c'},
      {'a': 3, 'b': 77, 'c': 33, '_vary': 'a+c'},
@@ -906,7 +937,7 @@ def run(
           those columns
     calc_dir
         Dir where calculation artifacts can be saved if needed, such as dirs
-        per pset ``<calc_dir>/<pset>``. Will be added to the database in
+        per pset ``<calc_dir>/<pset_id>``. Will be added to the database in
         ``_calc_dir`` field.
     simulate
         run everything in ``<calc_dir>.simulate``, don't call `worker`, i.e. save
@@ -917,7 +948,8 @@ def run(
     database_basename
         ``<database_dir>/<database_basename>``, default: "database.pk"
     backup
-        Make backup of ``<calc_dir>`` to ``<calc_dir>.bak_<timestamp>_run_id_<_run_id>``
+        Make backup of ``<calc_dir>`` to ``<calc_dir>.bak_<timestamp>_run_id_<run_id>``
+        where ``<run_id>`` is the latest ``_run_id`` present in ``df``
     git
         Use ``git`` to commit all files written and changed by the current run
         (``_run_id``). Make sure to create a ``.gitignore`` manually before if
@@ -1012,8 +1044,11 @@ def run(
         # Can't use lambda here b/c pool.map() still can't pickle local scope
         # lambdas. That's why we emulate
         #   pool.map(lambda pset: worker_wrapper_partial(pset, run_seq=...,
-        #            params)
-        # with nested partial(). Cool, eh?
+        #            params))
+        # with nested partial(). Cool, eh? We could solve this by
+        # using https://github.com/uqfoundation/multiprocess which uses
+        # https://github.com/uqfoundation/dill for serialization, but in the
+        # spirit of minimal dependencies, we don't.
         worker_wrapper_partial_pool = partial(
             worker_wrapper_partial, run_seq=run_seq_old + 1
         )
