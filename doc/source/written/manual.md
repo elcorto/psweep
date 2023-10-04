@@ -789,7 +789,7 @@ We have support for managing calculations on remote systems such
 as HPC clusters with a batch system like SLURM.
 
 You can use `dask` tooling or a template-based workflow. Both have their
-pros and cons, but try `dask` first.
+pros and cons (no free lunch!), but try `dask` first.
 
 ### `dask`
 
@@ -852,6 +852,15 @@ machine, you may still want to use `dask` + `LocalCluster` instead of
 `multiprocessing` since then you can access `dask`'s dashboard (see below).
 Also check [this tutorial](https://www.youtube.com/watch?v=N_GqzcuGLCY) and
 others by Matthew Rocklin.
+
+Note: `LocalCluster` is actually default, so
+
+```py
+client = Client()
+```
+
+is sufficient for running locally.
+
 
 #### Example
 
@@ -936,7 +945,8 @@ the dask dashboard and more.
 ```{admonition} Pros
 :class: hint
 
-* Simple API, almost the same workflow as if running locally.
+* Simple API, same workflow as if running locally.
+* Fine-grained control over mapping of workloads to compute resources.
 * You can run on all the different compute infrastructures that
   `dask.distributed` (+ `dask_jobqueue`) support, such as Kubernetes.
 * `dask`'s JupyterLab integration.
