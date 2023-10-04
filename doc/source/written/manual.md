@@ -581,7 +581,7 @@ df["mean"] = arr.mean(axis=1)
 cols = ["a", "mean", "_pset_id"]
 ps.df_print(df[cols])
 
-ps.df_write(df, "calc/database_eval.pk")
+ps.df_write("calc/database_eval.pk", df)
 ```
 
 
@@ -1263,7 +1263,7 @@ dicts = [
     ]
 
 df_eval = pd.DataFrame(dicts)
-ps.df_write(df_eval, "db/database_eval.pk")
+ps.df_write("db/database_eval.pk", df_eval)
 ```
 
 This is not ideal since we communicate by writing (potentially
