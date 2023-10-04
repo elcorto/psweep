@@ -1,3 +1,9 @@
+"""
+Start a dask cluster running on HPC infrastructure via SLURMCluster. Run
+workloads via ps.run() and collect results. The only difference to a local run
+is using ps.run(..., dask_client=client).
+"""
+
 import time
 
 from dask.distributed import Client
@@ -5,12 +11,6 @@ from dask_jobqueue import SLURMCluster
 
 import numpy as np
 import psweep as ps
-
-"""
-Start a dask cluster running on HPC infrastructure via SLURMCluster. Run
-workloads via ps.run() and collect results. The only difference to a local run
-is using ps.run(..., dask_client=client).
-"""
 
 def func(pset):
     time.sleep(1)
@@ -36,7 +36,8 @@ if __name__ == "__main__":
     print(cluster.job_script())
 
     a = ps.plist("a", range(100))
-    params = ps.pgrid([a])
+    ##params = ps.pgrid([a])
+    params = a
 
     # Start 2 batch jobs, each with 10 dask workers and 10 cores, so 1 thread /
     # worker and 20 workers in total. Each worker gets 1 GiB of memory.
