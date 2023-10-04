@@ -856,11 +856,19 @@ def test_prep_batch():
 def test_dask_local_cluster():
     from dask.distributed import Client, LocalCluster
 
+    # LocalCluster is default if no cluster is provided
+    client = Client()
+
+    params = ps.plist("a", [1, 2, 3])
+    df = ps.run(func_a, params, dask_client=client, save=False)
+    assert len(df) == 3
+    client.close()
+
     cluster = LocalCluster()
     client = Client(cluster)
 
-    params = ps.plist("a", [1, 2, 3])
-    ps.run(func_a, params, dask_client=client, save=False)
+    df = ps.run(func_a, params, dask_client=client, save=False, df=df)
+    assert len(df) == 6
 
 
 # Python normally ignores DeprecationWarning and it has to be enabled via
