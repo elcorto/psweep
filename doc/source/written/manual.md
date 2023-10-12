@@ -28,7 +28,7 @@ provided functions. The database is a normal `pandas` DataFrame.
 
 ```{note}
 We assume that you run experiments on a local machine (laptop, workstation).
-See the [section on distributed computing](distributed) for how you can scale
+See the [section on distributed computing](s:distributed) for how you can scale
 out to more advanced compute infrastructure.
 ```
 
@@ -782,7 +782,7 @@ Pro tip: You can manipulate the database at any later point and add the
 
 Super Pro tip: Make a backup of the database first!
 
-(distributed)=
+(s:distributed)=
 ## Running on (HPC) compute infrastructure
 
 We have support for managing calculations on remote systems such
@@ -981,7 +981,7 @@ revolves around maximal user control of each step of the workflow.
 
 ```{note}
 This workflow, while being the most general, might not be ideal for all
-workloads. See the [Pros and Cons](template-pro-con) section below.
+workloads. See the [Pros and Cons](s:template-pro-con) section below.
 
 ```
 
@@ -1158,7 +1158,7 @@ particular, make sure to create `.gitignore` first, else we'll track `calc/` as
 well, which you may safely do when data in `calc` is small. Else use `git-lfs`,
 for example.
 
-(template-pro-con)=
+(s:template-pro-con)=
 #### Pros and Cons
 
 ```{admonition} Pros
