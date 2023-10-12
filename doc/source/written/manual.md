@@ -965,7 +965,12 @@ the dask dashboard and more.
   queue for a long time and meanwhile the `dask_control` batch job gets
   terminated due to its time limit. The latter should be set to the longest
   available on the system, e.g. if you have a queue for long-running jobs, use
-  that.
+  that. Also the batch jobs holding workers have a time limit. See [this part
+  of the `dask_jobqueue`
+  docs][dask_time_limits]
+  for how to handle the latter and [this
+  comment](https://github.com/elcorto/psweep/issues/11#issuecomment-1757564391)
+  for more.
 * More software to install: On the HPC machine, you need `psweep`,
   `dask.distributed` and `dask_jobqueue`.
 ```
@@ -1355,9 +1360,17 @@ analyze the results".
 
 Unsurprisingly, there is a huge pile of similar tools. This project is super
 small and as such of course lacks a lot of features that other packages offer.
-In particular we are not a workflow engine, a tool that lets you define chains
-of interdependent tasks. We just attempt to scratch some particular itches
-which we haven't found to be covered in that combination by other tools, namely
+We provide
+
+* simple helpers to set up the params (`plist()`, `pgrid()`,
+`stargrid()`)
+* hook into the `concurrent.futures` API (`multiprocessing` or `dask`) for
+  parallel runs
+* give you a `DataFrame` with useful metadata
+
+Otherwise we stay out of the way. In particular we are not a workflow engine,
+a tool that lets you define chains of interdependent tasks (but see [this
+section](s:task-deps)). We just attempt to scratch some particular itches here:
 
 * simulate runs
 * backups
@@ -1373,30 +1386,56 @@ which we haven't found to be covered in that combination by other tools, namely
 * no config files, just Python please, thank you :)
 * not application specific (e.g. machine learning)
 
-Here is a list of related projects which offer some of the mechanisms
-implemented here.
+Here is a small list of related projects that we have looked at so far. We try
+to roughly classify each tool, based on its *main* use case, as best as we can.
 
-* https://materialsproject.github.io/fireworks/
-* https://luigi.readthedocs.io
-* https://snakemake.readthedocs.io
-* https://github.com/eviatarbach/parasweep
-* https://github.com/SmokinCaterpillar/pypet
-* https://github.com/pharmbio/sciluigi
-* https://github.com/open-research/sumatra
-* https://www.nist.gov/programs-projects/simulation-management-tools
-* https://github.com/IDSIA/sacred
-* https://www.wandb.ai/
-* https://github.com/maiot-io/zenml
-* https://github.com/LLNL/maestrowf
-* https://mlflow.org/
-* https://metaflow.org/
-* https://www.nextflow.io/
-* https://dvc.org/
-* https://apps.fz-juelich.de/jsc/jube/jube2/docu/index.html
-* https://www.prefect.io/
-* https://hydra.cc/
+tool | workflow | param sweep | exp. tracking
+-|-|-|-
+https://materialsproject.github.io/fireworks/ | * ||
+https://www.aiida.net/ | * ||
+https://luigi.readthedocs.io | * ||
+https://snakemake.readthedocs.io | * ||
+https://github.com/eviatarbach/parasweep ||*|
+https://github.com/SmokinCaterpillar/pypet ||*|
+https://github.com/pharmbio/sciluigi |*||
+https://github.com/open-research/sumatra |||*
+https://www.nist.gov/programs-projects/simulation-management-tools |||*
+https://github.com/IDSIA/sacred |||*
+https://www.wandb.ai/ |||*
+https://github.com/maiot-io/zenml |*||
+https://github.com/LLNL/maestrowf |*||
+https://mlflow.org/ |||*
+https://metaflow.org/ |*||*
+https://www.nextflow.io/ |*||
+https://dvc.org/ |||*
+https://apps.fz-juelich.de/jsc/jube/jube2/docu/index.html ||*|*
+https://www.prefect.io/ |*||
+https://hydra.cc/ |*||
+
+See also [this long list of workflow
+engines](https://github.com/meirwah/awesome-workflow-engines) and [this even
+longer list of MLOps
+tools](https://neptune.ai/blog/mlops-tools-platforms-landscape).
+
+(s:task-deps)=
+### Handling task dependencies
+
+In `psweep` we assume that workloads are independent (and "embarrassingly parallel"
+if using `poolsize` or `dask_client`).
+
+So while `psweep` is not a workflow engine where you can model task
+dependencies as DAGs, one way to handle (simple linear) task dependencies is by
+running things in order manually, say `10prepare.py`, `20production.py`,
+`30eval.py`, where the first two can use `psweep` to compute stuff, update the
+database and store intermediate data on disk, which the next script would pick
+up. The "workflow" is to run all scripts in order. This is super low tech,
+simple, but of course also a bit brittle. For more challenging dependencies and
+more reproducibility, look into into using one of the workflow frameworks
+above.
+
 
 [git-lfs]: https://git-lfs.github.com
 [dask]: https://dask.org
 [dask_dist]: https://distributed.dask.org
 [dask_jq]: https://jobqueue.dask.org
+[dask_time_limits]: https://jobqueue.dask.org/en/latest/advanced-tips-and-tricks.html#how-to-handle-job-queueing-system-walltime-killing-workers
