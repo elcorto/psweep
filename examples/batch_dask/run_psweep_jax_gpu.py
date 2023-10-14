@@ -109,19 +109,16 @@ hostname
 nvidia-smi
 echo "CUDA_VISIBLE_DEVICES=$CUDA_VISIBLE_DEVICES"
 """
+
+    # The dask worker running this workload (funcv()). worker.name is
+    # "SLURMCluster-X-Y"
     worker = get_worker()
     print(f"{worker.name=}")
+
+    # All available compute devices that jax sees on the node where func() is
+    # run. Can be CPU, GPU, TPU.
     print(f"{jax.devices()=}")
     print(ps.system(cmd).stdout.decode())
-
-    nn = pset["nn"]
-    X = jax.random.normal(jax.random.PRNGKey(0), (nn, nn))
-
-    # device=gpu(id=0)
-    # device.id=0
-    # device.device_kind='NVIDIA A100-SXM4-40GB'
-    # device.platform='gpu'
-    print_device_info(X.device(), prefix="X.")
 
     # Make sure we are on a GPU node. This only checks that we *have* GPUs
     # (https://github.com/google/jax/issues/971). After creating arrays and
@@ -131,6 +128,22 @@ echo "CUDA_VISIBLE_DEVICES=$CUDA_VISIBLE_DEVICES"
     # assignment.
     ##assert jax.default_backend() == "gpu"
 
+    # Generate a jax array. In contrast to pytorch, jax will automatically try
+    # to allocate this on the "best" device available, which is
+    # jax.default_backend(), so a GPU if available, and else fall back to CPU.
+    nn = pset["nn"]
+    X = jax.random.normal(jax.random.PRNGKey(0), (nn, nn))
+
+    # Example: the first GPU on the node. If CUDA_VISIBLE_DEVICES=0,1,... then
+    # this is GPU0.
+    #
+    # device=gpu(id=0)
+    # device.id=0
+    # device.device_kind='NVIDIA A100-SXM4-40GB'
+    # device.platform='gpu'
+    print_device_info(X.device(), prefix="X.")
+
+    # Some computations.
     evals, evecs = jnp.linalg.eigh(X.T @ X)
     print_device_info(evals.device(), prefix="evals.")
     print_device_info(evecs.device(), prefix="evecs.")
