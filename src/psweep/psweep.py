@@ -137,7 +137,8 @@ def pickle_write(fn: str, obj):
 
 
 def pickle_read(fn: str):
-    return pickle.load(open(fn, "rb"))
+    with open(fn, "rb") as fd:
+        return pickle.load(fd)
 
 
 class PsweepHashError(TypeError):
