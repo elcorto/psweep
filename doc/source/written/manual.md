@@ -884,21 +884,21 @@ To start calculations
  * run `python run_psweep.py` directly from the HPC cluster head
    node (if the cluster is yours and/or there is not runtime quota on the head
    node) or better yet
- * create a SLURM job script, say `dask_control.job`, that starts a dask
+ * create a SLURM job script, say `dask_control.slurm`, that starts a dask
    control process, in our case this is `python run_psweep.py`, run `sbatch
-   dask_control.job`, make sure that this job has large time limit; see example
+   dask_control.slurm`, make sure that this job has large time limit; see example
    below (recommended)
 
-`dask_control.job`
+`dask_control.slurm`
 
-```{literalinclude} ../../../examples/batch_dask/dask_control.job
+```{literalinclude} ../../../examples/batch_dask/dask_control.slurm
    :language: sh
 ```
 
 After submitting the job, the SLURM `squeue` output could look like this:
 
 ```sh
-hpc$ sbatch dask_control.job
+hpc$ sbatch dask_control.slurm
 hpc$ squeue -l -u $USER -O JobID,Name,NumNodes,NumTasks,NumCPUs,TimeLimit,State,ReasonList
 
 JOBID     NAME         NODES  TASKS  CPUS  TIME_LIMIT  STATE    NODELIST(REASON)
@@ -1098,7 +1098,7 @@ All other SLURM stuff can go into `templates/machines/cluster/jobscript`, e.g.
 
 ```sh
 #SBATCH --time 00:20:00
-#SBATCH -o out.job
+#SBATCH -o out.log
 #SBATCH -J foo_${_pset_seq}_${_pset_id}
 #SBATCH -p bar
 #SBATCH -A baz
@@ -1222,7 +1222,7 @@ param_b = $param_b
 #!/bin/bash
 
 #SBATCH --time 00:20:00
-#SBATCH -o out.job
+#SBATCH -o out.log
 #SBATCH -J foo_${_pset_seq}_${_pset_id}
 #SBATCH -p bar
 #SBATCH -A baz
@@ -1420,8 +1420,8 @@ tools](https://neptune.ai/blog/mlops-tools-platforms-landscape).
 (s:task-deps)=
 ### Handling task dependencies
 
-In `psweep` we assume that workloads are independent (and "embarrassingly parallel"
-if using `poolsize` or `dask_client`).
+In `psweep` we assume that workloads are independent and "embarrassingly
+parallel" if using `multiprocessing` or `dask`.
 
 So while `psweep` is not a workflow engine where you can model task
 dependencies as DAGs, one way to handle (simple linear) task dependencies is by
@@ -1430,8 +1430,7 @@ running things in order manually, say `10prepare.py`, `20production.py`,
 database and store intermediate data on disk, which the next script would pick
 up. The "workflow" is to run all scripts in order. This is super low tech,
 simple, but of course also a bit brittle. For more challenging dependencies and
-more reproducibility, look into into using one of the workflow frameworks
-above.
+more reproducibility, look into using one of the workflow frameworks above.
 
 
 [git-lfs]: https://git-lfs.github.com

@@ -1,11 +1,10 @@
-from dask.distributed import Client
-from dask_jobqueue import SLURMCluster
-##from icecream import ic
-import time
-
-
 """
+This script is independent of psweep. It explains dask_jobqueue.SLURMCluster
+parameters.
+
+
 SLURM terms
+-----------
 
 * node: a single physical machine (computer) with a number of CPUs (each having
   multiple cores) and memory (RAM)
@@ -34,50 +33,58 @@ SLURM terms
 * job: batch job, submitted by one sbatch command, can have multiple steps
   (default 1), each step can have multiple (parallel) tasks (default 1)
 
-  Some examples, adapted from https://blog.ronin.cloud/slurm-intro . Each is
-  the content of a SLURM batch script.
 
-  Single core task:
+Examples
+--------
 
-    #SBATCH --ntasks=1
-    #SBATCH --cpus-per-task=1
+Some examples, adapted from https://blog.ronin.cloud/slurm-intro . Each is
+the content of a SLURM batch script.
 
-    echo "I'm a task"
+Single core task:
 
-  2 parallel independent tasks per job:
+  #SBATCH --ntasks=1
+  #SBATCH --cpus-per-task=1
 
-    #SBATCH --ntasks=2
-    #SBATCH --cpus-per-task=1
+  echo "I'm a task"
 
-    srun --ntasks=1 echo "I'm task 1"
-    srun --ntasks=1 echo "I'm task 2"
+2 parallel independent tasks per job:
 
-  Tasks can have multiple threads, make sure to use 1 node:
+  #SBATCH --ntasks=2
+  #SBATCH --cpus-per-task=1
 
-    #SBATCH --nodes=1
-    #SBATCH --ntasks=1
-    #SBATCH --cpus-per-task=8
+  srun --ntasks=1 echo "I'm task 1"
+  srun --ntasks=1 echo "I'm task 2"
 
-    mycommand --threads 8
+Tasks can have multiple threads, make sure to use 1 node:
 
-  Multiple multithreaded tasks in one job, one node per task:
+  #SBATCH --nodes=1
+  #SBATCH --ntasks=1
+  #SBATCH --cpus-per-task=8
 
-    #SBATCH --nodes=4
-    #SBATCH --ntasks=4
-    #SBATCH --cpus-per-task=4
+  mycommand --threads 8
 
-    srun --ntasks=1 mycommand1 --threads 4
-    srun --ntasks=1 mycommand2 --threads 4
-    srun --ntasks=1 mycommand3 --threads 4
-    srun --ntasks=1 mycommand4 --threads 4
+Multiple multithreaded tasks in one job, one node per task:
 
-  MPI job with 16 tasks across 2 nodes:
+  #SBATCH --nodes=4
+  #SBATCH --ntasks=4
+  #SBATCH --cpus-per-task=4
 
-    #SBATCH --ntasks=16
-    #SBATCH --ntasks-per-node=8
+  srun --ntasks=1 mycommand1 --threads 4
+  srun --ntasks=1 mycommand2 --threads 4
+  srun --ntasks=1 mycommand3 --threads 4
+  srun --ntasks=1 mycommand4 --threads 4
 
-    mpirun myscript
+MPI job with 16 tasks across 2 nodes:
+
+  #SBATCH --ntasks=16
+  #SBATCH --ntasks-per-node=8
+
+  mpirun myscript
 """
+
+from dask.distributed import Client
+from dask_jobqueue import SLURMCluster
+import time
 
 
 def func(x):
