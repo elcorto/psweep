@@ -110,8 +110,10 @@ nvidia-smi
 echo "CUDA_VISIBLE_DEVICES=$CUDA_VISIBLE_DEVICES"
 """
 
-    # The dask worker running this workload (funcv()). worker.name is
-    # "SLURMCluster-X-Y"
+    # The dask worker running this workload (func()). worker.name is
+    # "SLURMCluster-X-Y", where X is the batch job index (0,1,2 for
+    # cluster.scale(jobs=3)) and Y is the dask worker index in that batch job
+    # (0,1 for SLURMCluster(processes=2)).
     worker = get_worker()
     print(f"{worker.name=}")
 
