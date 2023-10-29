@@ -18,12 +18,12 @@
   </script>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../_static/styles/theme.css?digest=ac02cc09edc035673794" rel="stylesheet" />
-<link href="../../_static/styles/bootstrap.css?digest=ac02cc09edc035673794" rel="stylesheet" />
-<link href="../../_static/styles/pydata-sphinx-theme.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+  <link href="../../_static/styles/theme.css?digest=c5ced968eda925caa686" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=c5ced968eda925caa686" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=c5ced968eda925caa686" rel="stylesheet" />
 
   
-  <link href="../../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+  <link href="../../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=c5ced968eda925caa686" rel="stylesheet" />
   <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
@@ -37,9 +37,9 @@
     <link rel="stylesheet" type="text/css" href="../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=ac02cc09edc035673794" />
-<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=ac02cc09edc035673794" />
-  <script src="../../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=ac02cc09edc035673794"></script>
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=c5ced968eda925caa686" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=c5ced968eda925caa686" />
+  <script src="../../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=c5ced968eda925caa686"></script>
 
     <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
@@ -143,13 +143,14 @@ const thebe_selector_output = ".output, .cell_output"
   
   
   
+  
     
     
       
     
     
-    <img src="../../_static/psweep-logo.png" class="logo__image only-light" alt="Logo image"/>
-    <script>document.write(`<img src="../../_static/psweep-logo.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
+    <img src="../../_static/psweep-logo.png" class="logo__image only-light" alt="psweep - Home"/>
+    <script>document.write(`<img src="../../_static/psweep-logo.png" class="logo__image only-dark" alt="psweep - Home"/>`);</script>
   
   
 </a></div>
@@ -369,6 +370,9 @@ document.write(`
 <span class="n">PSET_HASH_ALG</span> <span class="o">=</span> <span class="s2">&quot;sha1&quot;</span>
 <span class="n">GIT_ADD_ALL</span> <span class="o">=</span> <span class="s2">&quot;git add -A -v&quot;</span>
 
+<span class="c1"># Make DeprecationWarning visible to users by default.</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">&quot;default&quot;</span><span class="p">)</span>
+
 
 <span class="c1"># -----------------------------------------------------------------------------</span>
 <span class="c1"># helpers</span>
@@ -381,9 +385,9 @@ document.write(`
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    cmd :</span>
+<span class="sd">    cmd</span>
 <span class="sd">        shell command</span>
-<span class="sd">    kwds :</span>
+<span class="sd">    kwds</span>
 <span class="sd">        keywords passed to `subprocess.run`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
@@ -413,6 +417,11 @@ document.write(`
 
 
 <div class="viewcode-block" id="itr"><a class="viewcode-back" href="../../generated/api/psweep.psweep.itr.html#psweep.psweep.itr">[docs]</a><span class="k">def</span> <span class="nf">itr</span><span class="p">(</span><span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Wrap `func` to allow pasing args not as sequence.</span>
+
+<span class="sd">    Assuming ``func()`` requires a sequence as input: ``func([a,b,c])``, allow</span>
+<span class="sd">    passing ``func(a,b,c)``.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="nd">@wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
         <span class="c1"># (arg1,)</span>
@@ -462,6 +471,16 @@ document.write(`
         <span class="k">return</span> <span class="n">fd</span><span class="o">.</span><span class="n">read</span><span class="p">()</span></div>
 
 
+<div class="viewcode-block" id="pickle_write"><a class="viewcode-back" href="../../generated/api/psweep.psweep.pickle_write.html#psweep.psweep.pickle_write">[docs]</a><span class="k">def</span> <span class="nf">pickle_write</span><span class="p">(</span><span class="n">fn</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fd</span><span class="p">:</span>
+        <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">fd</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="pickle_read"><a class="viewcode-back" href="../../generated/api/psweep.psweep.pickle_read.html#psweep.psweep.pickle_read">[docs]</a><span class="k">def</span> <span class="nf">pickle_read</span><span class="p">(</span><span class="n">fn</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fd</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">fd</span><span class="p">)</span></div>
+
+
 <div class="viewcode-block" id="PsweepHashError"><a class="viewcode-back" href="../../generated/api/psweep.psweep.PsweepHashError.html#psweep.psweep.PsweepHashError">[docs]</a><span class="k">class</span> <span class="nc">PsweepHashError</span><span class="p">(</span><span class="ne">TypeError</span><span class="p">):</span>
     <span class="k">pass</span></div>
 
@@ -498,8 +517,8 @@ document.write(`
     <span class="c1">#     &gt;&gt;&gt; repr(Foo())</span>
     <span class="c1">#     &#39;&lt;__main__.Foo object at 0x7fcc732034c0&gt;&#39;</span>
     <span class="c1">#</span>
-    <span class="c1"># even though for our purpose, we&#39;d consider the two instances of ``Foo`` to</span>
-    <span class="c1"># be the same.</span>
+    <span class="c1"># even though for our purpose, we&#39;d consider the two instances of ``Foo``</span>
+    <span class="c1"># to be the same.</span>
     <span class="c1">#</span>
     <span class="c1"># The same observations have been also made elsewhere [1,2]. Esp. [2]</span>
     <span class="c1"># points to [3] which in turn mentions joblib.hashing.hash(). It&#39;s code</span>
@@ -567,15 +586,6 @@ document.write(`
     <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="pickle_write"><a class="viewcode-back" href="../../generated/api/psweep.psweep.pickle_write.html#psweep.psweep.pickle_write">[docs]</a><span class="k">def</span> <span class="nf">pickle_write</span><span class="p">(</span><span class="n">fn</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fd</span><span class="p">:</span>
-        <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">fd</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="pickle_read"><a class="viewcode-back" href="../../generated/api/psweep.psweep.pickle_read.html#psweep.psweep.pickle_read">[docs]</a><span class="k">def</span> <span class="nf">pickle_read</span><span class="p">(</span><span class="n">fn</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">))</span></div>
-
-
 <div class="viewcode-block" id="logspace"><a class="viewcode-back" href="../../generated/api/psweep.psweep.logspace.html#psweep.psweep.logspace">[docs]</a><span class="k">def</span> <span class="nf">logspace</span><span class="p">(</span>
     <span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">log_func</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span>
 <span class="p">):</span>
@@ -640,7 +650,7 @@ document.write(`
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    *args, **kwds :</span>
+<span class="sd">    *args, **kwds</span>
 <span class="sd">        Same as ``np.linspace``</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">assert</span> <span class="s2">&quot;dtype&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kwds</span><span class="p">,</span> <span class="s2">&quot;Got &#39;dtype&#39; multiple times.&quot;</span>
@@ -706,8 +716,9 @@ document.write(`
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    df : DataFrame</span>
-<span class="sd">    kwds :</span>
+<span class="sd">    df</span>
+<span class="sd">        DataFrame to convert</span>
+<span class="sd">    kwds</span>
 <span class="sd">        passed to :meth:`df.to_json`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">defaults</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
@@ -727,12 +738,13 @@ document.write(`
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    fn :</span>
+<span class="sd">    fn</span>
 <span class="sd">        filename</span>
-<span class="sd">    df : DataFrame</span>
-<span class="sd">    fmt :</span>
+<span class="sd">    df</span>
+<span class="sd">        DataFrame to write</span>
+<span class="sd">    fmt</span>
 <span class="sd">        ``{&#39;pickle&#39;, &#39;json&#39;}``</span>
-<span class="sd">    kwds :</span>
+<span class="sd">    kwds</span>
 <span class="sd">        passed to ``pickle.dump()`` or :func:`df_to_json`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">fn</span><span class="p">))</span>
@@ -777,15 +789,15 @@ document.write(`
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    df : DataFrame</span>
-<span class="sd">    index :</span>
+<span class="sd">    df</span>
+<span class="sd">    index</span>
 <span class="sd">        include DataFrame index</span>
-<span class="sd">    special_cols :</span>
+<span class="sd">    special_cols</span>
 <span class="sd">        include all special columns (`_pset_id` etc.)</span>
-<span class="sd">    cols :</span>
+<span class="sd">    cols</span>
 <span class="sd">        explicit sequence of columns, overrides `special_cols` when special columns</span>
 <span class="sd">        are specified</span>
-<span class="sd">    skip_cols :</span>
+<span class="sd">    skip_cols</span>
 <span class="sd">        skip those columns instead of selecting them (like `cols` would), use</span>
 <span class="sd">        either this or `cols`; overrides `special_cols` when special columns</span>
 <span class="sd">        are specified</span>
@@ -989,9 +1001,27 @@ document.write(`
 
 
 <div class="viewcode-block" id="pgrid"><a class="viewcode-back" href="../../generated/api/psweep.psweep.pgrid.html#psweep.psweep.pgrid">[docs]</a><span class="nd">@itr</span>
-<span class="k">def</span> <span class="nf">pgrid</span><span class="p">(</span><span class="n">plists</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">pgrid</span><span class="p">(</span><span class="n">plists</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="nb">dict</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Convenience function for the most common loop: nested loops with</span>
 <span class="sd">    ``itertools.product``: ``ps.itr2params(itertools.product(a,b,c,...))``.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    plists</span>
+<span class="sd">        List of :func:`plist()` results. If more than one, you can also provide</span>
+<span class="sd">        plists as args, so ``pgrid(a,b,c)`` instead of ``pgrid([a,b,c])``.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    For a single plist arg, you have to use ``pgrid([a])``. ``pgrid(a)`` won&#39;t</span>
+<span class="sd">    work. However, this edge case (passing one plist to pgrid) is not super</span>
+<span class="sd">    useful, since</span>
+
+<span class="sd">    &gt;&gt;&gt; a=ps.plist(&quot;a&quot;, [1,2,3])</span>
+<span class="sd">    &gt;&gt;&gt; a</span>
+<span class="sd">    [{&#39;a&#39;: 1}, {&#39;a&#39;: 2}, {&#39;a&#39;: 3}]</span>
+<span class="sd">    &gt;&gt;&gt; ps.pgrid([a])</span>
+<span class="sd">    [{&#39;a&#39;: 1}, {&#39;a&#39;: 2}, {&#39;a&#39;: 3}]</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
@@ -1044,7 +1074,7 @@ document.write(`
 <span class="sd">        passed to :func:`pset_hash`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">get_hash</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">pset</span><span class="p">:</span> <span class="n">pset</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;_pset_hash&quot;</span><span class="p">,</span> <span class="n">pset_hash</span><span class="p">(</span><span class="n">pset</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">))</span>
-    <span class="k">return</span> <span class="p">[</span><span class="n">pset</span> <span class="k">for</span> <span class="n">pset</span> <span class="ow">in</span> <span class="n">params</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">get_hash</span><span class="p">(</span><span class="n">pset</span><span class="p">)</span> <span class="ow">in</span> <span class="n">hashes</span><span class="p">]</span></div>
+    <span class="k">return</span> <span class="p">[</span><span class="n">pset</span> <span class="k">for</span> <span class="n">pset</span> <span class="ow">in</span> <span class="n">params</span> <span class="k">if</span> <span class="n">get_hash</span><span class="p">(</span><span class="n">pset</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">hashes</span><span class="p">]</span></div>
 
 
 <div class="viewcode-block" id="stargrid"><a class="viewcode-back" href="../../generated/api/psweep.psweep.stargrid.html#psweep.psweep.stargrid">[docs]</a><span class="k">def</span> <span class="nf">stargrid</span><span class="p">(</span>
@@ -1100,6 +1130,14 @@ document.write(`
 <span class="sd">     {&#39;a&#39;: 1, &#39;b&#39;: 99, &#39;c&#39;: 11, &#39;_vary&#39;: &#39;b&#39;}]</span>
 
 <span class="sd">    &gt;&gt;&gt; ps.stargrid(const, vary=[ps.itr2params(zip(a,c)),b], vary_labels=[&quot;a+c&quot;, &quot;b&quot;])</span>
+<span class="sd">    [{&#39;a&#39;: 1, &#39;b&#39;: 77, &#39;c&#39;: 11, &#39;_vary&#39;: &#39;a+c&#39;},</span>
+<span class="sd">     {&#39;a&#39;: 2, &#39;b&#39;: 77, &#39;c&#39;: 22, &#39;_vary&#39;: &#39;a+c&#39;},</span>
+<span class="sd">     {&#39;a&#39;: 3, &#39;b&#39;: 77, &#39;c&#39;: 33, &#39;_vary&#39;: &#39;a+c&#39;},</span>
+<span class="sd">     {&#39;a&#39;: 4, &#39;b&#39;: 77, &#39;c&#39;: 44, &#39;_vary&#39;: &#39;a+c&#39;},</span>
+<span class="sd">     {&#39;a&#39;: 1, &#39;b&#39;: 88, &#39;c&#39;: 11, &#39;_vary&#39;: &#39;b&#39;},</span>
+<span class="sd">     {&#39;a&#39;: 1, &#39;b&#39;: 99, &#39;c&#39;: 11, &#39;_vary&#39;: &#39;b&#39;}]</span>
+
+<span class="sd">    &gt;&gt;&gt; ps.stargrid(const, vary=[ps.pgrid([zip(a,c)]),b], vary_labels=[&quot;a+c&quot;, &quot;b&quot;])</span>
 <span class="sd">    [{&#39;a&#39;: 1, &#39;b&#39;: 77, &#39;c&#39;: 11, &#39;_vary&#39;: &#39;a+c&#39;},</span>
 <span class="sd">     {&#39;a&#39;: 2, &#39;b&#39;: 77, &#39;c&#39;: 22, &#39;_vary&#39;: &#39;a+c&#39;},</span>
 <span class="sd">     {&#39;a&#39;: 3, &#39;b&#39;: 77, &#39;c&#39;: 33, &#39;_vary&#39;: &#39;a+c&#39;},</span>
@@ -1195,6 +1233,7 @@ document.write(`
     <span class="n">params</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">dict</span><span class="p">],</span>
     <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">poolsize</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">dask_client</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">save</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">tmpsave</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">verbose</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
@@ -1224,6 +1263,8 @@ document.write(`
 <span class="sd">    poolsize</span>
 <span class="sd">        * None : use serial execution</span>
 <span class="sd">        * int : use multiprocessing.Pool (even for ``poolsize=1``)</span>
+<span class="sd">    dask_client</span>
+<span class="sd">        A dask client. Use this or ``poolsize``.</span>
 <span class="sd">    save</span>
 <span class="sd">        save final DataFrame to ``&lt;database_dir&gt;/&lt;database_basename&gt;`` (pickle</span>
 <span class="sd">        format only), default: &quot;calc/database.pk&quot;, see also `database_dir`,</span>
@@ -1237,7 +1278,7 @@ document.write(`
 <span class="sd">          those columns</span>
 <span class="sd">    calc_dir</span>
 <span class="sd">        Dir where calculation artifacts can be saved if needed, such as dirs</span>
-<span class="sd">        per pset ``&lt;calc_dir&gt;/&lt;pset&gt;``. Will be added to the database in</span>
+<span class="sd">        per pset ``&lt;calc_dir&gt;/&lt;pset_id&gt;``. Will be added to the database in</span>
 <span class="sd">        ``_calc_dir`` field.</span>
 <span class="sd">    simulate</span>
 <span class="sd">        run everything in ``&lt;calc_dir&gt;.simulate``, don&#39;t call `worker`, i.e. save</span>
@@ -1248,7 +1289,8 @@ document.write(`
 <span class="sd">    database_basename</span>
 <span class="sd">        ``&lt;database_dir&gt;/&lt;database_basename&gt;``, default: &quot;database.pk&quot;</span>
 <span class="sd">    backup</span>
-<span class="sd">        Make backup of ``&lt;calc_dir&gt;`` to ``&lt;calc_dir&gt;.bak_&lt;timestamp&gt;_run_id_&lt;_run_id&gt;``</span>
+<span class="sd">        Make backup of ``&lt;calc_dir&gt;`` to ``&lt;calc_dir&gt;.bak_&lt;timestamp&gt;_run_id_&lt;run_id&gt;``</span>
+<span class="sd">        where ``&lt;run_id&gt;`` is the latest ``_run_id`` present in ``df``</span>
 <span class="sd">    git</span>
 <span class="sd">        Use ``git`` to commit all files written and changed by the current run</span>
 <span class="sd">        (``_run_id``). Make sure to create a ``.gitignore`` manually before if</span>
@@ -1327,7 +1369,7 @@ document.write(`
         <span class="n">simulate</span><span class="o">=</span><span class="n">simulate</span><span class="p">,</span>
     <span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">poolsize</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">poolsize</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">dask_client</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
         <span class="n">results</span> <span class="o">=</span> <span class="p">[</span>
             <span class="n">worker_wrapper_partial</span><span class="p">(</span>
                 <span class="n">pset</span><span class="o">=</span><span class="n">pset</span><span class="p">,</span>
@@ -1337,16 +1379,26 @@ document.write(`
             <span class="k">for</span> <span class="n">ii</span><span class="p">,</span> <span class="n">pset</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
         <span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="p">[</span><span class="n">poolsize</span><span class="p">,</span> <span class="n">dask_client</span><span class="p">]</span><span class="o">.</span><span class="n">count</span><span class="p">(</span>
+            <span class="kc">None</span>
+        <span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Use either poolsize or dask_client.&quot;</span>
         <span class="c1"># Can&#39;t use lambda here b/c pool.map() still can&#39;t pickle local scope</span>
         <span class="c1"># lambdas. That&#39;s why we emulate</span>
         <span class="c1">#   pool.map(lambda pset: worker_wrapper_partial(pset, run_seq=...,</span>
-        <span class="c1">#            params)</span>
-        <span class="c1"># with nested partial(). Cool, eh?</span>
-        <span class="n">_worker_wrapper_partial</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span>
+        <span class="c1">#            params))</span>
+        <span class="c1"># with nested partial(). Cool, eh? We could solve this by</span>
+        <span class="c1"># using https://github.com/uqfoundation/multiprocess which uses</span>
+        <span class="c1"># https://github.com/uqfoundation/dill for serialization, but in the</span>
+        <span class="c1"># spirit of minimal dependencies, we don&#39;t.</span>
+        <span class="n">worker_wrapper_partial_pool</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span>
             <span class="n">worker_wrapper_partial</span><span class="p">,</span> <span class="n">run_seq</span><span class="o">=</span><span class="n">run_seq_old</span> <span class="o">+</span> <span class="mi">1</span>
         <span class="p">)</span>
-        <span class="k">with</span> <span class="n">mp</span><span class="o">.</span><span class="n">Pool</span><span class="p">(</span><span class="n">poolsize</span><span class="p">)</span> <span class="k">as</span> <span class="n">pool</span><span class="p">:</span>
-            <span class="n">results</span> <span class="o">=</span> <span class="n">pool</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">_worker_wrapper_partial</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">dask_client</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">mp</span><span class="o">.</span><span class="n">Pool</span><span class="p">(</span><span class="n">poolsize</span><span class="p">)</span> <span class="k">as</span> <span class="n">pool</span><span class="p">:</span>
+                <span class="n">results</span> <span class="o">=</span> <span class="n">pool</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">worker_wrapper_partial_pool</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">futures</span> <span class="o">=</span> <span class="n">dask_client</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">worker_wrapper_partial_pool</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+            <span class="n">results</span> <span class="o">=</span> <span class="n">dask_client</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="n">futures</span><span class="p">)</span>
 
     <span class="k">for</span> <span class="n">df_row</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
         <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">((</span><span class="n">df</span><span class="p">,</span> <span class="n">df_row</span><span class="p">),</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -1363,8 +1415,9 @@ document.write(`
     <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;run_local() has been renamed to run()&quot;</span><span class="p">,</span> <span class="ne">DeprecationWarning</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">run</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span></div>
 
+
 <span class="c1"># -----------------------------------------------------------------------------</span>
-<span class="c1"># HPC cluster batch runs</span>
+<span class="c1"># (HPC cluster) batch runs using file templates</span>
 <span class="c1"># -----------------------------------------------------------------------------</span>
 
 
@@ -1377,8 +1430,6 @@ document.write(`
 <span class="sd">            ^^^^^^^^^^^^^^^^^^^^^^^^^------------- machine_dir</span>
 <span class="sd">            templates/machines/&lt;name&gt;/jobscript</span>
 <span class="sd">                                      ^^^^^^^^^--- template.basename</span>
-
-
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">machine_dir</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">template</span> <span class="o">=</span> <span class="n">FileTemplate</span><span class="p">(</span>
@@ -1441,7 +1492,6 @@ document.write(`
     <span class="n">write_pset</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="o">**</span><span class="n">kwds</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Write files based on templates.</span>
 
@@ -1548,7 +1598,7 @@ By Steve Schmerler
     
   <p class="copyright">
     
-      © Copyright 2022.
+      © Copyright 2023.
       <br/>
     
   </p>
@@ -1572,8 +1622,8 @@ By Steve Schmerler
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../../_static/scripts/bootstrap.js?digest=ac02cc09edc035673794"></script>
-<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=ac02cc09edc035673794"></script>
+  <script src="../../_static/scripts/bootstrap.js?digest=c5ced968eda925caa686"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=c5ced968eda925caa686"></script>
 
   <footer class="bd-footer">
   </footer>

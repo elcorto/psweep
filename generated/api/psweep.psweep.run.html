@@ -19,12 +19,12 @@
   </script>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../_static/styles/theme.css?digest=ac02cc09edc035673794" rel="stylesheet" />
-<link href="../../_static/styles/bootstrap.css?digest=ac02cc09edc035673794" rel="stylesheet" />
-<link href="../../_static/styles/pydata-sphinx-theme.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+  <link href="../../_static/styles/theme.css?digest=c5ced968eda925caa686" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=c5ced968eda925caa686" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=c5ced968eda925caa686" rel="stylesheet" />
 
   
-  <link href="../../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+  <link href="../../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=c5ced968eda925caa686" rel="stylesheet" />
   <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
@@ -38,9 +38,9 @@
     <link rel="stylesheet" type="text/css" href="../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=ac02cc09edc035673794" />
-<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=ac02cc09edc035673794" />
-  <script src="../../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=ac02cc09edc035673794"></script>
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=c5ced968eda925caa686" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=c5ced968eda925caa686" />
+  <script src="../../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=c5ced968eda925caa686"></script>
 
     <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
@@ -146,13 +146,14 @@ const thebe_selector_output = ".output, .cell_output"
   
   
   
+  
     
     
       
     
     
-    <img src="../../_static/psweep-logo.png" class="logo__image only-light" alt="Logo image"/>
-    <script>document.write(`<img src="../../_static/psweep-logo.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
+    <img src="../../_static/psweep-logo.png" class="logo__image only-light" alt="psweep - Home"/>
+    <script>document.write(`<img src="../../_static/psweep-logo.png" class="logo__image only-dark" alt="psweep - Home"/>`);</script>
   
   
 </a></div>
@@ -391,7 +392,7 @@ document.write(`
 <h1>psweep.psweep.run<a class="headerlink" href="#psweep-psweep-run" title="Permalink to this heading">#</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="psweep.psweep.run">
-<span class="sig-prename descclassname"><span class="pre">psweep.psweep.</span></span><span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">worker</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">poolsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tmpsave</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calc_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'calc'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">simulate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">database_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">database_basename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'database.pk'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backup</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">git</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_dups</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/psweep/psweep.html#run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psweep.psweep.run" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">psweep.psweep.</span></span><span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">worker</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">poolsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dask_client</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tmpsave</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calc_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'calc'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">simulate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">database_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">database_basename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'database.pk'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backup</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">git</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_dups</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/psweep/psweep.html#run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psweep.psweep.run" title="Permalink to this definition">#</a></dt>
 <dd><p>Call <cite>worker</cite> for each <cite>pset</cite> in <cite>params</cite>. Populate a DataFrame with rows
 from each call <code class="docutils literal notranslate"><span class="pre">worker(pset)</span></code>.</p>
 <dl class="field-list simple">
@@ -408,6 +409,7 @@ read existing database file from disk if found</p></li>
 <li><p>int : use multiprocessing.Pool (even for <code class="docutils literal notranslate"><span class="pre">poolsize=1</span></code>)</p></li>
 </ul>
 </p></li>
+<li><p><strong>dask_client</strong> – A dask client. Use this or <code class="docutils literal notranslate"><span class="pre">poolsize</span></code>.</p></li>
 <li><p><strong>save</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – save final DataFrame to <code class="docutils literal notranslate"><span class="pre">&lt;database_dir&gt;/&lt;database_basename&gt;</span></code> (pickle
 format only), default: “calc/database.pk”, see also <cite>database_dir</cite>,
 <cite>calc_dir</cite> and <cite>database_basename</cite></p></li>
@@ -420,14 +422,15 @@ those columns</p></li>
 </ul>
 </p></li>
 <li><p><strong>calc_dir</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Dir where calculation artifacts can be saved if needed, such as dirs
-per pset <code class="docutils literal notranslate"><span class="pre">&lt;calc_dir&gt;/&lt;pset&gt;</span></code>. Will be added to the database in
+per pset <code class="docutils literal notranslate"><span class="pre">&lt;calc_dir&gt;/&lt;pset_id&gt;</span></code>. Will be added to the database in
 <code class="docutils literal notranslate"><span class="pre">_calc_dir</span></code> field.</p></li>
 <li><p><strong>simulate</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – run everything in <code class="docutils literal notranslate"><span class="pre">&lt;calc_dir&gt;.simulate</span></code>, don’t call <cite>worker</cite>, i.e. save
 what the run would create, but without the results from <cite>worker</cite>,
 useful to check if <cite>params</cite> are correct before starting a production run</p></li>
 <li><p><strong>database_dir</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Path for the database. Default is <code class="docutils literal notranslate"><span class="pre">&lt;calc_dir&gt;</span></code>.</p></li>
 <li><p><strong>database_basename</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – <code class="docutils literal notranslate"><span class="pre">&lt;database_dir&gt;/&lt;database_basename&gt;</span></code>, default: “database.pk”</p></li>
-<li><p><strong>backup</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – Make backup of <code class="docutils literal notranslate"><span class="pre">&lt;calc_dir&gt;</span></code> to <code class="docutils literal notranslate"><span class="pre">&lt;calc_dir&gt;.bak_&lt;timestamp&gt;_run_id_&lt;_run_id&gt;</span></code></p></li>
+<li><p><strong>backup</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – Make backup of <code class="docutils literal notranslate"><span class="pre">&lt;calc_dir&gt;</span></code> to <code class="docutils literal notranslate"><span class="pre">&lt;calc_dir&gt;.bak_&lt;timestamp&gt;_run_id_&lt;run_id&gt;</span></code>
+where <code class="docutils literal notranslate"><span class="pre">&lt;run_id&gt;</span></code> is the latest <code class="docutils literal notranslate"><span class="pre">_run_id</span></code> present in <code class="docutils literal notranslate"><span class="pre">df</span></code></p></li>
 <li><p><strong>git</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – Use <code class="docutils literal notranslate"><span class="pre">git</span></code> to commit all files written and changed by the current run
 (<code class="docutils literal notranslate"><span class="pre">_run_id</span></code>). Make sure to create a <code class="docutils literal notranslate"><span class="pre">.gitignore</span></code> manually before if
 needed.</p></li>
@@ -519,7 +522,7 @@ By Steve Schmerler
     
   <p class="copyright">
     
-      © Copyright 2022.
+      © Copyright 2023.
       <br/>
     
   </p>
@@ -543,8 +546,8 @@ By Steve Schmerler
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../../_static/scripts/bootstrap.js?digest=ac02cc09edc035673794"></script>
-<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=ac02cc09edc035673794"></script>
+  <script src="../../_static/scripts/bootstrap.js?digest=c5ced968eda925caa686"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=c5ced968eda925caa686"></script>
 
   <footer class="bd-footer">
   </footer>
