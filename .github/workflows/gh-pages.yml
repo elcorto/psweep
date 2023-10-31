@@ -24,7 +24,13 @@ jobs:
       - name: build
         run: |
           # sphinx-autodoc needs target package to be installed
-          pip install -e ".[doc]"
+          ##pip install -e ".[doc]"
+          pip install -e .
+
+          # See doc/requirements.txt for why we can't use
+          #   pip install -e ".[doc]"
+          pip install -r doc/requirements.txt
+
           cd doc
           sh generate-doc.sh
 

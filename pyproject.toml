@@ -38,13 +38,15 @@ test = [
 # Once black and ruff can reliably ignore files.
 ##dev = ["pre-commit"]
 
-doc = [
-    "jupyter-book",
-    "sphinx-autodoc-typehints",
-
-    # For doc/generate-doc.sh
-    "sphinx-autodoc @ git+https://github.com/elcorto/sphinx-autodoc",
-]
+# See doc/requirements.txt
+#
+##doc = [
+##    "jupyter-book",
+##    "sphinx-autodoc-typehints",
+##
+##    # For doc/generate-doc.sh
+##    "sphinx-autodoc @ git+https://github.com/elcorto/sphinx-autodoc",
+##]
 
 dask = [
     "dask",

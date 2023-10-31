@@ -1,0 +1,10 @@
+# Because of https://github.com/elcorto/psweep/issues/12 we can't have this in
+# pyproject.toml.
+
+jupyter-book
+sphinx-autodoc-typehints
+
+# For doc/generate-doc.sh
+sphinx-autodoc @ git+https://github.com/elcorto/sphinx-autodoc
+
+# vim:syn=conf
