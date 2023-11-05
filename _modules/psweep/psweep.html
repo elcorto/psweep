@@ -472,6 +472,7 @@ document.write(`
 
 
 <div class="viewcode-block" id="pickle_write"><a class="viewcode-back" href="../../generated/api/psweep.psweep.pickle_write.html#psweep.psweep.pickle_write">[docs]</a><span class="k">def</span> <span class="nf">pickle_write</span><span class="p">(</span><span class="n">fn</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+    <span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">fn</span><span class="p">))</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fd</span><span class="p">:</span>
         <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">fd</span><span class="p">)</span></div>
 
