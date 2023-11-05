@@ -132,6 +132,7 @@ def file_read(fn: str):
 
 
 def pickle_write(fn: str, obj):
+    makedirs(os.path.dirname(fn))
     with open(fn, "wb") as fd:
         pickle.dump(obj, fd)
 
