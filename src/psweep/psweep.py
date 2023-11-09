@@ -209,17 +209,6 @@ def pset_hash(
             return np.nan
 
 
-def add_hashes(params: Sequence[dict]) -> Sequence[dict]:
-    """Calculate hash for each pset and set pset["_pset_hash"]. Return new
-    params list.
-    """
-    new_params = []
-    for pset in params:
-        pset["_pset_hash"] = pset_hash(pset)
-        new_params.append(pset)
-    return new_params
-
-
 def check_calc_dir(calc_dir: str, df: pd.DataFrame):
     """Check calc dir for consistency with database.
 
@@ -316,6 +305,35 @@ def intspace(*args, dtype=np.int64, **kwds):
     """
     assert "dtype" not in kwds, "Got 'dtype' multiple times."
     return np.unique(np.round(np.linspace(*args, **kwds)).astype(dtype))
+
+
+def get_uuid(retry=10, existing: Sequence = []) -> str:
+    ret = str(uuid.uuid4())
+    while ret in existing:
+        ret = str(uuid.uuid4())
+        retry -= 1
+        if retry == 0:
+            raise Exception(
+                f"Failed to generate UUID after {retry} attempts. "
+                f"Existing UUIDs: {existing}"
+            )
+    return ret
+
+
+def get_many_uuids(
+    num: int, retry=10, existing: Sequence = []
+) -> Sequence[str]:
+    generate = lambda: set([str(uuid.uuid4()) for _ in range(num)])
+    ret = generate()
+    while (len(ret) < num) or (len(ret & set(existing)) > 0):
+        ret = generate()
+        retry -= 1
+        if retry == 0:
+            raise Exception(
+                f"Failed to generate {num} UUIDs after {retry} attempts. "
+                f"Existing UUIDs: {existing}"
+            )
+    return list(ret)
 
 
 # -----------------------------------------------------------------------------
@@ -847,44 +865,41 @@ def worker_wrapper(
     worker: Callable,
     tmpsave: bool = False,
     verbose: Union[bool, Sequence[str]] = None,
-    run_id: str = None,
-    calc_dir: str = None,
     simulate: bool = False,
     pset_seq=np.nan,
-    run_seq: int = None,
 ):
     """
-    Add special fields to pset. Call worker on exactly one pset. Return
-    DataFrame row built from ``pset.update(worker(pset))``.
+    Add special fields to pset which can be determined at call time.
+
+    Call worker on exactly one pset. Return DataFrame row built from
+    ``pset.update(worker(pset))``. Do verbose printing.
     """
-    assert run_id is not None
-    assert calc_dir is not None
-    pset_id = str(uuid.uuid4())
-    _pset = copy.deepcopy(pset)
+    assert "_pset_id" in pset
+    assert "_run_id" in pset
+    assert "_calc_dir" in pset
     time_start = pd.Timestamp(time.time(), unit=PANDAS_TIME_UNIT)
-    update = {
-        "_run_id": run_id,
-        "_pset_id": pset_id,
-        "_calc_dir": calc_dir,
-        "_time_utc": time_start,
-        "_pset_seq": pset_seq,
-        "_run_seq": run_seq,
-        "_exec_host": platform.node(),
-    }
-    _pset.update(update)
+
+    pset.update(
+        _time_utc=time_start, _pset_seq=pset_seq, _exec_host=platform.node()
+    )
     if verbose is not None:
-        df_row_print = pd.DataFrame([_pset], index=[time_start])
+        df_row_print = pd.DataFrame([pset], index=[time_start])
         if isinstance(verbose, bool) and verbose:
             df_print(df_row_print, index=True)
         elif is_seq(verbose):
             df_print(df_row_print[verbose], index=True)
     t0 = time.time()
     if not simulate:
-        _pset.update(worker(_pset))
-    _pset["_pset_runtime"] = time.time() - t0
-    df_row = pd.DataFrame([_pset])
+        pset.update(worker(pset))
+    pset["_pset_runtime"] = time.time() - t0
+    df_row = pd.DataFrame([pset])
     if tmpsave:
-        fn = pj(calc_dir, "tmpsave", run_id, pset_id + ".pk")
+        fn = pj(
+            pset["_calc_dir"],
+            "tmpsave",
+            pset["_run_id"],
+            pset["_pset_id"] + ".pk",
+        )
         df_write(fn, df_row)
     return df_row
 
@@ -967,6 +982,9 @@ def run(
         The database build from `params`.
     """
 
+    # Don't in-place alter dicts in params we get as input.
+    params = copy.deepcopy(params)
+
     database_dir = calc_dir if database_dir is None else database_dir
 
     git_enter(git)
@@ -1013,20 +1031,27 @@ def run(
         )
         shutil.copytree(calc_dir, dst)
 
-    params = add_hashes(params)
+    for pset in params:
+        pset["_pset_hash"] = pset_hash(pset)
 
     if skip_dups and len(df) > 0:
         params = filter_params_dup_hash(params, df._pset_hash.values)
 
-    run_id = str(uuid.uuid4())
+    run_id = get_uuid(existing=df._run_id.values if len(df) > 0 else [])
+    pset_ids = get_many_uuids(
+        len(params), existing=df._pset_id.values if len(df) > 0 else []
+    )
+    for pset, pset_id in zip(params, pset_ids):
+        pset["_pset_id"] = pset_id
+        pset["_run_seq"] = run_seq_old + 1
+        pset["_run_id"] = run_id
+        pset["_calc_dir"] = calc_dir
 
     worker_wrapper_partial = partial(
         worker_wrapper,
         worker=worker,
         tmpsave=tmpsave,
         verbose=verbose,
-        run_id=run_id,
-        calc_dir=calc_dir,
         simulate=simulate,
     )
 
@@ -1035,7 +1060,6 @@ def run(
             worker_wrapper_partial(
                 pset=pset,
                 pset_seq=pset_seq_old + ii + 1,
-                run_seq=run_seq_old + 1,
             )
             for ii, pset in enumerate(params)
         ]
@@ -1043,22 +1067,11 @@ def run(
         assert [poolsize, dask_client].count(
             None
         ) == 1, "Use either poolsize or dask_client."
-        # Can't use lambda here b/c pool.map() still can't pickle local scope
-        # lambdas. That's why we emulate
-        #   pool.map(lambda pset: worker_wrapper_partial(pset, run_seq=...,
-        #            params))
-        # with nested partial(). Cool, eh? We could solve this by
-        # using https://github.com/uqfoundation/multiprocess which uses
-        # https://github.com/uqfoundation/dill for serialization, but in the
-        # spirit of minimal dependencies, we don't.
-        worker_wrapper_partial_pool = partial(
-            worker_wrapper_partial, run_seq=run_seq_old + 1
-        )
         if dask_client is None:
             with mp.Pool(poolsize) as pool:
-                results = pool.map(worker_wrapper_partial_pool, params)
+                results = pool.map(worker_wrapper_partial, params)
         else:
-            futures = dask_client.map(worker_wrapper_partial_pool, params)
+            futures = dask_client.map(worker_wrapper_partial, params)
             results = dask_client.gather(futures)
 
     for df_row in results:
