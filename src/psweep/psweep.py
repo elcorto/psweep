@@ -740,7 +740,7 @@ def filter_params_dup_hash(
 
 def stargrid(
     const: dict,
-    vary: Sequence[dict],
+    vary: Sequence[Sequence[dict]],
     vary_labels: Sequence[str] = None,
     vary_label_col: str = "_vary",
     skip_dups=True,
@@ -759,7 +759,7 @@ def stargrid(
 
     Examples
     --------
-    >>> from psweep import psweep as ps
+    >>> import psweep as ps
     >>> const=dict(a=1, b=77, c=11)
     >>> a=ps.plist("a", [1,2,3,4])
     >>> b=ps.plist("b", [77,88,99])
