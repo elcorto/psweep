@@ -9,6 +9,8 @@ import subprocess
 from itertools import product
 from contextlib import nullcontext
 import importlib
+import uuid
+import copy
 
 import pandas as pd
 import numpy as np
@@ -903,3 +905,37 @@ def test_file_io():
         fn = f"{tmpdir}/path/that/has/to/be/created/file.txt"
         ps.file_write(fn, txt)
         assert txt == ps.file_read(fn)
+
+
+def test_single_uuid():
+    existing = [str(uuid.uuid4()) for _ in range(100)]
+    ret = ps.get_uuid()
+    # 'b5233ba3-25eb-40ac-b2b1-d1babbacd904'
+    assert isinstance(ret, str)
+    assert len(ret) == 36
+    assert re.match("([a-z0-9]+-){4}[a-z0-9]", ret) is not None
+    ret = ps.get_uuid(existing=existing)
+    assert ret not in existing
+
+
+def test_many_uuids():
+    existing = [str(uuid.uuid4()) for _ in range(100)]
+    ret = set(ps.get_many_uuids(100))
+    assert len(ret) == 100
+
+    ret = set(ps.get_many_uuids(100, existing=existing))
+    assert len(ret) == 100
+    assert len(ret & set(existing)) == 0
+
+
+def test_run_not_alter_params():
+    params = ps.plist("a", [1, 2, 3])
+    params_copy = copy.deepcopy(params)
+    hsh = joblib.hash(params, hash_name="sha1")
+    df = ps.run(func_a, params, save=False)
+    df = ps.run(func_a, params, save=False, df=df)
+    assert params == params_copy
+    assert hsh == joblib.hash(params, hash_name="sha1")
+    for pset in params:
+        for key in pset.keys():
+            assert not key.startswith("_")
