@@ -792,6 +792,7 @@ def test_prep_batch():
     params = ps.pgrid(a, b)
     template_dir = f"{here}/../examples/batch_templates_git/templates"
     with tempfile.TemporaryDirectory() as tmpdir:
+        # run 0
         df = ps.prep_batch(
             params,
             calc_dir=f"{tmpdir}/calc",
@@ -806,6 +807,14 @@ def test_prep_batch():
         assert os.path.exists(f"{tmpdir}/calc/run_local.sh")
         assert os.path.exists(f"{tmpdir}/calc/run_cluster.sh")
 
+        n_param = len(params)
+        for txt in [
+            ps.file_read(f"{tmpdir}/calc/run_cluster.sh"),
+            ps.file_read(f"{tmpdir}/calc/run_local.sh"),
+        ]:
+            assert "# run_seq=0 pset_seq=0" in txt
+            assert f"# run_seq=0 pset_seq={n_param - 1}" in txt
+
         for pset_id in df._pset_id.values:
             for name in [
                 "run.py",
@@ -814,6 +823,25 @@ def test_prep_batch():
                 "jobscript_cluster",
             ]:
                 assert os.path.exists(f"{tmpdir}/calc/{pset_id}/{name}")
+
+        # run 1
+        df = ps.prep_batch(
+            params,
+            calc_dir=f"{tmpdir}/calc",
+            calc_templ_dir=f"{template_dir}/calc",
+            machine_templ_dir=f"{template_dir}/machines",
+            database_dir=f"{tmpdir}/db",
+            write_pset=True,
+        )
+
+        for txt in [
+            ps.file_read(f"{tmpdir}/calc/run_cluster.sh"),
+            ps.file_read(f"{tmpdir}/calc/run_local.sh"),
+        ]:
+            assert "# run_seq=0 pset_seq=0" in txt
+            assert f"# run_seq=0 pset_seq={n_param - 1}" in txt
+            assert f"# run_seq=1 pset_seq={n_param}" in txt
+            assert f"# run_seq=1 pset_seq={2*n_param - 1}" in txt
 
 
 # We can't use
