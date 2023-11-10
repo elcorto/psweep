@@ -82,6 +82,7 @@ def itr(func: Callable) -> Callable:
     Assuming ``func()`` requires a sequence as input: ``func([a,b,c])``, allow
     passing ``func(a,b,c)``.
     """
+
     @wraps(func)
     def wrapper(*args):
         # (arg1,)
@@ -866,7 +867,6 @@ def worker_wrapper(
     tmpsave: bool = False,
     verbose: Union[bool, Sequence[str]] = None,
     simulate: bool = False,
-    pset_seq=np.nan,
 ):
     """
     Add special fields to pset which can be determined at call time.
@@ -879,9 +879,7 @@ def worker_wrapper(
     assert "_calc_dir" in pset
     time_start = pd.Timestamp(time.time(), unit=PANDAS_TIME_UNIT)
 
-    pset.update(
-        _time_utc=time_start, _pset_seq=pset_seq, _exec_host=platform.node()
-    )
+    pset.update(_time_utc=time_start, _exec_host=platform.node())
     if verbose is not None:
         df_row_print = pd.DataFrame([pset], index=[time_start])
         if isinstance(verbose, bool) and verbose:
@@ -1041,9 +1039,10 @@ def run(
     pset_ids = get_many_uuids(
         len(params), existing=df._pset_id.values if len(df) > 0 else []
     )
-    for pset, pset_id in zip(params, pset_ids):
+    for ii, (pset, pset_id) in enumerate(zip(params, pset_ids)):
         pset["_pset_id"] = pset_id
         pset["_run_seq"] = run_seq_old + 1
+        pset["_pset_seq"] = pset_seq_old + ii + 1
         pset["_run_id"] = run_id
         pset["_calc_dir"] = calc_dir
 
@@ -1057,11 +1056,7 @@ def run(
 
     if (poolsize is None) and (dask_client is None):
         results = [
-            worker_wrapper_partial(
-                pset=pset,
-                pset_seq=pset_seq_old + ii + 1,
-            )
-            for ii, pset in enumerate(params)
+            worker_wrapper_partial(pset=pset) for ii, pset in enumerate(params)
         ]
     else:
         assert [poolsize, dask_client].count(

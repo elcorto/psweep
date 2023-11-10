@@ -156,6 +156,12 @@ def test_run():
         assert len(df._pset_id.unique()) == 4
         assert len(df._pset_hash) == 4
         assert len(df._pset_hash.unique()) == 4
+        # For serial runs, this is guaranteed. For parallel runs, probably
+        # also, as long as we use only concurrent.futures style APIs, avoid
+        # map_async() and get results back in order. Should be safe with
+        # multiprocessing, not sure about dask, though.
+        assert (df._pset_seq.values == df.index.values).all()
+
         df = ps.run(
             func_a, params, calc_dir=calc_dir, poolsize=2, tmpsave=True
         )
@@ -165,6 +171,7 @@ def test_run():
         assert len(df._pset_id.unique()) == 8
         assert len(df._pset_hash) == 8
         assert len(df._pset_hash.unique()) == 4
+        assert (df._pset_seq.values == df.index.values).all()
         assert set(df.columns) == set(
             [
                 "_calc_dir",
