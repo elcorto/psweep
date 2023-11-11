@@ -866,18 +866,18 @@ def worker_wrapper(
     tmpsave: bool = False,
     verbose: Union[bool, Sequence[str]] = None,
     simulate: bool = False,
-):
+) -> dict:
     """
-    Add special fields to pset which can be determined at call time.
+    Add special fields to `pset` which can be determined at call time.
 
-    Call worker on exactly one pset. Return DataFrame row built from
+    Call worker on exactly one pset. Return updated pset built from
     ``pset.update(worker(pset))``. Do verbose printing.
     """
     assert "_pset_id" in pset
     assert "_run_id" in pset
     assert "_calc_dir" in pset
-    time_start = pd.Timestamp(time.time(), unit=PANDAS_TIME_UNIT)
 
+    time_start = pd.Timestamp(time.time(), unit=PANDAS_TIME_UNIT)
     pset.update(_time_utc=time_start, _exec_host=platform.node())
     if verbose is not None:
         df_row_print = pd.DataFrame([pset], index=[time_start])
@@ -889,7 +889,6 @@ def worker_wrapper(
     if not simulate:
         pset.update(worker(pset))
     pset["_pset_runtime"] = time.time() - t0
-    df_row = pd.DataFrame([pset])
     if tmpsave:
         fn = pj(
             pset["_calc_dir"],
@@ -897,8 +896,8 @@ def worker_wrapper(
             pset["_run_id"],
             pset["_pset_id"] + ".pk",
         )
-        df_write(fn, df_row)
-    return df_row
+        pickle_write(fn, pset)
+    return pset
 
 
 def run(
@@ -939,12 +938,13 @@ def run(
     dask_client
         A dask client. Use this or ``poolsize``.
     save
-        save final DataFrame to ``<database_dir>/<database_basename>`` (pickle
-        format only), default: "calc/database.pk", see also `database_dir`,
-        `calc_dir` and `database_basename`
+        save final ``DataFrame`` to ``<database_dir>/<database_basename>``
+        (pickle format only), default: "calc/database.pk", see also
+        `database_dir`, `calc_dir` and `database_basename`
     tmpsave
-        save results from each `pset` in `params` (the current DataFrame row) to
-        ``<calc_dir>/tmpsave/<run_id>/<pset_id>.pk`` (pickle format only)
+        save the result dict from each ``pset.update(worker(pset))`` from each
+        `pset` to ``<calc_dir>/tmpsave/<run_id>/<pset_id>.pk`` (pickle format
+        only), the data is a dict, not a DataFrame row
     verbose
         * bool : print the current DataFrame row
         * sequence : list of DataFrame column names, print the row but only
@@ -1068,8 +1068,7 @@ def run(
             futures = dask_client.map(worker_wrapper_partial, params)
             results = dask_client.gather(futures)
 
-    for df_row in results:
-        df = pd.concat((df, df_row), sort=False, ignore_index=True)
+    df = pd.concat((df, pd.DataFrame(results)), sort=False, ignore_index=True)
 
     if save:
         df_write(database_fn, df)
@@ -1172,7 +1171,7 @@ def prep_batch(
     git
         Use git to commit local changes.
     write_pset
-        Write ``<calc_dir>/<pset_id>/pset.pk``.
+        Write the input `pset` to ``<calc_dir>/<pset_id>/pset.pk``.
     **kwds
         Passed to :func:`run`.
 

@@ -194,9 +194,16 @@ def test_run():
 
         # tmp results of second run
         run_id = df._run_id.unique()[-1]
-        for pset_id in df[df._run_id == run_id]._pset_id:
+        df_sel = df[df._run_id == run_id]
+        for pset_id in df_sel._pset_id.values:
             tmpsave_fn = f"{calc_dir}/tmpsave/{run_id}/{pset_id}.pk"
             assert os.path.exists(tmpsave_fn)
+            read_dct = ps.pickle_read(tmpsave_fn)
+            assert isinstance(read_dct, dict)
+            assert (
+                df_sel[df_sel._pset_id == pset_id].iloc[0].to_dict()
+                == read_dct
+            )
 
 
 @pytest.mark.parametrize("use_disk", [True, False])
