@@ -6,21 +6,20 @@ import itertools
 import multiprocessing as mp
 import os
 import pickle
+import platform
 import re
 import shutil
 import string
 import subprocess
+import sys
 import time
 import uuid
 import warnings
-import yaml
-import sys
-import platform
-
-import numpy as np
-import pandas as pd
 
 import joblib
+import numpy as np
+import pandas as pd
+import yaml
 
 pj = os.path.join
 
