@@ -863,6 +863,7 @@ def stargrid(
 def worker_wrapper(
     pset: dict,
     worker: Callable,
+    *,
     tmpsave: bool = False,
     verbose: Union[bool, Sequence[str]] = None,
     simulate: bool = False,
@@ -1054,9 +1055,7 @@ def run(
     )
 
     if (poolsize is None) and (dask_client is None):
-        results = [
-            worker_wrapper_partial(pset=pset) for ii, pset in enumerate(params)
-        ]
+        results = list(map(worker_wrapper_partial, params))
     else:
         assert [poolsize, dask_client].count(
             None
