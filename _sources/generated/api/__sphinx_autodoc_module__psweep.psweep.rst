@@ -23,7 +23,6 @@ psweep
    PANDAS_TIME_UNIT
    PSET_HASH_ALG
    PsweepHashError
-   add_hashes
    check_calc_dir
    df_filter_conds
    df_print
@@ -38,6 +37,8 @@ psweep
    fullpath
    gather_calc_templates
    gather_machines
+   get_many_uuids
+   get_uuid
    git_clean
    git_enter
    git_exit

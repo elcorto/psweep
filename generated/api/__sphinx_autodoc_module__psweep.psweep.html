@@ -184,7 +184,6 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.PANDAS_TIME_UNIT.html">psweep.psweep.PANDAS_TIME_UNIT</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.PSET_HASH_ALG.html">psweep.psweep.PSET_HASH_ALG</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.PsweepHashError.html">psweep.psweep.PsweepHashError</a></li>
-<li class="toctree-l3"><a class="reference internal" href="psweep.psweep.add_hashes.html">psweep.psweep.add_hashes</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.check_calc_dir.html">psweep.psweep.check_calc_dir</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.df_filter_conds.html">psweep.psweep.df_filter_conds</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.df_print.html">psweep.psweep.df_print</a></li>
@@ -199,6 +198,8 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.fullpath.html">psweep.psweep.fullpath</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.gather_calc_templates.html">psweep.psweep.gather_calc_templates</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.gather_machines.html">psweep.psweep.gather_machines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="psweep.psweep.get_many_uuids.html">psweep.psweep.get_many_uuids</a></li>
+<li class="toctree-l3"><a class="reference internal" href="psweep.psweep.get_uuid.html">psweep.psweep.get_uuid</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.git_clean.html">psweep.psweep.git_clean</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.git_enter.html">psweep.psweep.git_enter</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.git_exit.html">psweep.psweep.git_exit</a></li>
@@ -413,43 +414,40 @@ document.write(`
 <tr class="row-odd"><td><p><a class="reference internal" href="psweep.psweep.PsweepHashError.html#psweep.psweep.PsweepHashError" title="psweep.psweep.PsweepHashError"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PsweepHashError</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="psweep.psweep.add_hashes.html#psweep.psweep.add_hashes" title="psweep.psweep.add_hashes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_hashes</span></code></a>(params)</p></td>
-<td><p>Calculate hash for each pset and set pset[&quot;_pset_hash&quot;].</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="psweep.psweep.check_calc_dir.html#psweep.psweep.check_calc_dir" title="psweep.psweep.check_calc_dir"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_calc_dir</span></code></a>(calc_dir, df)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="psweep.psweep.check_calc_dir.html#psweep.psweep.check_calc_dir" title="psweep.psweep.check_calc_dir"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_calc_dir</span></code></a>(calc_dir, df)</p></td>
 <td><p>Check calc dir for consistency with database.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="psweep.psweep.df_filter_conds.html#psweep.psweep.df_filter_conds" title="psweep.psweep.df_filter_conds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df_filter_conds</span></code></a>(df, conds[, op])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="psweep.psweep.df_filter_conds.html#psweep.psweep.df_filter_conds" title="psweep.psweep.df_filter_conds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df_filter_conds</span></code></a>(df, conds[, op])</p></td>
 <td><p>Filter DataFrame using bool arrays/Series/DataFrames in <cite>conds</cite>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="psweep.psweep.df_print.html#psweep.psweep.df_print" title="psweep.psweep.df_print"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df_print</span></code></a>(df[, index, special_cols, cols, ...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="psweep.psweep.df_print.html#psweep.psweep.df_print" title="psweep.psweep.df_print"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df_print</span></code></a>(df[, index, special_cols, cols, ...])</p></td>
 <td><p>Print DataFrame, by default without the index and special columns such as <cite>_pset_id</cite>.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="psweep.psweep.df_read.html#psweep.psweep.df_read" title="psweep.psweep.df_read"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df_read</span></code></a>(fn[, fmt])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="psweep.psweep.df_read.html#psweep.psweep.df_read" title="psweep.psweep.df_read"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df_read</span></code></a>(fn[, fmt])</p></td>
 <td><p>Read DataFrame from file <cite>fn</cite>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="psweep.psweep.df_to_json.html#psweep.psweep.df_to_json" title="psweep.psweep.df_to_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df_to_json</span></code></a>(df, **kwds)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="psweep.psweep.df_to_json.html#psweep.psweep.df_to_json" title="psweep.psweep.df_to_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df_to_json</span></code></a>(df, **kwds)</p></td>
 <td><p>Like <cite>df.to_json</cite> but with defaults for orient, date_unit, date_format, double_precision.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="psweep.psweep.df_write.html#psweep.psweep.df_write" title="psweep.psweep.df_write"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df_write</span></code></a>(fn, df[, fmt])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="psweep.psweep.df_write.html#psweep.psweep.df_write" title="psweep.psweep.df_write"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df_write</span></code></a>(fn, df[, fmt])</p></td>
 <td><p>Write DataFrame to disk.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="psweep.psweep.file_read.html#psweep.psweep.file_read" title="psweep.psweep.file_read"><code class="xref py py-obj docutils literal notranslate"><span class="pre">file_read</span></code></a>(fn)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="psweep.psweep.file_read.html#psweep.psweep.file_read" title="psweep.psweep.file_read"><code class="xref py py-obj docutils literal notranslate"><span class="pre">file_read</span></code></a>(fn)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="psweep.psweep.file_write.html#psweep.psweep.file_write" title="psweep.psweep.file_write"><code class="xref py py-obj docutils literal notranslate"><span class="pre">file_write</span></code></a>(fn, txt[, mode])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="psweep.psweep.file_write.html#psweep.psweep.file_write" title="psweep.psweep.file_write"><code class="xref py py-obj docutils literal notranslate"><span class="pre">file_write</span></code></a>(fn, txt[, mode])</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="psweep.psweep.filter_params_dup_hash.html#psweep.psweep.filter_params_dup_hash" title="psweep.psweep.filter_params_dup_hash"><code class="xref py py-obj docutils literal notranslate"><span class="pre">filter_params_dup_hash</span></code></a>(params, hashes, **kwds)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="psweep.psweep.filter_params_dup_hash.html#psweep.psweep.filter_params_dup_hash" title="psweep.psweep.filter_params_dup_hash"><code class="xref py py-obj docutils literal notranslate"><span class="pre">filter_params_dup_hash</span></code></a>(params, hashes, **kwds)</p></td>
 <td><p>Return params with psets whose hash is not in <cite>hashes</cite>.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="psweep.psweep.filter_params_unique.html#psweep.psweep.filter_params_unique" title="psweep.psweep.filter_params_unique"><code class="xref py py-obj docutils literal notranslate"><span class="pre">filter_params_unique</span></code></a>(params, **kwds)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="psweep.psweep.filter_params_unique.html#psweep.psweep.filter_params_unique" title="psweep.psweep.filter_params_unique"><code class="xref py py-obj docutils literal notranslate"><span class="pre">filter_params_unique</span></code></a>(params, **kwds)</p></td>
 <td><p>Reduce params to unique psets.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="psweep.psweep.flatten.html#psweep.psweep.flatten" title="psweep.psweep.flatten"><code class="xref py py-obj docutils literal notranslate"><span class="pre">flatten</span></code></a>(seq)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="psweep.psweep.flatten.html#psweep.psweep.flatten" title="psweep.psweep.flatten"><code class="xref py py-obj docutils literal notranslate"><span class="pre">flatten</span></code></a>(seq)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="psweep.psweep.fullpath.html#psweep.psweep.fullpath" title="psweep.psweep.fullpath"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fullpath</span></code></a>(path)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="psweep.psweep.fullpath.html#psweep.psweep.fullpath" title="psweep.psweep.fullpath"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fullpath</span></code></a>(path)</p></td>
 <td><p><dl class="field-list simple">
 <dt class="field-odd">rtype<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
@@ -457,28 +455,44 @@ document.write(`
 </dl>
 </p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="psweep.psweep.gather_calc_templates.html#psweep.psweep.gather_calc_templates" title="psweep.psweep.gather_calc_templates"><code class="xref py py-obj docutils literal notranslate"><span class="pre">gather_calc_templates</span></code></a>(calc_templ_dir)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="psweep.psweep.gather_calc_templates.html#psweep.psweep.gather_calc_templates" title="psweep.psweep.gather_calc_templates"><code class="xref py py-obj docutils literal notranslate"><span class="pre">gather_calc_templates</span></code></a>(calc_templ_dir)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="psweep.psweep.gather_machines.html#psweep.psweep.gather_machines" title="psweep.psweep.gather_machines"><code class="xref py py-obj docutils literal notranslate"><span class="pre">gather_machines</span></code></a>(machine_templ_dir)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="psweep.psweep.gather_machines.html#psweep.psweep.gather_machines" title="psweep.psweep.gather_machines"><code class="xref py py-obj docutils literal notranslate"><span class="pre">gather_machines</span></code></a>(machine_templ_dir)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="psweep.psweep.git_clean.html#psweep.psweep.git_clean" title="psweep.psweep.git_clean"><code class="xref py py-obj docutils literal notranslate"><span class="pre">git_clean</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="psweep.psweep.get_many_uuids.html#psweep.psweep.get_many_uuids" title="psweep.psweep.get_many_uuids"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_many_uuids</span></code></a>(num[, retry, existing])</p></td>
+<td><p><dl class="field-list simple">
+<dt class="field-odd">rtype<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</p>
+</dd>
+</dl>
+</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="psweep.psweep.get_uuid.html#psweep.psweep.get_uuid" title="psweep.psweep.get_uuid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_uuid</span></code></a>([retry, existing])</p></td>
+<td><p><dl class="field-list simple">
+<dt class="field-odd">rtype<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
+</dd>
+</dl>
+</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="psweep.psweep.git_clean.html#psweep.psweep.git_clean" title="psweep.psweep.git_clean"><code class="xref py py-obj docutils literal notranslate"><span class="pre">git_clean</span></code></a>()</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="psweep.psweep.git_enter.html#psweep.psweep.git_enter" title="psweep.psweep.git_enter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">git_enter</span></code></a>(use_git[, always_commit])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="psweep.psweep.git_enter.html#psweep.psweep.git_enter" title="psweep.psweep.git_enter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">git_enter</span></code></a>(use_git[, always_commit])</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="psweep.psweep.git_exit.html#psweep.psweep.git_exit" title="psweep.psweep.git_exit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">git_exit</span></code></a>(use_git, df)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="psweep.psweep.git_exit.html#psweep.psweep.git_exit" title="psweep.psweep.git_exit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">git_exit</span></code></a>(use_git, df)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="psweep.psweep.in_git_repo.html#psweep.psweep.in_git_repo" title="psweep.psweep.in_git_repo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">in_git_repo</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="psweep.psweep.in_git_repo.html#psweep.psweep.in_git_repo" title="psweep.psweep.in_git_repo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">in_git_repo</span></code></a>()</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="psweep.psweep.intspace.html#psweep.psweep.intspace" title="psweep.psweep.intspace"><code class="xref py py-obj docutils literal notranslate"><span class="pre">intspace</span></code></a>(*args[, dtype])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="psweep.psweep.intspace.html#psweep.psweep.intspace" title="psweep.psweep.intspace"><code class="xref py py-obj docutils literal notranslate"><span class="pre">intspace</span></code></a>(*args[, dtype])</p></td>
 <td><p>Like <code class="docutils literal notranslate"><span class="pre">np.linspace</span></code> but round to integers.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="psweep.psweep.is_seq.html#psweep.psweep.is_seq" title="psweep.psweep.is_seq"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_seq</span></code></a>(seq)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="psweep.psweep.is_seq.html#psweep.psweep.is_seq" title="psweep.psweep.is_seq"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_seq</span></code></a>(seq)</p></td>
 <td><p><dl class="field-list simple">
 <dt class="field-odd">rtype<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
@@ -486,53 +500,53 @@ document.write(`
 </dl>
 </p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="psweep.psweep.itr.html#psweep.psweep.itr" title="psweep.psweep.itr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">itr</span></code></a>(func)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="psweep.psweep.itr.html#psweep.psweep.itr" title="psweep.psweep.itr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">itr</span></code></a>(func)</p></td>
 <td><p>Wrap <cite>func</cite> to allow pasing args not as sequence.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="psweep.psweep.itr2params.html#psweep.psweep.itr2params" title="psweep.psweep.itr2params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">itr2params</span></code></a>(loops)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="psweep.psweep.itr2params.html#psweep.psweep.itr2params" title="psweep.psweep.itr2params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">itr2params</span></code></a>(loops)</p></td>
 <td><p>Transform the (possibly nested) result of a loop over plists (or whatever has been used to create psets) to a proper list of psets by flattening and merging dicts.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="psweep.psweep.logspace.html#psweep.psweep.logspace" title="psweep.psweep.logspace"><code class="xref py py-obj docutils literal notranslate"><span class="pre">logspace</span></code></a>(start, stop[, num, offset, log_func])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="psweep.psweep.logspace.html#psweep.psweep.logspace" title="psweep.psweep.logspace"><code class="xref py py-obj docutils literal notranslate"><span class="pre">logspace</span></code></a>(start, stop[, num, offset, log_func])</p></td>
 <td><p>Like <code class="docutils literal notranslate"><span class="pre">numpy.logspace</span></code> but</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="psweep.psweep.makedirs.html#psweep.psweep.makedirs" title="psweep.psweep.makedirs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">makedirs</span></code></a>(path)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="psweep.psweep.makedirs.html#psweep.psweep.makedirs" title="psweep.psweep.makedirs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">makedirs</span></code></a>(path)</p></td>
 <td><p>Create <cite>path</cite> recursively, no questions asked.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="psweep.psweep.merge_dicts.html#psweep.psweep.merge_dicts" title="psweep.psweep.merge_dicts"><code class="xref py py-obj docutils literal notranslate"><span class="pre">merge_dicts</span></code></a>(args)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="psweep.psweep.merge_dicts.html#psweep.psweep.merge_dicts" title="psweep.psweep.merge_dicts"><code class="xref py py-obj docutils literal notranslate"><span class="pre">merge_dicts</span></code></a>(args)</p></td>
 <td><p>Start with an empty dict and update with each arg dict left-to-right.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="psweep.psweep.pgrid.html#psweep.psweep.pgrid" title="psweep.psweep.pgrid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pgrid</span></code></a>(plists)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="psweep.psweep.pgrid.html#psweep.psweep.pgrid" title="psweep.psweep.pgrid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pgrid</span></code></a>(plists)</p></td>
 <td><p>Convenience function for the most common loop: nested loops with <code class="docutils literal notranslate"><span class="pre">itertools.product</span></code>: <code class="docutils literal notranslate"><span class="pre">ps.itr2params(itertools.product(a,b,c,...))</span></code>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="psweep.psweep.pickle_read.html#psweep.psweep.pickle_read" title="psweep.psweep.pickle_read"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pickle_read</span></code></a>(fn)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="psweep.psweep.pickle_read.html#psweep.psweep.pickle_read" title="psweep.psweep.pickle_read"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pickle_read</span></code></a>(fn)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="psweep.psweep.pickle_write.html#psweep.psweep.pickle_write" title="psweep.psweep.pickle_write"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pickle_write</span></code></a>(fn, obj)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="psweep.psweep.pickle_write.html#psweep.psweep.pickle_write" title="psweep.psweep.pickle_write"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pickle_write</span></code></a>(fn, obj)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="psweep.psweep.plist.html#psweep.psweep.plist" title="psweep.psweep.plist"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plist</span></code></a>(name, seq)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="psweep.psweep.plist.html#psweep.psweep.plist" title="psweep.psweep.plist"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plist</span></code></a>(name, seq)</p></td>
 <td><p>Create a list of single-item dicts holding the parameter name and a value.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="psweep.psweep.prep_batch.html#psweep.psweep.prep_batch" title="psweep.psweep.prep_batch"><code class="xref py py-obj docutils literal notranslate"><span class="pre">prep_batch</span></code></a>(params, *[, calc_templ_dir, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="psweep.psweep.prep_batch.html#psweep.psweep.prep_batch" title="psweep.psweep.prep_batch"><code class="xref py py-obj docutils literal notranslate"><span class="pre">prep_batch</span></code></a>(params, *[, calc_templ_dir, ...])</p></td>
 <td><p>Write files based on templates.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="psweep.psweep.pset_hash.html#psweep.psweep.pset_hash" title="psweep.psweep.pset_hash"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pset_hash</span></code></a>(dct[, method, raise_error, ...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="psweep.psweep.pset_hash.html#psweep.psweep.pset_hash" title="psweep.psweep.pset_hash"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pset_hash</span></code></a>(dct[, method, raise_error, ...])</p></td>
 <td><p>Reproducible hash of a dict for usage in database (hash of a <cite>pset</cite>).</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="psweep.psweep.run.html#psweep.psweep.run" title="psweep.psweep.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code></a>(worker, params[, df, poolsize, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="psweep.psweep.run.html#psweep.psweep.run" title="psweep.psweep.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code></a>(worker, params[, df, poolsize, ...])</p></td>
 <td><p>Call <cite>worker</cite> for each <cite>pset</cite> in <cite>params</cite>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="psweep.psweep.run_local.html#psweep.psweep.run_local" title="psweep.psweep.run_local"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_local</span></code></a>(*args, **kwds)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="psweep.psweep.run_local.html#psweep.psweep.run_local" title="psweep.psweep.run_local"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_local</span></code></a>(*args, **kwds)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="psweep.psweep.stargrid.html#psweep.psweep.stargrid" title="psweep.psweep.stargrid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">stargrid</span></code></a>(const, vary[, vary_labels, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="psweep.psweep.stargrid.html#psweep.psweep.stargrid" title="psweep.psweep.stargrid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">stargrid</span></code></a>(const, vary[, vary_labels, ...])</p></td>
 <td><p>Helper to create a specific param sampling pattern.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="psweep.psweep.system.html#psweep.psweep.system" title="psweep.psweep.system"><code class="xref py py-obj docutils literal notranslate"><span class="pre">system</span></code></a>(cmd, **kwds)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="psweep.psweep.system.html#psweep.psweep.system" title="psweep.psweep.system"><code class="xref py py-obj docutils literal notranslate"><span class="pre">system</span></code></a>(cmd, **kwds)</p></td>
 <td><p>Call shell command.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="psweep.psweep.worker_wrapper.html#psweep.psweep.worker_wrapper" title="psweep.psweep.worker_wrapper"><code class="xref py py-obj docutils literal notranslate"><span class="pre">worker_wrapper</span></code></a>(pset, worker[, tmpsave, ...])</p></td>
-<td><p>Add special fields to pset.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="psweep.psweep.worker_wrapper.html#psweep.psweep.worker_wrapper" title="psweep.psweep.worker_wrapper"><code class="xref py py-obj docutils literal notranslate"><span class="pre">worker_wrapper</span></code></a>(pset, worker, *[, tmpsave, ...])</p></td>
+<td><p>Add special fields to <cite>pset</cite> which can be determined at call time.</p></td>
 </tr>
 </tbody>
 </table>

@@ -184,7 +184,6 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.PANDAS_TIME_UNIT.html">psweep.psweep.PANDAS_TIME_UNIT</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.PSET_HASH_ALG.html">psweep.psweep.PSET_HASH_ALG</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.PsweepHashError.html">psweep.psweep.PsweepHashError</a></li>
-<li class="toctree-l3"><a class="reference internal" href="psweep.psweep.add_hashes.html">psweep.psweep.add_hashes</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.check_calc_dir.html">psweep.psweep.check_calc_dir</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.df_filter_conds.html">psweep.psweep.df_filter_conds</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.df_print.html">psweep.psweep.df_print</a></li>
@@ -199,6 +198,8 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.fullpath.html">psweep.psweep.fullpath</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.gather_calc_templates.html">psweep.psweep.gather_calc_templates</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.gather_machines.html">psweep.psweep.gather_machines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="psweep.psweep.get_many_uuids.html">psweep.psweep.get_many_uuids</a></li>
+<li class="toctree-l3"><a class="reference internal" href="psweep.psweep.get_uuid.html">psweep.psweep.get_uuid</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.git_clean.html">psweep.psweep.git_clean</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.git_enter.html">psweep.psweep.git_enter</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.git_exit.html">psweep.psweep.git_exit</a></li>
@@ -410,11 +411,12 @@ read existing database file from disk if found</p></li>
 </ul>
 </p></li>
 <li><p><strong>dask_client</strong> – A dask client. Use this or <code class="docutils literal notranslate"><span class="pre">poolsize</span></code>.</p></li>
-<li><p><strong>save</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – save final DataFrame to <code class="docutils literal notranslate"><span class="pre">&lt;database_dir&gt;/&lt;database_basename&gt;</span></code> (pickle
-format only), default: “calc/database.pk”, see also <cite>database_dir</cite>,
-<cite>calc_dir</cite> and <cite>database_basename</cite></p></li>
-<li><p><strong>tmpsave</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – save results from each <cite>pset</cite> in <cite>params</cite> (the current DataFrame row) to
-<code class="docutils literal notranslate"><span class="pre">&lt;calc_dir&gt;/tmpsave/&lt;run_id&gt;/&lt;pset_id&gt;.pk</span></code> (pickle format only)</p></li>
+<li><p><strong>save</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – save final <code class="docutils literal notranslate"><span class="pre">DataFrame</span></code> to <code class="docutils literal notranslate"><span class="pre">&lt;database_dir&gt;/&lt;database_basename&gt;</span></code>
+(pickle format only), default: “calc/database.pk”, see also
+<cite>database_dir</cite>, <cite>calc_dir</cite> and <cite>database_basename</cite></p></li>
+<li><p><strong>tmpsave</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – save the result dict from each <code class="docutils literal notranslate"><span class="pre">pset.update(worker(pset))</span></code> from each
+<cite>pset</cite> to <code class="docutils literal notranslate"><span class="pre">&lt;calc_dir&gt;/tmpsave/&lt;run_id&gt;/&lt;pset_id&gt;.pk</span></code> (pickle format
+only), the data is a dict, not a DataFrame row</p></li>
 <li><p><strong>verbose</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]) – <ul>
 <li><p>bool : print the current DataFrame row</p></li>
 <li><p>sequence : list of DataFrame column names, print the row but only

@@ -184,7 +184,6 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.PANDAS_TIME_UNIT.html">psweep.psweep.PANDAS_TIME_UNIT</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.PSET_HASH_ALG.html">psweep.psweep.PSET_HASH_ALG</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.PsweepHashError.html">psweep.psweep.PsweepHashError</a></li>
-<li class="toctree-l3"><a class="reference internal" href="psweep.psweep.add_hashes.html">psweep.psweep.add_hashes</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.check_calc_dir.html">psweep.psweep.check_calc_dir</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.df_filter_conds.html">psweep.psweep.df_filter_conds</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.df_print.html">psweep.psweep.df_print</a></li>
@@ -199,6 +198,8 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.fullpath.html">psweep.psweep.fullpath</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.gather_calc_templates.html">psweep.psweep.gather_calc_templates</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.gather_machines.html">psweep.psweep.gather_machines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="psweep.psweep.get_many_uuids.html">psweep.psweep.get_many_uuids</a></li>
+<li class="toctree-l3"><a class="reference internal" href="psweep.psweep.get_uuid.html">psweep.psweep.get_uuid</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.git_clean.html">psweep.psweep.git_clean</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.git_enter.html">psweep.psweep.git_enter</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.git_exit.html">psweep.psweep.git_exit</a></li>
@@ -403,7 +404,7 @@ non-reduced params in that case. If you want to fail at hash errors, use</p>
 </pre></div>
 </div>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">psweep</span> <span class="kn">import</span> <span class="n">psweep</span> <span class="k">as</span> <span class="n">ps</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">psweep</span> <span class="k">as</span> <span class="nn">ps</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">const</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">77</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="o">=</span><span class="n">ps</span><span class="o">.</span><span class="n">plist</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">b</span><span class="o">=</span><span class="n">ps</span><span class="o">.</span><span class="n">plist</span><span class="p">(</span><span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mi">77</span><span class="p">,</span><span class="mi">88</span><span class="p">,</span><span class="mi">99</span><span class="p">])</span>

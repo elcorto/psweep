@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>psweep.psweep.intspace &#8212; psweep</title>
+    <title>psweep.psweep.get_uuid &#8212; psweep</title>
   
   
   
@@ -62,11 +62,11 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../_static/sphinx-thebe.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'generated/api/psweep.psweep.intspace';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'generated/api/psweep.psweep.get_uuid';</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="psweep.psweep.is_seq" href="psweep.psweep.is_seq.html" />
-    <link rel="prev" title="psweep.psweep.in_git_repo" href="psweep.psweep.in_git_repo.html" />
+    <link rel="next" title="psweep.psweep.git_clean" href="psweep.psweep.git_clean.html" />
+    <link rel="prev" title="psweep.psweep.get_many_uuids" href="psweep.psweep.get_many_uuids.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -199,12 +199,12 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.gather_calc_templates.html">psweep.psweep.gather_calc_templates</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.gather_machines.html">psweep.psweep.gather_machines</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.get_many_uuids.html">psweep.psweep.get_many_uuids</a></li>
-<li class="toctree-l3"><a class="reference internal" href="psweep.psweep.get_uuid.html">psweep.psweep.get_uuid</a></li>
+<li class="toctree-l3 current active"><a class="current reference internal" href="#">psweep.psweep.get_uuid</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.git_clean.html">psweep.psweep.git_clean</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.git_enter.html">psweep.psweep.git_enter</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.git_exit.html">psweep.psweep.git_exit</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.in_git_repo.html">psweep.psweep.in_git_repo</a></li>
-<li class="toctree-l3 current active"><a class="current reference internal" href="#">psweep.psweep.intspace</a></li>
+<li class="toctree-l3"><a class="reference internal" href="psweep.psweep.intspace.html">psweep.psweep.intspace</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.is_seq.html">psweep.psweep.is_seq</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.itr.html">psweep.psweep.itr</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.itr2params.html">psweep.psweep.itr2params</a></li>
@@ -295,7 +295,7 @@ const thebe_selector_output = ".output, .cell_output"
       
       
       
-      <li><a href="../../_sources/generated/api/psweep.psweep.intspace.rst" target="_blank"
+      <li><a href="../../_sources/generated/api/psweep.psweep.get_uuid.rst" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -375,7 +375,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>psweep.psweep.intspace</h1>
+    <h1>psweep.psweep.get_uuid</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -389,20 +389,14 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <section id="psweep-psweep-intspace">
-<h1>psweep.psweep.intspace<a class="headerlink" href="#psweep-psweep-intspace" title="Permalink to this heading">#</a></h1>
+  <section id="psweep-psweep-get-uuid">
+<h1>psweep.psweep.get_uuid<a class="headerlink" href="#psweep-psweep-get-uuid" title="Permalink to this heading">#</a></h1>
 <dl class="py function">
-<dt class="sig sig-object py" id="psweep.psweep.intspace">
-<span class="sig-prename descclassname"><span class="pre">psweep.psweep.</span></span><span class="sig-name descname"><span class="pre">intspace</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">*args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype=&lt;class</span> <span class="pre">'numpy.int64'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">**kwds</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/psweep/psweep.html#intspace"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psweep.psweep.intspace" title="Permalink to this definition">#</a></dt>
-<dd><p>Like <code class="docutils literal notranslate"><span class="pre">np.linspace</span></code> but round to integers.</p>
-<p>The length of the returned array may be lower than specified by <cite>num</cite> if
-rounding to ints results in duplicates.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>*args</strong> – Same as <code class="docutils literal notranslate"><span class="pre">np.linspace</span></code></p></li>
-<li><p><strong>**kwds</strong> – Same as <code class="docutils literal notranslate"><span class="pre">np.linspace</span></code></p></li>
-</ul>
+<dt class="sig sig-object py" id="psweep.psweep.get_uuid">
+<span class="sig-prename descclassname"><span class="pre">psweep.psweep.</span></span><span class="sig-name descname"><span class="pre">get_uuid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">retry</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">existing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/psweep/psweep.html#get_uuid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psweep.psweep.get_uuid" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -440,20 +434,20 @@ rounding to ints results in duplicates.</p>
                   <!-- Previous / next buttons -->
 <div class="prev-next-area">
     <a class="left-prev"
-       href="psweep.psweep.in_git_repo.html"
+       href="psweep.psweep.get_many_uuids.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">psweep.psweep.in_git_repo</p>
+        <p class="prev-next-title">psweep.psweep.get_many_uuids</p>
       </div>
     </a>
     <a class="right-next"
-       href="psweep.psweep.is_seq.html"
+       href="psweep.psweep.git_clean.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">psweep.psweep.is_seq</p>
+        <p class="prev-next-title">psweep.psweep.git_clean</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

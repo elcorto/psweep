@@ -183,7 +183,6 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.PANDAS_TIME_UNIT.html">psweep.psweep.PANDAS_TIME_UNIT</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.PSET_HASH_ALG.html">psweep.psweep.PSET_HASH_ALG</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.PsweepHashError.html">psweep.psweep.PsweepHashError</a></li>
-<li class="toctree-l3"><a class="reference internal" href="psweep.psweep.add_hashes.html">psweep.psweep.add_hashes</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.check_calc_dir.html">psweep.psweep.check_calc_dir</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.df_filter_conds.html">psweep.psweep.df_filter_conds</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.df_print.html">psweep.psweep.df_print</a></li>
@@ -198,6 +197,8 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.fullpath.html">psweep.psweep.fullpath</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.gather_calc_templates.html">psweep.psweep.gather_calc_templates</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.gather_machines.html">psweep.psweep.gather_machines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="psweep.psweep.get_many_uuids.html">psweep.psweep.get_many_uuids</a></li>
+<li class="toctree-l3"><a class="reference internal" href="psweep.psweep.get_uuid.html">psweep.psweep.get_uuid</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.git_clean.html">psweep.psweep.git_clean</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.git_enter.html">psweep.psweep.git_enter</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.git_exit.html">psweep.psweep.git_exit</a></li>
@@ -391,9 +392,15 @@ document.write(`
 <h1>psweep.psweep.worker_wrapper<a class="headerlink" href="#psweep-psweep-worker-wrapper" title="Permalink to this heading">#</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="psweep.psweep.worker_wrapper">
-<span class="sig-prename descclassname"><span class="pre">psweep.psweep.</span></span><span class="sig-name descname"><span class="pre">worker_wrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">worker</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tmpsave</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calc_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">simulate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pset_seq</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">nan</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_seq</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/psweep/psweep.html#worker_wrapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psweep.psweep.worker_wrapper" title="Permalink to this definition">#</a></dt>
-<dd><p>Add special fields to pset. Call worker on exactly one pset. Return
-DataFrame row built from <code class="docutils literal notranslate"><span class="pre">pset.update(worker(pset))</span></code>.</p>
+<span class="sig-prename descclassname"><span class="pre">psweep.psweep.</span></span><span class="sig-name descname"><span class="pre">worker_wrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">worker</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tmpsave</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">simulate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/psweep/psweep.html#worker_wrapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psweep.psweep.worker_wrapper" title="Permalink to this definition">#</a></dt>
+<dd><p>Add special fields to <cite>pset</cite> which can be determined at call time.</p>
+<p>Call worker on exactly one pset. Return updated pset built from
+<code class="docutils literal notranslate"><span class="pre">pset.update(worker(pset))</span></code>. Do verbose printing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>

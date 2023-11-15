@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>psweep.psweep.add_hashes &#8212; psweep</title>
+    <title>psweep.psweep.get_many_uuids &#8212; psweep</title>
   
   
   
@@ -62,11 +62,11 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../_static/sphinx-thebe.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'generated/api/psweep.psweep.add_hashes';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'generated/api/psweep.psweep.get_many_uuids';</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="psweep.psweep.check_calc_dir" href="psweep.psweep.check_calc_dir.html" />
-    <link rel="prev" title="psweep.psweep.PsweepHashError" href="psweep.psweep.PsweepHashError.html" />
+    <link rel="next" title="psweep.psweep.get_uuid" href="psweep.psweep.get_uuid.html" />
+    <link rel="prev" title="psweep.psweep.gather_machines" href="psweep.psweep.gather_machines.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -184,7 +184,6 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.PANDAS_TIME_UNIT.html">psweep.psweep.PANDAS_TIME_UNIT</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.PSET_HASH_ALG.html">psweep.psweep.PSET_HASH_ALG</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.PsweepHashError.html">psweep.psweep.PsweepHashError</a></li>
-<li class="toctree-l3 current active"><a class="current reference internal" href="#">psweep.psweep.add_hashes</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.check_calc_dir.html">psweep.psweep.check_calc_dir</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.df_filter_conds.html">psweep.psweep.df_filter_conds</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.df_print.html">psweep.psweep.df_print</a></li>
@@ -199,6 +198,8 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.fullpath.html">psweep.psweep.fullpath</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.gather_calc_templates.html">psweep.psweep.gather_calc_templates</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.gather_machines.html">psweep.psweep.gather_machines</a></li>
+<li class="toctree-l3 current active"><a class="current reference internal" href="#">psweep.psweep.get_many_uuids</a></li>
+<li class="toctree-l3"><a class="reference internal" href="psweep.psweep.get_uuid.html">psweep.psweep.get_uuid</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.git_clean.html">psweep.psweep.git_clean</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.git_enter.html">psweep.psweep.git_enter</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.git_exit.html">psweep.psweep.git_exit</a></li>
@@ -294,7 +295,7 @@ const thebe_selector_output = ".output, .cell_output"
       
       
       
-      <li><a href="../../_sources/generated/api/psweep.psweep.add_hashes.rst" target="_blank"
+      <li><a href="../../_sources/generated/api/psweep.psweep.get_many_uuids.rst" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -374,7 +375,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>psweep.psweep.add_hashes</h1>
+    <h1>psweep.psweep.get_many_uuids</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -388,16 +389,14 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <section id="psweep-psweep-add-hashes">
-<h1>psweep.psweep.add_hashes<a class="headerlink" href="#psweep-psweep-add-hashes" title="Permalink to this heading">#</a></h1>
+  <section id="psweep-psweep-get-many-uuids">
+<h1>psweep.psweep.get_many_uuids<a class="headerlink" href="#psweep-psweep-get-many-uuids" title="Permalink to this heading">#</a></h1>
 <dl class="py function">
-<dt class="sig sig-object py" id="psweep.psweep.add_hashes">
-<span class="sig-prename descclassname"><span class="pre">psweep.psweep.</span></span><span class="sig-name descname"><span class="pre">add_hashes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/psweep/psweep.html#add_hashes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psweep.psweep.add_hashes" title="Permalink to this definition">#</a></dt>
-<dd><p>Calculate hash for each pset and set pset[“_pset_hash”]. Return new
-params list.</p>
-<dl class="field-list simple">
+<dt class="sig sig-object py" id="psweep.psweep.get_many_uuids">
+<span class="sig-prename descclassname"><span class="pre">psweep.psweep.</span></span><span class="sig-name descname"><span class="pre">get_many_uuids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">retry</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">existing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/psweep/psweep.html#get_many_uuids"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psweep.psweep.get_many_uuids" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>]</p>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -435,20 +434,20 @@ params list.</p>
                   <!-- Previous / next buttons -->
 <div class="prev-next-area">
     <a class="left-prev"
-       href="psweep.psweep.PsweepHashError.html"
+       href="psweep.psweep.gather_machines.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">psweep.psweep.PsweepHashError</p>
+        <p class="prev-next-title">psweep.psweep.gather_machines</p>
       </div>
     </a>
     <a class="right-next"
-       href="psweep.psweep.check_calc_dir.html"
+       href="psweep.psweep.get_uuid.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">psweep.psweep.check_calc_dir</p>
+        <p class="prev-next-title">psweep.psweep.get_uuid</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

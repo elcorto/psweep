@@ -181,7 +181,6 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.PANDAS_TIME_UNIT.html">psweep.psweep.PANDAS_TIME_UNIT</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.PSET_HASH_ALG.html">psweep.psweep.PSET_HASH_ALG</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.PsweepHashError.html">psweep.psweep.PsweepHashError</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.add_hashes.html">psweep.psweep.add_hashes</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.check_calc_dir.html">psweep.psweep.check_calc_dir</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.df_filter_conds.html">psweep.psweep.df_filter_conds</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.df_print.html">psweep.psweep.df_print</a></li>
@@ -196,6 +195,8 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.fullpath.html">psweep.psweep.fullpath</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.gather_calc_templates.html">psweep.psweep.gather_calc_templates</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.gather_machines.html">psweep.psweep.gather_machines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.get_many_uuids.html">psweep.psweep.get_many_uuids</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.get_uuid.html">psweep.psweep.get_uuid</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.git_clean.html">psweep.psweep.git_clean</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.git_enter.html">psweep.psweep.git_enter</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.git_exit.html">psweep.psweep.git_exit</a></li>
@@ -346,21 +347,20 @@ document.write(`
 <span class="kn">import</span> <span class="nn">multiprocessing</span> <span class="k">as</span> <span class="nn">mp</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">pickle</span>
+<span class="kn">import</span> <span class="nn">platform</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">shutil</span>
 <span class="kn">import</span> <span class="nn">string</span>
 <span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">import</span> <span class="nn">uuid</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
-<span class="kn">import</span> <span class="nn">yaml</span>
-<span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">import</span> <span class="nn">platform</span>
-
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
 <span class="kn">import</span> <span class="nn">joblib</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">yaml</span>
 
 <span class="n">pj</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span>
 
@@ -422,6 +422,7 @@ document.write(`
 <span class="sd">    Assuming ``func()`` requires a sequence as input: ``func([a,b,c])``, allow</span>
 <span class="sd">    passing ``func(a,b,c)``.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="nd">@wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
         <span class="c1"># (arg1,)</span>
@@ -549,17 +550,6 @@ document.write(`
             <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span></div>
 
 
-<div class="viewcode-block" id="add_hashes"><a class="viewcode-back" href="../../generated/api/psweep.psweep.add_hashes.html#psweep.psweep.add_hashes">[docs]</a><span class="k">def</span> <span class="nf">add_hashes</span><span class="p">(</span><span class="n">params</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">dict</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate hash for each pset and set pset[&quot;_pset_hash&quot;]. Return new</span>
-<span class="sd">    params list.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">new_params</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">pset</span> <span class="ow">in</span> <span class="n">params</span><span class="p">:</span>
-        <span class="n">pset</span><span class="p">[</span><span class="s2">&quot;_pset_hash&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pset_hash</span><span class="p">(</span><span class="n">pset</span><span class="p">)</span>
-        <span class="n">new_params</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pset</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">new_params</span></div>
-
-
 <div class="viewcode-block" id="check_calc_dir"><a class="viewcode-back" href="../../generated/api/psweep.psweep.check_calc_dir.html#psweep.psweep.check_calc_dir">[docs]</a><span class="k">def</span> <span class="nf">check_calc_dir</span><span class="p">(</span><span class="n">calc_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Check calc dir for consistency with database.</span>
 
@@ -656,6 +646,35 @@ document.write(`
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">assert</span> <span class="s2">&quot;dtype&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kwds</span><span class="p">,</span> <span class="s2">&quot;Got &#39;dtype&#39; multiple times.&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">dtype</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="get_uuid"><a class="viewcode-back" href="../../generated/api/psweep.psweep.get_uuid.html#psweep.psweep.get_uuid">[docs]</a><span class="k">def</span> <span class="nf">get_uuid</span><span class="p">(</span><span class="n">retry</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">existing</span><span class="p">:</span> <span class="n">Sequence</span> <span class="o">=</span> <span class="p">[])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="n">ret</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">())</span>
+    <span class="k">while</span> <span class="n">ret</span> <span class="ow">in</span> <span class="n">existing</span><span class="p">:</span>
+        <span class="n">ret</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">())</span>
+        <span class="n">retry</span> <span class="o">-=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">retry</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Failed to generate UUID after </span><span class="si">{</span><span class="n">retry</span><span class="si">}</span><span class="s2"> attempts. &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;Existing UUIDs: </span><span class="si">{</span><span class="n">existing</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+    <span class="k">return</span> <span class="n">ret</span></div>
+
+
+<div class="viewcode-block" id="get_many_uuids"><a class="viewcode-back" href="../../generated/api/psweep.psweep.get_many_uuids.html#psweep.psweep.get_many_uuids">[docs]</a><span class="k">def</span> <span class="nf">get_many_uuids</span><span class="p">(</span>
+    <span class="n">num</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">retry</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">existing</span><span class="p">:</span> <span class="n">Sequence</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+    <span class="n">generate</span> <span class="o">=</span> <span class="k">lambda</span><span class="p">:</span> <span class="nb">set</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">())</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num</span><span class="p">)])</span>
+    <span class="n">ret</span> <span class="o">=</span> <span class="n">generate</span><span class="p">()</span>
+    <span class="k">while</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ret</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">num</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ret</span> <span class="o">&amp;</span> <span class="nb">set</span><span class="p">(</span><span class="n">existing</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="n">ret</span> <span class="o">=</span> <span class="n">generate</span><span class="p">()</span>
+        <span class="n">retry</span> <span class="o">-=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">retry</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Failed to generate </span><span class="si">{</span><span class="n">num</span><span class="si">}</span><span class="s2"> UUIDs after </span><span class="si">{</span><span class="n">retry</span><span class="si">}</span><span class="s2"> attempts. &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;Existing UUIDs: </span><span class="si">{</span><span class="n">existing</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">ret</span><span class="p">)</span></div>
 
 
 <span class="c1"># -----------------------------------------------------------------------------</span>
@@ -1080,7 +1099,7 @@ document.write(`
 
 <div class="viewcode-block" id="stargrid"><a class="viewcode-back" href="../../generated/api/psweep.psweep.stargrid.html#psweep.psweep.stargrid">[docs]</a><span class="k">def</span> <span class="nf">stargrid</span><span class="p">(</span>
     <span class="n">const</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
-    <span class="n">vary</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">dict</span><span class="p">],</span>
+    <span class="n">vary</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="nb">dict</span><span class="p">]],</span>
     <span class="n">vary_labels</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">vary_label_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;_vary&quot;</span><span class="p">,</span>
     <span class="n">skip_dups</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
@@ -1099,7 +1118,7 @@ document.write(`
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
-<span class="sd">    &gt;&gt;&gt; from psweep import psweep as ps</span>
+<span class="sd">    &gt;&gt;&gt; import psweep as ps</span>
 <span class="sd">    &gt;&gt;&gt; const=dict(a=1, b=77, c=11)</span>
 <span class="sd">    &gt;&gt;&gt; a=ps.plist(&quot;a&quot;, [1,2,3,4])</span>
 <span class="sd">    &gt;&gt;&gt; b=ps.plist(&quot;b&quot;, [77,88,99])</span>
@@ -1185,48 +1204,42 @@ document.write(`
 <div class="viewcode-block" id="worker_wrapper"><a class="viewcode-back" href="../../generated/api/psweep.psweep.worker_wrapper.html#psweep.psweep.worker_wrapper">[docs]</a><span class="k">def</span> <span class="nf">worker_wrapper</span><span class="p">(</span>
     <span class="n">pset</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
     <span class="n">worker</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
     <span class="n">tmpsave</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">verbose</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">run_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">calc_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">simulate</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-    <span class="n">pset_seq</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
-    <span class="n">run_seq</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<span class="p">):</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Add special fields to pset. Call worker on exactly one pset. Return</span>
-<span class="sd">    DataFrame row built from ``pset.update(worker(pset))``.</span>
+<span class="sd">    Add special fields to `pset` which can be determined at call time.</span>
+
+<span class="sd">    Call worker on exactly one pset. Return updated pset built from</span>
+<span class="sd">    ``pset.update(worker(pset))``. Do verbose printing.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">assert</span> <span class="n">run_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-    <span class="k">assert</span> <span class="n">calc_dir</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-    <span class="n">pset_id</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">())</span>
-    <span class="n">_pset</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">pset</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="s2">&quot;_pset_id&quot;</span> <span class="ow">in</span> <span class="n">pset</span>
+    <span class="k">assert</span> <span class="s2">&quot;_run_id&quot;</span> <span class="ow">in</span> <span class="n">pset</span>
+    <span class="k">assert</span> <span class="s2">&quot;_calc_dir&quot;</span> <span class="ow">in</span> <span class="n">pset</span>
+
     <span class="n">time_start</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">(),</span> <span class="n">unit</span><span class="o">=</span><span class="n">PANDAS_TIME_UNIT</span><span class="p">)</span>
-    <span class="n">update</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;_run_id&quot;</span><span class="p">:</span> <span class="n">run_id</span><span class="p">,</span>
-        <span class="s2">&quot;_pset_id&quot;</span><span class="p">:</span> <span class="n">pset_id</span><span class="p">,</span>
-        <span class="s2">&quot;_calc_dir&quot;</span><span class="p">:</span> <span class="n">calc_dir</span><span class="p">,</span>
-        <span class="s2">&quot;_time_utc&quot;</span><span class="p">:</span> <span class="n">time_start</span><span class="p">,</span>
-        <span class="s2">&quot;_pset_seq&quot;</span><span class="p">:</span> <span class="n">pset_seq</span><span class="p">,</span>
-        <span class="s2">&quot;_run_seq&quot;</span><span class="p">:</span> <span class="n">run_seq</span><span class="p">,</span>
-        <span class="s2">&quot;_exec_host&quot;</span><span class="p">:</span> <span class="n">platform</span><span class="o">.</span><span class="n">node</span><span class="p">(),</span>
-    <span class="p">}</span>
-    <span class="n">_pset</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">update</span><span class="p">)</span>
+    <span class="n">pset</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">_time_utc</span><span class="o">=</span><span class="n">time_start</span><span class="p">,</span> <span class="n">_exec_host</span><span class="o">=</span><span class="n">platform</span><span class="o">.</span><span class="n">node</span><span class="p">())</span>
     <span class="k">if</span> <span class="n">verbose</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">df_row_print</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span><span class="n">_pset</span><span class="p">],</span> <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="n">time_start</span><span class="p">])</span>
+        <span class="n">df_row_print</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span><span class="n">pset</span><span class="p">],</span> <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="n">time_start</span><span class="p">])</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">verbose</span><span class="p">,</span> <span class="nb">bool</span><span class="p">)</span> <span class="ow">and</span> <span class="n">verbose</span><span class="p">:</span>
             <span class="n">df_print</span><span class="p">(</span><span class="n">df_row_print</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">is_seq</span><span class="p">(</span><span class="n">verbose</span><span class="p">):</span>
             <span class="n">df_print</span><span class="p">(</span><span class="n">df_row_print</span><span class="p">[</span><span class="n">verbose</span><span class="p">],</span> <span class="n">index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">simulate</span><span class="p">:</span>
-        <span class="n">_pset</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">worker</span><span class="p">(</span><span class="n">_pset</span><span class="p">))</span>
-    <span class="n">_pset</span><span class="p">[</span><span class="s2">&quot;_pset_runtime&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t0</span>
-    <span class="n">df_row</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span><span class="n">_pset</span><span class="p">])</span>
+        <span class="n">pset</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">worker</span><span class="p">(</span><span class="n">pset</span><span class="p">))</span>
+    <span class="n">pset</span><span class="p">[</span><span class="s2">&quot;_pset_runtime&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t0</span>
     <span class="k">if</span> <span class="n">tmpsave</span><span class="p">:</span>
-        <span class="n">fn</span> <span class="o">=</span> <span class="n">pj</span><span class="p">(</span><span class="n">calc_dir</span><span class="p">,</span> <span class="s2">&quot;tmpsave&quot;</span><span class="p">,</span> <span class="n">run_id</span><span class="p">,</span> <span class="n">pset_id</span> <span class="o">+</span> <span class="s2">&quot;.pk&quot;</span><span class="p">)</span>
-        <span class="n">df_write</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">df_row</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">df_row</span></div>
+        <span class="n">fn</span> <span class="o">=</span> <span class="n">pj</span><span class="p">(</span>
+            <span class="n">pset</span><span class="p">[</span><span class="s2">&quot;_calc_dir&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;tmpsave&quot;</span><span class="p">,</span>
+            <span class="n">pset</span><span class="p">[</span><span class="s2">&quot;_run_id&quot;</span><span class="p">],</span>
+            <span class="n">pset</span><span class="p">[</span><span class="s2">&quot;_pset_id&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;.pk&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">pickle_write</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">pset</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">pset</span></div>
 
 
 <div class="viewcode-block" id="run"><a class="viewcode-back" href="../../generated/api/psweep.psweep.run.html#psweep.psweep.run">[docs]</a><span class="k">def</span> <span class="nf">run</span><span class="p">(</span>
@@ -1267,12 +1280,13 @@ document.write(`
 <span class="sd">    dask_client</span>
 <span class="sd">        A dask client. Use this or ``poolsize``.</span>
 <span class="sd">    save</span>
-<span class="sd">        save final DataFrame to ``&lt;database_dir&gt;/&lt;database_basename&gt;`` (pickle</span>
-<span class="sd">        format only), default: &quot;calc/database.pk&quot;, see also `database_dir`,</span>
-<span class="sd">        `calc_dir` and `database_basename`</span>
+<span class="sd">        save final ``DataFrame`` to ``&lt;database_dir&gt;/&lt;database_basename&gt;``</span>
+<span class="sd">        (pickle format only), default: &quot;calc/database.pk&quot;, see also</span>
+<span class="sd">        `database_dir`, `calc_dir` and `database_basename`</span>
 <span class="sd">    tmpsave</span>
-<span class="sd">        save results from each `pset` in `params` (the current DataFrame row) to</span>
-<span class="sd">        ``&lt;calc_dir&gt;/tmpsave/&lt;run_id&gt;/&lt;pset_id&gt;.pk`` (pickle format only)</span>
+<span class="sd">        save the result dict from each ``pset.update(worker(pset))`` from each</span>
+<span class="sd">        `pset` to ``&lt;calc_dir&gt;/tmpsave/&lt;run_id&gt;/&lt;pset_id&gt;.pk`` (pickle format</span>
+<span class="sd">        only), the data is a dict, not a DataFrame row</span>
 <span class="sd">    verbose</span>
 <span class="sd">        * bool : print the current DataFrame row</span>
 <span class="sd">        * sequence : list of DataFrame column names, print the row but only</span>
@@ -1306,6 +1320,9 @@ document.write(`
 <span class="sd">    df</span>
 <span class="sd">        The database build from `params`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Don&#39;t in-place alter dicts in params we get as input.</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
 
     <span class="n">database_dir</span> <span class="o">=</span> <span class="n">calc_dir</span> <span class="k">if</span> <span class="n">database_dir</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">database_dir</span>
 
@@ -1353,56 +1370,45 @@ document.write(`
         <span class="p">)</span>
         <span class="n">shutil</span><span class="o">.</span><span class="n">copytree</span><span class="p">(</span><span class="n">calc_dir</span><span class="p">,</span> <span class="n">dst</span><span class="p">)</span>
 
-    <span class="n">params</span> <span class="o">=</span> <span class="n">add_hashes</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">pset</span> <span class="ow">in</span> <span class="n">params</span><span class="p">:</span>
+        <span class="n">pset</span><span class="p">[</span><span class="s2">&quot;_pset_hash&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pset_hash</span><span class="p">(</span><span class="n">pset</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">skip_dups</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">params</span> <span class="o">=</span> <span class="n">filter_params_dup_hash</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">_pset_hash</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
 
-    <span class="n">run_id</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">())</span>
+    <span class="n">run_id</span> <span class="o">=</span> <span class="n">get_uuid</span><span class="p">(</span><span class="n">existing</span><span class="o">=</span><span class="n">df</span><span class="o">.</span><span class="n">_run_id</span><span class="o">.</span><span class="n">values</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="p">[])</span>
+    <span class="n">pset_ids</span> <span class="o">=</span> <span class="n">get_many_uuids</span><span class="p">(</span>
+        <span class="nb">len</span><span class="p">(</span><span class="n">params</span><span class="p">),</span> <span class="n">existing</span><span class="o">=</span><span class="n">df</span><span class="o">.</span><span class="n">_pset_id</span><span class="o">.</span><span class="n">values</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="p">[]</span>
+    <span class="p">)</span>
+    <span class="k">for</span> <span class="n">ii</span><span class="p">,</span> <span class="p">(</span><span class="n">pset</span><span class="p">,</span> <span class="n">pset_id</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">pset_ids</span><span class="p">)):</span>
+        <span class="n">pset</span><span class="p">[</span><span class="s2">&quot;_pset_id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pset_id</span>
+        <span class="n">pset</span><span class="p">[</span><span class="s2">&quot;_run_seq&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">run_seq_old</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">pset</span><span class="p">[</span><span class="s2">&quot;_pset_seq&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pset_seq_old</span> <span class="o">+</span> <span class="n">ii</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">pset</span><span class="p">[</span><span class="s2">&quot;_run_id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">run_id</span>
+        <span class="n">pset</span><span class="p">[</span><span class="s2">&quot;_calc_dir&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">calc_dir</span>
 
     <span class="n">worker_wrapper_partial</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span>
         <span class="n">worker_wrapper</span><span class="p">,</span>
         <span class="n">worker</span><span class="o">=</span><span class="n">worker</span><span class="p">,</span>
         <span class="n">tmpsave</span><span class="o">=</span><span class="n">tmpsave</span><span class="p">,</span>
         <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
-        <span class="n">run_id</span><span class="o">=</span><span class="n">run_id</span><span class="p">,</span>
-        <span class="n">calc_dir</span><span class="o">=</span><span class="n">calc_dir</span><span class="p">,</span>
         <span class="n">simulate</span><span class="o">=</span><span class="n">simulate</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="k">if</span> <span class="p">(</span><span class="n">poolsize</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">dask_client</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
-        <span class="n">results</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="n">worker_wrapper_partial</span><span class="p">(</span>
-                <span class="n">pset</span><span class="o">=</span><span class="n">pset</span><span class="p">,</span>
-                <span class="n">pset_seq</span><span class="o">=</span><span class="n">pset_seq_old</span> <span class="o">+</span> <span class="n">ii</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
-                <span class="n">run_seq</span><span class="o">=</span><span class="n">run_seq_old</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
-            <span class="p">)</span>
-            <span class="k">for</span> <span class="n">ii</span><span class="p">,</span> <span class="n">pset</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
-        <span class="p">]</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">worker_wrapper_partial</span><span class="p">,</span> <span class="n">params</span><span class="p">))</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">assert</span> <span class="p">[</span><span class="n">poolsize</span><span class="p">,</span> <span class="n">dask_client</span><span class="p">]</span><span class="o">.</span><span class="n">count</span><span class="p">(</span>
             <span class="kc">None</span>
         <span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Use either poolsize or dask_client.&quot;</span>
-        <span class="c1"># Can&#39;t use lambda here b/c pool.map() still can&#39;t pickle local scope</span>
-        <span class="c1"># lambdas. That&#39;s why we emulate</span>
-        <span class="c1">#   pool.map(lambda pset: worker_wrapper_partial(pset, run_seq=...,</span>
-        <span class="c1">#            params))</span>
-        <span class="c1"># with nested partial(). Cool, eh? We could solve this by</span>
-        <span class="c1"># using https://github.com/uqfoundation/multiprocess which uses</span>
-        <span class="c1"># https://github.com/uqfoundation/dill for serialization, but in the</span>
-        <span class="c1"># spirit of minimal dependencies, we don&#39;t.</span>
-        <span class="n">worker_wrapper_partial_pool</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span>
-            <span class="n">worker_wrapper_partial</span><span class="p">,</span> <span class="n">run_seq</span><span class="o">=</span><span class="n">run_seq_old</span> <span class="o">+</span> <span class="mi">1</span>
-        <span class="p">)</span>
         <span class="k">if</span> <span class="n">dask_client</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">with</span> <span class="n">mp</span><span class="o">.</span><span class="n">Pool</span><span class="p">(</span><span class="n">poolsize</span><span class="p">)</span> <span class="k">as</span> <span class="n">pool</span><span class="p">:</span>
-                <span class="n">results</span> <span class="o">=</span> <span class="n">pool</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">worker_wrapper_partial_pool</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+                <span class="n">results</span> <span class="o">=</span> <span class="n">pool</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">worker_wrapper_partial</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">futures</span> <span class="o">=</span> <span class="n">dask_client</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">worker_wrapper_partial_pool</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+            <span class="n">futures</span> <span class="o">=</span> <span class="n">dask_client</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">worker_wrapper_partial</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
             <span class="n">results</span> <span class="o">=</span> <span class="n">dask_client</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="n">futures</span><span class="p">)</span>
 
-    <span class="k">for</span> <span class="n">df_row</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
-        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">((</span><span class="n">df</span><span class="p">,</span> <span class="n">df_row</span><span class="p">),</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">((</span><span class="n">df</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">results</span><span class="p">)),</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">save</span><span class="p">:</span>
         <span class="n">df_write</span><span class="p">(</span><span class="n">database_fn</span><span class="p">,</span> <span class="n">df</span><span class="p">)</span>
@@ -1505,7 +1511,7 @@ document.write(`
 <span class="sd">    git</span>
 <span class="sd">        Use git to commit local changes.</span>
 <span class="sd">    write_pset</span>
-<span class="sd">        Write ``&lt;calc_dir&gt;/&lt;pset_id&gt;/pset.pk``.</span>
+<span class="sd">        Write the input `pset` to ``&lt;calc_dir&gt;/&lt;pset_id&gt;/pset.pk``.</span>
 <span class="sd">    **kwds</span>
 <span class="sd">        Passed to :func:`run`.</span>
 
