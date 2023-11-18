@@ -1,7 +1,8 @@
 from functools import partial, wraps
-from io import IOBase
+from io import IOBase, StringIO
 from typing import Any, Union, Sequence, Callable, Iterator
 import copy
+from contextlib import redirect_stdout, redirect_stderr
 import itertools
 import multiprocessing as mp
 import os
@@ -901,6 +902,44 @@ def worker_wrapper(
     return pset
 
 
+def capture_logs_wrapper(
+    pset: dict,
+    worker: Callable,
+    capture_logs: str,
+    db_field: str = "_logs",
+) -> dict:
+    """Capture and redirect stdout and stderr produced in worker().
+
+    Note the limitations mentioned in [1]:
+
+        Note that the global side effect on sys.stdout means that this context
+        manager is not suitable for use in library code and most threaded
+        applications. It also has no effect on the output of subprocesses.
+        However, it is still a useful approach for many utility scripts.
+
+    So if users rely on playing with sys.stdout/stderr in worker(), then they
+    sould not use this feature and take care of logging themselves.
+
+    [1] https://docs.python.org/3/library/contextlib.html#contextlib.redirect_stdout
+    """
+    fn = f"{pset['_calc_dir']}/{pset['_pset_id']}/logs.txt"
+    if capture_logs == "file":
+        makedirs(os.path.dirname(fn))
+        with open(fn, "w") as fd, redirect_stdout(fd), redirect_stderr(fd):
+            return worker(pset)
+    elif capture_logs in ["db", "db+file"]:
+        with StringIO() as fd:
+            with redirect_stdout(fd), redirect_stderr(fd):
+                ret = worker(pset)
+            txt = fd.getvalue()
+        ret[db_field] = txt
+        if capture_logs == "db+file":
+            file_write(fn, txt)
+        return ret
+    else:
+        raise ValueError(f"Illegal value {capture_logs=}")
+
+
 def run(
     worker: Callable,
     params: Sequence[dict],
@@ -917,6 +956,7 @@ def run(
     backup: bool = False,
     git: bool = False,
     skip_dups: bool = False,
+    capture_logs: str = None,
 ) -> pd.DataFrame:
     """
     Call `worker` for each `pset` in `params`. Populate a DataFrame with rows
@@ -972,7 +1012,12 @@ def run(
     skip_dups
         Skip psets whose hash is already present in `df`. Useful when repeating
         (parts of) a study.
-
+    capture_logs
+        {'db', 'file', 'db+file', None}
+        Redirect stdout and stderr generated in ``worker()`` to database ('db')
+        column ``_logs``, file ``<calc_dir>/<pset_id>/logs.txt``, or both. If
+        ``None`` then do nothing (default). Useful for capturing per-pset log
+        text, e.g. ``print()`` calls in `worker` will be captured.
 
     Returns
     -------
@@ -1045,6 +1090,11 @@ def run(
         pset["_pset_seq"] = pset_seq_old + ii + 1
         pset["_run_id"] = run_id
         pset["_calc_dir"] = calc_dir
+
+    if capture_logs is not None:
+        worker = partial(
+            capture_logs_wrapper, worker=worker, capture_logs=capture_logs
+        )
 
     worker_wrapper_partial = partial(
         worker_wrapper,
