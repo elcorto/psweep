@@ -3,6 +3,7 @@ import os
 import re
 import shutil
 import string
+import sys
 import tempfile
 import pickle
 import subprocess
@@ -981,3 +982,106 @@ def test_run_not_alter_params():
     for pset in params:
         for key in pset.keys():
             assert not key.startswith("_")
+
+
+class TestCaptureLogs:
+    def get_client(self, use_dask):
+        if use_dask:
+            from dask.distributed import Client, LocalCluster
+
+            cluster = LocalCluster()
+            cluster.scale(n=3)
+            client = Client(cluster)
+            return client
+        else:
+            return None
+
+    @staticmethod
+    def func_with_logs(pset):
+        print(f"{pset=}")
+        print("txt on stdout")
+        print("txt on stderr", file=sys.stderr)
+        sys.stdout.write("stdout direct")
+        sys.stderr.write("stderr direct")
+        return dict()
+
+    @staticmethod
+    def assert_txt_content(txt):
+        assert "pset=" in txt
+        assert "txt on stdout" in txt
+        assert "txt on stderr" in txt
+        assert "stderr direct" in txt
+        assert "stdout direct" in txt
+
+    def assert_log_content(self, df, run_id, in_file=False, in_db=False):
+        dfs = df[df._run_id == run_id]
+        assert len(dfs) == 3
+        for calc_dir, pset_id in zip(
+            dfs._calc_dir.values, dfs._pset_id.values
+        ):
+            if in_db:
+                db_txt = dfs.loc[dfs._pset_id == pset_id, "_logs"].iloc[0]
+                assert len(db_txt) > 0
+                self.assert_txt_content(db_txt)
+            fn = pj(calc_dir, pset_id, "logs.txt")
+            if in_file:
+                assert os.path.exists(fn)
+                txt = ps.file_read(fn)
+                assert len(txt) > 0
+                self.assert_txt_content(txt)
+                if in_db:
+                    assert db_txt == txt
+            else:
+                assert not os.path.exists(fn)
+
+    def test(self):
+        self.impl(use_dask=False)
+
+    @pytest.mark.skipif(
+        (importlib.util.find_spec("dask") is None)
+        or (importlib.util.find_spec("dask.distributed") is None),
+        reason="dask or dask.distributed not found",
+    )
+    def test_with_dask(self):
+        self.impl(use_dask=True)
+
+    def impl(self, use_dask):
+        client = self.get_client(use_dask)
+        with tempfile.TemporaryDirectory() as tmpdir:
+            calc_dir = f"{tmpdir}/calc"
+            params = ps.plist("a", [1, 2, 3])
+            df = ps.run(
+                self.func_with_logs,
+                params,
+                calc_dir=calc_dir,
+                capture_logs="file",
+                dask_client=client,
+            )
+            assert not hasattr(df, "_logs")
+            self.assert_log_content(
+                df, run_id=df._run_id.values[-1], in_file=True
+            )
+
+            df = ps.run(
+                self.func_with_logs,
+                params,
+                calc_dir=calc_dir,
+                capture_logs="db",
+                dask_client=client,
+            )
+            assert hasattr(df, "_logs")
+            self.assert_log_content(
+                df, run_id=df._run_id.values[-1], in_db=True
+            )
+
+            df = ps.run(
+                self.func_with_logs,
+                params,
+                calc_dir=calc_dir,
+                capture_logs="db+file",
+                dask_client=client,
+            )
+            assert hasattr(df, "_logs")
+            self.assert_log_content(
+                df, run_id=df._run_id.values[-1], in_file=True, in_db=True
+            )
