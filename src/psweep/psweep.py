@@ -1096,7 +1096,7 @@ def run(
             capture_logs_wrapper, worker=worker, capture_logs=capture_logs
         )
 
-    worker_wrapper_partial = partial(
+    worker = partial(
         worker_wrapper,
         worker=worker,
         tmpsave=tmpsave,
@@ -1105,16 +1105,16 @@ def run(
     )
 
     if (poolsize is None) and (dask_client is None):
-        results = list(map(worker_wrapper_partial, params))
+        results = list(map(worker, params))
     else:
         assert [poolsize, dask_client].count(
             None
         ) == 1, "Use either poolsize or dask_client."
         if dask_client is None:
             with mp.Pool(poolsize) as pool:
-                results = pool.map(worker_wrapper_partial, params)
+                results = pool.map(worker, params)
         else:
-            futures = dask_client.map(worker_wrapper_partial, params)
+            futures = dask_client.map(worker, params)
             results = dask_client.gather(futures)
 
     df = pd.concat((df, pd.DataFrame(results)), sort=False, ignore_index=True)
