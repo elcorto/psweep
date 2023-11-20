@@ -12,6 +12,7 @@ from contextlib import nullcontext
 import importlib
 import uuid
 import copy
+from functools import partial
 
 import pandas as pd
 import numpy as np
@@ -997,12 +998,35 @@ class TestCaptureLogs:
             return None
 
     @staticmethod
-    def func_with_logs(pset):
+    def get_print_funcs():
+        fout = lambda msg: sys.stdout.write(msg)
+        ferr = lambda msg: sys.stderr.write(msg)
+        return fout, ferr
+
+    @staticmethod
+    def get_print_funcs_fail(sout=sys.stdout, serr=sys.stderr):
+        """This case will fail, i.e. printed text will disappear into the
+        nirvana. The reason is that the redirect machinery in run() will
+        dynamically redirect sys.sydout and sys.stderr at runtime. However
+        here, we have bound those streams to the sout and serr variables at
+        parse time before run() can touch them, so they won't be affected.
+
+        This is an example of user code where the redirect feature cannot be
+        used.
+        """
+        fout = lambda msg: sout.write(msg)
+        ferr = lambda msg: serr.write(msg)
+        return fout, ferr
+
+    def func_with_logs(self, pset, f_get_print_funcs=None):
         print(f"{pset=}")
         print("txt on stdout")
         print("txt on stderr", file=sys.stderr)
         sys.stdout.write("stdout direct")
         sys.stderr.write("stderr direct")
+        fout, ferr = f_get_print_funcs()
+        fout("txt from fout")
+        ferr("txt from ferr")
         return dict()
 
     @staticmethod
@@ -1012,6 +1036,8 @@ class TestCaptureLogs:
         assert "txt on stderr" in txt
         assert "stderr direct" in txt
         assert "stdout direct" in txt
+        assert "txt from fout" in txt
+        assert "txt from ferr" in txt
 
     def assert_log_content(self, df, run_id, in_file=False, in_db=False):
         dfs = df[df._run_id == run_id]
@@ -1034,24 +1060,40 @@ class TestCaptureLogs:
             else:
                 assert not os.path.exists(fn)
 
-    def test(self):
-        self.impl(use_dask=False)
+    @staticmethod
+    def get_parametrize_mark(test_func):
+        xfail = pytest.mark.xfail(raises=AssertionError, strict=True)
+        wrapper = pytest.mark.parametrize(
+            "should_pass", [True, pytest.param(False, marks=xfail)]
+        )
+        return wrapper(test_func)
+
+    @get_parametrize_mark
+    def test(self, should_pass):
+        self.impl(use_dask=False, should_pass=should_pass)
 
     @pytest.mark.skipif(
         (importlib.util.find_spec("dask") is None)
         or (importlib.util.find_spec("dask.distributed") is None),
         reason="dask or dask.distributed not found",
     )
-    def test_with_dask(self):
-        self.impl(use_dask=True)
+    @get_parametrize_mark
+    def test_with_dask(self, should_pass):
+        self.impl(use_dask=True, should_pass=should_pass)
 
-    def impl(self, use_dask):
+    def impl(self, use_dask, should_pass):
         client = self.get_client(use_dask)
+        func = partial(
+            self.func_with_logs,
+            f_get_print_funcs=self.get_print_funcs
+            if should_pass
+            else self.get_print_funcs_fail,
+        )
         with tempfile.TemporaryDirectory() as tmpdir:
             calc_dir = f"{tmpdir}/calc"
             params = ps.plist("a", [1, 2, 3])
             df = ps.run(
-                self.func_with_logs,
+                func,
                 params,
                 calc_dir=calc_dir,
                 capture_logs="file",
@@ -1063,7 +1105,7 @@ class TestCaptureLogs:
             )
 
             df = ps.run(
-                self.func_with_logs,
+                func,
                 params,
                 calc_dir=calc_dir,
                 capture_logs="db",
@@ -1075,7 +1117,7 @@ class TestCaptureLogs:
             )
 
             df = ps.run(
-                self.func_with_logs,
+                func,
                 params,
                 calc_dir=calc_dir,
                 capture_logs="db+file",
