@@ -1127,11 +1127,6 @@ def run(
     return df
 
 
-def run_local(*args, **kwds):
-    warnings.warn("run_local() has been renamed to run()", DeprecationWarning)
-    return run(*args, **kwds)
-
-
 # -----------------------------------------------------------------------------
 # (HPC cluster) batch runs using file templates
 # -----------------------------------------------------------------------------

@@ -924,22 +924,6 @@ def test_dask_local_cluster():
     assert len(df) == 6
 
 
-# Python normally ignores DeprecationWarning and it has to be enabled via
-#
-#   warnings.simplefilter("default")
-#
-# or "python -Wdefault" (-Wd for short).
-#
-# However, the test below passes (so DeprecationWarning gets triggered) even if
-# we do NOT use either. Must be hidden pytest magic again. If we run a script
-# where we call ps.run_local() or use an interactive shell, there is no
-# DeprecationWarning unless enabled explicitly.
-def test_run_local_deprecated():
-    params = ps.plist("a", [1, 2, 3])
-    with pytest.deprecated_call():
-        ps.run_local(func_a, params, save=False)
-
-
 def test_pickle_io():
     obj = dict(a=1, b=_Foo(), c=np.sin)
     hsh = lambda obj: joblib.hash(obj, hash_name="sha1")
