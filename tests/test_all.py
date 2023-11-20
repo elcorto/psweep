@@ -904,14 +904,20 @@ def test_dask_local_cluster():
     from dask.distributed import Client, LocalCluster
 
     # LocalCluster is default if no cluster is provided
-    client = Client()
+    client = Client(dashboard_address=None)
 
     params = ps.plist("a", [1, 2, 3])
     df = ps.run(func_a, params, dask_client=client, save=False)
     assert len(df) == 3
     client.close()
 
-    cluster = LocalCluster()
+    # We don't need the dask dashboard in tests. Setting dashboard_address=None
+    # should turn the dashboard off. But that doesn't work
+    # (https://github.com/dask/distributed/issues/8136). We see warnings like
+    #   UserWarning: Port 8787 is already in use. Perhaps you already have a
+    #   cluster running? ...
+    # as a result, if we run tests in parallel.
+    cluster = LocalCluster(dashboard_address=None)
     client = Client(cluster)
 
     df = ps.run(func_a, params, dask_client=client, save=False, df=df)
@@ -990,7 +996,7 @@ class TestCaptureLogs:
         if use_dask:
             from dask.distributed import Client, LocalCluster
 
-            cluster = LocalCluster()
+            cluster = LocalCluster(dashboard_address=None)
             cluster.scale(n=3)
             client = Client(cluster)
             return client
