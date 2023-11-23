@@ -881,12 +881,14 @@ def worker_wrapper(
 
     time_start = pd.Timestamp(time.time(), unit=PANDAS_TIME_UNIT)
     pset.update(_time_utc=time_start, _exec_host=platform.node())
-    if verbose is not None:
+    if verbose:
         df_row_print = pd.DataFrame([pset], index=[time_start])
         if isinstance(verbose, bool) and verbose:
             df_print(df_row_print, index=True)
         elif is_seq(verbose):
-            df_print(df_row_print[verbose], index=True)
+            df_print(df_row_print, index=True, cols=verbose)
+        else:
+            raise ValueError(f"Type of {verbose=} not understood.")
     t0 = time.time()
     if not simulate:
         pset.update(worker(pset))

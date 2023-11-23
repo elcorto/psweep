@@ -1117,3 +1117,30 @@ class TestCaptureLogs:
             self.assert_log_content(
                 df, run_id=df._run_id.values[-1], in_file=True, in_db=True
             )
+
+
+# We don't go the extra mile and verify the text output, but you may check like
+# so:
+#
+# $ pytest -k verbose -vs
+# tests/test_all.py::test_verbose[True]
+#                                a
+# 2023-11-22 19:41:49.736106634  1
+#                                a
+# 2023-11-22 19:41:49.739609957  2
+#                                a
+# 2023-11-22 19:41:49.742296457  3
+# PASSED
+# tests/test_all.py::test_verbose[False] PASSED
+# tests/test_all.py::test_verbose[verbose2]
+#                                                            _pset_id  a
+# 2023-11-22 19:41:49.752099991  38a6820f-7e41-40af-b403-3647f44e8b9d  1
+#                                                            _pset_id  a
+# 2023-11-22 19:41:49.755405426  9ade6afb-1fd3-4d29-9e7a-0bacdb950994  2
+#                                                            _pset_id  a
+# 2023-11-22 19:41:49.757858753  80193006-56d4-47b1-be95-fe06cee2eec1  3
+# PASSED
+@pytest.mark.parametrize("verbose", [True, False, ["a", "_pset_id"]])
+def test_verbose(verbose):
+    params = ps.plist("a", [1, 2, 3])
+    ps.run(func_a, params, save=False, verbose=verbose)
