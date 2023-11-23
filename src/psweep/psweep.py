@@ -1,6 +1,6 @@
 from functools import partial, wraps
 from io import IOBase, StringIO
-from typing import Any, Union, Sequence, Callable, Iterator
+from typing import Any, Sequence, Callable, Iterator
 import copy
 from contextlib import redirect_stdout, redirect_stderr
 import itertools
@@ -866,7 +866,7 @@ def worker_wrapper(
     worker: Callable,
     *,
     tmpsave: bool = False,
-    verbose: Union[bool, Sequence[str]] = None,
+    verbose: bool | Sequence[str] = False,
     simulate: bool = False,
 ) -> dict:
     """
@@ -948,7 +948,7 @@ def run(
     dask_client=None,
     save: bool = True,
     tmpsave: bool = False,
-    verbose: Union[bool, Sequence[str]] = False,
+    verbose: bool | Sequence[str] = False,
     calc_dir: str = "calc",
     simulate: bool = False,
     database_dir: str = None,
