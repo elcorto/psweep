@@ -23,6 +23,7 @@ psweep
    PANDAS_TIME_UNIT
    PSET_HASH_ALG
    PsweepHashError
+   capture_logs_wrapper
    check_calc_dir
    df_filter_conds
    df_print
@@ -57,7 +58,6 @@ psweep
    prep_batch
    pset_hash
    run
-   run_local
    stargrid
    system
    worker_wrapper

@@ -181,6 +181,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.PANDAS_TIME_UNIT.html">psweep.psweep.PANDAS_TIME_UNIT</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.PSET_HASH_ALG.html">psweep.psweep.PSET_HASH_ALG</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.PsweepHashError.html">psweep.psweep.PsweepHashError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.capture_logs_wrapper.html">psweep.psweep.capture_logs_wrapper</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.check_calc_dir.html">psweep.psweep.check_calc_dir</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.df_filter_conds.html">psweep.psweep.df_filter_conds</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.df_print.html">psweep.psweep.df_print</a></li>
@@ -215,7 +216,6 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.prep_batch.html">psweep.psweep.prep_batch</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.pset_hash.html">psweep.psweep.pset_hash</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.run.html">psweep.psweep.run</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.run_local.html">psweep.psweep.run_local</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.stargrid.html">psweep.psweep.stargrid</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.system.html">psweep.psweep.system</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.worker_wrapper.html">psweep.psweep.worker_wrapper</a></li>
@@ -340,9 +340,10 @@ document.write(`
                   
   <h1>Source code for psweep.psweep</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span><span class="p">,</span> <span class="n">wraps</span>
-<span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">IOBase</span>
+<span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">IOBase</span><span class="p">,</span> <span class="n">StringIO</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Iterator</span>
 <span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">from</span> <span class="nn">contextlib</span> <span class="kn">import</span> <span class="n">redirect_stdout</span><span class="p">,</span> <span class="n">redirect_stderr</span>
 <span class="kn">import</span> <span class="nn">itertools</span>
 <span class="kn">import</span> <span class="nn">multiprocessing</span> <span class="k">as</span> <span class="nn">mp</span>
 <span class="kn">import</span> <span class="nn">os</span>
@@ -1242,6 +1243,44 @@ document.write(`
     <span class="k">return</span> <span class="n">pset</span></div>
 
 
+<div class="viewcode-block" id="capture_logs_wrapper"><a class="viewcode-back" href="../../generated/api/psweep.psweep.capture_logs_wrapper.html#psweep.psweep.capture_logs_wrapper">[docs]</a><span class="k">def</span> <span class="nf">capture_logs_wrapper</span><span class="p">(</span>
+    <span class="n">pset</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+    <span class="n">worker</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span>
+    <span class="n">capture_logs</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">db_field</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;_logs&quot;</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Capture and redirect stdout and stderr produced in worker().</span>
+
+<span class="sd">    Note the limitations mentioned in [1]:</span>
+
+<span class="sd">        Note that the global side effect on sys.stdout means that this context</span>
+<span class="sd">        manager is not suitable for use in library code and most threaded</span>
+<span class="sd">        applications. It also has no effect on the output of subprocesses.</span>
+<span class="sd">        However, it is still a useful approach for many utility scripts.</span>
+
+<span class="sd">    So if users rely on playing with sys.stdout/stderr in worker(), then they</span>
+<span class="sd">    sould not use this feature and take care of logging themselves.</span>
+
+<span class="sd">    [1] https://docs.python.org/3/library/contextlib.html#contextlib.redirect_stdout</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">fn</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">pset</span><span class="p">[</span><span class="s1">&#39;_calc_dir&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">pset</span><span class="p">[</span><span class="s1">&#39;_pset_id&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">/logs.txt&quot;</span>
+    <span class="k">if</span> <span class="n">capture_logs</span> <span class="o">==</span> <span class="s2">&quot;file&quot;</span><span class="p">:</span>
+        <span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">fn</span><span class="p">))</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fd</span><span class="p">,</span> <span class="n">redirect_stdout</span><span class="p">(</span><span class="n">fd</span><span class="p">),</span> <span class="n">redirect_stderr</span><span class="p">(</span><span class="n">fd</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">worker</span><span class="p">(</span><span class="n">pset</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">capture_logs</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;db&quot;</span><span class="p">,</span> <span class="s2">&quot;db+file&quot;</span><span class="p">]:</span>
+        <span class="k">with</span> <span class="n">StringIO</span><span class="p">()</span> <span class="k">as</span> <span class="n">fd</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">redirect_stdout</span><span class="p">(</span><span class="n">fd</span><span class="p">),</span> <span class="n">redirect_stderr</span><span class="p">(</span><span class="n">fd</span><span class="p">):</span>
+                <span class="n">ret</span> <span class="o">=</span> <span class="n">worker</span><span class="p">(</span><span class="n">pset</span><span class="p">)</span>
+            <span class="n">txt</span> <span class="o">=</span> <span class="n">fd</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span>
+        <span class="n">ret</span><span class="p">[</span><span class="n">db_field</span><span class="p">]</span> <span class="o">=</span> <span class="n">txt</span>
+        <span class="k">if</span> <span class="n">capture_logs</span> <span class="o">==</span> <span class="s2">&quot;db+file&quot;</span><span class="p">:</span>
+            <span class="n">file_write</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">txt</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ret</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Illegal value </span><span class="si">{</span><span class="n">capture_logs</span><span class="si">=}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
 <div class="viewcode-block" id="run"><a class="viewcode-back" href="../../generated/api/psweep.psweep.run.html#psweep.psweep.run">[docs]</a><span class="k">def</span> <span class="nf">run</span><span class="p">(</span>
     <span class="n">worker</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span>
     <span class="n">params</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">dict</span><span class="p">],</span>
@@ -1258,6 +1297,7 @@ document.write(`
     <span class="n">backup</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">git</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">skip_dups</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">capture_logs</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Call `worker` for each `pset` in `params`. Populate a DataFrame with rows</span>
@@ -1313,7 +1353,12 @@ document.write(`
 <span class="sd">    skip_dups</span>
 <span class="sd">        Skip psets whose hash is already present in `df`. Useful when repeating</span>
 <span class="sd">        (parts of) a study.</span>
-
+<span class="sd">    capture_logs</span>
+<span class="sd">        {&#39;db&#39;, &#39;file&#39;, &#39;db+file&#39;, None}</span>
+<span class="sd">        Redirect stdout and stderr generated in ``worker()`` to database (&#39;db&#39;)</span>
+<span class="sd">        column ``_logs``, file ``&lt;calc_dir&gt;/&lt;pset_id&gt;/logs.txt``, or both. If</span>
+<span class="sd">        ``None`` then do nothing (default). Useful for capturing per-pset log</span>
+<span class="sd">        text, e.g. ``print()`` calls in `worker` will be captured.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -1387,7 +1432,12 @@ document.write(`
         <span class="n">pset</span><span class="p">[</span><span class="s2">&quot;_run_id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">run_id</span>
         <span class="n">pset</span><span class="p">[</span><span class="s2">&quot;_calc_dir&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">calc_dir</span>
 
-    <span class="n">worker_wrapper_partial</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span>
+    <span class="k">if</span> <span class="n">capture_logs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">worker</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span>
+            <span class="n">capture_logs_wrapper</span><span class="p">,</span> <span class="n">worker</span><span class="o">=</span><span class="n">worker</span><span class="p">,</span> <span class="n">capture_logs</span><span class="o">=</span><span class="n">capture_logs</span>
+        <span class="p">)</span>
+
+    <span class="n">worker</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span>
         <span class="n">worker_wrapper</span><span class="p">,</span>
         <span class="n">worker</span><span class="o">=</span><span class="n">worker</span><span class="p">,</span>
         <span class="n">tmpsave</span><span class="o">=</span><span class="n">tmpsave</span><span class="p">,</span>
@@ -1396,16 +1446,16 @@ document.write(`
     <span class="p">)</span>
 
     <span class="k">if</span> <span class="p">(</span><span class="n">poolsize</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">dask_client</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
-        <span class="n">results</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">worker_wrapper_partial</span><span class="p">,</span> <span class="n">params</span><span class="p">))</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">worker</span><span class="p">,</span> <span class="n">params</span><span class="p">))</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">assert</span> <span class="p">[</span><span class="n">poolsize</span><span class="p">,</span> <span class="n">dask_client</span><span class="p">]</span><span class="o">.</span><span class="n">count</span><span class="p">(</span>
             <span class="kc">None</span>
         <span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Use either poolsize or dask_client.&quot;</span>
         <span class="k">if</span> <span class="n">dask_client</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">with</span> <span class="n">mp</span><span class="o">.</span><span class="n">Pool</span><span class="p">(</span><span class="n">poolsize</span><span class="p">)</span> <span class="k">as</span> <span class="n">pool</span><span class="p">:</span>
-                <span class="n">results</span> <span class="o">=</span> <span class="n">pool</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">worker_wrapper_partial</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+                <span class="n">results</span> <span class="o">=</span> <span class="n">pool</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">worker</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">futures</span> <span class="o">=</span> <span class="n">dask_client</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">worker_wrapper_partial</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+            <span class="n">futures</span> <span class="o">=</span> <span class="n">dask_client</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">worker</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
             <span class="n">results</span> <span class="o">=</span> <span class="n">dask_client</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="n">futures</span><span class="p">)</span>
 
     <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">((</span><span class="n">df</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">results</span><span class="p">)),</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -1416,11 +1466,6 @@ document.write(`
     <span class="n">git_exit</span><span class="p">(</span><span class="n">git</span><span class="p">,</span> <span class="n">df</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">df</span></div>
-
-
-<div class="viewcode-block" id="run_local"><a class="viewcode-back" href="../../generated/api/psweep.psweep.run_local.html#psweep.psweep.run_local">[docs]</a><span class="k">def</span> <span class="nf">run_local</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">):</span>
-    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;run_local() has been renamed to run()&quot;</span><span class="p">,</span> <span class="ne">DeprecationWarning</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">run</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span></div>
 
 
 <span class="c1"># -----------------------------------------------------------------------------</span>

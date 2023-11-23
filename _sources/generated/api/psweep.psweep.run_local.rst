@@ -1,6 +1,0 @@
-﻿psweep.psweep.run\_local
-========================
-
-.. currentmodule:: psweep.psweep
-
-.. autofunction:: run_local
