@@ -782,6 +782,138 @@ Pro tip: You can manipulate the database at any later point and add the
 
 Super Pro tip: Make a backup of the database first!
 
+(s:wrap-failed-func)=
+### How to handle failing workloads
+
+If the code in `func()` fails and raises a Python exception, it will take
+down the whole run (the call `run(func, params, ...)`).
+
+Sometimes we instead want to catch that, log the event, carry on and later
+analyze the failed `pset`s. One way to do this is by wrapping `func` in a
+`try`...`except` block, for example:
+
+```py
+import traceback
+
+def func(pset):
+    ... here be code ...
+    return dict(...)
+
+def safe_func(pset):
+    try:
+        ret = func(pset)
+        ret.update(_failed=False, _exc_txt=None)
+    except:
+        txt = traceback.format_exc()
+        print(f"{pset=} failed, traceback:\n{txt}")
+        ret = dict(_failed=True, _exc_txt=txt)
+    return ret
+
+df = ps.run(safe_func, params)
+```
+
+This will add a bool field `_failed` to the database, as well as a text field
+`_exc_txt` which stores the exception's traceback message.
+
+We don't implement this as a feature and only provide examples, which keeps
+things fexible. Maybe you want `_failed` to be called `_crashed` instead, or you want
+to log more data.
+
+For post-processing, you would then do something like:
+
+```py
+df = ps.df_read("calc/database.pk")
+
+# Only successful psets
+df_good = df[~df._failed]
+
+# All failed pset
+df_fail = df[df._failed]
+
+for pset_id, txt in zip(df_fail._pset_id, df_fail._exc_txt):
+    print(f"{pset_id=}\n{txt}")
+```
+
+See also [this discussion](https://github.com/elcorto/psweep/issues/1) for
+more.
+
+### Text logging per `pset`
+
+All text sent to the terminal (`sys.stdout` and `sys.stderr`) by any code in
+`func()` can be redirected to a database field `_logs`, a file
+`<calc_dir>/<pset_id>/logs.txt`, or both, by using
+
+```py
+ps.run(..., capture_logs="db")
+ps.run(..., capture_logs="file")
+ps.run(..., capture_logs="db+file")
+```
+
+For `print()`-style logging, this is very convenient.
+
+```{note}
+This feature may have side effects since it dynamically redirects
+`sys.stdout` and `sys.stderr`, so code in `func()` making advanced use of
+those may not work as intended.
+```
+
+To also log all text from shell commands that you call, make sure to capture
+this on the Python side and print it. For example
+
+```py
+import subprocess
+
+def func(pset):
+    input_file_txt = f"""
+param_a={pset["a"]}
+param_b={pset["b"]}
+"""
+    pset_id = pset["_pset_id"]
+    ps.file_write(f"calc/{pset_id}/input.txt", input_file_txt)
+    txt = subprocess.run(
+        f"cd {pset_id}; my_fortran_simulation_code.x < input.txt | tee output.txt,
+        shell=True,
+        check=False,
+        stderr=subprocess.STDOUT,
+        stdout=subprocess.PIPE,
+    ).stdout.decode()
+    print(txt)
+    return dict()
+
+ps.run(func, params, capture_logs="db+file")
+```
+
+This will log all text output and errors from the command executed by
+`subprocess.run()`. In this example we use `subprocess.run(..., check=False)`
+which prevents raising an exception in case of a shell error (exit code != 0).
+To detect and log a fail, you may look into `txt` for signs of an error,
+either directly in `func()`, or later in post-processing, for example using
+regular expressions (see also [this
+discussion](https://github.com/elcorto/psweep/issues/1)). But you can also use
+`check=True` and wrap the function [as described earlier](s:wrap-failed-func).
+
+```py
+def func(pset):
+    ...
+    # Same as above only that check=True
+    print(subprocess.run(..., check=True).stdout.decode())
+    return dict()
+
+
+def safe_func(pset):
+    """Simple safe_func that doesn't create new database fields."""
+    try:
+        return(func(pset))
+    except:
+        print(traceback.format_exc())
+        return dict()
+
+ps.run(safe_func, params, capture_logs="db+file")
+```
+
+See also `examples/capture_logs.py` for a worked example.
+
+
 (s:distributed)=
 ## Running on (HPC) compute infrastructure
 
@@ -1360,9 +1492,9 @@ analyze the results".
 
 Unsurprisingly, there is a huge pile of similar tools. This project is super
 small and as such of course lacks a lot of features that other packages offer.
-We provide
+We only
 
-* simple helpers to set up the params (`plist()`, `pgrid()`,
+* provide simple helpers to set up the params (`plist()`, `pgrid()`,
 `stargrid()`)
 * hook into the `concurrent.futures` API (`multiprocessing` or `dask`) for
   parallel runs
