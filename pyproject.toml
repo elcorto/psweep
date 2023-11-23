@@ -7,7 +7,7 @@ authors = [
 description = "loop like a pro, make parameter studies fun"
 readme = "README.md"
 license = {file = "LICENSE"}
-requires-python = ">=3.8"
+requires-python = ">=3.10"
 keywords = [
     "computational-experiment",
     "parameter-sweep",
