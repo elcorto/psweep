@@ -412,6 +412,8 @@ document.write(`
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#simulate-dry-run-look-before-you-leap">Simulate / Dry-Run: look before you leap</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#advanced-give-runs-names-for-easy-post-processing">Advanced: Give runs names for easy post-processing</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#how-to-handle-failing-workloads">How to handle failing workloads</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#text-logging-per-pset">Text logging per <code class="docutils literal notranslate"><span class="pre">pset</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#running-on-hpc-compute-infrastructure">Running on (HPC) compute infrastructure</a><ul class="nav section-nav flex-column">
@@ -1113,6 +1115,122 @@ change the “study” column at any time, or delete it again.</p>
 “study” column after all runs have been done.</p>
 <p>Super Pro tip: Make a backup of the database first!</p>
 </section>
+<section id="how-to-handle-failing-workloads">
+<span id="s-wrap-failed-func"></span><h3>How to handle failing workloads<a class="headerlink" href="#how-to-handle-failing-workloads" title="Permalink to this heading">#</a></h3>
+<p>If the code in <code class="docutils literal notranslate"><span class="pre">func()</span></code> fails and raises a Python exception, it will take
+down the whole run (the call <code class="docutils literal notranslate"><span class="pre">run(func,</span> <span class="pre">params,</span> <span class="pre">...)</span></code>).</p>
+<p>Sometimes we instead want to catch that, log the event, carry on and later
+analyze the failed <code class="docutils literal notranslate"><span class="pre">pset</span></code>s. One way to do this is by wrapping <code class="docutils literal notranslate"><span class="pre">func</span></code> in a
+<code class="docutils literal notranslate"><span class="pre">try</span></code>…<code class="docutils literal notranslate"><span class="pre">except</span></code> block, for example:</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">traceback</span>
+
+<span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="n">pset</span><span class="p">):</span>
+    <span class="o">...</span> <span class="n">here</span> <span class="n">be</span> <span class="n">code</span> <span class="o">...</span>
+    <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">safe_func</span><span class="p">(</span><span class="n">pset</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">ret</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="n">pset</span><span class="p">)</span>
+        <span class="n">ret</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">_failed</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">_exc_txt</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="n">txt</span> <span class="o">=</span> <span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">pset</span><span class="si">=}</span><span class="s2"> failed, traceback:</span><span class="se">\n</span><span class="si">{</span><span class="n">txt</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">ret</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">_failed</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">_exc_txt</span><span class="o">=</span><span class="n">txt</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ret</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">safe_func</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This will add a bool field <code class="docutils literal notranslate"><span class="pre">_failed</span></code> to the database, as well as a text field
+<code class="docutils literal notranslate"><span class="pre">_exc_txt</span></code> which stores the exception’s traceback message.</p>
+<p>We don’t implement this as a feature and only provide examples, which keeps
+things fexible. Maybe you want <code class="docutils literal notranslate"><span class="pre">_failed</span></code> to be called <code class="docutils literal notranslate"><span class="pre">_crashed</span></code> instead, or you want
+to log more data.</p>
+<p>For post-processing, you would then do something like:</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">df_read</span><span class="p">(</span><span class="s2">&quot;calc/database.pk&quot;</span><span class="p">)</span>
+
+<span class="c1"># Only successful psets</span>
+<span class="n">df_good</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="o">~</span><span class="n">df</span><span class="o">.</span><span class="n">_failed</span><span class="p">]</span>
+
+<span class="c1"># All failed pset</span>
+<span class="n">df_fail</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">_failed</span><span class="p">]</span>
+
+<span class="k">for</span> <span class="n">pset_id</span><span class="p">,</span> <span class="n">txt</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">df_fail</span><span class="o">.</span><span class="n">_pset_id</span><span class="p">,</span> <span class="n">df_fail</span><span class="o">.</span><span class="n">_exc_txt</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">pset_id</span><span class="si">=}</span><span class="se">\n</span><span class="si">{</span><span class="n">txt</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>See also <a class="reference external" href="https://github.com/elcorto/psweep/issues/1">this discussion</a> for
+more.</p>
+</section>
+<section id="text-logging-per-pset">
+<h3>Text logging per <code class="docutils literal notranslate"><span class="pre">pset</span></code><a class="headerlink" href="#text-logging-per-pset" title="Permalink to this heading">#</a></h3>
+<p>All text sent to the terminal (<code class="docutils literal notranslate"><span class="pre">sys.stdout</span></code> and <code class="docutils literal notranslate"><span class="pre">sys.stderr</span></code>) by any code in
+<code class="docutils literal notranslate"><span class="pre">func()</span></code> can be redirected to a database field <code class="docutils literal notranslate"><span class="pre">_logs</span></code>, a file
+<code class="docutils literal notranslate"><span class="pre">&lt;calc_dir&gt;/&lt;pset_id&gt;/logs.txt</span></code>, or both, by using</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">ps</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">capture_logs</span><span class="o">=</span><span class="s2">&quot;db&quot;</span><span class="p">)</span>
+<span class="n">ps</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">capture_logs</span><span class="o">=</span><span class="s2">&quot;file&quot;</span><span class="p">)</span>
+<span class="n">ps</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">capture_logs</span><span class="o">=</span><span class="s2">&quot;db+file&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>For <code class="docutils literal notranslate"><span class="pre">print()</span></code>-style logging, this is very convenient.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This feature may have side effects since it dynamically redirects
+<code class="docutils literal notranslate"><span class="pre">sys.stdout</span></code> and <code class="docutils literal notranslate"><span class="pre">sys.stderr</span></code>, so code in <code class="docutils literal notranslate"><span class="pre">func()</span></code> making advanced use of
+those may not work as intended.</p>
+</div>
+<p>To also log all text from shell commands that you call, make sure to capture
+this on the Python side and print it. For example</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">subprocess</span>
+
+<span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="n">pset</span><span class="p">):</span>
+    <span class="n">input_file_txt</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">param_a=</span><span class="si">{</span><span class="n">pset</span><span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">]</span><span class="si">}</span>
+<span class="s2">param_b=</span><span class="si">{</span><span class="n">pset</span><span class="p">[</span><span class="s2">&quot;b&quot;</span><span class="p">]</span><span class="si">}</span>
+<span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">pset_id</span> <span class="o">=</span> <span class="n">pset</span><span class="p">[</span><span class="s2">&quot;_pset_id&quot;</span><span class="p">]</span>
+    <span class="n">ps</span><span class="o">.</span><span class="n">file_write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;calc/</span><span class="si">{</span><span class="n">pset_id</span><span class="si">}</span><span class="s2">/input.txt&quot;</span><span class="p">,</span> <span class="n">input_file_txt</span><span class="p">)</span>
+    <span class="n">txt</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;cd </span><span class="si">{</span><span class="n">pset_id</span><span class="si">}</span><span class="s2">; my_fortran_simulation_code.x &lt; input.txt | tee output.txt,</span>
+        <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">check</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">STDOUT</span><span class="p">,</span>
+        <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">txt</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">dict</span><span class="p">()</span>
+
+<span class="n">ps</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">capture_logs</span><span class="o">=</span><span class="s2">&quot;db+file&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This will log all text output and errors from the command executed by
+<code class="docutils literal notranslate"><span class="pre">subprocess.run()</span></code>. In this example we use <code class="docutils literal notranslate"><span class="pre">subprocess.run(...,</span> <span class="pre">check=False)</span></code>
+which prevents raising an exception in case of a shell error (exit code != 0).
+To detect and log a fail, you may look into <code class="docutils literal notranslate"><span class="pre">txt</span></code> for signs of an error,
+either directly in <code class="docutils literal notranslate"><span class="pre">func()</span></code>, or later in post-processing, for example using
+regular expressions (see also <a class="reference external" href="https://github.com/elcorto/psweep/issues/1">this
+discussion</a>). But you can also use
+<code class="docutils literal notranslate"><span class="pre">check=True</span></code> and wrap the function <a class="reference internal" href="#s-wrap-failed-func"><span class="std std-ref">as described earlier</span></a>.</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="n">pset</span><span class="p">):</span>
+    <span class="o">...</span>
+    <span class="c1"># Same as above only that check=True</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">check</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
+    <span class="k">return</span> <span class="nb">dict</span><span class="p">()</span>
+
+
+<span class="k">def</span> <span class="nf">safe_func</span><span class="p">(</span><span class="n">pset</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Simple safe_func that doesn&#39;t create new database fields.&quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span><span class="p">(</span><span class="n">func</span><span class="p">(</span><span class="n">pset</span><span class="p">))</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">())</span>
+        <span class="k">return</span> <span class="nb">dict</span><span class="p">()</span>
+
+<span class="n">ps</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">safe_func</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">capture_logs</span><span class="o">=</span><span class="s2">&quot;db+file&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>See also <code class="docutils literal notranslate"><span class="pre">examples/capture_logs.py</span></code> for a worked example.</p>
+</section>
 </section>
 <section id="running-on-hpc-compute-infrastructure">
 <span id="s-distributed"></span><h2>Running on (HPC) compute infrastructure<a class="headerlink" href="#running-on-hpc-compute-infrastructure" title="Permalink to this heading">#</a></h2>
@@ -1700,9 +1818,9 @@ can be formulated as <strong>computational experiments</strong>: “let’s vary
 analyze the results”.</p>
 <p>Unsurprisingly, there is a huge pile of similar tools. This project is super
 small and as such of course lacks a lot of features that other packages offer.
-We provide</p>
+We only</p>
 <ul class="simple">
-<li><p>simple helpers to set up the params (<code class="docutils literal notranslate"><span class="pre">plist()</span></code>, <code class="docutils literal notranslate"><span class="pre">pgrid()</span></code>,
+<li><p>provide simple helpers to set up the params (<code class="docutils literal notranslate"><span class="pre">plist()</span></code>, <code class="docutils literal notranslate"><span class="pre">pgrid()</span></code>,
 <code class="docutils literal notranslate"><span class="pre">stargrid()</span></code>)</p></li>
 <li><p>hook into the <code class="docutils literal notranslate"><span class="pre">concurrent.futures</span></code> API (<code class="docutils literal notranslate"><span class="pre">multiprocessing</span></code> or <code class="docutils literal notranslate"><span class="pre">dask</span></code>) for
 parallel runs</p></li>
@@ -1947,6 +2065,8 @@ more reproducibility, look into using one of the workflow frameworks above.</p>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#simulate-dry-run-look-before-you-leap">Simulate / Dry-Run: look before you leap</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#advanced-give-runs-names-for-easy-post-processing">Advanced: Give runs names for easy post-processing</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#how-to-handle-failing-workloads">How to handle failing workloads</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#text-logging-per-pset">Text logging per <code class="docutils literal notranslate"><span class="pre">pset</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#running-on-hpc-compute-infrastructure">Running on (HPC) compute infrastructure</a><ul class="nav section-nav flex-column">
