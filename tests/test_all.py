@@ -13,6 +13,7 @@ import importlib
 import uuid
 import copy
 from functools import partial
+import textwrap
 
 import pandas as pd
 import numpy as np
@@ -976,16 +977,13 @@ def test_run_not_alter_params():
 
 
 class TestCaptureLogs:
-    def get_client(self, use_dask):
-        if use_dask:
-            from dask.distributed import Client, LocalCluster
+    def get_dask_client(self, n):
+        from dask.distributed import Client, LocalCluster
 
-            cluster = LocalCluster(dashboard_address=None)
-            cluster.scale(n=3)
-            client = Client(cluster)
-            return client
-        else:
-            return None
+        cluster = LocalCluster(dashboard_address=None)
+        cluster.scale(n=n)
+        client = Client(cluster)
+        return client
 
     @staticmethod
     def get_print_funcs():
@@ -1012,39 +1010,49 @@ class TestCaptureLogs:
         print(f"{pset=}")
         print("txt on stdout")
         print("txt on stderr", file=sys.stderr)
-        sys.stdout.write("stdout direct")
-        sys.stderr.write("stderr direct")
+        sys.stdout.write("stdout direct\n")
+        sys.stderr.write("stderr direct\n")
         fout, ferr = f_get_print_funcs()
-        fout("txt from fout")
+        fout("txt from fout\n")
         ferr("txt from ferr")
         return dict()
 
     @staticmethod
-    def assert_txt_content(txt):
-        assert "pset=" in txt
-        assert "txt on stdout" in txt
-        assert "txt on stderr" in txt
-        assert "stderr direct" in txt
-        assert "stdout direct" in txt
-        assert "txt from fout" in txt
-        assert "txt from ferr" in txt
+    def assert_txt_content(txt, pset):
+        # fmt: off
+        ref_txt = textwrap.dedent(f"""\
+            {pset=}
+            txt on stdout
+            txt on stderr
+            stdout direct
+            stderr direct
+            txt from fout
+            txt from ferr"""
+            )
+        # fmt: on
+        assert ref_txt == txt
 
     def assert_log_content(self, df, run_id, in_file=False, in_db=False):
         dfs = df[df._run_id == run_id]
-        assert len(dfs) == 3
+        assert len(dfs) == 100
+        # Added after func() is called, so these won't be part of the pset
+        # print in func().
+        skip_cols = ["_pset_runtime", "_logs"]
+        cols = [c for c in df.columns if c not in skip_cols]
         for calc_dir, pset_id in zip(
             dfs._calc_dir.values, dfs._pset_id.values
         ):
+            pset = dfs.loc[dfs._pset_id == pset_id].iloc[0][cols].to_dict()
             if in_db:
                 db_txt = dfs.loc[dfs._pset_id == pset_id, "_logs"].iloc[0]
                 assert len(db_txt) > 0
-                self.assert_txt_content(db_txt)
+                self.assert_txt_content(db_txt, pset)
             fn = pj(calc_dir, pset_id, "logs.txt")
             if in_file:
                 assert os.path.exists(fn)
                 txt = ps.file_read(fn)
                 assert len(txt) > 0
-                self.assert_txt_content(txt)
+                self.assert_txt_content(txt, pset)
                 if in_db:
                     assert db_txt == txt
             else:
@@ -1059,8 +1067,12 @@ class TestCaptureLogs:
         return wrapper(test_func)
 
     @get_parametrize_mark
-    def test(self, should_pass):
-        self.impl(use_dask=False, should_pass=should_pass)
+    def test_serial(self, should_pass):
+        self.impl(use_dask=False, use_pool=False, should_pass=should_pass)
+
+    @get_parametrize_mark
+    def test_pool(self, should_pass):
+        self.impl(use_dask=False, use_pool=True, should_pass=should_pass)
 
     @pytest.mark.skipif(
         (importlib.util.find_spec("dask") is None)
@@ -1068,11 +1080,13 @@ class TestCaptureLogs:
         reason="dask or dask.distributed not found",
     )
     @get_parametrize_mark
-    def test_with_dask(self, should_pass):
-        self.impl(use_dask=True, should_pass=should_pass)
+    def test_dask(self, should_pass):
+        self.impl(use_dask=True, use_pool=False, should_pass=should_pass)
 
-    def impl(self, use_dask, should_pass):
-        client = self.get_client(use_dask)
+    def impl(self, use_dask, use_pool, should_pass):
+        assert not (use_dask and use_pool)
+        dask_client = self.get_dask_client(n=3) if use_dask else None
+        poolsize = 3 if use_pool else None
         func = partial(
             self.func_with_logs,
             f_get_print_funcs=self.get_print_funcs
@@ -1081,13 +1095,14 @@ class TestCaptureLogs:
         )
         with tempfile.TemporaryDirectory() as tmpdir:
             calc_dir = f"{tmpdir}/calc"
-            params = ps.plist("a", [1, 2, 3])
+            params = ps.plist("a", range(100))
             df = ps.run(
                 func,
                 params,
                 calc_dir=calc_dir,
                 capture_logs="file",
-                dask_client=client,
+                dask_client=dask_client,
+                poolsize=poolsize,
             )
             assert not hasattr(df, "_logs")
             self.assert_log_content(
@@ -1099,7 +1114,8 @@ class TestCaptureLogs:
                 params,
                 calc_dir=calc_dir,
                 capture_logs="db",
-                dask_client=client,
+                dask_client=dask_client,
+                poolsize=poolsize,
             )
             assert hasattr(df, "_logs")
             self.assert_log_content(
@@ -1111,7 +1127,8 @@ class TestCaptureLogs:
                 params,
                 calc_dir=calc_dir,
                 capture_logs="db+file",
-                dask_client=client,
+                dask_client=dask_client,
+                poolsize=poolsize,
             )
             assert hasattr(df, "_logs")
             self.assert_log_content(
