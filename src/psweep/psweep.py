@@ -124,7 +124,10 @@ def flatten(seq):
 def file_write(fn: str, txt: str, mode="w"):
     makedirs(os.path.dirname(fn))
     with open(fn, mode=mode) as fd:
-        fd.write(txt)
+        try:
+            fd.write(txt)
+        except UnicodeEncodeError:
+            fd.write(txt.encode("ascii", errors="xmlcharrefreplace").decode())
 
 
 def file_read(fn: str):
