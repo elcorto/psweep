@@ -324,9 +324,10 @@ def get_uuid(retry=10, existing: Sequence = []) -> str:
 def get_many_uuids(
     num: int, retry=10, existing: Sequence = []
 ) -> Sequence[str]:
-    generate = lambda: set([str(uuid.uuid4()) for _ in range(num)])
+    generate = lambda: set(str(uuid.uuid4()) for _ in range(num))
     ret = generate()
-    while (len(ret) < num) or (len(ret & set(existing)) > 0):
+    set_existing = set(existing)
+    while (len(ret) < num) or (len(ret & set_existing) > 0):
         ret = generate()
         retry -= 1
         if retry == 0:
