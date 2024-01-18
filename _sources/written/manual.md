@@ -871,7 +871,7 @@ param_b={pset["b"]}
     pset_id = pset["_pset_id"]
     ps.file_write(f"calc/{pset_id}/input.txt", input_file_txt)
     txt = subprocess.run(
-        f"cd {pset_id}; my_fortran_simulation_code.x < input.txt | tee output.txt,
+        f"cd calc/{pset_id}; my_fortran_simulation_code.x < input.txt | tee output.txt",
         shell=True,
         check=False,
         stderr=subprocess.STDOUT,
