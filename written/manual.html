@@ -1,13 +1,12 @@
 
-
 <!DOCTYPE html>
 
 
-<html lang="en" data-content_root="" >
+<html lang="en" data-content_root="../" >
 
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>Manual &#8212; psweep</title>
   
@@ -19,49 +18,45 @@
   </script>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../_static/styles/theme.css?digest=bd9e20870c6007c4c509" rel="stylesheet" />
-<link href="../_static/styles/bootstrap.css?digest=bd9e20870c6007c4c509" rel="stylesheet" />
-<link href="../_static/styles/pydata-sphinx-theme.css?digest=bd9e20870c6007c4c509" rel="stylesheet" />
+  <link href="../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
 
   
-  <link href="../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=bd9e20870c6007c4c509" rel="stylesheet" />
+  <link href="../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
   <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=bd9e20870c6007c4c509" />
-<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=bd9e20870c6007c4c509" />
-  <script src="../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=bd9e20870c6007c4c509"></script>
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
 
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/clipboard.min.js"></script>
-    <script src="../_static/copybutton.js"></script>
-    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script src="../_static/design-tabs.js"></script>
-    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
-const thebe_selector = ".thebe,.cell"
-const thebe_selector_input = "pre"
-const thebe_selector_output = ".output, .cell_output"
-</script>
-    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script src="../_static/design-tabs.js?v=36754332"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'written/manual';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -79,7 +74,6 @@ const thebe_selector_output = ".output, .cell_output"
   <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
   
   <div id="pst-scroll-pixel-helper"></div>
-
   
   <button type="button" class="btn rounded-pill" id="pst-back-to-top">
     <i class="fa-solid fa-arrow-up"></i>
@@ -119,20 +113,15 @@ const thebe_selector_output = ".output, .cell_output"
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
 </form></div>
   </div>
-
-  <header>
   
-    <div class="bd-header navbar navbar-expand-lg bd-navbar">
-    </div>
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+    </header>
   
-  </header>
 
   <div class="bd-container">
     <div class="bd-container__inner bd-page-width">
       
       
-      
-        
       
       <div class="bd-sidebar-primary bd-sidebar">
         
@@ -166,7 +155,18 @@ const thebe_selector_output = ".output, .cell_output"
   
   
 </a></div>
-        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         
         <ul class="nav bd-sidenav bd-sidenav__home-link">
@@ -470,7 +470,7 @@ document.write(`
                 <article class="bd-article">
                   
   <section class="tex2jax_ignore mathjax_ignore" id="manual">
-<h1>Manual<a class="headerlink" href="#manual" title="Permalink to this heading">#</a></h1>
+<h1>Manual<a class="headerlink" href="#manual" title="Link to this heading">#</a></h1>
 <p>This package helps you to set up and run parameter studies.</p>
 <p>Mostly, you’ll start with a script and a for-loop and ask “why do I
 need a package for that”? Well, soon you’ll want housekeeping tools
@@ -501,7 +501,7 @@ See the <a class="reference internal" href="#s-distributed"><span class="std std
 out to more advanced compute infrastructure.</p>
 </div>
 <section id="getting-started">
-<h2>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this heading">#</a></h2>
+<h2>Getting started<a class="headerlink" href="#getting-started" title="Link to this heading">#</a></h2>
 <p>A simple example: Loop over two parameters <code class="docutils literal notranslate"><span class="pre">a</span></code> and <code class="docutils literal notranslate"><span class="pre">b</span></code> in a nested loop (grid),
 calculate and store the result of a calculation for each parameter combination.</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">random</span>
@@ -589,7 +589,7 @@ same as the integer index <code class="docutils literal notranslate"><span class
 <a class="reference external" href="https://joblib.readthedocs.io">joblib</a> package.</p>
 </section>
 <section id="concepts">
-<h2>Concepts<a class="headerlink" href="#concepts" title="Permalink to this heading">#</a></h2>
+<h2>Concepts<a class="headerlink" href="#concepts" title="Link to this heading">#</a></h2>
 <p>The basic data structure for a param study is a list of “parameter sets” or
 short “<code class="docutils literal notranslate"><span class="pre">pset</span></code>s”, each of which is a dict.</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">params</span> <span class="o">=</span> <span class="p">[{</span><span class="s2">&quot;a&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">:</span> <span class="mi">88</span><span class="p">},</span>  <span class="c1"># pset 1</span>
@@ -627,7 +627,7 @@ per pset). Using <code class="docutils literal notranslate"><span class="pre">ps
 <code class="docutils literal notranslate"><span class="pre">params</span></code> using <code class="docutils literal notranslate"><span class="pre">multiprocessing.Pool</span></code>.</p>
 </section>
 <section id="building-parameter-grids">
-<h2>Building parameter grids<a class="headerlink" href="#building-parameter-grids" title="Permalink to this heading">#</a></h2>
+<h2>Building parameter grids<a class="headerlink" href="#building-parameter-grids" title="Link to this heading">#</a></h2>
 <p>This package offers some very simple helper functions which assist in creating
 <code class="docutils literal notranslate"><span class="pre">params</span></code>. Basically, we define the to-be-varied parameters and then use
 something like <code class="docutils literal notranslate"><span class="pre">itertools.product()</span></code> to loop over them to create <code class="docutils literal notranslate"><span class="pre">params</span></code>,
@@ -746,9 +746,9 @@ a static <code class="docutils literal notranslate"><span class="pre">params</sp
 previous study, etc.</p>
 <p>The point is: you generate <code class="docutils literal notranslate"><span class="pre">params</span></code>, we run the study.</p>
 <section id="gotchas">
-<h3>Gotchas<a class="headerlink" href="#gotchas" title="Permalink to this heading">#</a></h3>
+<h3>Gotchas<a class="headerlink" href="#gotchas" title="Link to this heading">#</a></h3>
 <section id="pgrid">
-<h4><code class="docutils literal notranslate"><span class="pre">pgrid</span></code><a class="headerlink" href="#pgrid" title="Permalink to this heading">#</a></h4>
+<h4><code class="docutils literal notranslate"><span class="pre">pgrid</span></code><a class="headerlink" href="#pgrid" title="Link to this heading">#</a></h4>
 <p>tl;dr: <code class="docutils literal notranslate"><span class="pre">pgrid(a,b,...)</span></code> is a convenience API. It can’t handle all corner
 cases. If in doubt, use <code class="docutils literal notranslate"><span class="pre">pgrid([a,b,...])</span></code> (or even <code class="docutils literal notranslate"><span class="pre">itr2params(product(...))</span></code>
 directly).</p>
@@ -783,14 +783,14 @@ raise an error, just as in case <code class="docutils literal notranslate"><span
 </div>
 </section>
 <section id="zip">
-<h4><code class="docutils literal notranslate"><span class="pre">zip</span></code><a class="headerlink" href="#zip" title="Permalink to this heading">#</a></h4>
+<h4><code class="docutils literal notranslate"><span class="pre">zip</span></code><a class="headerlink" href="#zip" title="Link to this heading">#</a></h4>
 <p>When using <code class="docutils literal notranslate"><span class="pre">zip(a,b)</span></code>, make sure that <code class="docutils literal notranslate"><span class="pre">a</span></code> and <code class="docutils literal notranslate"><span class="pre">b</span></code> have the same length, else <code class="docutils literal notranslate"><span class="pre">zip</span></code>
 will return an iterator whose length is <code class="docutils literal notranslate"><span class="pre">min(len(a),</span> <span class="pre">len(b))</span></code>.</p>
 </section>
 </section>
 </section>
 <section id="the-database">
-<h2>The database<a class="headerlink" href="#the-database" title="Permalink to this heading">#</a></h2>
+<h2>The database<a class="headerlink" href="#the-database" title="Link to this heading">#</a></h2>
 <p>By default, <code class="docutils literal notranslate"><span class="pre">ps.run()</span></code> writes a database <code class="docutils literal notranslate"><span class="pre">calc/database.pk</span></code> (a pickled
 DataFrame) with the default <code class="docutils literal notranslate"><span class="pre">calc_dir='calc'</span></code>. You can turn that off using
 <code class="docutils literal notranslate"><span class="pre">save=False</span></code> if you want. If you run <code class="docutils literal notranslate"><span class="pre">ps.run()</span></code> again</p>
@@ -808,7 +808,7 @@ session when you pass in <code class="docutils literal notranslate"><span class=
 </div>
 </section>
 <section id="special-database-fields-and-repeated-runs">
-<h2>Special database fields and repeated runs<a class="headerlink" href="#special-database-fields-and-repeated-runs" title="Permalink to this heading">#</a></h2>
+<h2>Special database fields and repeated runs<a class="headerlink" href="#special-database-fields-and-repeated-runs" title="Link to this heading">#</a></h2>
 <p>See <code class="docutils literal notranslate"><span class="pre">examples/*repeat.py</span></code>.</p>
 <p>It is important to get the difference between the two special fields
 <code class="docutils literal notranslate"><span class="pre">_run_id</span></code> and <code class="docutils literal notranslate"><span class="pre">_pset_id</span></code>, the most important one being <code class="docutils literal notranslate"><span class="pre">_pset_id</span></code>.</p>
@@ -853,7 +853,7 @@ same</em> <code class="docutils literal notranslate"><span class="pre">_pset_has
 the same pset, e.g. an exact repetition of one experiment. But since we use
 UUIDs for <code class="docutils literal notranslate"><span class="pre">_pset_id</span></code>, those calculations can still be distinguished.</p>
 <section id="filter-by-pset-hashes">
-<h3>Filter by <code class="docutils literal notranslate"><span class="pre">pset</span></code> hashes<a class="headerlink" href="#filter-by-pset-hashes" title="Permalink to this heading">#</a></h3>
+<h3>Filter by <code class="docutils literal notranslate"><span class="pre">pset</span></code> hashes<a class="headerlink" href="#filter-by-pset-hashes" title="Link to this heading">#</a></h3>
 <p>As mentioned, we create a hash for each <code class="docutils literal notranslate"><span class="pre">pset</span></code>, which is stored in the
 <code class="docutils literal notranslate"><span class="pre">_pset_hash</span></code> database column. This unlocks powerful database filter options.</p>
 <p>As shown above, when calling <code class="docutils literal notranslate"><span class="pre">run()</span></code> twice
@@ -869,7 +869,7 @@ only add calculations for new <code class="docutils literal notranslate"><span c
 </section>
 </section>
 <section id="best-practices">
-<h2>Best practices<a class="headerlink" href="#best-practices" title="Permalink to this heading">#</a></h2>
+<h2>Best practices<a class="headerlink" href="#best-practices" title="Link to this heading">#</a></h2>
 <p>The following workflows and practices come from experience. They are, if
 you will, the “framework” for how to do things. However, we decided to
 not codify any of these ideas but to only provide tools to make them
@@ -878,7 +878,7 @@ requirements and workflows.</p>
 <p>Please also have a look at the <code class="docutils literal notranslate"><span class="pre">examples/</span></code> dir where we document these
 and more common workflows.</p>
 <section id="save-data-on-disk-use-uuids">
-<h3>Save data on disk, use UUIDs<a class="headerlink" href="#save-data-on-disk-use-uuids" title="Permalink to this heading">#</a></h3>
+<h3>Save data on disk, use UUIDs<a class="headerlink" href="#save-data-on-disk-use-uuids" title="Link to this heading">#</a></h3>
 <p>Assume that you need to save results from a <code class="docutils literal notranslate"><span class="pre">func()</span></code> call not only in the
 returned dict from <code class="docutils literal notranslate"><span class="pre">func</span></code> (or even not at all!) but on disk, for instance when
 you call an external program which saves data on disk. Consider this toy
@@ -947,7 +947,7 @@ by a UUID that will never change. This is the only kind of naming
 convention which makes sense in the long run.</p>
 </section>
 <section id="post-processing">
-<h3>Post-processing<a class="headerlink" href="#post-processing" title="Permalink to this heading">#</a></h3>
+<h3>Post-processing<a class="headerlink" href="#post-processing" title="Link to this heading">#</a></h3>
 <p>An example of a simple post-processing script that reads data from disk
 (<code class="docutils literal notranslate"><span class="pre">examples/save_data_on_disk/20eval.py</span></code>):</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">df_read</span><span class="p">(</span><span class="s2">&quot;calc/database.pk&quot;</span><span class="p">)</span>
@@ -970,7 +970,7 @@ convention which makes sense in the long run.</p>
 </div>
 </section>
 <section id="iterative-extension-of-a-parameter-study">
-<h3>Iterative extension of a parameter study<a class="headerlink" href="#iterative-extension-of-a-parameter-study" title="Permalink to this heading">#</a></h3>
+<h3>Iterative extension of a parameter study<a class="headerlink" href="#iterative-extension-of-a-parameter-study" title="Link to this heading">#</a></h3>
 <p>See <code class="docutils literal notranslate"><span class="pre">examples/multiple_local_1d_scans/</span></code> and <code class="docutils literal notranslate"><span class="pre">examples/*repeat*</span></code>.</p>
 <p>You can backup old calc dirs when repeating calls to <code class="docutils literal notranslate"><span class="pre">ps.run()</span></code> using the
 <code class="docutils literal notranslate"><span class="pre">backup</span></code> keyword.</p>
@@ -998,7 +998,7 @@ study again. You will modify <code class="docutils literal notranslate"><span cl
 study.</p>
 </section>
 <section id="use-git">
-<h3>Use git<a class="headerlink" href="#use-git" title="Permalink to this heading">#</a></h3>
+<h3>Use git<a class="headerlink" href="#use-git" title="Link to this heading">#</a></h3>
 <p>Instead or in addition to using</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">backup</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
@@ -1029,7 +1029,7 @@ message containing the current <code class="docutils literal notranslate"><span 
 </pre></div>
 </div>
 <section id="how-to-handle-large-files-when-using-git">
-<h4>How to handle large files when using git<a class="headerlink" href="#how-to-handle-large-files-when-using-git" title="Permalink to this heading">#</a></h4>
+<h4>How to handle large files when using git<a class="headerlink" href="#how-to-handle-large-files-when-using-git" title="Link to this heading">#</a></h4>
 <p>The first option is to <code class="docutils literal notranslate"><span class="pre">.gitignore</span></code> them. Another is to use
 <a class="reference external" href="https://git-lfs.github.com"><code class="docutils literal notranslate"><span class="pre">git-lfs</span></code></a> (see the section on that later). That way you track their
 changes but only store the most recent version. Or you leave those files on
@@ -1040,7 +1040,7 @@ building blocks.</p>
 </section>
 </section>
 <section id="simulate-dry-run-look-before-you-leap">
-<h3>Simulate / Dry-Run: look before you leap<a class="headerlink" href="#simulate-dry-run-look-before-you-leap" title="Permalink to this heading">#</a></h3>
+<h3>Simulate / Dry-Run: look before you leap<a class="headerlink" href="#simulate-dry-run-look-before-you-leap" title="Link to this heading">#</a></h3>
 <p>See <code class="docutils literal notranslate"><span class="pre">examples/vary_1_param_simulate.py</span></code>.</p>
 <p>When you fiddle with finding the next good <code class="docutils literal notranslate"><span class="pre">params</span></code> and even when using
 <code class="docutils literal notranslate"><span class="pre">backup</span></code> and/or <code class="docutils literal notranslate"><span class="pre">git</span></code>, appending to the old database might be
@@ -1068,7 +1068,7 @@ $<span class="w"> </span>cp<span class="w"> </span>calc/database.pk<span class="
 real run, but in a safe separate dir which you can delete later.</p>
 </section>
 <section id="advanced-give-runs-names-for-easy-post-processing">
-<h3>Advanced: Give runs names for easy post-processing<a class="headerlink" href="#advanced-give-runs-names-for-easy-post-processing" title="Permalink to this heading">#</a></h3>
+<h3>Advanced: Give runs names for easy post-processing<a class="headerlink" href="#advanced-give-runs-names-for-easy-post-processing" title="Link to this heading">#</a></h3>
 <p>See <code class="docutils literal notranslate"><span class="pre">examples/vary_1_param_study_column.py</span></code>.</p>
 <p>Post-processing is not the scope of the package. The database is a
 <code class="docutils literal notranslate"><span class="pre">pandas</span></code> DataFrame and that’s it. You can query it and use your full <code class="docutils literal notranslate"><span class="pre">pandas</span></code>
@@ -1127,7 +1127,7 @@ change the “study” column at any time, or delete it again.</p>
 <p>Super Pro tip: Make a backup of the database first!</p>
 </section>
 <section id="how-to-handle-failing-workloads">
-<span id="s-wrap-failed-func"></span><h3>How to handle failing workloads<a class="headerlink" href="#how-to-handle-failing-workloads" title="Permalink to this heading">#</a></h3>
+<span id="s-wrap-failed-func"></span><h3>How to handle failing workloads<a class="headerlink" href="#how-to-handle-failing-workloads" title="Link to this heading">#</a></h3>
 <p>If the code in <code class="docutils literal notranslate"><span class="pre">func()</span></code> fails and raises a Python exception, it will take
 down the whole run (the call <code class="docutils literal notranslate"><span class="pre">run(func,</span> <span class="pre">params,</span> <span class="pre">...)</span></code>).</p>
 <p>Sometimes we instead want to catch that, log the event, carry on and later
@@ -1174,7 +1174,7 @@ to log more data.</p>
 more.</p>
 </section>
 <section id="text-logging-per-pset">
-<h3>Text logging per <code class="docutils literal notranslate"><span class="pre">pset</span></code><a class="headerlink" href="#text-logging-per-pset" title="Permalink to this heading">#</a></h3>
+<h3>Text logging per <code class="docutils literal notranslate"><span class="pre">pset</span></code><a class="headerlink" href="#text-logging-per-pset" title="Link to this heading">#</a></h3>
 <p>All text sent to the terminal (<code class="docutils literal notranslate"><span class="pre">sys.stdout</span></code> and <code class="docutils literal notranslate"><span class="pre">sys.stderr</span></code>) by any code in
 <code class="docutils literal notranslate"><span class="pre">func()</span></code> can be redirected to a database field <code class="docutils literal notranslate"><span class="pre">_logs</span></code>, a file
 <code class="docutils literal notranslate"><span class="pre">&lt;calc_dir&gt;/&lt;pset_id&gt;/logs.txt</span></code>, or both, by using</p>
@@ -1244,20 +1244,20 @@ discussion</a>). But you can also use
 </section>
 </section>
 <section id="running-on-hpc-compute-infrastructure">
-<span id="s-distributed"></span><h2>Running on (HPC) compute infrastructure<a class="headerlink" href="#running-on-hpc-compute-infrastructure" title="Permalink to this heading">#</a></h2>
+<span id="s-distributed"></span><h2>Running on (HPC) compute infrastructure<a class="headerlink" href="#running-on-hpc-compute-infrastructure" title="Link to this heading">#</a></h2>
 <p>We have support for managing calculations on remote systems such
 as HPC clusters with a batch system like SLURM.</p>
 <p>You can use <code class="docutils literal notranslate"><span class="pre">dask</span></code> tooling or a template-based workflow. Both have their
 pros and cons (no free lunch!), but try <code class="docutils literal notranslate"><span class="pre">dask</span></code> first.</p>
 <section id="dask">
-<h3><code class="docutils literal notranslate"><span class="pre">dask</span></code><a class="headerlink" href="#dask" title="Permalink to this heading">#</a></h3>
+<h3><code class="docutils literal notranslate"><span class="pre">dask</span></code><a class="headerlink" href="#dask" title="Link to this heading">#</a></h3>
 <p>Overview of <code class="docutils literal notranslate"><span class="pre">dask</span></code>’s architecture (from <a class="reference external" href="https://docs.dask.org/en/stable/deploying.html">the <code class="docutils literal notranslate"><span class="pre">dask</span></code>
 docs</a>).</p>
 <figure class="align-center">
 <a class="reference internal image-reference" href="https://docs.dask.org/en/stable/_images/dask-cluster-manager.svg"><img alt="https://docs.dask.org/en/stable/_images/dask-cluster-manager.svg" src="https://docs.dask.org/en/stable/_images/dask-cluster-manager.svg" width="80%" /></a>
 </figure>
 <section id="overview">
-<h4>Overview<a class="headerlink" href="#overview" title="Permalink to this heading">#</a></h4>
+<h4>Overview<a class="headerlink" href="#overview" title="Link to this heading">#</a></h4>
 <p>The <code class="docutils literal notranslate"><span class="pre">dask</span></code> ecosystem provides <a class="reference external" href="https://distributed.dask.org"><code class="docutils literal notranslate"><span class="pre">dask.distributed</span></code></a> which
 lets you spin up a dask cluster on distributed infrastructure.
 <a class="reference external" href="https://jobqueue.dask.org"><code class="docutils literal notranslate"><span class="pre">dask_jobqueue</span></code></a> supports doing this on HPC machines.</p>
@@ -1274,7 +1274,7 @@ workload and the compute infrastructure you wish to run on.</p>
 which covers the most important <code class="docutils literal notranslate"><span class="pre">SLURMCluster</span></code> settings.</p>
 </section>
 <section id="api">
-<h4>API<a class="headerlink" href="#api" title="Permalink to this heading">#</a></h4>
+<h4>API<a class="headerlink" href="#api" title="Link to this heading">#</a></h4>
 <p>The <code class="docutils literal notranslate"><span class="pre">psweep</span></code> API to use <code class="docutils literal notranslate"><span class="pre">dask</span></code> is just <code class="docutils literal notranslate"><span class="pre">df=ps.run(...,</span> <span class="pre">dask_client=client)</span></code>.</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">dask.distributed</span> <span class="kn">import</span> <span class="n">Client</span><span class="p">,</span> <span class="n">LocalCluster</span>
 
@@ -1306,7 +1306,7 @@ others by Matthew Rocklin.</p>
 <p>is sufficient for running locally.</p>
 </section>
 <section id="example">
-<h4>Example<a class="headerlink" href="#example" title="Permalink to this heading">#</a></h4>
+<h4>Example<a class="headerlink" href="#example" title="Link to this heading">#</a></h4>
 <p>The example below uses the SLURM workload manager typically found in HPC
 centers.</p>
 <p>Create a script that</p>
@@ -1416,7 +1416,7 @@ JOBID<span class="w">     </span>NAME<span class="w">         </span>NODES<span 
 the dask cluster with 10 dask workers each run <code class="docutils literal notranslate"><span class="pre">node123</span></code> and <code class="docutils literal notranslate"><span class="pre">node124</span></code>.</p>
 </section>
 <section id="access-to-the-dask-dashboard">
-<h4>Access to the <code class="docutils literal notranslate"><span class="pre">dask</span></code> dashboard<a class="headerlink" href="#access-to-the-dask-dashboard" title="Permalink to this heading">#</a></h4>
+<h4>Access to the <code class="docutils literal notranslate"><span class="pre">dask</span></code> dashboard<a class="headerlink" href="#access-to-the-dask-dashboard" title="Link to this heading">#</a></h4>
 <p><code class="docutils literal notranslate"><span class="pre">dask</span></code> has a <a class="reference external" href="https://docs.dask.org/en/stable/dashboard.html">nice dashboard</a>
 to visualize the state of all workers. Say you set the dashboard port to 3333
 in <code class="docutils literal notranslate"><span class="pre">SLURMCluster</span></code>. If the <code class="docutils literal notranslate"><span class="pre">dask_control</span></code> process runs on the head node, you
@@ -1433,7 +1433,7 @@ mybox$<span class="w"> </span>browser<span class="w"> </span>localhost:2222
 </div>
 </section>
 <section id="jupyter">
-<h4>Jupyter<a class="headerlink" href="#jupyter" title="Permalink to this heading">#</a></h4>
+<h4>Jupyter<a class="headerlink" href="#jupyter" title="Link to this heading">#</a></h4>
 <p>Many HPC centers offer a <a class="reference external" href="https://jupyter.org/hub">JupyterHub</a> service, where a
 small batch job is started that runs a JupyterLab. When using that, you can
 skip the <code class="docutils literal notranslate"><span class="pre">dask_control</span></code> batch job part and run the content of <code class="docutils literal notranslate"><span class="pre">run_psweep.py</span></code>
@@ -1442,7 +1442,7 @@ extension</a> that gives you access to
 the dask dashboard and more.</p>
 </section>
 <section id="pros-and-cons">
-<h4>Pros and Cons<a class="headerlink" href="#pros-and-cons" title="Permalink to this heading">#</a></h4>
+<h4>Pros and Cons<a class="headerlink" href="#pros-and-cons" title="Link to this heading">#</a></h4>
 <div class="hint admonition">
 <p class="admonition-title">Pros</p>
 <ul class="simple">
@@ -1479,7 +1479,7 @@ for more.</p></li>
 </section>
 </section>
 <section id="templates">
-<h3>Templates<a class="headerlink" href="#templates" title="Permalink to this heading">#</a></h3>
+<h3>Templates<a class="headerlink" href="#templates" title="Link to this heading">#</a></h3>
 <p>This template-based workflow is basically a modernized
 and stripped-down version of
 <a class="reference external" href="https://elcorto.github.io/pwtools/written/background/param_study.html"><code class="docutils literal notranslate"><span class="pre">pwtools.batch</span></code></a>.
@@ -1504,7 +1504,7 @@ install <code class="docutils literal notranslate"><span class="pre">psweep</spa
 Since we actually don’t start jobs or talk to the batch system, you have full
 control over every part of the workflow. We just automate the boring stuff.</p>
 <section id="workflow-summary">
-<h4>Workflow summary<a class="headerlink" href="#workflow-summary" title="Permalink to this heading">#</a></h4>
+<h4>Workflow summary<a class="headerlink" href="#workflow-summary" title="Link to this heading">#</a></h4>
 <ul class="simple">
 <li><p>define <code class="docutils literal notranslate"><span class="pre">params</span></code> to be varied as shown above (probably in a script, say
 <code class="docutils literal notranslate"><span class="pre">input.py</span></code>)</p></li>
@@ -1567,7 +1567,7 @@ commands still in there, but commented out</p></li>
 </ul>
 </section>
 <section id="templates-layout-and-written-files">
-<h4>Templates layout and written files<a class="headerlink" href="#templates-layout-and-written-files" title="Permalink to this heading">#</a></h4>
+<h4>Templates layout and written files<a class="headerlink" href="#templates-layout-and-written-files" title="Link to this heading">#</a></h4>
 <p>An example template dir, based on <code class="docutils literal notranslate"><span class="pre">examples/batch_templates</span></code>:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>templates
 ├── calc
@@ -1582,13 +1582,13 @@ commands still in there, but commented out</p></li>
 </pre></div>
 </div>
 <section id="calc-templates">
-<h5>calc templates<a class="headerlink" href="#calc-templates" title="Permalink to this heading">#</a></h5>
+<h5>calc templates<a class="headerlink" href="#calc-templates" title="Link to this heading">#</a></h5>
 <p>Each file in <code class="docutils literal notranslate"><span class="pre">templates/calc</span></code> such as <code class="docutils literal notranslate"><span class="pre">run.py</span></code> will be treated as
 template, goes thru the file template machinery and ends up in
 <code class="docutils literal notranslate"><span class="pre">calc/&lt;pset_id&gt;/</span></code>.</p>
 </section>
 <section id="machine-templates">
-<h5>machine templates<a class="headerlink" href="#machine-templates" title="Permalink to this heading">#</a></h5>
+<h5>machine templates<a class="headerlink" href="#machine-templates" title="Link to this heading">#</a></h5>
 <p>The example above has machine templates for 2 machines, “local” and a
 remote machine named “cluster”. <code class="docutils literal notranslate"><span class="pre">psweep</span></code> will generate <code class="docutils literal notranslate"><span class="pre">run_&lt;machine&gt;.sh</span></code>
 for both. Also you must provide a file <code class="docutils literal notranslate"><span class="pre">info.yaml</span></code> to store
@@ -1651,7 +1651,7 @@ calc/65b7b453-96ec-4694-a0c4-4f71c53d982a
 </section>
 </section>
 <section id="git-support">
-<h4>git support<a class="headerlink" href="#git-support" title="Permalink to this heading">#</a></h4>
+<h4>git support<a class="headerlink" href="#git-support" title="Link to this heading">#</a></h4>
 <p>Use <code class="docutils literal notranslate"><span class="pre">prep_batch(...,</span> <span class="pre">git=True)</span></code> to have some basic git support such as
 automatic commits in each call. It just uses <code class="docutils literal notranslate"><span class="pre">run(...,</span> <span class="pre">git=True)</span></code> when
 creating batch scripts, so all best practices for that apply here as well. In
@@ -1660,7 +1660,7 @@ well, which you may safely do when data in <code class="docutils literal notrans
 for example.</p>
 </section>
 <section id="s-template-pro-con">
-<span id="id1"></span><h4>Pros and Cons<a class="headerlink" href="#s-template-pro-con" title="Permalink to this heading">#</a></h4>
+<span id="id1"></span><h4>Pros and Cons<a class="headerlink" href="#s-template-pro-con" title="Link to this heading">#</a></h4>
 <div class="hint admonition">
 <p class="admonition-title">Pros</p>
 <ul class="simple">
@@ -1765,9 +1765,9 @@ something that matches your compute infrastructure.</p>
 </section>
 </section>
 <section id="special-topics">
-<h2>Special topics<a class="headerlink" href="#special-topics" title="Permalink to this heading">#</a></h2>
+<h2>Special topics<a class="headerlink" href="#special-topics" title="Link to this heading">#</a></h2>
 <section id="how-to-migrate-a-normal-git-repo-to-git-lfs">
-<h3>How to migrate a normal <code class="docutils literal notranslate"><span class="pre">git</span></code> repo to <code class="docutils literal notranslate"><span class="pre">git-lfs</span></code><a class="headerlink" href="#how-to-migrate-a-normal-git-repo-to-git-lfs" title="Permalink to this heading">#</a></h3>
+<h3>How to migrate a normal <code class="docutils literal notranslate"><span class="pre">git</span></code> repo to <code class="docutils literal notranslate"><span class="pre">git-lfs</span></code><a class="headerlink" href="#how-to-migrate-a-normal-git-repo-to-git-lfs" title="Link to this heading">#</a></h3>
 <p>First we’ll quickly mention how to set up LFS in a <em>new</em> repo. In this case we
 just need to configure <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">lfs</span></code> to track certain files. We’ll use dirs
 <code class="docutils literal notranslate"><span class="pre">_pics/</span></code> and <code class="docutils literal notranslate"><span class="pre">calc/</span></code> as examples.</p>
@@ -1823,7 +1823,7 @@ $<span class="w"> </span>cat<span class="w"> </span>_pics/foo.png
 </section>
 </section>
 <section id="scope-and-related-projects">
-<h2>Scope and related projects<a class="headerlink" href="#scope-and-related-projects" title="Permalink to this heading">#</a></h2>
+<h2>Scope and related projects<a class="headerlink" href="#scope-and-related-projects" title="Link to this heading">#</a></h2>
 <p>This project aims to be agnostic to the field of study. We target problems that
 can be formulated as <strong>computational experiments</strong>: “let’s vary X,Y and
 analyze the results”.</p>
@@ -1973,7 +1973,7 @@ engines</a> and <a class="reference external" href="https://neptune.ai/blog/mlop
 longer list of MLOps
 tools</a>.</p>
 <section id="handling-task-dependencies">
-<span id="s-task-deps"></span><h3>Handling task dependencies<a class="headerlink" href="#handling-task-dependencies" title="Permalink to this heading">#</a></h3>
+<span id="s-task-deps"></span><h3>Handling task dependencies<a class="headerlink" href="#handling-task-dependencies" title="Link to this heading">#</a></h3>
 <p>In <code class="docutils literal notranslate"><span class="pre">psweep</span></code> we assume that workloads are independent and “embarrassingly
 parallel” if using <code class="docutils literal notranslate"><span class="pre">multiprocessing</span></code> or <code class="docutils literal notranslate"><span class="pre">dask</span></code>.</p>
 <p>So while <code class="docutils literal notranslate"><span class="pre">psweep</span></code> is not a workflow engine where you can model task
@@ -2160,8 +2160,8 @@ By Steve Schmerler
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../_static/scripts/bootstrap.js?digest=bd9e20870c6007c4c509"></script>
-<script src="../_static/scripts/pydata-sphinx-theme.js?digest=bd9e20870c6007c4c509"></script>
+  <script src="../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
 
   <footer class="bd-footer">
   </footer>
