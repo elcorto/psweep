@@ -1,3 +1,4 @@
+[![ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 [![pypi](https://img.shields.io/pypi/v/psweep?color=blue)](https://pypi.org/project/psweep)
 ![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/elcorto/psweep/tests.yml?branch=master&label=tests)
 [![DOI](https://zenodo.org/badge/92956212.svg)](https://zenodo.org/badge/latestdoi/92956212)
