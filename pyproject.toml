@@ -35,8 +35,7 @@ test = [
     "pytest-xdist",
 ]
 
-# Once black and ruff can reliably ignore files.
-##dev = ["pre-commit"]
+dev = ["pre-commit"]
 
 # See doc/requirements.txt
 #
@@ -73,24 +72,21 @@ script-files = [
 ]
 
 
-# These tools get in the way sometimes. extend-exclude doesn't work, fix later.
-# In examples/batch_with_git/templates/calc/run.py we have place holders $foo
-# that break parsing.
+# We skip the extend-exclude config here since that is only needed for
+# "pre-commit run -a" which we only do using ruff. The black config is for
+# cases where people run something like "black foo.py" manually.
 [tool.black]
 line-length = 79
-##extend-exclude = """
-##(
-##    ^/examples/batch_with_git/templates/calc/run.py
-##)
-##"""
 
 
+# In examples/**/run.py we have place holders $foo that break parsing.
 [tool.ruff]
 line-length = 79
-lint.ignore = ["E501", "E731"]
-##extend-exclude = [
-##    "examples/batch_with_git/templates/calc/run.py",
-##]
+lint.ignore = ["E501", "E731", "E722", "F403"]
+extend-exclude = [
+    "examples/batch_templates_git/templates/calc/run.py",
+    "examples/batch_templates/templates/calc/run.py",
+]
 
 
 [tool.mypy]
