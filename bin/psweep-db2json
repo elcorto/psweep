@@ -43,10 +43,9 @@ example:
         02ca9694-696e-4fdd-ac08-8c343080bb63 2018-09-03T00:00:24Z
         0a1fb364-8681-4178-869e-1126f3719da4 2018-09-02T22:23:47Z
         97058ee2-2e81-426f-b674-04b7ec718c43 2018-09-02T22:09:44Z
-""".format(this=os.path.basename(__file__),
-           db='database.pk')
+""".format(this=os.path.basename(__file__), db="database.pk")
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     args = docopt.docopt(__doc__)
-    df = ps.df_read(args['<file>'])
-    print(ps.df_to_json(df, orient=args['-o']))
+    df = ps.df_read(args["<file>"])
+    print(ps.df_to_json(df, orient=args["-o"]))

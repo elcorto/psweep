@@ -5,7 +5,6 @@ import psweep as ps
 
 
 if __name__ == "__main__":
-
     df = ps.df_read("calc/database.pk")
 
     # Filter database

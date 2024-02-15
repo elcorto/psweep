@@ -16,7 +16,6 @@ def func(pset):
 
 
 if __name__ == "__main__":
-
     print("first run")
 
     const = {"a": 11111, "b": 55555}
@@ -27,7 +26,6 @@ if __name__ == "__main__":
     values = dict(a=[1, 2, 3], b=[66, 77])
 
     for study, seq in values.items():
-
         # [{'a': 1}, {'a': 2}, {'a': 3}]
         # [{'b': 66}, {'b': 77}]
         params_1d = ps.plist(study, seq)

@@ -12,6 +12,7 @@ from dask_jobqueue import SLURMCluster
 import numpy as np
 import psweep as ps
 
+
 def func(pset):
     time.sleep(1)
     return dict(b=pset["a"] * np.random.rand(10))

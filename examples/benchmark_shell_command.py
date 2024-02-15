@@ -21,22 +21,21 @@ import psweep as ps
 
 
 def func(pset):
-
     cmd_tmpl = """
         echo "calling func: pset: a={a} b={b} const={const}";
         sleep $(echo "0.1 * {a} / {b}" | bc -l)
         """
     cmd = cmd_tmpl.format(**pset)
-    timing = min(timeit.repeat(lambda: run(cmd, shell=True),
-                               repeat=3,
-                               number=1))
-    return {'timing': timing}
+    timing = min(
+        timeit.repeat(lambda: run(cmd, shell=True), repeat=3, number=1)
+    )
+    return {"timing": timing}
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     params = ps.pgrid(
-        ps.plist('a', [1,2,3,4]),
-        ps.plist('b', [1.0,2.0]),
-        ps.plist('const', ['const']),
-        )
+        ps.plist("a", [1, 2, 3, 4]),
+        ps.plist("b", [1.0, 2.0]),
+        ps.plist("const", ["const"]),
+    )
     df = ps.run(func, params)
