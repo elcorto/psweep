@@ -35,7 +35,13 @@ test = [
     "pytest-xdist",
 ]
 
-dev = ["pre-commit"]
+# We need to sync the ruff version here with the one in
+# .pre-commit-config.yaml, ahh well.
+dev = [
+    "pre-commit",
+    "ruff == 0.2.1",
+]
+
 
 # See doc/requirements.txt
 #

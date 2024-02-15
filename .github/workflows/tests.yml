@@ -11,7 +11,7 @@ on:
 jobs:
   tests:
     strategy:
-      fail-fast: false
+      fail-fast: true
       matrix:
         python-version: ["3.10", "3.11", "3.12"]
         os: [ubuntu-latest]
@@ -30,7 +30,28 @@ jobs:
 
       - name: install
         run: |
-          pip install -e ".[test,dask]"
+          pip install -e ".[test,dask,dev]"
+
+      # We run this for each Python version in the matrix which is redundant,
+      # but since ruff is fast, that's OK. We like to make sure that we install
+      # the ruff version from pyproject.toml, which we achieve by
+      #
+      #   pip install -e ".[dev]"
+      #
+      # Doing this in another workflow such as lint.yml would install psweep +
+      # all deps again just for linting.
+      #
+      # The alternative would be to say
+      #
+      #   pip install ruff==<version>
+      #
+      # but then we duplicate version information, which has to be maintained.
+      - name: lint
+        run: |
+          # Check for lint rules.
+          ruff check .
+          # Check if files need to be formatted. Exit non-zero if the case.
+          ruff format --check .
 
       - name: run tests
         run: |
