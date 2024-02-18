@@ -39,7 +39,7 @@ test = [
 # .pre-commit-config.yaml, ahh well.
 dev = [
     "pre-commit",
-    "ruff == 0.2.1",
+    "ruff == 0.2.2",
 ]
 
 
