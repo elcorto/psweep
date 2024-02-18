@@ -1,9 +1,4 @@
 repos:
-  ##- repo: https://github.com/psf/black
-  ##  rev: 23.11.0
-  ##  hooks:
-  ##  - id: black
-
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: 'v0.2.1'
     hooks:
@@ -11,3 +6,11 @@ repos:
       - id: ruff
       # formatter
       - id: ruff-format
+
+# Config for https://pre-commit.ci/. Need that because dependabot doesn't
+# support this config file
+# (https://github.com/dependabot/dependabot-core/issues/1524), aww man!
+#
+ci:
+  autofix_commit_msg: |
+    [pre-commit.ci] auto fixes from pre-commit.com hooks
