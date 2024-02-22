@@ -6,11 +6,3 @@ repos:
       - id: ruff
       # formatter
       - id: ruff-format
-
-# Config for https://pre-commit.ci/. Need that because dependabot doesn't
-# support this config file
-# (https://github.com/dependabot/dependabot-core/issues/1524), aww man!
-#
-ci:
-  autofix_commit_msg: |
-    [pre-commit.ci] auto fixes from pre-commit.com hooks
