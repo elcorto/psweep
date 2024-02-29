@@ -1161,3 +1161,7 @@ class TestCaptureLogs:
 def test_verbose(verbose):
     params = ps.plist("a", [1, 2, 3])
     ps.run(func_a, params, save=False, verbose=verbose)
+
+
+def test_version():
+    assert isinstance(ps.__version__, str)
