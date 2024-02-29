@@ -35,8 +35,9 @@ test = [
     "pytest-xdist",
 ]
 
-# We need to sync the ruff version here with the one in
-# .pre-commit-config.yaml, ahh well.
+# github dependabot takes care of the ruff version here. The one in
+# .pre-commit-config.yaml is dealt with by https://pre-commit.ci/ because
+# https://github.com/dependabot/dependabot-core/issues/1524 . Well ok, then!
 dev = [
     "pre-commit",
     "ruff == 0.2.2",
