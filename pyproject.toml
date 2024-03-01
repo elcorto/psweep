@@ -79,21 +79,27 @@ script-files = [
 ]
 
 
+# In examples/**/run.py we have place holders $foo that break parsing, that's
+# why we extend-exclude them here.
+[tool.ruff]
+line-length = 79
+lint.ignore = [
+    "E501", # Line too long
+    "E722", # Do not use bare except
+    "E731", # Do not assign a lambda expression, use a def
+    "F403", # from {name} import * used; unable to detect undefined names
+]
+extend-exclude = [
+    "examples/batch_templates_git/templates/calc/run.py",
+    "examples/batch_templates/templates/calc/run.py",
+]
+
+
 # We skip the extend-exclude config here since that is only needed for
 # "pre-commit run -a" which we only do using ruff. The black config is for
 # cases where people run something like "black foo.py" manually.
 [tool.black]
 line-length = 79
-
-
-# In examples/**/run.py we have place holders $foo that break parsing.
-[tool.ruff]
-line-length = 79
-lint.ignore = ["E501", "E731", "E722", "F403"]
-extend-exclude = [
-    "examples/batch_templates_git/templates/calc/run.py",
-    "examples/batch_templates/templates/calc/run.py",
-]
 
 
 [tool.mypy]
