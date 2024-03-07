@@ -797,10 +797,8 @@ def stargrid(
     values (middle of the "star").
 
     When doing that, duplicate psets can occur. By default try to filter them
-    out (use filter_params_unique()) but ignore hash calculation errors and return
-    non-reduced params in that case. If you want to fail at hash errors, use
-
-    >>> filter_params_unique(stargrid(..., skip_dups=False), raise_error=True)
+    out (using :func:`filter_params_unique`) but ignore hash calculation errors
+    and return non-reduced params in that case.
 
     Examples
     --------
@@ -899,7 +897,8 @@ def worker_wrapper(
     simulate: bool = False,
 ) -> dict:
     """
-    Add special fields to `pset` which can be determined at call time.
+    Add those prefix fields (e.g. `_time_utc`) to `pset` which can be
+    determined at call time.
 
     Call worker on exactly one pset. Return updated pset built from
     ``pset.update(worker(pset))``. Do verbose printing.
