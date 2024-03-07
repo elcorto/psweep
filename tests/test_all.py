@@ -628,13 +628,29 @@ def test_pset_hash():
     ps.pset_hash(dict(a=_Foo))
     ps.pset_hash(dict(a=_Foo()))
 
-    d_no_us = dict(a=1, b=2)
-    d_us = dict(a=1, b=2, _c=3)
-    assert ps.pset_hash(d_no_us) == ps.pset_hash(d_us)
-    assert ps.pset_hash(d_no_us) == ps.pset_hash(d_us, skip_special_cols=True)
-    assert not ps.pset_hash(d_no_us) == ps.pset_hash(
-        d_us, skip_special_cols=False
-    )
+
+def test_pset_hash_skip_cols():
+    d_no_pre_post = dict(a=1, b=2)
+    d_pre = dict(a=1, b=2, _c=3)
+    d_post = dict(a=1, b=2, d_=4)
+    d_pre_post = dict(a=1, b=2, _c=3, d_=4)
+
+    f_hash = lambda x: joblib.hash(x, hash_name=ps.PSET_HASH_ALG)
+
+    assert ps.pset_hash(d_pre_post) == f_hash(d_no_pre_post)
+
+    assert ps.pset_hash(d_no_pre_post) == ps.pset_hash(d_pre)
+    assert ps.pset_hash(d_no_pre_post) == ps.pset_hash(d_post)
+    assert ps.pset_hash(d_no_pre_post) == ps.pset_hash(d_pre_post)
+
+    assert ps.pset_hash(d_pre_post, skip_prefix_cols=False) == f_hash(d_pre)
+    assert ps.pset_hash(d_pre_post, skip_postfix_cols=False) == f_hash(d_post)
+    assert ps.pset_hash(
+        d_pre_post, skip_prefix_cols=False, skip_postfix_cols=False
+    ) == f_hash(d_pre_post)
+
+    with pytest.deprecated_call():
+        ps.pset_hash(d_pre_post, skip_special_cols=True)
 
 
 def test_param_build():
