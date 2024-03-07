@@ -154,7 +154,9 @@ def pset_hash(
     dct: dict,
     method=PSET_HASH_ALG,
     raise_error=True,
-    skip_special_cols=True,
+    skip_special_cols=None,
+    skip_prefix_cols=True,
+    skip_postfix_cols=True,
 ):
     """Reproducible hash of a dict for usage in database (hash of a `pset`)."""
 
@@ -192,9 +194,22 @@ def pset_hash(
     # [1] https://death.andgravity.com/stable-hashing
     # [2] https://ourpython.com/python/deterministic-recursive-hashing-in-python
     # [3] https://stackoverflow.com/a/52175075
-    if skip_special_cols:
+    if skip_special_cols is not None:
+        warnings.warn(
+            "skip_special_cols is deprecated, use skip_prefix_cols",
+            DeprecationWarning,
+        )
+        skip_prefix_cols = skip_special_cols
+    skip_cols_test = None
+    if skip_prefix_cols and skip_postfix_cols:
+        skip_cols_test = lambda key: key.startswith("_") or key.endswith("_")
+    elif skip_prefix_cols:
+        skip_cols_test = lambda key: key.startswith("_")
+    elif skip_postfix_cols:
+        skip_cols_test = lambda key: key.endswith("_")
+    if skip_cols_test is not None:
         _dct = {
-            key: val for key, val in dct.items() if not key.startswith("_")
+            key: val for key, val in dct.items() if not skip_cols_test(key)
         }
     else:
         _dct = dct
@@ -846,7 +861,10 @@ def stargrid(
     if skip_dups:
         try:
             return filter_params_unique(
-                params, raise_error=True, skip_special_cols=True
+                params,
+                raise_error=True,
+                skip_prefix_cols=True,
+                skip_postfix_cols=True,
             )
         except PsweepHashError:
             return params
