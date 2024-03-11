@@ -40,7 +40,7 @@ test = [
 # https://github.com/dependabot/dependabot-core/issues/1524 . Well ok, then!
 dev = [
     "pre-commit",
-    "ruff == 0.3.0",
+    "ruff == 0.3.2",
 ]
 
 
