@@ -43,7 +43,7 @@ calculate and store the result of a calculation for each parameter combination.
 
 
 >>> def func(pset):
-...    return {"result": random.random() * pset["a"] * pset["b"]}
+...    return {"result_": random.random() * pset["a"] * pset["b"]}
 
 >>> a = ps.plist("a", [1,2,3])
 >>> b = ps.plist("b", [88,99])
@@ -95,7 +95,7 @@ pickled file `calc/database.pk` by default:
 4      calc 2023-01-20 19:54:09.546977043          4         0    deskbot
 5      calc 2023-01-20 19:54:09.548082113          5         0    deskbot
 
-       result  _pset_runtime
+      result_  _pset_runtime
 0    3.629665       0.000004
 1   59.093600       0.000002
 2   84.056801       0.000002
@@ -104,7 +104,7 @@ pickled file `calc/database.pk` by default:
 5   37.220296       0.000002
 ```
 
-You see the columns `a` and `b`, the column `result` (returned by
+You see the columns `a` and `b`, the column `result_` (returned by
 `func`) and a number of reserved fields for book-keeping such as
 
 ```
@@ -157,13 +157,13 @@ and runs the workload for that pset. `func` must return a
 dict, for example:
 
 ```py
-{'result': 1.234}
+{'result_': 1.234}
 ```
 
 or an updated 'pset':
 
 ```py
-{'a': 1, 'b': 88, 'result': 1.234}
+{'a': 1, 'b': 88, 'result_': 1.234}
 ```
 
 We always merge (`dict.update()`) the result of `func` with the pset, which gives
@@ -179,6 +179,19 @@ using the `ps.run()` helper function. The function adds some special
 columns such as `_run_id` (once per `ps.run()` call) or `_pset_id` (once
 per pset). Using `ps.run(... poolsize=...)` runs `func` in parallel on
 `params` using `multiprocessing.Pool`.
+
+## Naming of database fields
+
+`ps.run()` will add book-keeping fields starting with an underscore prefix
+(e.g. `_pset_id`). By doing that, they can be distinguished from `pset` fields
+`a` and `b`. We *recommend* but not require you name all fields (dict keys)
+generated in `func()` such as `result_` with a trailing or *postfix*
+underscore. That way you can in the database clearly distinguish between
+book-keeping (`_foo`), pset (`a`, `b`) and result-type fields (`bar_`). But
+again, this is only a suggestion, you can name the fields in a `pset` and the
+ones created in `func()` any way you like. See [this section for more
+details](s:more-on-db-field-names).
+
 
 ## Building parameter grids
 
@@ -438,7 +451,7 @@ have as above two unique `_run_id`s, unique `_pset_id`s, but *two sets of the
 same* `_pset_hash`.
 
 ```
-                             _run_id                              _pset_id  _run_seq  _pset_seq                                _pset_hash  a    result
+                             _run_id                              _pset_id  _run_seq  _pset_seq                                _pset_hash  a   result_
 8543fdad-4426-41cb-ab42-8a80b1bebbe2  08cb5f7c-8ce8-451f-846d-db5ac3bcc746         0          0  e4ad4daad53a2eec0313386ada88211e50d693bd  1  0.381589
 8543fdad-4426-41cb-ab42-8a80b1bebbe2  18da3840-d00e-4bdd-b29c-68be2adb164e         0          1  7b7ee754248759adcee9e62a4c1477ed1a8bb1ab  2  1.935220
 8543fdad-4426-41cb-ab42-8a80b1bebbe2  bcc47205-0919-4084-9f07-072eb56ed5fd         0          2  9e0e6d8a99c72daf40337183358cbef91bba7311  3  2.187107
@@ -469,6 +482,36 @@ want to add some more scans *without* removing the code that generated the old
 
 This will skip all `pset`s already in the database based on their hash and
 only add calculations for new `pset`s.
+
+
+(s:more-on-db-field-names)=
+### More details on naming databse fields
+
+We implement the convention to ignore fields starting and ending in an
+underscore at the moment only internally in `ps.pset_hash()` to ensure that the
+hash includes only `pset` variables. However, when `ps.run()` is called, the
+hash is calculated *before* book-keeping fields like `_pset_id` are added and
+`func()` is called to, for instance, return `{'result_': 1.234}` and update the
+`pset`. Therefore, this convention is in fact not needed. It only takes effect
+should you ever want to re-calculate the hash, as in
+
+```py
+>>> for idx, row in df.iterrows():
+...    df.at[idx, "_pset_hash_new"] = ps.pset_hash(row)
+
+>>> df
+   a                                _pset_hash                              _pset_id  ...   result_                            _pset_hash_new
+0  1  64846e128be5c974d6194f77557d0511542835a8  61f899a8-314b-4a19-a359-3502e3e2d009  ...  0.880328  64846e128be5c974d6194f77557d0511542835a8
+1  2  e746f91e51f09064bd7f1e516701ba7d0d908653  cd1dc05b-0fab-4e09-9798-9de94a5b3cd3  ...  0.815945  e746f91e51f09064bd7f1e516701ba7d0d908653
+2  3  96da150761c9d66b31975f11ef44bfb75c2fdc11  6612eab6-5d5a-4fbf-ae18-fdb4846fd459  ...  0.096946  96da150761c9d66b31975f11ef44bfb75c2fdc11
+3  4  79ba178b3895a603bf9d84dea82e034791e8fe30  bf5bf881-3273-4932-a3f3-9c117bca921b  ...  2.606486  79ba178b3895a603bf9d84dea82e034791e8fe30
+```
+
+Here the hash goes only over the `a` field, so `_pset_hash` and `_pset_hash_new`
+must be the same.
+
+We may provide tooling for that in the future. See also
+https://github.com/elcorto/psweep/issues/15 .
 
 
 ## Best practices
@@ -1483,6 +1526,7 @@ $ cat _pics/foo.png
 ```
 
 will bring the content back to the working dir.
+
 
 ## Scope and related projects
 
