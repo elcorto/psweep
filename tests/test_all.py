@@ -36,10 +36,10 @@ def system(cmd):
 
 
 def func_a(pset):
-    # We need to multiply by a float here to make sure the 'result' column has
+    # We need to multiply by a float here to make sure the 'result_' column has
     # float dtype. Else the column will be cast to float once we add NaNs,
     # which breaks df.equals(other_df) .
-    return {"result": pset["a"] * 10.0}
+    return {"result_": pset["a"] * 10.0}
 
 
 def find_examples(skip=["batch_dask"]):
@@ -187,7 +187,7 @@ def test_run():
                 "_pset_runtime",
                 "_exec_host",
                 "a",
-                "result",
+                "result_",
             ]
         )
 
@@ -281,12 +281,12 @@ def test_simulate():
         assert df_sim.equals(ps.df_read(dbfn_sim))
 
         assert df.iloc[:4].equals(df_sim.iloc[:4])
-        assert np.isnan(df_sim.result.values[-2:]).all()
+        assert np.isnan(df_sim.result_.values[-2:]).all()
 
         df2 = ps.run(func_a, params_sim, calc_dir=calc_dir)
         assert len(df2) == 6
         assert df.iloc[:4].equals(df2.iloc[:4])
-        assert (df2.result.values[-2:] == np.array([880.0, 990.0])).all()
+        assert (df2.result_.values[-2:] == np.array([880.0, 990.0])).all()
 
 
 def test_is_seq():
@@ -425,7 +425,7 @@ def test_backup():
         fn = pj(dr, "foo")
         with open(fn, "w") as fd:
             fd.write(pset["_pset_id"])
-        return {"result": pset["a"] * 10}
+        return {"result_": pset["a"] * 10}
 
     with tempfile.TemporaryDirectory() as tmpdir:
         calc_dir = pj(tmpdir, "calc")
@@ -464,7 +464,7 @@ def test_backup():
 def test_pass_df_interactive():
     def df_cmp(dfa, dfb):
         assert (dfa.a.values == dfb.a.values).all()
-        assert (dfa.result.values == dfb.result.values).all()
+        assert (dfa.result_.values == dfb.result_.values).all()
         assert (dfa._pset_seq.values == dfb._pset_seq.values).all()
         assert (dfa._run_seq.values == dfb._run_seq.values).all()
         assert (dfa._pset_hash.values == dfb._pset_hash.values).all()
