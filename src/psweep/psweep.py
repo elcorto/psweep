@@ -194,6 +194,7 @@ def pset_hash(
     # [1] https://death.andgravity.com/stable-hashing
     # [2] https://ourpython.com/python/deterministic-recursive-hashing-in-python
     # [3] https://stackoverflow.com/a/52175075
+    assert isinstance(dct, dict), f"{dct=} is not a dict but {type(dct)=}"
     if skip_special_cols is not None:
         warnings.warn(
             "skip_special_cols is deprecated, use skip_prefix_cols",
