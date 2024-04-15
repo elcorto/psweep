@@ -497,7 +497,7 @@ should you ever want to re-calculate the hash, as in
 
 ```py
 >>> for idx, row in df.iterrows():
-...    df.at[idx, "_pset_hash_new"] = ps.pset_hash(row)
+...    df.at[idx, "_pset_hash_new"] = ps.pset_hash(row.to_dict())
 
 >>> df
    a                                _pset_hash                              _pset_id  ...   result_                            _pset_hash_new
