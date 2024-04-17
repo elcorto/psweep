@@ -5,7 +5,7 @@ import psweep as ps
 
 
 def func(pset):
-    return {"result": random.random() * pset["a"]}
+    return {"result_": random.random() * pset["a"]}
 
 
 if __name__ == "__main__":

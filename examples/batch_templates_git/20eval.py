@@ -10,9 +10,9 @@ if __name__ == "__main__":
         [np.load(f"calc/{pset_id}/out.npy") for pset_id in df._pset_id.values]
     )
 
-    df["mean"] = arr.mean(axis=1)
+    df["mean_"] = arr.mean(axis=1)
 
-    cols = ["param_a", "param_b", "mean"]
+    cols = ["param_a", "param_b", "mean_"]
     ps.df_print(df[cols])
 
     ps.df_write("calc/database_eval.pk", df)

@@ -29,7 +29,7 @@ def func(pset):
     timing = min(
         timeit.repeat(lambda: run(cmd, shell=True), repeat=3, number=1)
     )
-    return {"timing": timing}
+    return {"timing_": timing}
 
 
 if __name__ == "__main__":
