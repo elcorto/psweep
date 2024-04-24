@@ -49,4 +49,4 @@ sh run_local.sh
 cd ..
 ./20eval.py
 
-psweep-db2table calc/database_eval.pk param_a param_b mean _run_seq _pset_seq _run_id _pset_id
+psweep-db2table calc/database_eval.pk param_a param_b mean_ _run_seq _pset_seq _run_id _pset_id

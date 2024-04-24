@@ -17,9 +17,9 @@ if __name__ == "__main__":
         ]
     )
 
-    df["mean"] = arr.mean(axis=1)
+    df["mean_"] = arr.mean(axis=1)
 
-    cols = ["a", "mean", "_pset_id"]
+    cols = ["a", "mean_", "_pset_id"]
     ps.df_print(df[cols])
 
     ps.df_write("calc/database_eval.pk", df)

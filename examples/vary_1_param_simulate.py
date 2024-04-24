@@ -5,11 +5,11 @@ import psweep as ps
 
 
 def func(pset):
-    return {"result": random.random() * pset["a"] * pset["b"]}
+    return {"result_": random.random() * pset["a"] * pset["b"]}
 
 
 if __name__ == "__main__":
-    sel = ["_calc_dir", "a", "b", "result"]
+    sel = ["_calc_dir", "a", "b", "result_"]
 
     # 1st real run: produce some data, vary a, b constant
     params = ps.pgrid(ps.plist("a", [1, 2, 3, 4]), ps.plist("b", [100]))

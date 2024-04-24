@@ -5,7 +5,7 @@ import psweep as ps
 
 
 def func(pset):
-    return {"result": random.random() * pset["a"] * pset["b"]}
+    return {"result_": random.random() * pset["a"] * pset["b"]}
 
 
 if __name__ == "__main__":
@@ -30,6 +30,6 @@ if __name__ == "__main__":
         "_pset_hash",
         "a",
         "b",
-        "result",
+        "result_",
     ]
     ps.df_print(df[cols])

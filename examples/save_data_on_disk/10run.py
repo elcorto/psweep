@@ -12,7 +12,7 @@ def func(pset):
         f"echo {pset['a']} {pset['a']*2} {pset['a']*4} > {fn}"
     )
     subprocess.run(cmd, shell=True)
-    return {"cmd": cmd}
+    return {"_cmd": cmd}
 
 
 if __name__ == "__main__":

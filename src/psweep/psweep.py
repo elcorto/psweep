@@ -154,7 +154,9 @@ def pset_hash(
     dct: dict,
     method=PSET_HASH_ALG,
     raise_error=True,
-    skip_special_cols=True,
+    skip_special_cols=None,
+    skip_prefix_cols=True,
+    skip_postfix_cols=True,
 ):
     """Reproducible hash of a dict for usage in database (hash of a `pset`)."""
 
@@ -192,9 +194,23 @@ def pset_hash(
     # [1] https://death.andgravity.com/stable-hashing
     # [2] https://ourpython.com/python/deterministic-recursive-hashing-in-python
     # [3] https://stackoverflow.com/a/52175075
-    if skip_special_cols:
+    assert isinstance(dct, dict), f"{dct=} is not a dict but {type(dct)=}"
+    if skip_special_cols is not None:
+        warnings.warn(
+            "skip_special_cols is deprecated, use skip_prefix_cols",
+            DeprecationWarning,
+        )
+        skip_prefix_cols = skip_special_cols
+    skip_cols_test = None
+    if skip_prefix_cols and skip_postfix_cols:
+        skip_cols_test = lambda key: key.startswith("_") or key.endswith("_")
+    elif skip_prefix_cols:
+        skip_cols_test = lambda key: key.startswith("_")
+    elif skip_postfix_cols:
+        skip_cols_test = lambda key: key.endswith("_")
+    if skip_cols_test is not None:
         _dct = {
-            key: val for key, val in dct.items() if not key.startswith("_")
+            key: val for key, val in dct.items() if not skip_cols_test(key)
         }
     else:
         _dct = dct
@@ -458,11 +474,12 @@ def df_read(fn: str, fmt="pickle", **kwds):
 def df_print(
     df: pd.DataFrame,
     index: bool = False,
-    special_cols: bool = False,
+    special_cols=None,
+    prefix_cols: bool = False,
     cols: Sequence[str] = [],
     skip_cols: Sequence[str] = [],
 ):
-    """Print DataFrame, by default without the index and special columns such
+    """Print DataFrame, by default without the index and prefix columns such
     as `_pset_id`.
 
     Similar logic as in `bin/psweep-db2table`, w/o tabulate support but more
@@ -476,14 +493,15 @@ def df_print(
     df
     index
         include DataFrame index
-    special_cols
-        include all special columns (`_pset_id` etc.)
+    prefix_cols
+        include all prefix columns (`_pset_id` etc.), we don't support skipping
+        user-added postfix columns (e.g. `result_`)
     cols
-        explicit sequence of columns, overrides `special_cols` when special columns
+        explicit sequence of columns, overrides `prefix_cols` when prefix columns
         are specified
     skip_cols
         skip those columns instead of selecting them (like `cols` would), use
-        either this or `cols`; overrides `special_cols` when special columns
+        either this or `cols`; overrides `prefix_cols` when prefix columns
         are specified
 
     Examples
@@ -503,7 +521,7 @@ def df_print(
     0.698738 0.589642
     0.343316 0.186595
 
-    >>> ps.df_print(df, special_cols=True)
+    >>> ps.df_print(df, prefix_cols=True)
            a        b       _c
     0.373534 0.304302 0.161799
     0.698738 0.589642 0.557172
@@ -521,7 +539,7 @@ def df_print(
     0.698738
     0.343316
 
-    >>> ps.df_print(df, cols=["a"], special_cols=True)
+    >>> ps.df_print(df, cols=["a"], prefix_cols=True)
            a       _c
     0.373534 0.161799
     0.698738 0.557172
@@ -539,15 +557,20 @@ def df_print(
     0.589642
     0.186595
     """
-    _special_cols = set(x for x in df.columns if x.startswith("_"))
+    if special_cols is not None:
+        warnings.warn(
+            "special_cols is deprecated, use prefix_cols",
+            DeprecationWarning,
+        )
+        prefix_cols = special_cols
+
+    _prefix_cols = set(x for x in df.columns if x.startswith("_"))
     if len(cols) > 0:
         if len(skip_cols) > 0:
             raise ValueError("Use either skip_cols or cols")
-        disp_cols = set(cols) | (_special_cols if special_cols else set())
+        disp_cols = set(cols) | (_prefix_cols if prefix_cols else set())
     else:
-        disp_cols = set(df.columns) - (
-            set() if special_cols else _special_cols
-        )
+        disp_cols = set(df.columns) - (set() if prefix_cols else _prefix_cols)
         if len(skip_cols) > 0:
             disp_cols = disp_cols - set(skip_cols)
     disp_cols = list(disp_cols)
@@ -775,10 +798,8 @@ def stargrid(
     values (middle of the "star").
 
     When doing that, duplicate psets can occur. By default try to filter them
-    out (use filter_params_unique()) but ignore hash calculation errors and return
-    non-reduced params in that case. If you want to fail at hash errors, use
-
-    >>> filter_params_unique(stargrid(..., skip_dups=False), raise_error=True)
+    out (using :func:`filter_params_unique`) but ignore hash calculation errors
+    and return non-reduced params in that case.
 
     Examples
     --------
@@ -846,7 +867,10 @@ def stargrid(
     if skip_dups:
         try:
             return filter_params_unique(
-                params, raise_error=True, skip_special_cols=True
+                params,
+                raise_error=True,
+                skip_prefix_cols=True,
+                skip_postfix_cols=True,
             )
         except PsweepHashError:
             return params
@@ -874,7 +898,8 @@ def worker_wrapper(
     simulate: bool = False,
 ) -> dict:
     """
-    Add special fields to `pset` which can be determined at call time.
+    Add those prefix fields (e.g. `_time_utc`) to `pset` which can be
+    determined at call time.
 
     Call worker on exactly one pset. Return updated pset built from
     ``pset.update(worker(pset))``. Do verbose printing.

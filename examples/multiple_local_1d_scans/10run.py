@@ -12,7 +12,7 @@ import psweep as ps
 
 
 def func(pset):
-    return {"result": random.random() * pset["a"] * pset["b"]}
+    return {"result_": random.random() * pset["a"] * pset["b"]}
 
 
 if __name__ == "__main__":
@@ -43,4 +43,4 @@ if __name__ == "__main__":
 
     disp_cols += ["_run_id", "study"]
     df = ps.run(func, params, verbose=disp_cols)
-    print(df[disp_cols + ["result"]])
+    print(df[disp_cols + ["result_"]])

@@ -37,7 +37,7 @@ def func_no_exc(pset):
 
     # stderr
     print("text on stderr", file=sys.stderr)
-    return {"result": random.random() * pset["a"]}
+    return {"result_": random.random() * pset["a"]}
 
 
 def func_with_exc(pset):
@@ -53,7 +53,7 @@ def func_with_exc(pset):
             raise_error=True,
         )
     )
-    return {"result": random.random() * pset["a"]}
+    return {"result_": random.random() * pset["a"]}
 
 
 def safe_func(pset):
