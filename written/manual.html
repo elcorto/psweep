@@ -400,6 +400,7 @@ document.write(`
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#getting-started">Getting started</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#concepts">Concepts</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#naming-of-database-fields">Naming of database fields</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#building-parameter-grids">Building parameter grids</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gotchas">Gotchas</a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pgrid"><code class="docutils literal notranslate"><span class="pre">pgrid</span></code></a></li>
@@ -411,6 +412,7 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-database">The database</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#special-database-fields-and-repeated-runs">Special database fields and repeated runs</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#filter-by-pset-hashes">Filter by <code class="docutils literal notranslate"><span class="pre">pset</span></code> hashes</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#more-details-on-naming-database-fields">More details on naming database fields</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#best-practices">Best practices</a><ul class="nav section-nav flex-column">
@@ -509,7 +511,7 @@ calculate and store the result of a calculation for each parameter combination.<
 
 
 <span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="n">pset</span><span class="p">):</span>
-<span class="gp">... </span>   <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">*</span> <span class="n">pset</span><span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">pset</span><span class="p">[</span><span class="s2">&quot;b&quot;</span><span class="p">]}</span>
+<span class="gp">... </span>   <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;result_&quot;</span><span class="p">:</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">*</span> <span class="n">pset</span><span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">pset</span><span class="p">[</span><span class="s2">&quot;b&quot;</span><span class="p">]}</span>
 
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">plist</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">plist</span><span class="p">(</span><span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mi">88</span><span class="p">,</span><span class="mi">99</span><span class="p">])</span>
@@ -556,7 +558,7 @@ pickled file <code class="docutils literal notranslate"><span class="pre">calc/d
 <span class="go">4      calc 2023-01-20 19:54:09.546977043          4         0    deskbot</span>
 <span class="go">5      calc 2023-01-20 19:54:09.548082113          5         0    deskbot</span>
 
-<span class="go">       result  _pset_runtime</span>
+<span class="go">      result_  _pset_runtime</span>
 <span class="go">0    3.629665       0.000004</span>
 <span class="go">1   59.093600       0.000002</span>
 <span class="go">2   84.056801       0.000002</span>
@@ -565,7 +567,7 @@ pickled file <code class="docutils literal notranslate"><span class="pre">calc/d
 <span class="go">5   37.220296       0.000002</span>
 </pre></div>
 </div>
-<p>You see the columns <code class="docutils literal notranslate"><span class="pre">a</span></code> and <code class="docutils literal notranslate"><span class="pre">b</span></code>, the column <code class="docutils literal notranslate"><span class="pre">result</span></code> (returned by
+<p>You see the columns <code class="docutils literal notranslate"><span class="pre">a</span></code> and <code class="docutils literal notranslate"><span class="pre">b</span></code>, the column <code class="docutils literal notranslate"><span class="pre">result_</span></code> (returned by
 <code class="docutils literal notranslate"><span class="pre">func</span></code>) and a number of reserved fields for book-keeping such as</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">_run_id</span>
 <span class="n">_pset_id</span>
@@ -607,11 +609,11 @@ pset such as:</p>
 </div>
 <p>and runs the workload for that pset. <code class="docutils literal notranslate"><span class="pre">func</span></code> must return a
 dict, for example:</p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;result&#39;</span><span class="p">:</span> <span class="mf">1.234</span><span class="p">}</span>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;result_&#39;</span><span class="p">:</span> <span class="mf">1.234</span><span class="p">}</span>
 </pre></div>
 </div>
 <p>or an updated ‘pset’:</p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="mi">88</span><span class="p">,</span> <span class="s1">&#39;result&#39;</span><span class="p">:</span> <span class="mf">1.234</span><span class="p">}</span>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="mi">88</span><span class="p">,</span> <span class="s1">&#39;result_&#39;</span><span class="p">:</span> <span class="mf">1.234</span><span class="p">}</span>
 </pre></div>
 </div>
 <p>We always merge (<code class="docutils literal notranslate"><span class="pre">dict.update()</span></code>) the result of <code class="docutils literal notranslate"><span class="pre">func</span></code> with the pset, which gives
@@ -625,6 +627,18 @@ using the <code class="docutils literal notranslate"><span class="pre">ps.run()<
 columns such as <code class="docutils literal notranslate"><span class="pre">_run_id</span></code> (once per <code class="docutils literal notranslate"><span class="pre">ps.run()</span></code> call) or <code class="docutils literal notranslate"><span class="pre">_pset_id</span></code> (once
 per pset). Using <code class="docutils literal notranslate"><span class="pre">ps.run(...</span> <span class="pre">poolsize=...)</span></code> runs <code class="docutils literal notranslate"><span class="pre">func</span></code> in parallel on
 <code class="docutils literal notranslate"><span class="pre">params</span></code> using <code class="docutils literal notranslate"><span class="pre">multiprocessing.Pool</span></code>.</p>
+</section>
+<section id="naming-of-database-fields">
+<h2>Naming of database fields<a class="headerlink" href="#naming-of-database-fields" title="Link to this heading">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">ps.run()</span></code> will add book-keeping fields starting with an underscore prefix
+(e.g. <code class="docutils literal notranslate"><span class="pre">_pset_id</span></code>). By doing that, they can be distinguished from <code class="docutils literal notranslate"><span class="pre">pset</span></code> fields
+<code class="docutils literal notranslate"><span class="pre">a</span></code> and <code class="docutils literal notranslate"><span class="pre">b</span></code>. We <em>recommend</em> but not require you to name all fields (dict keys)
+generated in <code class="docutils literal notranslate"><span class="pre">func()</span></code> such as <code class="docutils literal notranslate"><span class="pre">result_</span></code> with a trailing or <em>postfix</em>
+underscore. That way you can in the database clearly distinguish between
+book-keeping (<code class="docutils literal notranslate"><span class="pre">_foo</span></code>), pset (<code class="docutils literal notranslate"><span class="pre">a</span></code>, <code class="docutils literal notranslate"><span class="pre">b</span></code>) and result-type fields (<code class="docutils literal notranslate"><span class="pre">bar_</span></code>). But
+again, this is only a suggestion, you can name the fields in a <code class="docutils literal notranslate"><span class="pre">pset</span></code> and the
+ones created in <code class="docutils literal notranslate"><span class="pre">func()</span></code> any way you like. See <a class="reference internal" href="#s-more-on-db-field-names"><span class="std std-ref">this section for more
+details</span></a>.</p>
 </section>
 <section id="building-parameter-grids">
 <h2>Building parameter grids<a class="headerlink" href="#building-parameter-grids" title="Link to this heading">#</a></h2>
@@ -840,7 +854,7 @@ when you call <code class="docutils literal notranslate"><span class="pre">ps.ru
 for the same <code class="docutils literal notranslate"><span class="pre">pset</span></code>s in <code class="docutils literal notranslate"><span class="pre">params</span></code> over and over again. In this case, you will
 have as above two unique <code class="docutils literal notranslate"><span class="pre">_run_id</span></code>s, unique <code class="docutils literal notranslate"><span class="pre">_pset_id</span></code>s, but <em>two sets of the
 same</em> <code class="docutils literal notranslate"><span class="pre">_pset_hash</span></code>.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>                             <span class="n">_run_id</span>                              <span class="n">_pset_id</span>  <span class="n">_run_seq</span>  <span class="n">_pset_seq</span>                                <span class="n">_pset_hash</span>  <span class="n">a</span>    <span class="n">result</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>                             <span class="n">_run_id</span>                              <span class="n">_pset_id</span>  <span class="n">_run_seq</span>  <span class="n">_pset_seq</span>                                <span class="n">_pset_hash</span>  <span class="n">a</span>   <span class="n">result_</span>
 <span class="mi">8543</span><span class="n">fdad</span><span class="o">-</span><span class="mi">4426</span><span class="o">-</span><span class="mi">41</span><span class="n">cb</span><span class="o">-</span><span class="n">ab42</span><span class="o">-</span><span class="mi">8</span><span class="n">a80b1bebbe2</span>  <span class="mi">08</span><span class="n">cb5f7c</span><span class="o">-</span><span class="mi">8</span><span class="n">ce8</span><span class="o">-</span><span class="mi">451</span><span class="n">f</span><span class="o">-</span><span class="mi">846</span><span class="n">d</span><span class="o">-</span><span class="n">db5ac3bcc746</span>         <span class="mi">0</span>          <span class="mi">0</span>  <span class="n">e4ad4daad53a2eec0313386ada88211e50d693bd</span>  <span class="mi">1</span>  <span class="mf">0.381589</span>
 <span class="mi">8543</span><span class="n">fdad</span><span class="o">-</span><span class="mi">4426</span><span class="o">-</span><span class="mi">41</span><span class="n">cb</span><span class="o">-</span><span class="n">ab42</span><span class="o">-</span><span class="mi">8</span><span class="n">a80b1bebbe2</span>  <span class="mi">18</span><span class="n">da3840</span><span class="o">-</span><span class="n">d00e</span><span class="o">-</span><span class="mi">4</span><span class="n">bdd</span><span class="o">-</span><span class="n">b29c</span><span class="o">-</span><span class="mi">68</span><span class="n">be2adb164e</span>         <span class="mi">0</span>          <span class="mi">1</span>  <span class="mi">7</span><span class="n">b7ee754248759adcee9e62a4c1477ed1a8bb1ab</span>  <span class="mi">2</span>  <span class="mf">1.935220</span>
 <span class="mi">8543</span><span class="n">fdad</span><span class="o">-</span><span class="mi">4426</span><span class="o">-</span><span class="mi">41</span><span class="n">cb</span><span class="o">-</span><span class="n">ab42</span><span class="o">-</span><span class="mi">8</span><span class="n">a80b1bebbe2</span>  <span class="n">bcc47205</span><span class="o">-</span><span class="mi">0919</span><span class="o">-</span><span class="mi">4084</span><span class="o">-</span><span class="mi">9</span><span class="n">f07</span><span class="o">-</span><span class="mi">072</span><span class="n">eb56ed5fd</span>         <span class="mi">0</span>          <span class="mi">2</span>  <span class="mf">9e0</span><span class="n">e6d8a99c72daf40337183358cbef91bba7311</span>  <span class="mi">3</span>  <span class="mf">2.187107</span>
@@ -866,6 +880,31 @@ want to add some more scans <em>without</em> removing the code that generated th
 </div>
 <p>This will skip all <code class="docutils literal notranslate"><span class="pre">pset</span></code>s already in the database based on their hash and
 only add calculations for new <code class="docutils literal notranslate"><span class="pre">pset</span></code>s.</p>
+</section>
+<section id="more-details-on-naming-database-fields">
+<span id="s-more-on-db-field-names"></span><h3>More details on naming database fields<a class="headerlink" href="#more-details-on-naming-database-fields" title="Link to this heading">#</a></h3>
+<p>We implement the convention to ignore fields starting and ending in an
+underscore at the moment only internally in <code class="docutils literal notranslate"><span class="pre">ps.pset_hash()</span></code> to ensure that the
+hash includes only <code class="docutils literal notranslate"><span class="pre">pset</span></code> variables. However, when <code class="docutils literal notranslate"><span class="pre">ps.run()</span></code> is called, the
+hash is calculated <em>before</em> book-keeping fields like <code class="docutils literal notranslate"><span class="pre">_pset_id</span></code> are added and
+<code class="docutils literal notranslate"><span class="pre">func()</span></code> is called to, for instance, return <code class="docutils literal notranslate"><span class="pre">{'result_':</span> <span class="pre">1.234}</span></code> and update the
+<code class="docutils literal notranslate"><span class="pre">pset</span></code>. Therefore, this convention is in fact not needed. It only takes effect
+should you ever want to re-calculate the hash, as in</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+<span class="gp">... </span>   <span class="n">df</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="s2">&quot;_pset_hash_new&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">pset_hash</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">to_dict</span><span class="p">())</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span>
+<span class="go">   a                                _pset_hash                              _pset_id  ...   result_                            _pset_hash_new</span>
+<span class="go">0  1  64846e128be5c974d6194f77557d0511542835a8  61f899a8-314b-4a19-a359-3502e3e2d009  ...  0.880328  64846e128be5c974d6194f77557d0511542835a8</span>
+<span class="go">1  2  e746f91e51f09064bd7f1e516701ba7d0d908653  cd1dc05b-0fab-4e09-9798-9de94a5b3cd3  ...  0.815945  e746f91e51f09064bd7f1e516701ba7d0d908653</span>
+<span class="go">2  3  96da150761c9d66b31975f11ef44bfb75c2fdc11  6612eab6-5d5a-4fbf-ae18-fdb4846fd459  ...  0.096946  96da150761c9d66b31975f11ef44bfb75c2fdc11</span>
+<span class="go">3  4  79ba178b3895a603bf9d84dea82e034791e8fe30  bf5bf881-3273-4932-a3f3-9c117bca921b  ...  2.606486  79ba178b3895a603bf9d84dea82e034791e8fe30</span>
+</pre></div>
+</div>
+<p>Here the hash goes only over the <code class="docutils literal notranslate"><span class="pre">a</span></code> field, so <code class="docutils literal notranslate"><span class="pre">_pset_hash</span></code> and <code class="docutils literal notranslate"><span class="pre">_pset_hash_new</span></code>
+must be the same.</p>
+<p>We may provide tooling for that in the future. See also
+<a class="github reference external" href="https://github.com/elcorto/psweep/issues/15">elcorto/psweep#15</a> .</p>
 </section>
 </section>
 <section id="best-practices">
@@ -1155,7 +1194,7 @@ analyze the failed <code class="docutils literal notranslate"><span class="pre">
 <p>This will add a bool field <code class="docutils literal notranslate"><span class="pre">_failed</span></code> to the database, as well as a text field
 <code class="docutils literal notranslate"><span class="pre">_exc_txt</span></code> which stores the exception’s traceback message.</p>
 <p>We don’t implement this as a feature and only provide examples, which keeps
-things fexible. Maybe you want <code class="docutils literal notranslate"><span class="pre">_failed</span></code> to be called <code class="docutils literal notranslate"><span class="pre">_crashed</span></code> instead, or you want
+things flexible. Maybe you want <code class="docutils literal notranslate"><span class="pre">_failed</span></code> to be called <code class="docutils literal notranslate"><span class="pre">_crashed</span></code> instead, or you want
 to log more data.</p>
 <p>For post-processing, you would then do something like:</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">df_read</span><span class="p">(</span><span class="s2">&quot;calc/database.pk&quot;</span><span class="p">)</span>
@@ -2055,6 +2094,7 @@ more reproducibility, look into using one of the workflow frameworks above.</p>
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#getting-started">Getting started</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#concepts">Concepts</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#naming-of-database-fields">Naming of database fields</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#building-parameter-grids">Building parameter grids</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gotchas">Gotchas</a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pgrid"><code class="docutils literal notranslate"><span class="pre">pgrid</span></code></a></li>
@@ -2066,6 +2106,7 @@ more reproducibility, look into using one of the workflow frameworks above.</p>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-database">The database</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#special-database-fields-and-repeated-runs">Special database fields and repeated runs</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#filter-by-pset-hashes">Filter by <code class="docutils literal notranslate"><span class="pre">pset</span></code> hashes</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#more-details-on-naming-database-fields">More details on naming database fields</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#best-practices">Best practices</a><ul class="nav section-nav flex-column">

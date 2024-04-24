@@ -419,12 +419,13 @@ document.write(`
 <p>Vary params in a “star” pattern (and not a full pgrid) around constant
 values (middle of the “star”).</p>
 <p>When doing that, duplicate psets can occur. By default try to filter them
-out (use filter_params_unique()) but ignore hash calculation errors and return
-non-reduced params in that case. If you want to fail at hash errors, use
-:rtype: <span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>]</span></p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">filter_params_unique</span><span class="p">(</span><span class="n">stargrid</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">skip_dups</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span> <span class="n">raise_error</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</pre></div>
-</div>
+out (using <a class="reference internal" href="psweep.psweep.filter_params_unique.html#psweep.psweep.filter_params_unique" title="psweep.psweep.filter_params_unique"><code class="xref py py-func docutils literal notranslate"><span class="pre">filter_params_unique()</span></code></a>) but ignore hash calculation errors
+and return non-reduced params in that case.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>]</span></p>
+</dd>
+</dl>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">psweep</span> <span class="k">as</span> <span class="nn">ps</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">const</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">77</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>

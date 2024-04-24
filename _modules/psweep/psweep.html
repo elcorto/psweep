@@ -543,7 +543,9 @@ document.write(`
     <span class="n">dct</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
     <span class="n">method</span><span class="o">=</span><span class="n">PSET_HASH_ALG</span><span class="p">,</span>
     <span class="n">raise_error</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-    <span class="n">skip_special_cols</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">skip_special_cols</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">skip_prefix_cols</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">skip_postfix_cols</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Reproducible hash of a dict for usage in database (hash of a `pset`).&quot;&quot;&quot;</span>
 
@@ -581,9 +583,23 @@ document.write(`
     <span class="c1"># [1] https://death.andgravity.com/stable-hashing</span>
     <span class="c1"># [2] https://ourpython.com/python/deterministic-recursive-hashing-in-python</span>
     <span class="c1"># [3] https://stackoverflow.com/a/52175075</span>
-    <span class="k">if</span> <span class="n">skip_special_cols</span><span class="p">:</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dct</span><span class="p">,</span> <span class="nb">dict</span><span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dct</span><span class="si">=}</span><span class="s2"> is not a dict but </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">dct</span><span class="p">)</span><span class="si">=}</span><span class="s2">&quot;</span>
+    <span class="k">if</span> <span class="n">skip_special_cols</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+            <span class="s2">&quot;skip_special_cols is deprecated, use skip_prefix_cols&quot;</span><span class="p">,</span>
+            <span class="ne">DeprecationWarning</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">skip_prefix_cols</span> <span class="o">=</span> <span class="n">skip_special_cols</span>
+    <span class="n">skip_cols_test</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">skip_prefix_cols</span> <span class="ow">and</span> <span class="n">skip_postfix_cols</span><span class="p">:</span>
+        <span class="n">skip_cols_test</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">key</span><span class="p">:</span> <span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">key</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">skip_prefix_cols</span><span class="p">:</span>
+        <span class="n">skip_cols_test</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">key</span><span class="p">:</span> <span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">skip_postfix_cols</span><span class="p">:</span>
+        <span class="n">skip_cols_test</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">key</span><span class="p">:</span> <span class="n">key</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">skip_cols_test</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">_dct</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="n">key</span><span class="p">:</span> <span class="n">val</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">dct</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)</span>
+            <span class="n">key</span><span class="p">:</span> <span class="n">val</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">dct</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">skip_cols_test</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
         <span class="p">}</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">_dct</span> <span class="o">=</span> <span class="n">dct</span>
@@ -886,11 +902,12 @@ document.write(`
 <span class="k">def</span> <span class="nf">df_print</span><span class="p">(</span>
     <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
     <span class="n">index</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-    <span class="n">special_cols</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">special_cols</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">prefix_cols</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">cols</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span>
     <span class="n">skip_cols</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Print DataFrame, by default without the index and special columns such</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Print DataFrame, by default without the index and prefix columns such</span>
 <span class="sd">    as `_pset_id`.</span>
 
 <span class="sd">    Similar logic as in `bin/psweep-db2table`, w/o tabulate support but more</span>
@@ -904,14 +921,15 @@ document.write(`
 <span class="sd">    df</span>
 <span class="sd">    index</span>
 <span class="sd">        include DataFrame index</span>
-<span class="sd">    special_cols</span>
-<span class="sd">        include all special columns (`_pset_id` etc.)</span>
+<span class="sd">    prefix_cols</span>
+<span class="sd">        include all prefix columns (`_pset_id` etc.), we don&#39;t support skipping</span>
+<span class="sd">        user-added postfix columns (e.g. `result_`)</span>
 <span class="sd">    cols</span>
-<span class="sd">        explicit sequence of columns, overrides `special_cols` when special columns</span>
+<span class="sd">        explicit sequence of columns, overrides `prefix_cols` when prefix columns</span>
 <span class="sd">        are specified</span>
 <span class="sd">    skip_cols</span>
 <span class="sd">        skip those columns instead of selecting them (like `cols` would), use</span>
-<span class="sd">        either this or `cols`; overrides `special_cols` when special columns</span>
+<span class="sd">        either this or `cols`; overrides `prefix_cols` when prefix columns</span>
 <span class="sd">        are specified</span>
 
 <span class="sd">    Examples</span>
@@ -931,7 +949,7 @@ document.write(`
 <span class="sd">    0.698738 0.589642</span>
 <span class="sd">    0.343316 0.186595</span>
 
-<span class="sd">    &gt;&gt;&gt; ps.df_print(df, special_cols=True)</span>
+<span class="sd">    &gt;&gt;&gt; ps.df_print(df, prefix_cols=True)</span>
 <span class="sd">           a        b       _c</span>
 <span class="sd">    0.373534 0.304302 0.161799</span>
 <span class="sd">    0.698738 0.589642 0.557172</span>
@@ -949,7 +967,7 @@ document.write(`
 <span class="sd">    0.698738</span>
 <span class="sd">    0.343316</span>
 
-<span class="sd">    &gt;&gt;&gt; ps.df_print(df, cols=[&quot;a&quot;], special_cols=True)</span>
+<span class="sd">    &gt;&gt;&gt; ps.df_print(df, cols=[&quot;a&quot;], prefix_cols=True)</span>
 <span class="sd">           a       _c</span>
 <span class="sd">    0.373534 0.161799</span>
 <span class="sd">    0.698738 0.557172</span>
@@ -967,15 +985,20 @@ document.write(`
 <span class="sd">    0.589642</span>
 <span class="sd">    0.186595</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">_special_cols</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">special_cols</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+            <span class="s2">&quot;special_cols is deprecated, use prefix_cols&quot;</span><span class="p">,</span>
+            <span class="ne">DeprecationWarning</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">prefix_cols</span> <span class="o">=</span> <span class="n">special_cols</span>
+
+    <span class="n">_prefix_cols</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">))</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cols</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">skip_cols</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Use either skip_cols or cols&quot;</span><span class="p">)</span>
-        <span class="n">disp_cols</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">cols</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">_special_cols</span> <span class="k">if</span> <span class="n">special_cols</span> <span class="k">else</span> <span class="nb">set</span><span class="p">())</span>
+        <span class="n">disp_cols</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">cols</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">_prefix_cols</span> <span class="k">if</span> <span class="n">prefix_cols</span> <span class="k">else</span> <span class="nb">set</span><span class="p">())</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">disp_cols</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span>
-            <span class="nb">set</span><span class="p">()</span> <span class="k">if</span> <span class="n">special_cols</span> <span class="k">else</span> <span class="n">_special_cols</span>
-        <span class="p">)</span>
+        <span class="n">disp_cols</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="nb">set</span><span class="p">()</span> <span class="k">if</span> <span class="n">prefix_cols</span> <span class="k">else</span> <span class="n">_prefix_cols</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">skip_cols</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">disp_cols</span> <span class="o">=</span> <span class="n">disp_cols</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">skip_cols</span><span class="p">)</span>
     <span class="n">disp_cols</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">disp_cols</span><span class="p">)</span>
@@ -1227,10 +1250,8 @@ document.write(`
 <span class="sd">    values (middle of the &quot;star&quot;).</span>
 
 <span class="sd">    When doing that, duplicate psets can occur. By default try to filter them</span>
-<span class="sd">    out (use filter_params_unique()) but ignore hash calculation errors and return</span>
-<span class="sd">    non-reduced params in that case. If you want to fail at hash errors, use</span>
-
-<span class="sd">    &gt;&gt;&gt; filter_params_unique(stargrid(..., skip_dups=False), raise_error=True)</span>
+<span class="sd">    out (using :func:`filter_params_unique`) but ignore hash calculation errors</span>
+<span class="sd">    and return non-reduced params in that case.</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
@@ -1298,7 +1319,10 @@ document.write(`
     <span class="k">if</span> <span class="n">skip_dups</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">filter_params_unique</span><span class="p">(</span>
-                <span class="n">params</span><span class="p">,</span> <span class="n">raise_error</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">skip_special_cols</span><span class="o">=</span><span class="kc">True</span>
+                <span class="n">params</span><span class="p">,</span>
+                <span class="n">raise_error</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">skip_prefix_cols</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">skip_postfix_cols</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
             <span class="p">)</span>
         <span class="k">except</span> <span class="n">PsweepHashError</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">params</span>
@@ -1329,7 +1353,8 @@ document.write(`
     <span class="n">simulate</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Add special fields to `pset` which can be determined at call time.</span>
+<span class="sd">    Add those prefix fields (e.g. `_time_utc`) to `pset` which can be</span>
+<span class="sd">    determined at call time.</span>
 
 <span class="sd">    Call worker on exactly one pset. Return updated pset built from</span>
 <span class="sd">    ``pset.update(worker(pset))``. Do verbose printing.</span>
