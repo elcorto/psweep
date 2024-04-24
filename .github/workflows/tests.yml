@@ -46,7 +46,7 @@ jobs:
 
       - name: install deps
         run: |
-          pip install -e ".[test,dask,dev]"
+          pip install -e ".[test,dask]"
 
       - name: lint
         run: |
