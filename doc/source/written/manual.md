@@ -184,7 +184,7 @@ per pset). Using `ps.run(... poolsize=...)` runs `func` in parallel on
 
 `ps.run()` will add book-keeping fields starting with an underscore prefix
 (e.g. `_pset_id`). By doing that, they can be distinguished from `pset` fields
-`a` and `b`. We *recommend* but not require you name all fields (dict keys)
+`a` and `b`. We *recommend* but not require you to name all fields (dict keys)
 generated in `func()` such as `result_` with a trailing or *postfix*
 underscore. That way you can in the database clearly distinguish between
 book-keeping (`_foo`), pset (`a`, `b`) and result-type fields (`bar_`). But
@@ -485,7 +485,7 @@ only add calculations for new `pset`s.
 
 
 (s:more-on-db-field-names)=
-### More details on naming databse fields
+### More details on naming database fields
 
 We implement the convention to ignore fields starting and ending in an
 underscore at the moment only internally in `ps.pset_hash()` to ensure that the
@@ -859,7 +859,7 @@ This will add a bool field `_failed` to the database, as well as a text field
 `_exc_txt` which stores the exception's traceback message.
 
 We don't implement this as a feature and only provide examples, which keeps
-things fexible. Maybe you want `_failed` to be called `_crashed` instead, or you want
+things flexible. Maybe you want `_failed` to be called `_crashed` instead, or you want
 to log more data.
 
 For post-processing, you would then do something like:
