@@ -28,24 +28,26 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: install
+      - name: install ruff
+        run: |
+          # Install the ruff version from .pre-commit-config.yaml here. Using
+          # https://pre-commit.ci/ because of [1] is not fun since dependabot
+          # and pre-commit.ci don't update at the same time, so ruff versions
+          # are always out of sync.
+          #
+          # [1] https://github.com/dependabot/dependabot-core/issues/1524
+          ruff_version=$(grep -E -A1 'astral-sh/ruff-pre-commit' \
+              .pre-commit-config.yaml | sed -nre "s/^\s+rev:.+'v([0-9\.]+)'/\1/p")
+          if [ -z "$ruff_version" ]; then
+              echo "error parsing ruff version, no match"
+              exit 1
+          fi
+          pip install "ruff==$ruff_version"
+
+      - name: install deps
         run: |
           pip install -e ".[test,dask,dev]"
 
-      # We run this for each Python version in the matrix which is redundant,
-      # but since ruff is fast, that's OK. We like to make sure that we install
-      # the ruff version from pyproject.toml, which we achieve by
-      #
-      #   pip install -e ".[dev]"
-      #
-      # Doing this in another workflow such as lint.yml would install psweep +
-      # all deps again just for linting.
-      #
-      # The alternative would be to say
-      #
-      #   pip install ruff==<version>
-      #
-      # but then we duplicate version information, which has to be maintained.
       - name: lint
         run: |
           # Check for lint rules.

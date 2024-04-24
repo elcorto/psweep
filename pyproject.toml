@@ -35,12 +35,10 @@ test = [
     "pytest-xdist",
 ]
 
-# github dependabot takes care of the ruff version here. The one in
-# .pre-commit-config.yaml is dealt with by https://pre-commit.ci/ because
-# https://github.com/dependabot/dependabot-core/issues/1524 . Well ok, then!
+# For installing the correct ruff version in CI, see
+# .github/workflows/tests.yml .
 dev = [
     "pre-commit",
-    "ruff == 0.4.1",
 ]
 
 
