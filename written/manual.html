@@ -433,7 +433,7 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dask"><code class="docutils literal notranslate"><span class="pre">dask</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#api">API</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#example">Example</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hpc-machine-example">HPC machine example</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#access-to-the-dask-dashboard">Access to the <code class="docutils literal notranslate"><span class="pre">dask</span></code> dashboard</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#jupyter">Jupyter</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pros-and-cons">Pros and Cons</a></li>
@@ -1302,7 +1302,8 @@ lets you spin up a dask cluster on distributed infrastructure.
 <a class="reference external" href="https://jobqueue.dask.org"><code class="docutils literal notranslate"><span class="pre">dask_jobqueue</span></code></a> supports doing this on HPC machines.</p>
 <p>With these tools, you have fine-grained control over how many batch jobs you
 start. This is useful for cases where you have many small workloads (each
-<code class="docutils literal notranslate"><span class="pre">func(pset)</span></code> runs only a few seconds, say). Then one batch job per <code class="docutils literal notranslate"><span class="pre">pset</span></code> would
+<code class="docutils literal notranslate"><span class="pre">func(pset)</span></code> runs only a few seconds, say). Then one batch job per <code class="docutils literal notranslate"><span class="pre">pset</span></code>, as
+in the <a class="reference internal" href="#s-templates"><span class="std std-ref">templates workflow</span></a>, would
 be overhead and using many dask workers living in only a few (or one!) batch
 job is more efficient.</p>
 <p>From the <code class="docutils literal notranslate"><span class="pre">psweep</span></code> side of things, you just need to provide a <code class="docutils literal notranslate"><span class="pre">dask</span></code> client (see
@@ -1314,11 +1315,13 @@ which covers the most important <code class="docutils literal notranslate"><span
 </section>
 <section id="api">
 <h4>API<a class="headerlink" href="#api" title="Link to this heading">#</a></h4>
-<p>The <code class="docutils literal notranslate"><span class="pre">psweep</span></code> API to use <code class="docutils literal notranslate"><span class="pre">dask</span></code> is just <code class="docutils literal notranslate"><span class="pre">df=ps.run(...,</span> <span class="pre">dask_client=client)</span></code>.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">psweep</span></code> API to use <code class="docutils literal notranslate"><span class="pre">dask</span></code> is <code class="docutils literal notranslate"><span class="pre">df=ps.run(...,</span> <span class="pre">dask_client=client)</span></code>.
+First, let’s look at an example for using <code class="docutils literal notranslate"><span class="pre">dask</span></code> locally.</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">dask.distributed</span> <span class="kn">import</span> <span class="n">Client</span><span class="p">,</span> <span class="n">LocalCluster</span>
 
 <span class="c1"># The type of cluster depends on your compute infastructure. Replace</span>
-<span class="c1"># LocalCluster with e.g. dask_jobqueue.SLURMCluster.</span>
+<span class="c1"># LocalCluster with e.g. dask_jobqueue.SLURMCluster when running on a HPC</span>
+<span class="c1"># machine.</span>
 <span class="n">cluster</span> <span class="o">=</span> <span class="n">LocalCluster</span><span class="p">()</span>
 <span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">(</span><span class="n">cluster</span><span class="p">)</span>
 
@@ -1344,8 +1347,8 @@ others by Matthew Rocklin.</p>
 </div>
 <p>is sufficient for running locally.</p>
 </section>
-<section id="example">
-<h4>Example<a class="headerlink" href="#example" title="Link to this heading">#</a></h4>
+<section id="hpc-machine-example">
+<h4>HPC machine example<a class="headerlink" href="#hpc-machine-example" title="Link to this heading">#</a></h4>
 <p>The example below uses the SLURM workload manager typically found in HPC
 centers.</p>
 <p>Create a script that</p>
@@ -1398,8 +1401,10 @@ database (<code class="docutils literal notranslate"><span class="pre">ps.pgrid(
     <span class="c1">##params = ps.pgrid([a])</span>
     <span class="n">params</span> <span class="o">=</span> <span class="n">a</span>
 
-    <span class="c1"># Start 2 batch jobs, each with 10 dask workers and 10 cores, so 1 thread /</span>
-    <span class="c1"># worker and 20 workers in total. Each worker gets 1 GiB of memory.</span>
+    <span class="c1"># Start 2 batch jobs, each with 10 dask workers (processes=10) and 10</span>
+    <span class="c1"># cores, so 1 core (1 thread) / worker and 20 workers in total (2 jobs x 10</span>
+    <span class="c1"># workers). Each worker gets 1 GiB of memory (memory=&quot;10GiB&quot; for 10</span>
+    <span class="c1"># workers). See examples/batch_dask/slurm_cluster_settings.py</span>
     <span class="n">cluster</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="n">jobs</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
     <span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">(</span><span class="n">cluster</span><span class="p">)</span>
     <span class="n">df</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">dask_client</span><span class="o">=</span><span class="n">client</span><span class="p">)</span>
@@ -1428,9 +1433,9 @@ below (recommended)</p></li>
 <span class="c1">#SBATCH --time=2-0</span>
 
 <span class="c1"># Submit this job manually via &quot;sbatch &lt;this_script&gt;&quot;. It will run on some node</span>
-<span class="c1"># and from there spin up the dask cluster defined in run_psweep.py. The dask</span>
-<span class="c1"># cluster will then run workloads. After all work is done, the dask cluster</span>
-<span class="c1"># will be teared down and this job will exit.</span>
+<span class="c1"># and from there submit the batch jobs to spin up the dask cluster defined in</span>
+<span class="c1"># run_psweep.py. The dask cluster will then run workloads. After all work is</span>
+<span class="c1"># done, the dask cluster will be teared down and this job will exit.</span>
 <span class="c1">#</span>
 <span class="c1"># The reason for using a batch job to run a the dask control process (so python</span>
 <span class="c1"># run_psweep.py) is that typically on HPC machines, there is a time limit for</span>
@@ -1465,7 +1470,7 @@ only need to forward that port to your local machine (<code class="docutils lite
 mybox$<span class="w"> </span>browser<span class="w"> </span>localhost:2222
 </pre></div>
 </div>
-<p>If <code class="docutils literal notranslate"><span class="pre">dask_control</span></code> runs on a compute node, you may need a second tunnel:</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">dask_control</span></code> runs on a compute node, you will need a second tunnel:</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>mybox$<span class="w"> </span>ssh<span class="w"> </span>-L<span class="w"> </span><span class="m">2222</span>:localhost:3333<span class="w"> </span>hpc.machine.edu
 hpc$<span class="w"> </span>ssh<span class="w"> </span>-L<span class="w"> </span><span class="m">3333</span>:localhost:3333<span class="w"> </span>node42
 mybox$<span class="w"> </span>browser<span class="w"> </span>localhost:2222
@@ -1519,7 +1524,7 @@ for more.</p></li>
 </section>
 </section>
 <section id="templates">
-<h3>Templates<a class="headerlink" href="#templates" title="Link to this heading">#</a></h3>
+<span id="s-templates"></span><h3>Templates<a class="headerlink" href="#templates" title="Link to this heading">#</a></h3>
 <p>This template-based workflow is basically a modernized
 and stripped-down version of
 <a class="reference external" href="https://elcorto.github.io/pwtools/written/background/param_study.html"><code class="docutils literal notranslate"><span class="pre">pwtools.batch</span></code></a>.
@@ -1533,10 +1538,17 @@ workloads. See the <a class="reference internal" href="#s-template-pro-con"><spa
 </div>
 <p>The central function to use is <code class="docutils literal notranslate"><span class="pre">ps.prep_batch()</span></code>. See <code class="docutils literal notranslate"><span class="pre">examples/batch_templates</span></code>
 for a full example.</p>
-<p>The workflow is based on <strong>template files</strong>. In the templates, we use
-the standard library’s <code class="docutils literal notranslate"><span class="pre">string.Template</span></code>, where each <code class="docutils literal notranslate"><span class="pre">$foo</span></code> is replaced by a
-value contained in a pset, so <code class="docutils literal notranslate"><span class="pre">$param_a</span></code>, <code class="docutils literal notranslate"><span class="pre">$param_b</span></code>, as well as <code class="docutils literal notranslate"><span class="pre">$_pset_id</span></code>
-and so forth.</p>
+<p>The workflow is based on <strong>template files</strong>. In the templates, we use the
+standard library’s
+<a class="reference external" href="https://docs.python.org/3/library/string.html#template-strings"><code class="docutils literal notranslate"><span class="pre">string.Template</span></code></a>,
+where each <code class="docutils literal notranslate"><span class="pre">$foo</span></code> is replaced by a value contained in a pset, so <code class="docutils literal notranslate"><span class="pre">$param_a</span></code>,
+<code class="docutils literal notranslate"><span class="pre">$param_b</span></code>, as well as <code class="docutils literal notranslate"><span class="pre">$_pset_id</span></code> and so forth.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If your template files are shell scripts that contain variables like <code class="docutils literal notranslate"><span class="pre">$foo</span></code>,
+you need to escape the <code class="docutils literal notranslate"><span class="pre">$</span></code> with <code class="docutils literal notranslate"><span class="pre">$$foo</span></code>, else they will be treated as
+placeholders.</p>
+</div>
 <p>We piggy-back on the <code class="docutils literal notranslate"><span class="pre">run()</span></code> workflow from above to, instead of running jobs
 with it, just <strong>create batch scripts using template files</strong>.</p>
 <p>You can use the proposed workflow below directly on the remote machine (need to
@@ -1621,6 +1633,13 @@ commands still in there, but commented out</p></li>
         └── jobscript
 </pre></div>
 </div>
+<p>The template workflow is very generic. One aspect of this design is that each
+template file is treated as a simple text file, be it a Python script, a shell
+script, a config file or anything else. Above we use a small Python script
+<code class="docutils literal notranslate"><span class="pre">run.py</span></code> for demonstration purposes and communicate <code class="docutils literal notranslate"><span class="pre">pset</span></code> content (parameters
+to vary) by replacing placeholders in there. See <a class="reference internal" href="#s-template-pro-con"><span class="std std-ref">this
+section</span></a> for other ways to improve this in the Python
+script case.</p>
 <section id="calc-templates">
 <h5>calc templates<a class="headerlink" href="#calc-templates" title="Link to this heading">#</a></h5>
 <p>Each file in <code class="docutils literal notranslate"><span class="pre">templates/calc</span></code> such as <code class="docutils literal notranslate"><span class="pre">run.py</span></code> will be treated as
@@ -1693,7 +1712,7 @@ calc/65b7b453-96ec-4694-a0c4-4f71c53d982a
 <section id="git-support">
 <h4>git support<a class="headerlink" href="#git-support" title="Link to this heading">#</a></h4>
 <p>Use <code class="docutils literal notranslate"><span class="pre">prep_batch(...,</span> <span class="pre">git=True)</span></code> to have some basic git support such as
-automatic commits in each call. It just uses <code class="docutils literal notranslate"><span class="pre">run(...,</span> <span class="pre">git=True)</span></code> when
+automatic commits in each call. It uses <code class="docutils literal notranslate"><span class="pre">run(...,</span> <span class="pre">git=True)</span></code> when
 creating batch scripts, so all best practices for that apply here as well. In
 particular, make sure to create <code class="docutils literal notranslate"><span class="pre">.gitignore</span></code> first, else we’ll track <code class="docutils literal notranslate"><span class="pre">calc/</span></code> as
 well, which you may safely do when data in <code class="docutils literal notranslate"><span class="pre">calc</span></code> is small. Else use <code class="docutils literal notranslate"><span class="pre">git-lfs</span></code>,
@@ -2127,7 +2146,7 @@ more reproducibility, look into using one of the workflow frameworks above.</p>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dask"><code class="docutils literal notranslate"><span class="pre">dask</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#api">API</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#example">Example</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hpc-machine-example">HPC machine example</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#access-to-the-dask-dashboard">Access to the <code class="docutils literal notranslate"><span class="pre">dask</span></code> dashboard</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#jupyter">Jupyter</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pros-and-cons">Pros and Cons</a></li>

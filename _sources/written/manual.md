@@ -984,7 +984,8 @@ lets you spin up a dask cluster on distributed infrastructure.
 
 With these tools, you have fine-grained control over how many batch jobs you
 start. This is useful for cases where you have many small workloads (each
-`func(pset)` runs only a few seconds, say). Then one batch job per `pset` would
+`func(pset)` runs only a few seconds, say). Then one batch job per `pset`, as
+in the [templates workflow](s:templates), would
 be overhead and using many dask workers living in only a few (or one!) batch
 job is more efficient.
 
@@ -998,13 +999,15 @@ which covers the most important `SLURMCluster` settings.
 
 #### API
 
-The `psweep` API to use `dask` is just `df=ps.run(..., dask_client=client)`.
+The `psweep` API to use `dask` is `df=ps.run(..., dask_client=client)`.
+First, let's look at an example for using `dask` locally.
 
 ```py
 from dask.distributed import Client, LocalCluster
 
 # The type of cluster depends on your compute infastructure. Replace
-# LocalCluster with e.g. dask_jobqueue.SLURMCluster.
+# LocalCluster with e.g. dask_jobqueue.SLURMCluster when running on a HPC
+# machine.
 cluster = LocalCluster()
 client = Client(cluster)
 
@@ -1037,7 +1040,7 @@ client = Client()
 is sufficient for running locally.
 
 
-#### Example
+#### HPC machine example
 
 The example below uses the SLURM workload manager typically found in HPC
 centers.
@@ -1097,7 +1100,7 @@ mybox$ ssh -L 2222:localhost:3333 hpc.machine.edu
 mybox$ browser localhost:2222
 ```
 
-If `dask_control` runs on a compute node, you may need a second tunnel:
+If `dask_control` runs on a compute node, you will need a second tunnel:
 
 ```sh
 mybox$ ssh -L 2222:localhost:3333 hpc.machine.edu
@@ -1150,6 +1153,7 @@ the dask dashboard and more.
   `dask.distributed` and `dask_jobqueue`.
 ```
 
+(s:templates)=
 ### Templates
 
 This template-based workflow is basically a modernized
@@ -1168,10 +1172,17 @@ workloads. See the [Pros and Cons](s:template-pro-con) section below.
 The central function to use is `ps.prep_batch()`. See `examples/batch_templates`
 for a full example.
 
-The workflow is based on **template files**. In the templates, we use
-the standard library's `string.Template`, where each `$foo` is replaced by a
-value contained in a pset, so `$param_a`, `$param_b`, as well as `$_pset_id`
-and so forth.
+The workflow is based on **template files**. In the templates, we use the
+standard library's
+[`string.Template`](https://docs.python.org/3/library/string.html#template-strings),
+where each `$foo` is replaced by a value contained in a pset, so `$param_a`,
+`$param_b`, as well as `$_pset_id` and so forth.
+
+```{note}
+If your template files are shell scripts that contain variables like `$foo`,
+you need to escape the `$` with `$$foo`, else they will be treated as
+placeholders.
+```
 
 We piggy-back on the `run()` workflow from above to, instead of running jobs
 with it, just **create batch scripts using template files**.
@@ -1249,6 +1260,14 @@ templates
         ├── info.yaml
         └── jobscript
 ```
+
+The template workflow is very generic. One aspect of this design is that each
+template file is treated as a simple text file, be it a Python script, a shell
+script, a config file or anything else. Above we use a small Python script
+`run.py` for demonstration purposes and communicate `pset` content (parameters
+to vary) by replacing placeholders in there. See [this
+section](s:template-pro-con) for other ways to improve this in the Python
+script case.
 
 ##### calc templates
 
@@ -1332,7 +1351,7 @@ cd 11967c0d-7ce6-404f-aae6-2b0ea74beefa; sbatch jobscript_cluster; cd $here  # r
 #### git support
 
 Use `prep_batch(..., git=True)` to have some basic git support such as
-automatic commits in each call. It just uses `run(..., git=True)` when
+automatic commits in each call. It uses `run(..., git=True)` when
 creating batch scripts, so all best practices for that apply here as well. In
 particular, make sure to create `.gitignore` first, else we'll track `calc/` as
 well, which you may safely do when data in `calc` is small. Else use `git-lfs`,
