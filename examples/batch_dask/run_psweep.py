@@ -40,8 +40,10 @@ if __name__ == "__main__":
     ##params = ps.pgrid([a])
     params = a
 
-    # Start 2 batch jobs, each with 10 dask workers and 10 cores, so 1 thread /
-    # worker and 20 workers in total. Each worker gets 1 GiB of memory.
+    # Start 2 batch jobs, each with 10 dask workers (processes=10) and 10
+    # cores, so 1 core (1 thread) / worker and 20 workers in total (2 jobs x 10
+    # workers). Each worker gets 1 GiB of memory (memory="10GiB" for 10
+    # workers). See examples/batch_dask/slurm_cluster_settings.py
     cluster.scale(jobs=2)
     client = Client(cluster)
     df = ps.run(func, params, dask_client=client)

@@ -9,9 +9,9 @@
 #SBATCH --time=2-0
 
 # Submit this job manually via "sbatch <this_script>". It will run on some node
-# and from there spin up the dask cluster defined in run_psweep.py. The dask
-# cluster will then run workloads. After all work is done, the dask cluster
-# will be teared down and this job will exit.
+# and from there submit the batch jobs to spin up the dask cluster defined in
+# run_psweep.py. The dask cluster will then run workloads. After all work is
+# done, the dask cluster will be teared down and this job will exit.
 #
 # The reason for using a batch job to run a the dask control process (so python
 # run_psweep.py) is that typically on HPC machines, there is a time limit for
