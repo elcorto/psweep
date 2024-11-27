@@ -189,9 +189,7 @@ if __name__ == "__main__":
         scheduler_options={"dashboard_address": ":3333"},
     )
 
-    nn = ps.plist("nn", ps.intspace(100, 300, num=100))
-    ##params = ps.pgrid([nn])
-    params = nn
+    params = ps.plist("nn", ps.intspace(100, 300, num=100))
 
     cluster.scale(jobs=3)
     client = Client(cluster)

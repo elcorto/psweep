@@ -29,16 +29,12 @@ if __name__ == "__main__":
         local_directory="dask_tmp",
         log_directory="dask_log",
         scheduler_options={"dashboard_address": ":3333"},
-        # If you need a GPU
-        ##job_extra_directives=["--gres gpu:1"],
     )
 
     print(cluster.dashboard_link)
     print(cluster.job_script())
 
-    a = ps.plist("a", range(100))
-    ##params = ps.pgrid([a])
-    params = a
+    params = ps.plist("a", range(100))
 
     # Start 2 batch jobs, each with 10 dask workers (processes=10) and 10
     # cores, so 1 core (1 thread) / worker and 20 workers in total (2 jobs x 10
