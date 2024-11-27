@@ -19,6 +19,7 @@ import pandas as pd
 import numpy as np
 import pytest
 import joblib
+from packaging.version import parse as parse_version
 
 import psweep as ps
 
@@ -607,10 +608,13 @@ def test_pset_hash():
     assert ps.pset_hash(d1) == ps.pset_hash(dref)
     assert ps.pset_hash(d2) == ps.pset_hash(dref)
 
-    assert (
-        ps.pset_hash(dict(a=np.sin))
-        == "32522716b0514eb8b2677a917888c4ca21f792da"
-    )
+    h_ref_np_v1 = "32522716b0514eb8b2677a917888c4ca21f792da"
+    h_ref_np_v2 = "6f5ceea02d337dac4914401d5cb53476eb68493c"
+    h_val = ps.pset_hash(dict(a=np.sin))
+    if parse_version(np.__version__).major == 1:
+        assert h_val == h_ref_np_v1
+    else:
+        assert h_val == h_ref_np_v2
 
     # These are the correct hashes (tested: ipython or run this function in a
     # script). But pytest's deep introspection "magic" must do something to the

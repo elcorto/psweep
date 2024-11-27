@@ -33,6 +33,7 @@ dependencies = [
 test = [
     "pytest",
     "pytest-xdist",
+    "packaging",
 ]
 
 # For installing the correct ruff version in CI, see
