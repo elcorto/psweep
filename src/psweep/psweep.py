@@ -1091,8 +1091,9 @@ def run(
         pset_seq_old = -1
         run_seq_old = -1
     else:
-        pset_seq_old = df._pset_seq.values.max()
-        run_seq_old = df._run_seq.values.max()
+        # int(): convert np.int64 back to Python int
+        pset_seq_old = int(df._pset_seq.values.max())
+        run_seq_old = int(df._run_seq.values.max())
 
     if backup and len(df.index) > 0:
         stamp = df._time_utc.max().strftime("%Y-%m-%dT%H:%M:%S.%fZ")
