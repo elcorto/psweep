@@ -386,6 +386,7 @@
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#concepts">Concepts</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#naming-of-database-fields">Naming of database fields</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#building-parameter-grids">Building parameter grids</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#how-to-define-default-params">How to define default params</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gotchas">Gotchas</a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pgrid"><code class="docutils literal notranslate"><span class="pre">pgrid</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#zip"><code class="docutils literal notranslate"><span class="pre">zip</span></code></a></li>
@@ -743,6 +744,29 @@ a static <code class="docutils literal notranslate"><span class="pre">params</sp
 <p>or read <code class="docutils literal notranslate"><span class="pre">params</span></code> in from an external source such as a database from a
 previous study, etc.</p>
 <p>The point is: you generate <code class="docutils literal notranslate"><span class="pre">params</span></code>, we run the study.</p>
+<section id="how-to-define-default-params">
+<h3>How to define default params<a class="headerlink" href="#how-to-define-default-params" title="Link to this heading">#</a></h3>
+<p>There are two ways to do this. You can use a list of length 1 as mentioned
+above with the <code class="docutils literal notranslate"><span class="pre">const</span></code> param. This will end up in the database, which is
+(probably) what you want. So, let’s define a default value for “c” this way.</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">plist</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">plist</span><span class="p">(</span><span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mi">88</span><span class="p">,</span> <span class="mi">99</span><span class="p">])</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">plist</span><span class="p">(</span><span class="s2">&quot;c&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mf">1.23</span><span class="p">])</span>
+<span class="n">params</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">pgrid</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Another solution is to define defauts in <code class="docutils literal notranslate"><span class="pre">func</span></code>, like so:</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="n">pset</span><span class="p">,</span> <span class="n">c_default</span><span class="o">=</span><span class="mf">1.23</span><span class="p">):</span>
+    <span class="n">a_val</span> <span class="o">=</span> <span class="n">pset</span><span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">]</span>
+    <span class="n">b_val</span> <span class="o">=</span> <span class="n">pset</span><span class="p">[</span><span class="s2">&quot;b&quot;</span><span class="p">]</span>
+    <span class="c1"># Use c_default if &quot;c&quot; is not in pset.</span>
+    <span class="n">c_val</span> <span class="o">=</span> <span class="n">pset</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;c&quot;</span><span class="p">,</span> <span class="n">c_default</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;result_&quot;</span><span class="p">:</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">*</span> <span class="n">a_val</span> <span class="o">*</span> <span class="n">b_val</span> <span class="o">*</span> <span class="n">c_val</span><span class="p">,</span> <span class="s2">&quot;c&quot;</span><span class="p">:</span> <span class="n">c_val</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>In this case, the default value of param “c” won’t end up in the database,
+unless we add it to the returned dict, which we did in the example above.</p>
+</section>
 <section id="gotchas">
 <h3>Gotchas<a class="headerlink" href="#gotchas" title="Link to this heading">#</a></h3>
 <section id="pgrid">
@@ -2097,6 +2121,7 @@ more reproducibility, look into using one of the workflow frameworks above.</p>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#concepts">Concepts</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#naming-of-database-fields">Naming of database fields</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#building-parameter-grids">Building parameter grids</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#how-to-define-default-params">How to define default params</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gotchas">Gotchas</a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pgrid"><code class="docutils literal notranslate"><span class="pre">pgrid</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#zip"><code class="docutils literal notranslate"><span class="pre">zip</span></code></a></li>

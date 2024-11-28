@@ -333,6 +333,33 @@ previous study, etc.
 
 The point is: you generate `params`, we run the study.
 
+### How to define default params
+
+There are two ways to do this. You can use a list of length 1 as mentioned
+above with the `const` param. This will end up in the database, which is
+(probably) what you want. So, let's define a default value for "c" this way.
+
+```py
+a = ps.plist("a", [1, 2, 3])
+b = ps.plist("b", [88, 99])
+c = ps.plist("c", [1.23])
+params = ps.pgrid(a, b, c)
+```
+
+Another solution is to define defauts in `func`, like so:
+
+```py
+def func(pset, c_default=1.23):
+    a_val = pset["a"]
+    b_val = pset["b"]
+    # Use c_default if "c" is not in pset.
+    c_val = pset.get("c", c_default)
+    return {"result_": random.random() * a_val * b_val * c_val, "c": c_val}
+```
+
+In this case, the default value of param "c" won't end up in the database,
+unless we add it to the returned dict, which we did in the example above.
+
 ### Gotchas
 
 #### `pgrid`
