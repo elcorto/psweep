@@ -59,6 +59,20 @@ def find_examples(skip=["batch_dask"]):
     return found_paths
 
 
+class DummyClass:
+    """Dummy custom type used in test_dotdict(). As always, must be defined
+    outside b/c Python can't pickle stuff defined in the same scope.
+    """
+
+    x = 55
+
+    def __eq__(self, other):
+        return self.x == other.x
+
+    def __hash__(self):
+        return self.x
+
+
 # ----------------------------------------------------------------------------
 # test function
 # ----------------------------------------------------------------------------
@@ -516,20 +530,6 @@ def test_df_filter_conds():
     assert df.equals(ps.df_filter_conds(df, conds, op="or"))
 
 
-class _Foo:
-    """Dummy custom type used in test_dotdict(). As always, must be defined
-    outside b/c Python can't pickle stuff defined in the same scope.
-    """
-
-    x = 55
-
-    def __eq__(self, other):
-        return self.x == other.x
-
-    def __hash__(self):
-        return self.x
-
-
 # Uncomment to run test_dotdict using one of those implementations.
 
 # https://github.com/cdgriffith/Box
@@ -579,8 +579,8 @@ def test_dotdict():
     #         __delattr__ = dict.__delitem__
     #         __dir__ = dict.keys
 
-    f = _Foo()
-    ref = dict(a=1, b=2, c=np.sin, d=f, e=_Foo)
+    f = DummyClass()
+    ref = dict(a=1, b=2, c=np.sin, d=f, e=DummyClass)
 
     def dct_cmp(ref, ddict):
         assert ref == ddict
@@ -618,19 +618,19 @@ def test_pset_hash():
 
     # These are the correct hashes (tested: ipython or run this function in a
     # script). But pytest's deep introspection "magic" must do something to the
-    # _Foo class such that its hash changes, thank you very much. So we just
+    # DummyClass class such that its hash changes, thank you very much. So we just
     # test that hashing them works.
     #
     ##assert (
-    ##    ps.pset_hash(dict(a=_Foo))
+    ##    ps.pset_hash(dict(a=DummyClass))
     ##    == "f7a936832c167d5dc1c9574b937822ad0853c00d"
     ##)
     ##assert (
-    ##    ps.pset_hash(dict(a=_Foo()))
+    ##    ps.pset_hash(dict(a=DummyClass()))
     ##    == "7c78a7c995e1cf7a2f1f68f29090b173c9b930fa"
     ##)
-    ps.pset_hash(dict(a=_Foo))
-    ps.pset_hash(dict(a=_Foo()))
+    ps.pset_hash(dict(a=DummyClass))
+    ps.pset_hash(dict(a=DummyClass()))
 
 
 def test_pset_hash_skip_cols():
@@ -762,7 +762,7 @@ def test_filter_params_dup_hash():
 def test_stargrid():
     a = ps.plist("a", [1, 2, 3])
     b = ps.plist("b", [77, 88, 99])
-    c = ps.plist("c", [np.sin, np.cos, _Foo, _Foo()])
+    c = ps.plist("c", [np.sin, np.cos, DummyClass, DummyClass()])
     const = dict(a=1, b=77)
 
     # API
@@ -955,7 +955,7 @@ def test_dask_local_cluster():
 
 
 def test_pickle_io():
-    obj = dict(a=1, b=_Foo(), c=np.sin)
+    obj = dict(a=1, b=DummyClass(), c=np.sin)
     hsh = lambda obj: joblib.hash(obj, hash_name="sha1")
     with tempfile.TemporaryDirectory() as tmpdir:
         fn = f"{tmpdir}/path/that/has/to/be/created/file.pk"
