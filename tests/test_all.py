@@ -73,6 +73,11 @@ class DummyClass:
         return self.x
 
 
+def dummy_func(a):
+    b = a * 3
+    return b
+
+
 # ----------------------------------------------------------------------------
 # test function
 # ----------------------------------------------------------------------------
@@ -657,9 +662,20 @@ def test_pset_hash_skip_cols():
         ps.pset_hash(d_pre_post, skip_special_cols=True)
 
 
-def test_pset_hash_recalc_from_df():
-    params = [{"a": 1}, {"a": 2}, {"a": 3}, {"a": 4}]
-    df = ps.run(func_a, params, save=False)
+@pytest.mark.parametrize(
+    "non_py_type",
+    [
+        2,
+        pytest.param(np.int64(2), marks=pytest.mark.xfail),
+        pytest.param(np.uint64(2), marks=pytest.mark.xfail),
+        pytest.param(np.float64(2.0), marks=pytest.mark.xfail),
+    ],
+)
+def test_pset_hash_recalc_from_df(non_py_type):
+    params = ps.plist(
+        "a", [1, "3", np.sin, [], None, 1.23, dummy_func, non_py_type]
+    )
+    df = ps.run(lambda pset: {}, params, save=False)
     for idx, row in df.iterrows():
         df.at[idx, "_pset_hash_new"] = ps.pset_hash(row.to_dict())
 
