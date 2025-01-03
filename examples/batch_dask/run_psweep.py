@@ -19,6 +19,8 @@ def func(pset):
 
 
 if __name__ == "__main__":
+    # Settings in SLURMCluster() apply to one batch job, started with e.g.
+    # cluster.scale(jobs=1).
     cluster = SLURMCluster(
         queue="some_queue,some_other_queue",
         ##account="some_account",
@@ -36,10 +38,11 @@ if __name__ == "__main__":
 
     params = ps.plist("a", range(100))
 
-    # Start 2 batch jobs, each with 10 dask workers (processes=10) and 10
-    # cores, so 1 core (1 thread) / worker and 20 workers in total (2 jobs x 10
-    # workers). Each worker gets 1 GiB of memory (memory="10GiB" for 10
-    # workers). See examples/batch_dask/slurm_cluster_settings.py
+    # Start 2 batch jobs (cluster.scale(jobs=2)), each with 10 dask workers
+    # (processes=10) and 10 cores (cores=10), so 1 core (1 thread) / worker and
+    # 20 workers in total (2 jobs x 10 workers). Each worker gets 1 GiB of
+    # memory (memory="10GiB" for 10 workers per batch job). See
+    # examples/batch_dask/slurm_cluster_settings.py .
     cluster.scale(jobs=2)
     client = Client(cluster)
     df = ps.run(func, params, dask_client=client)

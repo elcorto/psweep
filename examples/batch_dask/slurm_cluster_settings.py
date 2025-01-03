@@ -1,6 +1,6 @@
 """
-This script is independent of psweep. It explains dask_jobqueue.SLURMCluster
-parameters.
+This script is (almost) independent of psweep. It explains
+dask_jobqueue.SLURMCluster parameters.
 
 
 SLURM terms
@@ -82,13 +82,22 @@ MPI job with 16 tasks across 2 nodes:
   mpirun myscript
 """
 
+import time
+
 from dask.distributed import Client
 from dask_jobqueue import SLURMCluster
-import time
 
 
 def func(x):
     time.sleep(5)
+
+    # If using print() logging/debugging, also in combo with ps.run(...,
+    # capture_logs=).
+    #
+    # https://github.com/dask/dask-jobqueue/issues/299#issuecomment-609002077
+    ##sys.stdout.flush()
+    ##os.fsync(sys.stdout.fileno())
+
     return x**2
 
 
@@ -189,6 +198,8 @@ if __name__ == "__main__":
         # Memory for the whole job. Will be distributed among workers
         # (dask_worker --memory-limit).
         memory="10GiB",
+        # should be <= the smallest expected queue time limit, can also help to
+        # get jobs started more quuckly
         walltime="00:10:00",
         # Each of the settings in this list will end up in the job script, e.g.
         #   #SBATCH --gres gpu:1
@@ -200,6 +211,8 @@ if __name__ == "__main__":
         # ssh -L 2222:localhost:3333 cluster
         # localhost$ browser localhost:2222/status
         scheduler_options={"dashboard_address": ":3333"},
+        # gracefully terminate workers, must be <= walltime above
+        worker_extra_args=["--lifetime", "9m", "--lifetime-stagger", "30s"],
     )
 
     # Job script generated with
