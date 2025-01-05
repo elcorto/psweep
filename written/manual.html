@@ -16,8 +16,8 @@
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
-  <!-- 
-    this give us a css class that will be invisible only if js is disabled 
+  <!--
+    this give us a css class that will be invisible only if js is disabled
   -->
   <noscript>
     <style>
@@ -27,8 +27,8 @@
   </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../_static/styles/theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
-<link href="../_static/styles/pydata-sphinx-theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
@@ -39,10 +39,10 @@
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
   
   <!-- So that users can add custom icons -->
-  <script src="../_static/scripts/fontawesome.js?digest=26a4bc78f4c0ddb94549"></script>
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
-<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
     <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
@@ -235,9 +235,14 @@
   
   
   <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
   </div>
-  
-  <div id="rtd-footer-container"></div>
 
 
       </div>
@@ -421,6 +426,7 @@
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hpc-machine-example">HPC machine example</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#access-to-the-dask-dashboard">Access to the <code class="docutils literal notranslate"><span class="pre">dask</span></code> dashboard</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#jupyter">Jupyter</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#how-to-request-gpus">How to request GPUs</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pros-and-cons">Pros and Cons</a></li>
 </ul>
 </li>
@@ -755,7 +761,7 @@ above with the <code class="docutils literal notranslate"><span class="pre">cons
 <span class="n">params</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">pgrid</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Another solution is to define defauts in <code class="docutils literal notranslate"><span class="pre">func</span></code>, like so:</p>
+<p>Another solution is to define defaults in <code class="docutils literal notranslate"><span class="pre">func</span></code>, like so:</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="n">pset</span><span class="p">,</span> <span class="n">c_default</span><span class="o">=</span><span class="mf">1.23</span><span class="p">):</span>
     <span class="n">a_val</span> <span class="o">=</span> <span class="n">pset</span><span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">]</span>
     <span class="n">b_val</span> <span class="o">=</span> <span class="n">pset</span><span class="p">[</span><span class="s2">&quot;b&quot;</span><span class="p">]</span>
@@ -1388,6 +1394,8 @@ database (<code class="docutils literal notranslate"><span class="pre">ps.pgrid(
 
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="c1"># Settings in SLURMCluster() apply to one batch job, started with e.g.</span>
+    <span class="c1"># cluster.scale(jobs=1).</span>
     <span class="n">cluster</span> <span class="o">=</span> <span class="n">SLURMCluster</span><span class="p">(</span>
         <span class="n">queue</span><span class="o">=</span><span class="s2">&quot;some_queue,some_other_queue&quot;</span><span class="p">,</span>
         <span class="c1">##account=&quot;some_account&quot;,</span>
@@ -1405,10 +1413,11 @@ database (<code class="docutils literal notranslate"><span class="pre">ps.pgrid(
 
     <span class="n">params</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">plist</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">))</span>
 
-    <span class="c1"># Start 2 batch jobs, each with 10 dask workers (processes=10) and 10</span>
-    <span class="c1"># cores, so 1 core (1 thread) / worker and 20 workers in total (2 jobs x 10</span>
-    <span class="c1"># workers). Each worker gets 1 GiB of memory (memory=&quot;10GiB&quot; for 10</span>
-    <span class="c1"># workers). See examples/batch_dask/slurm_cluster_settings.py</span>
+    <span class="c1"># Start 2 batch jobs (cluster.scale(jobs=2)), each with 10 dask workers</span>
+    <span class="c1"># (processes=10) and 10 cores (cores=10), so 1 core (1 thread) / worker and</span>
+    <span class="c1"># 20 workers in total (2 jobs x 10 workers). Each worker gets 1 GiB of</span>
+    <span class="c1"># memory (memory=&quot;10GiB&quot; for 10 workers per batch job). See</span>
+    <span class="c1"># examples/batch_dask/slurm_cluster_settings.py .</span>
     <span class="n">cluster</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="n">jobs</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
     <span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">(</span><span class="n">cluster</span><span class="p">)</span>
     <span class="n">df</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">dask_client</span><span class="o">=</span><span class="n">client</span><span class="p">)</span>
@@ -1441,7 +1450,7 @@ below (recommended)</p></li>
 <span class="c1"># run_psweep.py. The dask cluster will then run workloads. After all work is</span>
 <span class="c1"># done, the dask cluster will be teared down and this job will exit.</span>
 <span class="c1">#</span>
-<span class="c1"># The reason for using a batch job to run a the dask control process (so python</span>
+<span class="c1"># The reason for using a batch job to run the dask control process (so python</span>
 <span class="c1"># run_psweep.py) is that typically on HPC machines, there is a time limit for</span>
 <span class="c1"># user processes started on the head / login nodes. Therefore the dask control</span>
 <span class="c1"># process may get killed before the dask workers have finished processing.</span>
@@ -1490,6 +1499,10 @@ in Jupyter. JupyterLab also has <a class="reference external" href="https://gith
 extension</a> that gives you access to
 the dask dashboard and more.</p>
 </section>
+<section id="how-to-request-gpus">
+<h4>How to request GPUs<a class="headerlink" href="#how-to-request-gpus" title="Link to this heading">#</a></h4>
+<p>See <code class="docutils literal notranslate"><span class="pre">examples/batch_dask/run_psweep_jax_gpu.py</span></code>.</p>
+</section>
 <section id="pros-and-cons">
 <h4>Pros and Cons<a class="headerlink" href="#pros-and-cons" title="Link to this heading">#</a></h4>
 <div class="hint admonition">
@@ -1515,7 +1528,7 @@ specifications. See these discussions for more:
 queue for a long time and meanwhile the <code class="docutils literal notranslate"><span class="pre">dask_control</span></code> batch job gets
 terminated due to its time limit. The latter should be set to the longest
 available on the system, e.g. if you have a queue for long-running jobs, use
-that. Also the batch jobs holding workers have a time limit. See <a class="reference external" href="https://jobqueue.dask.org/en/latest/advanced-tips-and-tricks.html#how-to-handle-job-queueing-system-walltime-killing-workers">this part
+that. Also the batch jobs holding workers have a time limit. See <a class="reference external" href="https://jobqueue.dask.org/en/latest/clusters-advanced-tips-and-tricks.html#how-to-handle-job-queueing-system-walltime-killing-workers">this part
 of the <code class="docutils literal notranslate"><span class="pre">dask_jobqueue</span></code>
 docs</a>
 for how to handle the latter and <a class="reference external" href="https://github.com/elcorto/psweep/issues/11#issuecomment-1757564391">this
@@ -1523,6 +1536,10 @@ comment</a>
 for more.</p></li>
 <li><p>More software to install: On the HPC machine, you need <code class="docutils literal notranslate"><span class="pre">psweep</span></code>,
 <code class="docutils literal notranslate"><span class="pre">dask.distributed</span></code> and <code class="docutils literal notranslate"><span class="pre">dask_jobqueue</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dask</span></code> uses <a class="reference external" href="https://github.com/cloudpipe/cloudpickle"><code class="docutils literal notranslate"><span class="pre">cloudpickle</span></code></a> to
+serialize data before sending it to workers, which may fail in some cases
+such as data generated by
+<a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.compile.html"><code class="docutils literal notranslate"><span class="pre">torch.compile</span></code></a></p></li>
 </ul>
 </div>
 </section>
@@ -2156,6 +2173,7 @@ more reproducibility, look into using one of the workflow frameworks above.</p>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hpc-machine-example">HPC machine example</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#access-to-the-dask-dashboard">Access to the <code class="docutils literal notranslate"><span class="pre">dask</span></code> dashboard</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#jupyter">Jupyter</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#how-to-request-gpus">How to request GPUs</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pros-and-cons">Pros and Cons</a></li>
 </ul>
 </li>
@@ -2228,8 +2246,8 @@ By Steve Schmerler
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549"></script>
-<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549"></script>
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
 
   <footer class="bd-footer">
   </footer>
