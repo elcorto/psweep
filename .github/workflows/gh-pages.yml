@@ -11,6 +11,10 @@ on:
 jobs:
   pages:
     runs-on: ubuntu-latest
+
+    # Only if tests have passed, not just if the tests workflow ran.
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+
     steps:
 
       - name: checkout
