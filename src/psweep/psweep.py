@@ -631,9 +631,9 @@ def df_filter_conds(
     if len(cc) == 1:
         msk = cc[0]
     else:
-        assert op in (
-            op_allowed := ["and", "or", "xor"]
-        ), f"{op=} not one of {op_allowed}"
+        assert op in (op_allowed := ["and", "or", "xor"]), (
+            f"{op=} not one of {op_allowed}"
+        )
         msk = getattr(np, f"logical_{op}").reduce(cc)
     return df[msk]
 
@@ -701,9 +701,9 @@ def itr2params(loops: Iterator[Any]):
     """
     ret = [merge_dicts(flatten(entry)) for entry in loops]
     lens = list(map(len, ret))
-    assert (
-        len(np.unique(lens)) == 1
-    ), f"not all psets have same length {lens=}\n  {ret=}"
+    assert len(np.unique(lens)) == 1, (
+        f"not all psets have same length {lens=}\n  {ret=}"
+    )
     return ret
 
 
@@ -852,9 +852,9 @@ def stargrid(
     """
     params = []
     if vary_labels is not None:
-        assert len(vary_labels) == len(
-            vary
-        ), f"{vary_labels=} and {vary=} must have same length"
+        assert len(vary_labels) == len(vary), (
+            f"{vary_labels=} and {vary=} must have same length"
+        )
     for ii, plist in enumerate(vary):
         for dct in plist:
             if vary_labels is not None:
@@ -1139,9 +1139,9 @@ def run(
     if (poolsize is None) and (dask_client is None):
         results = list(map(worker, params))
     else:
-        assert [poolsize, dask_client].count(
-            None
-        ) == 1, "Use either poolsize or dask_client."
+        assert [poolsize, dask_client].count(None) == 1, (
+            "Use either poolsize or dask_client."
+        )
         if dask_client is None:
             with mp.Pool(poolsize) as pool:
                 results = pool.map(worker, params)

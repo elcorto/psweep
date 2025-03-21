@@ -908,7 +908,7 @@ def test_prep_batch():
             assert "# run_seq=0 pset_seq=0" in txt
             assert f"# run_seq=0 pset_seq={n_param - 1}" in txt
             assert f"# run_seq=1 pset_seq={n_param}" in txt
-            assert f"# run_seq=1 pset_seq={2*n_param - 1}" in txt
+            assert f"# run_seq=1 pset_seq={2 * n_param - 1}" in txt
 
 
 # We can't use

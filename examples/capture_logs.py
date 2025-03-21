@@ -67,9 +67,9 @@ def safe_func(pset):
 def msg(header, txt):
     h = textwrap.dedent(
         f"""
-        {"-"*79}
+        {"-" * 79}
         {header}
-        {"-"*79}
+        {"-" * 79}
         """
     )
     print(f"{h}\n{txt}")
