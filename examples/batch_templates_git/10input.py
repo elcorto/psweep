@@ -24,5 +24,5 @@ if __name__ == "__main__":
     param_b = ps.plist("param_b", [88, 99])
 
     params = ps.pgrid(param_a, param_b)
-    df = ps.prep_batch(params, git=True)
+    df = ps.prep_batch(params, git=True, template_mode="dollar")
     print(df)

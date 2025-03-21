@@ -22,6 +22,7 @@ dependencies = [
     "pandas >= 0.19.2",
     "pyyaml",
     "joblib",
+    "Jinja2",
 
     # For bin/psweep-db2* scripts
     "docopt",

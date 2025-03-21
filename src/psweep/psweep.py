@@ -21,6 +21,7 @@ import joblib
 import numpy as np
 import pandas as pd
 import yaml
+import jinja2
 
 pj = os.path.join
 
@@ -1198,9 +1199,19 @@ class FileTemplate:
     def __repr__(self):
         return self.filename
 
-    def fill(self, pset):
+    def fill(self, pset, mode="jinja"):
         try:
-            return string.Template(file_read(self.filename)).substitute(pset)
+            txt = file_read(self.filename)
+            if mode == "dollar":
+                return string.Template(txt).substitute(pset)
+            elif mode == "jinja":
+                return (
+                    jinja2.Environment(undefined=jinja2.StrictUndefined)
+                    .from_string(txt)
+                    .render(pset)
+                )
+            else:
+                raise ValueError(f"template {mode}= not supported")
         except:
             print(f"Failed to fill template: {self.filename}", file=sys.stderr)
             raise
@@ -1233,6 +1244,7 @@ def prep_batch(
     machine_templ_dir: str = "templates/machines",
     git: bool = False,
     write_pset: bool = False,
+    template_mode: str = "jinja",
     **kwds,
 ) -> pd.DataFrame:
     """
@@ -1248,6 +1260,8 @@ def prep_batch(
         Use git to commit local changes.
     write_pset
         Write the input `pset` to ``<calc_dir>/<pset_id>/pset.pk``.
+    template_mode
+        'dollar' or 'jinja'
     **kwds
         Passed to :func:`run`.
 
@@ -1268,7 +1282,7 @@ def prep_batch(
         for template in templates:
             file_write(
                 pj(calc_dir, pset["_pset_id"], template.targetname),
-                template.fill(pset),
+                template.fill(pset, mode=template_mode),
             )
             if write_pset:
                 pickle_write(pj(calc_dir, pset["_pset_id"], "pset.pk"), pset)

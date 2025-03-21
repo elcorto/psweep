@@ -1208,13 +1208,19 @@ workloads. See the [Pros and Cons](s:template-pro-con) section below.
 The central function to use is `ps.prep_batch()`. See `examples/batch_templates`
 for a full example.
 
-The workflow is based on **template files**. In the templates, we use the
-standard library's
-[`string.Template`](https://docs.python.org/3/library/string.html#template-strings),
-where each `$foo` is replaced by a value contained in a pset, so `$param_a`,
-`$param_b`, as well as `$_pset_id` and so forth.
+The workflow is based on **template files**. They are processed using
+[jinja](https://github.com/pallets/jinja) to replace each `{{foo}}` or `{{ foo }}`
+by a value contained in a pset, so `{{param_a}}`,
+`{{param_b}}`, as well as `{{_pset_id}}` and so forth.
 
 ```{note}
+We support an older template mechanism where we use the standard
+library's
+[`string.Template`](https://docs.python.org/3/library/string.html#template-strings)
+with "dollar" placeholder syntax (`$foo`, `$param_a`, `$_pset_id`). You can
+switch this on with `ps.prep_batch(..., template_mode="dollar")` but the default
+is `template_mode="jinja"`.
+
 If your template files are shell scripts that contain variables like `$foo`,
 you need to escape the `$` with `$$foo`, else they will be treated as
 placeholders.
@@ -1239,8 +1245,8 @@ control over every part of the workflow. We just automate the boring stuff.
   * read `templates/machines/<mycluster>/info.yaml`: machine-specific info
     (e.g. command to submit the `jobscript`)
   * define `func()` that will create a dir named `calc/<pset_id>` for each
-    batch job, **replace placeholders** such as `$param_a` from `pset`s
-    (including special ones such as `$_pset_id`)
+    batch job, **replace placeholders** such as `{{param_a}}` from `pset`s
+    (including special ones such as `{{_pset_id}}`)
   * call `run(func, params)`
   * create a script `calc/run_<mycluster>.sh` to submit all jobs
 * if running locally
@@ -1329,17 +1335,13 @@ All other SLURM stuff can go into `templates/machines/cluster/jobscript`, e.g.
 ```sh
 #SBATCH --time 00:20:00
 #SBATCH -o out.log
-#SBATCH -J foo_${_pset_seq}_${_pset_id}
+#SBATCH -J foo_{{_pset_seq}}_{{_pset_id}}
 #SBATCH -p bar
 #SBATCH -A baz
 
-# Because we use Python's string.Template, we need to escape the dollar char
-# with two.
-echo "hostname=$$(hostname)"
+echo "hostname=$(hostname)"
 
 module purge
-
-module load bzzrrr/1.2.3
 module load python
 
 python3 run.py
@@ -1442,8 +1444,8 @@ Python interface, for instance
 ```
 # Input file for super fast bzzrrr simulation code.
 
-param_a = $param_a
-param_b = $param_b
+param_a = {{param_a}}
+param_b = {{param_b}}
 ```
 
 `templates/machines/cluster/jobscript`:
@@ -1453,7 +1455,7 @@ param_b = $param_b
 
 #SBATCH --time 00:20:00
 #SBATCH -o out.log
-#SBATCH -J foo_${_pset_seq}_${_pset_id}
+#SBATCH -J foo_{{_pset_seq}}_{{_pset_id}}
 #SBATCH -p bar
 #SBATCH -A baz
 #SBATCH -n 1 -c 8
@@ -1466,7 +1468,7 @@ mpirun -np 8 bzzrrr input_file
 
 For Python workloads (the one we have in
 `examples/batch_templates/templates/calc/run.py`), using placeholders like
-`$param_a` is actually a bit of an anti-pattern, since we would ideally like to
+`{{param_a}}` is actually a bit of an anti-pattern, since we would ideally like to
 pass the `pset` to the workload using Python. With templates, we can use
 `prep_batch(..., write_pset=True)` which writes
 `<calc_dir>/<pset_id>/pset.pk`. In `run.py` you can then do
@@ -1507,8 +1509,11 @@ many) small files, namely `run.py`, `pset.pk`, `result.pk`
 example above, `run.py` would be the exact same file for each job.
 
 So we recommend to use the `dask` workflow if you can and use templates as a
-fallback solution, for instance if `dask_jobqueue` doesn't have
-something that matches your compute infrastructure.
+fallback solution, for instance if
+
+* `dask_jobqueue` doesn't have something that matches your compute infrastructure
+* your workload doesn't have a Python interface / it is cumbersome to create a
+  Python function that runs your workload
 
 ## Special topics
 
@@ -1596,7 +1601,7 @@ We only
 * provide simple helpers to set up the params (`plist()`, `pgrid()`,
 `stargrid()`)
 * hook into the `concurrent.futures` API (`multiprocessing` or `dask`) for
-  parallel runs
+  parallel (HPC) runs / provide a template workflow for HPC runs
 * give you a `DataFrame` with useful metadata
 
 Otherwise we stay out of the way. In particular we are not a workflow engine,
@@ -1652,7 +1657,7 @@ tools](https://neptune.ai/blog/mlops-tools-platforms-landscape).
 ### Handling task dependencies
 
 In `psweep` we assume that workloads are independent and "embarrassingly
-parallel" if using `multiprocessing` or `dask`.
+parallel" if using `multiprocessing`, `dask` or templates.
 
 So while `psweep` is not a workflow engine where you can model task
 dependencies as DAGs, one way to handle (simple linear) task dependencies is by

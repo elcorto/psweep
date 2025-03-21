@@ -1,4 +1,6 @@
-Same as batch_templates, but additionally using git to track changes.
+Same as `batch_templates/`, but additionally using git to track changes. Also
+we use the older template "dollar" syntax here for demonstration, but recommend
+to use jinja instead, as we do in `batch_templates/`.
 
 Do NOT run the scripts, e.g. `10input.py`, in this dir directly because that
 will create git commits in psweep's repo (here)!

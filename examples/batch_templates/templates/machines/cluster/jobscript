@@ -2,13 +2,13 @@
 
 #SBATCH --time 00:20:00
 #SBATCH -o out.job
-#SBATCH -J foo_${_pset_seq}_${_pset_id}
+#SBATCH -J foo_{{_pset_seq}}_{{_pset_id}}
 #SBATCH -p bar
 #SBATCH -A baz
 
-# Because we use Python's string.Template, we need to escape the dollar char
-# with two.
-echo "hostname=$$(hostname)"
+# When using template dollar syntax
+##echo "hostname=$$(hostname)"
+echo "hostname=$(hostname)"
 
 module purge
 
