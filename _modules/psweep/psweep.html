@@ -15,33 +15,30 @@
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
-  <!--
-    this give us a css class that will be invisible only if js is disabled
-  -->
-  <noscript>
-    <style>
-      .pst-js-only { display: none !important; }
-
-    </style>
-  </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
-<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
 
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=a3416100" />
+  
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
     <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
   
-  <!-- So that users can add custom icons -->
-  <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
-<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
     <script src="../../_static/documentation_options.js?v=9eb32ce0"></script>
     <script src="../../_static/doctools.js?v=9a2dae69"></script>
@@ -64,7 +61,6 @@
     <link rel="search" title="Search" href="../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="" />
   </head>
   
   
@@ -80,8 +76,19 @@
     <i class="fa-solid fa-arrow-up"></i>Back to top</button>
 
   
-  <dialog id="pst-search-dialog">
-    
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
 <form class="bd-search d-flex align-items-center"
       action="../../search.html"
       method="get">
@@ -89,6 +96,7 @@
   <input type="search"
          class="form-control"
          name="q"
+         id="search-input"
          placeholder="Search this book..."
          aria-label="Search this book..."
          autocomplete="off"
@@ -96,8 +104,8 @@
          autocapitalize="off"
          spellcheck="false"/>
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
-</form>
-  </dialog>
+</form></div>
+  </div>
 
   <div class="pst-async-banner-revealer d-none">
   <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
@@ -115,8 +123,7 @@
       
         
       
-      <dialog id="pst-primary-sidebar-modal"></dialog>
-      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+      <div class="bd-sidebar-primary bd-sidebar">
         
 
   
@@ -146,17 +153,21 @@
     
     
     <img src="../../_static/psweep-logo.png" class="logo__image only-light" alt="psweep - Home"/>
-    <img src="../../_static/psweep-logo.png" class="logo__image only-dark pst-js-only" alt="psweep - Home"/>
+    <script>document.write(`<img src="../../_static/psweep-logo.png" class="logo__image only-dark" alt="psweep - Home"/>`);</script>
   
   
 </a></div>
         <div class="sidebar-primary-item">
 
-<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
- <i class="fa-solid fa-magnifying-glass"></i>
- <span class="search-button__default-text">Search</span>
- <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
-</button></div>
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
         <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         
@@ -234,14 +245,9 @@
   
   
   <div class="sidebar-primary-items__end sidebar-primary__section">
-      <div class="sidebar-primary-item">
-<div id="ethical-ad-placement"
-      class="flat"
-      data-ea-publisher="readthedocs"
-      data-ea-type="readthedocs-sidebar"
-      data-ea-manual="true">
-</div></div>
   </div>
+  
+  <div id="rtd-footer-container"></div>
 
 
       </div>
@@ -305,16 +311,24 @@
 
 
 
-<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
-  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
-  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
-  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
-</button>
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
 
 
-<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
-</button>
+  </button>
+`);
+</script>
 
 </div></div>
       
@@ -341,29 +355,29 @@
                 <article class="bd-article">
                   
   <h1>Source code for psweep.psweep</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span><span class="p">,</span> <span class="n">wraps</span>
-<span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">IOBase</span><span class="p">,</span> <span class="n">StringIO</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Iterator</span>
-<span class="kn">import</span> <span class="nn">copy</span>
-<span class="kn">from</span> <span class="nn">contextlib</span> <span class="kn">import</span> <span class="n">redirect_stdout</span><span class="p">,</span> <span class="n">redirect_stderr</span>
-<span class="kn">import</span> <span class="nn">itertools</span>
-<span class="kn">import</span> <span class="nn">multiprocessing</span> <span class="k">as</span> <span class="nn">mp</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">pickle</span>
-<span class="kn">import</span> <span class="nn">platform</span>
-<span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">import</span> <span class="nn">shutil</span>
-<span class="kn">import</span> <span class="nn">string</span>
-<span class="kn">import</span> <span class="nn">subprocess</span>
-<span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">import</span> <span class="nn">time</span>
-<span class="kn">import</span> <span class="nn">uuid</span>
-<span class="kn">import</span> <span class="nn">warnings</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">partial</span><span class="p">,</span> <span class="n">wraps</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">io</span><span class="w"> </span><span class="kn">import</span> <span class="n">IOBase</span><span class="p">,</span> <span class="n">StringIO</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Iterator</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">contextlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">redirect_stdout</span><span class="p">,</span> <span class="n">redirect_stderr</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">itertools</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">multiprocessing</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mp</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pickle</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">platform</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">string</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">uuid</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
 
-<span class="kn">import</span> <span class="nn">joblib</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">yaml</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">joblib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">yaml</span>
 
 <span class="n">pj</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span>
 
@@ -384,7 +398,7 @@
 
 <div class="viewcode-block" id="system">
 <a class="viewcode-back" href="../../generated/api/psweep.psweep.system.html#psweep.psweep.system">[docs]</a>
-<span class="k">def</span> <span class="nf">system</span><span class="p">(</span><span class="n">cmd</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">CompletedProcess</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">system</span><span class="p">(</span><span class="n">cmd</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">CompletedProcess</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Call shell command.</span>
 
@@ -413,7 +427,7 @@
 <span class="c1"># https://github.com/elcorto/pwtools</span>
 <div class="viewcode-block" id="makedirs">
 <a class="viewcode-back" href="../../generated/api/psweep.psweep.makedirs.html#psweep.psweep.makedirs">[docs]</a>
-<span class="k">def</span> <span class="nf">makedirs</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">makedirs</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Create `path` recursively, no questions asked.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">path</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
         <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
@@ -423,14 +437,14 @@
 <span class="c1"># https://github.com/elcorto/pwtools</span>
 <div class="viewcode-block" id="fullpath">
 <a class="viewcode-back" href="../../generated/api/psweep.psweep.fullpath.html#psweep.psweep.fullpath">[docs]</a>
-<span class="k">def</span> <span class="nf">fullpath</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">fullpath</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="n">path</span><span class="p">))</span></div>
 
 
 
 <div class="viewcode-block" id="itr">
 <a class="viewcode-back" href="../../generated/api/psweep.psweep.itr.html#psweep.psweep.itr">[docs]</a>
-<span class="k">def</span> <span class="nf">itr</span><span class="p">(</span><span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">itr</span><span class="p">(</span><span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Wrap `func` to allow pasing args not as sequence.</span>
 
 <span class="sd">    Assuming ``func()`` requires a sequence as input: ``func([a,b,c])``, allow</span>
@@ -438,7 +452,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="nd">@wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
         <span class="c1"># (arg1,)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">arg</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -454,7 +468,7 @@
 <span class="c1"># https://github.com/elcorto/pwtools</span>
 <div class="viewcode-block" id="is_seq">
 <a class="viewcode-back" href="../../generated/api/psweep.psweep.is_seq.html#psweep.psweep.is_seq">[docs]</a>
-<span class="k">def</span> <span class="nf">is_seq</span><span class="p">(</span><span class="n">seq</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">is_seq</span><span class="p">(</span><span class="n">seq</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
     <span class="k">if</span> <span class="p">(</span>
         <span class="nb">isinstance</span><span class="p">(</span><span class="n">seq</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
         <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">seq</span><span class="p">,</span> <span class="n">IOBase</span><span class="p">)</span>
@@ -472,7 +486,7 @@
 
 <div class="viewcode-block" id="flatten">
 <a class="viewcode-back" href="../../generated/api/psweep.psweep.flatten.html#psweep.psweep.flatten">[docs]</a>
-<span class="k">def</span> <span class="nf">flatten</span><span class="p">(</span><span class="n">seq</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">flatten</span><span class="p">(</span><span class="n">seq</span><span class="p">):</span>
     <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">seq</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">is_seq</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
             <span class="k">yield</span> <span class="n">item</span>
@@ -484,7 +498,7 @@
 
 <div class="viewcode-block" id="file_write">
 <a class="viewcode-back" href="../../generated/api/psweep.psweep.file_write.html#psweep.psweep.file_write">[docs]</a>
-<span class="k">def</span> <span class="nf">file_write</span><span class="p">(</span><span class="n">fn</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">txt</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;w&quot;</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">file_write</span><span class="p">(</span><span class="n">fn</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">txt</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;w&quot;</span><span class="p">):</span>
     <span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">fn</span><span class="p">))</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="n">mode</span><span class="p">)</span> <span class="k">as</span> <span class="n">fd</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
@@ -496,7 +510,7 @@
 
 <div class="viewcode-block" id="file_read">
 <a class="viewcode-back" href="../../generated/api/psweep.psweep.file_read.html#psweep.psweep.file_read">[docs]</a>
-<span class="k">def</span> <span class="nf">file_read</span><span class="p">(</span><span class="n">fn</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">file_read</span><span class="p">(</span><span class="n">fn</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fd</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">fd</span><span class="o">.</span><span class="n">read</span><span class="p">()</span></div>
 
@@ -504,7 +518,7 @@
 
 <div class="viewcode-block" id="pickle_write">
 <a class="viewcode-back" href="../../generated/api/psweep.psweep.pickle_write.html#psweep.psweep.pickle_write">[docs]</a>
-<span class="k">def</span> <span class="nf">pickle_write</span><span class="p">(</span><span class="n">fn</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">pickle_write</span><span class="p">(</span><span class="n">fn</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
     <span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">fn</span><span class="p">))</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fd</span><span class="p">:</span>
         <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">fd</span><span class="p">)</span></div>
@@ -513,7 +527,7 @@
 
 <div class="viewcode-block" id="pickle_read">
 <a class="viewcode-back" href="../../generated/api/psweep.psweep.pickle_read.html#psweep.psweep.pickle_read">[docs]</a>
-<span class="k">def</span> <span class="nf">pickle_read</span><span class="p">(</span><span class="n">fn</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">pickle_read</span><span class="p">(</span><span class="n">fn</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fd</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">fd</span><span class="p">)</span></div>
 
@@ -521,14 +535,14 @@
 
 <div class="viewcode-block" id="PsweepHashError">
 <a class="viewcode-back" href="../../generated/api/psweep.psweep.PsweepHashError.html#psweep.psweep.PsweepHashError">[docs]</a>
-<span class="k">class</span> <span class="nc">PsweepHashError</span><span class="p">(</span><span class="ne">TypeError</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PsweepHashError</span><span class="p">(</span><span class="ne">TypeError</span><span class="p">):</span>
     <span class="k">pass</span></div>
 
 
 
 <div class="viewcode-block" id="pset_hash">
 <a class="viewcode-back" href="../../generated/api/psweep.psweep.pset_hash.html#psweep.psweep.pset_hash">[docs]</a>
-<span class="k">def</span> <span class="nf">pset_hash</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">pset_hash</span><span class="p">(</span>
     <span class="n">dct</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
     <span class="n">method</span><span class="o">=</span><span class="n">PSET_HASH_ALG</span><span class="p">,</span>
     <span class="n">raise_error</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
@@ -602,7 +616,7 @@
         <span class="k">if</span> <span class="n">raise_error</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">PsweepHashError</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s2">&quot;Error in hash calculation of: </span><span class="si">{</span><span class="n">dct</span><span class="si">}</span><span class="s2">&quot;</span>
-            <span class="p">)</span> <span class="kn">from</span> <span class="nn">ex</span>
+            <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">ex</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span></div>
 
@@ -610,7 +624,7 @@
 
 <div class="viewcode-block" id="check_calc_dir">
 <a class="viewcode-back" href="../../generated/api/psweep.psweep.check_calc_dir.html#psweep.psweep.check_calc_dir">[docs]</a>
-<span class="k">def</span> <span class="nf">check_calc_dir</span><span class="p">(</span><span class="n">calc_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">check_calc_dir</span><span class="p">(</span><span class="n">calc_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Check calc dir for consistency with database.</span>
 
 <span class="sd">    Assuming dirs are named::</span>
@@ -640,7 +654,7 @@
 
 <div class="viewcode-block" id="logspace">
 <a class="viewcode-back" href="../../generated/api/psweep.psweep.logspace.html#psweep.psweep.logspace">[docs]</a>
-<span class="k">def</span> <span class="nf">logspace</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">logspace</span><span class="p">(</span>
     <span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">log_func</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -699,7 +713,7 @@
 
 <div class="viewcode-block" id="intspace">
 <a class="viewcode-back" href="../../generated/api/psweep.psweep.intspace.html#psweep.psweep.intspace">[docs]</a>
-<span class="k">def</span> <span class="nf">intspace</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">intspace</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Like ``np.linspace`` but round to integers.</span>
 
 <span class="sd">    The length of the returned array may be lower than specified by `num` if</span>
@@ -717,7 +731,7 @@
 
 <div class="viewcode-block" id="get_uuid">
 <a class="viewcode-back" href="../../generated/api/psweep.psweep.get_uuid.html#psweep.psweep.get_uuid">[docs]</a>
-<span class="k">def</span> <span class="nf">get_uuid</span><span class="p">(</span><span class="n">retry</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">existing</span><span class="p">:</span> <span class="n">Sequence</span> <span class="o">=</span> <span class="p">[])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_uuid</span><span class="p">(</span><span class="n">retry</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">existing</span><span class="p">:</span> <span class="n">Sequence</span> <span class="o">=</span> <span class="p">[])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="n">ret</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">())</span>
     <span class="k">while</span> <span class="n">ret</span> <span class="ow">in</span> <span class="n">existing</span><span class="p">:</span>
         <span class="n">ret</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">())</span>
@@ -733,7 +747,7 @@
 
 <div class="viewcode-block" id="get_many_uuids">
 <a class="viewcode-back" href="../../generated/api/psweep.psweep.get_many_uuids.html#psweep.psweep.get_many_uuids">[docs]</a>
-<span class="k">def</span> <span class="nf">get_many_uuids</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_many_uuids</span><span class="p">(</span>
     <span class="n">num</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">retry</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">existing</span><span class="p">:</span> <span class="n">Sequence</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
     <span class="n">generate</span> <span class="o">=</span> <span class="k">lambda</span><span class="p">:</span> <span class="nb">set</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">())</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num</span><span class="p">))</span>
@@ -758,14 +772,14 @@
 
 <div class="viewcode-block" id="git_clean">
 <a class="viewcode-back" href="../../generated/api/psweep.psweep.git_clean.html#psweep.psweep.git_clean">[docs]</a>
-<span class="k">def</span> <span class="nf">git_clean</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">git_clean</span><span class="p">():</span>
     <span class="k">return</span> <span class="n">system</span><span class="p">(</span><span class="s2">&quot;git status --porcelain&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span></div>
 
 
 
 <div class="viewcode-block" id="in_git_repo">
 <a class="viewcode-back" href="../../generated/api/psweep.psweep.in_git_repo.html#psweep.psweep.in_git_repo">[docs]</a>
-<span class="k">def</span> <span class="nf">in_git_repo</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">in_git_repo</span><span class="p">():</span>
     <span class="c1"># fmt: off</span>
     <span class="k">return</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
         <span class="s2">&quot;git status&quot;</span><span class="p">,</span>
@@ -779,7 +793,7 @@
 
 <div class="viewcode-block" id="git_enter">
 <a class="viewcode-back" href="../../generated/api/psweep.psweep.git_enter.html#psweep.psweep.git_enter">[docs]</a>
-<span class="k">def</span> <span class="nf">git_enter</span><span class="p">(</span><span class="n">use_git</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">always_commit</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">git_enter</span><span class="p">(</span><span class="n">use_git</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">always_commit</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">use_git</span><span class="p">:</span>
         <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">fullpath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">curdir</span><span class="p">))</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">in_git_repo</span><span class="p">():</span>
@@ -802,7 +816,7 @@
 
 <div class="viewcode-block" id="git_exit">
 <a class="viewcode-back" href="../../generated/api/psweep.psweep.git_exit.html#psweep.psweep.git_exit">[docs]</a>
-<span class="k">def</span> <span class="nf">git_exit</span><span class="p">(</span><span class="n">use_git</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">git_exit</span><span class="p">(</span><span class="n">use_git</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">use_git</span> <span class="ow">and</span> <span class="p">(</span><span class="ow">not</span> <span class="n">git_clean</span><span class="p">()):</span>
         <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">fullpath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">curdir</span><span class="p">))</span>
         <span class="n">system</span><span class="p">(</span>
@@ -818,7 +832,7 @@
 
 <div class="viewcode-block" id="df_to_json">
 <a class="viewcode-back" href="../../generated/api/psweep.psweep.df_to_json.html#psweep.psweep.df_to_json">[docs]</a>
-<span class="k">def</span> <span class="nf">df_to_json</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">df_to_json</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Like `df.to_json` but with defaults for orient, date_unit, date_format,</span>
 <span class="sd">    double_precision.</span>
 
@@ -844,7 +858,7 @@
 
 <div class="viewcode-block" id="df_write">
 <a class="viewcode-back" href="../../generated/api/psweep.psweep.df_write.html#psweep.psweep.df_write">[docs]</a>
-<span class="k">def</span> <span class="nf">df_write</span><span class="p">(</span><span class="n">fn</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s2">&quot;pickle&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">df_write</span><span class="p">(</span><span class="n">fn</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s2">&quot;pickle&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Write DataFrame to disk.</span>
 
 <span class="sd">    Parameters</span>
@@ -871,7 +885,7 @@
 
 <div class="viewcode-block" id="df_read">
 <a class="viewcode-back" href="../../generated/api/psweep.psweep.df_read.html#psweep.psweep.df_read">[docs]</a>
-<span class="k">def</span> <span class="nf">df_read</span><span class="p">(</span><span class="n">fn</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s2">&quot;pickle&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">df_read</span><span class="p">(</span><span class="n">fn</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s2">&quot;pickle&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Read DataFrame from file `fn`. See :func:`df_write`.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">fmt</span> <span class="o">==</span> <span class="s2">&quot;pickle&quot;</span><span class="p">:</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fd</span><span class="p">:</span>
@@ -888,7 +902,7 @@
 
 <div class="viewcode-block" id="df_print">
 <a class="viewcode-back" href="../../generated/api/psweep.psweep.df_print.html#psweep.psweep.df_print">[docs]</a>
-<span class="k">def</span> <span class="nf">df_print</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">df_print</span><span class="p">(</span>
     <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
     <span class="n">index</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">special_cols</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -998,7 +1012,7 @@
 
 <div class="viewcode-block" id="df_filter_conds">
 <a class="viewcode-back" href="../../generated/api/psweep.psweep.df_filter_conds.html#psweep.psweep.df_filter_conds">[docs]</a>
-<span class="k">def</span> <span class="nf">df_filter_conds</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">df_filter_conds</span><span class="p">(</span>
     <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
     <span class="n">conds</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="nb">bool</span><span class="p">]],</span>
     <span class="n">op</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;and&quot;</span><span class="p">,</span>
@@ -1051,9 +1065,9 @@
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cc</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
         <span class="n">msk</span> <span class="o">=</span> <span class="n">cc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">assert</span> <span class="n">op</span> <span class="ow">in</span> <span class="p">(</span>
-            <span class="n">op_allowed</span> <span class="o">:=</span> <span class="p">[</span><span class="s2">&quot;and&quot;</span><span class="p">,</span> <span class="s2">&quot;or&quot;</span><span class="p">,</span> <span class="s2">&quot;xor&quot;</span><span class="p">]</span>
-        <span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">op</span><span class="si">=}</span><span class="s2"> not one of </span><span class="si">{</span><span class="n">op_allowed</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">assert</span> <span class="n">op</span> <span class="ow">in</span> <span class="p">(</span><span class="n">op_allowed</span> <span class="o">:=</span> <span class="p">[</span><span class="s2">&quot;and&quot;</span><span class="p">,</span> <span class="s2">&quot;or&quot;</span><span class="p">,</span> <span class="s2">&quot;xor&quot;</span><span class="p">]),</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">op</span><span class="si">=}</span><span class="s2"> not one of </span><span class="si">{</span><span class="n">op_allowed</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
         <span class="n">msk</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">np</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;logical_</span><span class="si">{</span><span class="n">op</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">reduce</span><span class="p">(</span><span class="n">cc</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">df</span><span class="p">[</span><span class="n">msk</span><span class="p">]</span></div>
 
@@ -1066,7 +1080,7 @@
 
 <div class="viewcode-block" id="plist">
 <a class="viewcode-back" href="../../generated/api/psweep.psweep.plist.html#psweep.psweep.plist">[docs]</a>
-<span class="k">def</span> <span class="nf">plist</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">seq</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Any</span><span class="p">]):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">plist</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">seq</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Any</span><span class="p">]):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a list of single-item dicts holding the parameter name and a</span>
 <span class="sd">    value.</span>
 
@@ -1080,7 +1094,7 @@
 <div class="viewcode-block" id="merge_dicts">
 <a class="viewcode-back" href="../../generated/api/psweep.psweep.merge_dicts.html#psweep.psweep.merge_dicts">[docs]</a>
 <span class="nd">@itr</span>
-<span class="k">def</span> <span class="nf">merge_dicts</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">dict</span><span class="p">]):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">merge_dicts</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">dict</span><span class="p">]):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Start with an empty dict and update with each arg dict</span>
 <span class="sd">    left-to-right.&quot;&quot;&quot;</span>
     <span class="n">dct</span> <span class="o">=</span> <span class="p">{}</span>
@@ -1094,7 +1108,7 @@
 
 <div class="viewcode-block" id="itr2params">
 <a class="viewcode-back" href="../../generated/api/psweep.psweep.itr2params.html#psweep.psweep.itr2params">[docs]</a>
-<span class="k">def</span> <span class="nf">itr2params</span><span class="p">(</span><span class="n">loops</span><span class="p">:</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Any</span><span class="p">]):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">itr2params</span><span class="p">(</span><span class="n">loops</span><span class="p">:</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Any</span><span class="p">]):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Transform the (possibly nested) result of a loop over plists (or</span>
 <span class="sd">    whatever has been used to create psets) to a proper list of psets</span>
 <span class="sd">    by flattening and merging dicts.</span>
@@ -1130,9 +1144,9 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">ret</span> <span class="o">=</span> <span class="p">[</span><span class="n">merge_dicts</span><span class="p">(</span><span class="n">flatten</span><span class="p">(</span><span class="n">entry</span><span class="p">))</span> <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">loops</span><span class="p">]</span>
     <span class="n">lens</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">len</span><span class="p">,</span> <span class="n">ret</span><span class="p">))</span>
-    <span class="k">assert</span> <span class="p">(</span>
-        <span class="nb">len</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">lens</span><span class="p">))</span> <span class="o">==</span> <span class="mi">1</span>
-    <span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;not all psets have same length </span><span class="si">{</span><span class="n">lens</span><span class="si">=}</span><span class="se">\n</span><span class="s2">  </span><span class="si">{</span><span class="n">ret</span><span class="si">=}</span><span class="s2">&quot;</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">lens</span><span class="p">))</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;not all psets have same length </span><span class="si">{</span><span class="n">lens</span><span class="si">=}</span><span class="se">\n</span><span class="s2">  </span><span class="si">{</span><span class="n">ret</span><span class="si">=}</span><span class="s2">&quot;</span>
+    <span class="p">)</span>
     <span class="k">return</span> <span class="n">ret</span></div>
 
 
@@ -1140,7 +1154,7 @@
 <div class="viewcode-block" id="pgrid">
 <a class="viewcode-back" href="../../generated/api/psweep.psweep.pgrid.html#psweep.psweep.pgrid">[docs]</a>
 <span class="nd">@itr</span>
-<span class="k">def</span> <span class="nf">pgrid</span><span class="p">(</span><span class="n">plists</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="nb">dict</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">pgrid</span><span class="p">(</span><span class="n">plists</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="nb">dict</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Convenience function for the most common loop: nested loops with</span>
 <span class="sd">    ``itertools.product``: ``ps.itr2params(itertools.product(a,b,c,...))``.</span>
 
@@ -1185,7 +1199,7 @@
 
 <div class="viewcode-block" id="filter_params_unique">
 <a class="viewcode-back" href="../../generated/api/psweep.psweep.filter_params_unique.html#psweep.psweep.filter_params_unique">[docs]</a>
-<span class="k">def</span> <span class="nf">filter_params_unique</span><span class="p">(</span><span class="n">params</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">dict</span><span class="p">],</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">filter_params_unique</span><span class="p">(</span><span class="n">params</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">dict</span><span class="p">],</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Reduce params to unique psets.</span>
 
 <span class="sd">    Use pset[&quot;_pset_hash&quot;]  if present, else calculate hash on the fly.</span>
@@ -1204,7 +1218,7 @@
 
 <div class="viewcode-block" id="filter_params_dup_hash">
 <a class="viewcode-back" href="../../generated/api/psweep.psweep.filter_params_dup_hash.html#psweep.psweep.filter_params_dup_hash">[docs]</a>
-<span class="k">def</span> <span class="nf">filter_params_dup_hash</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">filter_params_dup_hash</span><span class="p">(</span>
     <span class="n">params</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">dict</span><span class="p">],</span> <span class="n">hashes</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="o">**</span><span class="n">kwds</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return params with psets whose hash is not in `hashes`.</span>
@@ -1225,7 +1239,7 @@
 
 <div class="viewcode-block" id="stargrid">
 <a class="viewcode-back" href="../../generated/api/psweep.psweep.stargrid.html#psweep.psweep.stargrid">[docs]</a>
-<span class="k">def</span> <span class="nf">stargrid</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">stargrid</span><span class="p">(</span>
     <span class="n">const</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
     <span class="n">vary</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="nb">dict</span><span class="p">]],</span>
     <span class="n">vary_labels</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -1293,9 +1307,9 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">params</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">if</span> <span class="n">vary_labels</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">vary_labels</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span>
-            <span class="n">vary</span>
-        <span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">vary_labels</span><span class="si">=}</span><span class="s2"> and </span><span class="si">{</span><span class="n">vary</span><span class="si">=}</span><span class="s2"> must have same length&quot;</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">vary_labels</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">vary</span><span class="p">),</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">vary_labels</span><span class="si">=}</span><span class="s2"> and </span><span class="si">{</span><span class="n">vary</span><span class="si">=}</span><span class="s2"> must have same length&quot;</span>
+        <span class="p">)</span>
     <span class="k">for</span> <span class="n">ii</span><span class="p">,</span> <span class="n">plist</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">vary</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">dct</span> <span class="ow">in</span> <span class="n">plist</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">vary_labels</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -1333,7 +1347,7 @@
 
 <div class="viewcode-block" id="worker_wrapper">
 <a class="viewcode-back" href="../../generated/api/psweep.psweep.worker_wrapper.html#psweep.psweep.worker_wrapper">[docs]</a>
-<span class="k">def</span> <span class="nf">worker_wrapper</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">worker_wrapper</span><span class="p">(</span>
     <span class="n">pset</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
     <span class="n">worker</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
@@ -1380,7 +1394,7 @@
 
 <div class="viewcode-block" id="capture_logs_wrapper">
 <a class="viewcode-back" href="../../generated/api/psweep.psweep.capture_logs_wrapper.html#psweep.psweep.capture_logs_wrapper">[docs]</a>
-<span class="k">def</span> <span class="nf">capture_logs_wrapper</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">capture_logs_wrapper</span><span class="p">(</span>
     <span class="n">pset</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
     <span class="n">worker</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span>
     <span class="n">capture_logs</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -1421,7 +1435,7 @@
 
 <div class="viewcode-block" id="run">
 <a class="viewcode-back" href="../../generated/api/psweep.psweep.run.html#psweep.psweep.run">[docs]</a>
-<span class="k">def</span> <span class="nf">run</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span>
     <span class="n">worker</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span>
     <span class="n">params</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">dict</span><span class="p">],</span>
     <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -1589,9 +1603,9 @@
     <span class="k">if</span> <span class="p">(</span><span class="n">poolsize</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">dask_client</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
         <span class="n">results</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">worker</span><span class="p">,</span> <span class="n">params</span><span class="p">))</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">assert</span> <span class="p">[</span><span class="n">poolsize</span><span class="p">,</span> <span class="n">dask_client</span><span class="p">]</span><span class="o">.</span><span class="n">count</span><span class="p">(</span>
-            <span class="kc">None</span>
-        <span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Use either poolsize or dask_client.&quot;</span>
+        <span class="k">assert</span> <span class="p">[</span><span class="n">poolsize</span><span class="p">,</span> <span class="n">dask_client</span><span class="p">]</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="p">(</span>
+            <span class="s2">&quot;Use either poolsize or dask_client.&quot;</span>
+        <span class="p">)</span>
         <span class="k">if</span> <span class="n">dask_client</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">with</span> <span class="n">mp</span><span class="o">.</span><span class="n">Pool</span><span class="p">(</span><span class="n">poolsize</span><span class="p">)</span> <span class="k">as</span> <span class="n">pool</span><span class="p">:</span>
                 <span class="n">results</span> <span class="o">=</span> <span class="n">pool</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">worker</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
@@ -1617,10 +1631,10 @@
 
 <div class="viewcode-block" id="Machine">
 <a class="viewcode-back" href="../../generated/api/psweep.psweep.Machine.html#psweep.psweep.Machine">[docs]</a>
-<span class="k">class</span> <span class="nc">Machine</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Machine</span><span class="p">:</span>
 <div class="viewcode-block" id="Machine.__init__">
 <a class="viewcode-back" href="../../generated/api/psweep.psweep.Machine.html#psweep.psweep.Machine.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">machine_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">jobscript_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;jobscript&quot;</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">machine_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">jobscript_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;jobscript&quot;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Expected templates layout::</span>
 
@@ -1640,27 +1654,27 @@
             <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span></div>
 
 
-    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">template</span><span class="si">}</span><span class="s2">&quot;</span></div>
 
 
 
 <div class="viewcode-block" id="FileTemplate">
 <a class="viewcode-back" href="../../generated/api/psweep.psweep.FileTemplate.html#psweep.psweep.FileTemplate">[docs]</a>
-<span class="k">class</span> <span class="nc">FileTemplate</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">FileTemplate</span><span class="p">:</span>
 <div class="viewcode-block" id="FileTemplate.__init__">
 <a class="viewcode-back" href="../../generated/api/psweep.psweep.FileTemplate.html#psweep.psweep.FileTemplate.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">target_suffix</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">target_suffix</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">filename</span> <span class="o">=</span> <span class="n">filename</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">basename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dirname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">targetname</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">basename</span><span class="si">}{</span><span class="n">target_suffix</span><span class="si">}</span><span class="s2">&quot;</span></div>
 
 
-    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">filename</span>
 
-    <span class="k">def</span> <span class="nf">fill</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pset</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">fill</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pset</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">string</span><span class="o">.</span><span class="n">Template</span><span class="p">(</span><span class="n">file_read</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">))</span><span class="o">.</span><span class="n">substitute</span><span class="p">(</span><span class="n">pset</span><span class="p">)</span>
         <span class="k">except</span><span class="p">:</span>
@@ -1671,7 +1685,7 @@
 
 <div class="viewcode-block" id="gather_calc_templates">
 <a class="viewcode-back" href="../../generated/api/psweep.psweep.gather_calc_templates.html#psweep.psweep.gather_calc_templates">[docs]</a>
-<span class="k">def</span> <span class="nf">gather_calc_templates</span><span class="p">(</span><span class="n">calc_templ_dir</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">gather_calc_templates</span><span class="p">(</span><span class="n">calc_templ_dir</span><span class="p">):</span>
     <span class="k">return</span> <span class="p">[</span>
         <span class="n">FileTemplate</span><span class="p">(</span><span class="n">pj</span><span class="p">(</span><span class="n">calc_templ_dir</span><span class="p">,</span> <span class="n">basename</span><span class="p">))</span>
         <span class="k">for</span> <span class="n">basename</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">calc_templ_dir</span><span class="p">)</span>
@@ -1681,7 +1695,7 @@
 
 <div class="viewcode-block" id="gather_machines">
 <a class="viewcode-back" href="../../generated/api/psweep.psweep.gather_machines.html#psweep.psweep.gather_machines">[docs]</a>
-<span class="k">def</span> <span class="nf">gather_machines</span><span class="p">(</span><span class="n">machine_templ_dir</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">gather_machines</span><span class="p">(</span><span class="n">machine_templ_dir</span><span class="p">):</span>
     <span class="k">return</span> <span class="p">[</span>
         <span class="n">Machine</span><span class="p">(</span><span class="n">pj</span><span class="p">(</span><span class="n">machine_templ_dir</span><span class="p">,</span> <span class="n">basename</span><span class="p">))</span>
         <span class="k">for</span> <span class="n">basename</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">machine_templ_dir</span><span class="p">)</span>
@@ -1697,7 +1711,7 @@
 <span class="c1">#</span>
 <div class="viewcode-block" id="prep_batch">
 <a class="viewcode-back" href="../../generated/api/psweep.psweep.prep_batch.html#psweep.psweep.prep_batch">[docs]</a>
-<span class="k">def</span> <span class="nf">prep_batch</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">prep_batch</span><span class="p">(</span>
     <span class="n">params</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">dict</span><span class="p">],</span>
     <span class="o">*</span><span class="p">,</span>
     <span class="n">calc_templ_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;templates/calc&quot;</span><span class="p">,</span>
@@ -1735,7 +1749,7 @@
     <span class="n">machines</span> <span class="o">=</span> <span class="n">gather_machines</span><span class="p">(</span><span class="n">machine_templ_dir</span><span class="p">)</span>
     <span class="n">templates</span> <span class="o">=</span> <span class="n">calc_templates</span> <span class="o">+</span> <span class="p">[</span><span class="n">m</span><span class="o">.</span><span class="n">template</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">machines</span><span class="p">]</span>
 
-    <span class="k">def</span> <span class="nf">worker</span><span class="p">(</span><span class="n">pset</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">worker</span><span class="p">(</span><span class="n">pset</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">template</span> <span class="ow">in</span> <span class="n">templates</span><span class="p">:</span>
             <span class="n">file_write</span><span class="p">(</span>
                 <span class="n">pj</span><span class="p">(</span><span class="n">calc_dir</span><span class="p">,</span> <span class="n">pset</span><span class="p">[</span><span class="s2">&quot;_pset_id&quot;</span><span class="p">],</span> <span class="n">template</span><span class="o">.</span><span class="n">targetname</span><span class="p">),</span>
@@ -1838,8 +1852,8 @@ By Steve Schmerler
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
-<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
 
   <footer class="bd-footer">
   </footer>
