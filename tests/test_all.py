@@ -19,6 +19,7 @@ import pandas as pd
 import numpy as np
 import pytest
 import joblib
+import jinja2
 ##from packaging.version import parse as parse_version
 
 import psweep as ps
@@ -1215,3 +1216,37 @@ def test_verbose(verbose):
 
 def test_version():
     assert isinstance(ps.__version__, str)
+
+
+def test_file_template_fill():
+    # We ignore keys which have no placeholder.
+    pset = dict(foo="lala", _bar=23, baz=None)
+    rendered_txt = " lala 23"
+    with tempfile.NamedTemporaryFile() as fd:
+        ps.file_write(fd.name, " $foo $_bar")
+        tmpl = ps.FileTemplate(fd.name)
+        assert tmpl.fill(pset, mode="dollar") == rendered_txt
+
+        for tmpl_txt in [
+            " {{foo}} {{_bar}}",
+            " {{ foo}} {{ _bar}}",
+            " {{foo }} {{_bar }}",
+            " {{ foo }} {{ _bar }}",
+        ]:
+            ps.file_write(fd.name, tmpl_txt)
+            tmpl = ps.FileTemplate(fd.name)
+            assert tmpl.fill(pset, mode="jinja") == rendered_txt
+
+
+def test_file_template_raise_error_on_unfilled_placeholder():
+    pset = dict(foo="lala", _bar=23, baz=None)
+    with tempfile.NamedTemporaryFile() as fd:
+        ps.file_write(fd.name, " $foo $_bar $abc")
+        tmpl = ps.FileTemplate(fd.name)
+        with pytest.raises(KeyError):
+            tmpl.fill(pset, mode="dollar")
+
+        ps.file_write(fd.name, " {{foo}} {{_bar}} {{abc}}")
+        tmpl = ps.FileTemplate(fd.name)
+        with pytest.raises(jinja2.exceptions.UndefinedError):
+            tmpl.fill(pset, mode="jinja")
