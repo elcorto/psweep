@@ -1574,13 +1574,18 @@ workloads. See the <a class="reference internal" href="#s-template-pro-con"><spa
 </div>
 <p>The central function to use is <code class="docutils literal notranslate"><span class="pre">ps.prep_batch()</span></code>. See <code class="docutils literal notranslate"><span class="pre">examples/batch_templates</span></code>
 for a full example.</p>
-<p>The workflow is based on <strong>template files</strong>. In the templates, we use the
-standard library’s
-<a class="reference external" href="https://docs.python.org/3/library/string.html#template-strings"><code class="docutils literal notranslate"><span class="pre">string.Template</span></code></a>,
-where each <code class="docutils literal notranslate"><span class="pre">$foo</span></code> is replaced by a value contained in a pset, so <code class="docutils literal notranslate"><span class="pre">$param_a</span></code>,
-<code class="docutils literal notranslate"><span class="pre">$param_b</span></code>, as well as <code class="docutils literal notranslate"><span class="pre">$_pset_id</span></code> and so forth.</p>
+<p>The workflow is based on <strong>template files</strong>. They are processed using
+<a class="reference external" href="https://github.com/pallets/jinja">jinja</a> to replace each <code class="docutils literal notranslate"><span class="pre">{{foo}}</span></code> or <code class="docutils literal notranslate"><span class="pre">{{</span> <span class="pre">foo</span> <span class="pre">}}</span></code>
+by a value contained in a pset, so <code class="docutils literal notranslate"><span class="pre">{{param_a}}</span></code>,
+<code class="docutils literal notranslate"><span class="pre">{{param_b}}</span></code>, as well as <code class="docutils literal notranslate"><span class="pre">{{_pset_id}}</span></code> and so forth.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
+<p>We support an older template mechanism where we use the standard
+library’s
+<a class="reference external" href="https://docs.python.org/3/library/string.html#template-strings"><code class="docutils literal notranslate"><span class="pre">string.Template</span></code></a>
+with “dollar” placeholder syntax (<code class="docutils literal notranslate"><span class="pre">$foo</span></code>, <code class="docutils literal notranslate"><span class="pre">$param_a</span></code>, <code class="docutils literal notranslate"><span class="pre">$_pset_id</span></code>). You can
+switch this on with <code class="docutils literal notranslate"><span class="pre">ps.prep_batch(...,</span> <span class="pre">template_mode=&quot;dollar&quot;)</span></code> but the default
+is <code class="docutils literal notranslate"><span class="pre">template_mode=&quot;jinja&quot;</span></code>.</p>
 <p>If your template files are shell scripts that contain variables like <code class="docutils literal notranslate"><span class="pre">$foo</span></code>,
 you need to escape the <code class="docutils literal notranslate"><span class="pre">$</span></code> with <code class="docutils literal notranslate"><span class="pre">$$foo</span></code>, else they will be treated as
 placeholders.</p>
@@ -1604,8 +1609,8 @@ this performs these steps for you</p>
 <li><p>read <code class="docutils literal notranslate"><span class="pre">templates/machines/&lt;mycluster&gt;/info.yaml</span></code>: machine-specific info
 (e.g. command to submit the <code class="docutils literal notranslate"><span class="pre">jobscript</span></code>)</p></li>
 <li><p>define <code class="docutils literal notranslate"><span class="pre">func()</span></code> that will create a dir named <code class="docutils literal notranslate"><span class="pre">calc/&lt;pset_id&gt;</span></code> for each
-batch job, <strong>replace placeholders</strong> such as <code class="docutils literal notranslate"><span class="pre">$param_a</span></code> from <code class="docutils literal notranslate"><span class="pre">pset</span></code>s
-(including special ones such as <code class="docutils literal notranslate"><span class="pre">$_pset_id</span></code>)</p></li>
+batch job, <strong>replace placeholders</strong> such as <code class="docutils literal notranslate"><span class="pre">{{param_a}}</span></code> from <code class="docutils literal notranslate"><span class="pre">pset</span></code>s
+(including special ones such as <code class="docutils literal notranslate"><span class="pre">{{_pset_id}}</span></code>)</p></li>
 <li><p>call <code class="docutils literal notranslate"><span class="pre">run(func,</span> <span class="pre">params)</span></code></p></li>
 <li><p>create a script <code class="docutils literal notranslate"><span class="pre">calc/run_&lt;mycluster&gt;.sh</span></code> to submit all jobs</p></li>
 </ul>
@@ -1696,17 +1701,13 @@ machine-specific info. ATM this is only <code class="docutils literal notranslat
 <p>All other SLURM stuff can go into <code class="docutils literal notranslate"><span class="pre">templates/machines/cluster/jobscript</span></code>, e.g.</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="c1">#SBATCH --time 00:20:00</span>
 <span class="c1">#SBATCH -o out.log</span>
-<span class="c1">#SBATCH -J foo_${_pset_seq}_${_pset_id}</span>
+<span class="c1">#SBATCH -J foo_{{_pset_seq}}_{{_pset_id}}</span>
 <span class="c1">#SBATCH -p bar</span>
 <span class="c1">#SBATCH -A baz</span>
 
-<span class="c1"># Because we use Python&#39;s string.Template, we need to escape the dollar char</span>
-<span class="c1"># with two.</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;hostname=</span><span class="nv">$$</span><span class="s2">(hostname)&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;hostname=</span><span class="k">$(</span>hostname<span class="k">)</span><span class="s2">&quot;</span>
 
 module<span class="w"> </span>purge
-
-module<span class="w"> </span>load<span class="w"> </span>bzzrrr/1.2.3
 module<span class="w"> </span>load<span class="w"> </span>python
 
 python3<span class="w"> </span>run.py
@@ -1794,10 +1795,10 @@ with a function <code class="docutils literal notranslate"><span class="pre">fun
 non-Python workloads, such as simulation software with text input files and no
 Python interface, for instance</p>
 <p><code class="docutils literal notranslate"><span class="pre">templates/calc/input_file</span></code>:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span># Input file for super fast bzzrrr simulation code.
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Input file for super fast bzzrrr simulation code.</span>
 
-param_a = $param_a
-param_b = $param_b
+<span class="n">param_a</span> <span class="o">=</span> <span class="p">{{</span><span class="n">param_a</span><span class="p">}}</span>
+<span class="n">param_b</span> <span class="o">=</span> <span class="p">{{</span><span class="n">param_b</span><span class="p">}}</span>
 </pre></div>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">templates/machines/cluster/jobscript</span></code>:</p>
@@ -1805,7 +1806,7 @@ param_b = $param_b
 
 <span class="c1">#SBATCH --time 00:20:00</span>
 <span class="c1">#SBATCH -o out.log</span>
-<span class="c1">#SBATCH -J foo_${_pset_seq}_${_pset_id}</span>
+<span class="c1">#SBATCH -J foo_{{_pset_seq}}_{{_pset_id}}</span>
 <span class="c1">#SBATCH -p bar</span>
 <span class="c1">#SBATCH -A baz</span>
 <span class="c1">#SBATCH -n 1 -c 8</span>
@@ -1818,7 +1819,7 @@ mpirun<span class="w"> </span>-np<span class="w"> </span><span class="m">8</span
 </div>
 <p>For Python workloads (the one we have in
 <code class="docutils literal notranslate"><span class="pre">examples/batch_templates/templates/calc/run.py</span></code>), using placeholders like
-<code class="docutils literal notranslate"><span class="pre">$param_a</span></code> is actually a bit of an anti-pattern, since we would ideally like to
+<code class="docutils literal notranslate"><span class="pre">{{param_a}}</span></code> is actually a bit of an anti-pattern, since we would ideally like to
 pass the <code class="docutils literal notranslate"><span class="pre">pset</span></code> to the workload using Python. With templates, we can use
 <code class="docutils literal notranslate"><span class="pre">prep_batch(...,</span> <span class="pre">write_pset=True)</span></code> which writes
 <code class="docutils literal notranslate"><span class="pre">&lt;calc_dir&gt;/&lt;pset_id&gt;/pset.pk</span></code>. In <code class="docutils literal notranslate"><span class="pre">run.py</span></code> you can then do</p>
@@ -1854,8 +1855,12 @@ many) small files, namely <code class="docutils literal notranslate"><span class
 <code class="docutils literal notranslate"><span class="pre">jobscript_&lt;cluster&gt;</span></code> for each <code class="docutils literal notranslate"><span class="pre">&lt;calc_dir&gt;/&lt;pset_id&gt;/</span></code> dir. Also, in the
 example above, <code class="docutils literal notranslate"><span class="pre">run.py</span></code> would be the exact same file for each job.</p>
 <p>So we recommend to use the <code class="docutils literal notranslate"><span class="pre">dask</span></code> workflow if you can and use templates as a
-fallback solution, for instance if <code class="docutils literal notranslate"><span class="pre">dask_jobqueue</span></code> doesn’t have
-something that matches your compute infrastructure.</p>
+fallback solution, for instance if</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">dask_jobqueue</span></code> doesn’t have something that matches your compute infrastructure</p></li>
+<li><p>your workload doesn’t have a Python interface / it is cumbersome to create a
+Python function that runs your workload</p></li>
+</ul>
 </section>
 </section>
 </section>
@@ -1929,7 +1934,7 @@ We only</p>
 <li><p>provide simple helpers to set up the params (<code class="docutils literal notranslate"><span class="pre">plist()</span></code>, <code class="docutils literal notranslate"><span class="pre">pgrid()</span></code>,
 <code class="docutils literal notranslate"><span class="pre">stargrid()</span></code>)</p></li>
 <li><p>hook into the <code class="docutils literal notranslate"><span class="pre">concurrent.futures</span></code> API (<code class="docutils literal notranslate"><span class="pre">multiprocessing</span></code> or <code class="docutils literal notranslate"><span class="pre">dask</span></code>) for
-parallel runs</p></li>
+parallel (HPC) runs / provide a template workflow for HPC runs</p></li>
 <li><p>give you a <code class="docutils literal notranslate"><span class="pre">DataFrame</span></code> with useful metadata</p></li>
 </ul>
 <p>Otherwise we stay out of the way. In particular we are not a workflow engine,
@@ -2071,7 +2076,7 @@ tools</a>.</p>
 <section id="handling-task-dependencies">
 <span id="s-task-deps"></span><h3>Handling task dependencies<a class="headerlink" href="#handling-task-dependencies" title="Link to this heading">#</a></h3>
 <p>In <code class="docutils literal notranslate"><span class="pre">psweep</span></code> we assume that workloads are independent and “embarrassingly
-parallel” if using <code class="docutils literal notranslate"><span class="pre">multiprocessing</span></code> or <code class="docutils literal notranslate"><span class="pre">dask</span></code>.</p>
+parallel” if using <code class="docutils literal notranslate"><span class="pre">multiprocessing</span></code>, <code class="docutils literal notranslate"><span class="pre">dask</span></code> or templates.</p>
 <p>So while <code class="docutils literal notranslate"><span class="pre">psweep</span></code> is not a workflow engine where you can model task
 dependencies as DAGs, one way to handle (simple linear) task dependencies is by
 running things in order manually, say <code class="docutils literal notranslate"><span class="pre">10prepare.py</span></code>, <code class="docutils literal notranslate"><span class="pre">20production.py</span></code>,
