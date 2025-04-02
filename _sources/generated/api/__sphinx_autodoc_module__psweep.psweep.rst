@@ -36,6 +36,7 @@ psweep
    filter_params_unique
    flatten
    fullpath
+   func_wrapper
    gather_calc_templates
    gather_machines
    get_many_uuids
@@ -60,4 +61,3 @@ psweep
    run
    stargrid
    system
-   worker_wrapper

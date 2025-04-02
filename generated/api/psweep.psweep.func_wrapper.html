@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>psweep.psweep.worker_wrapper &#8212; psweep</title>
+    <title>psweep.psweep.func_wrapper &#8212; psweep</title>
   
   
   
@@ -57,10 +57,11 @@
     <script async="async" src="../../_static/sphinx-thebe.js?v=c100c467"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'generated/api/psweep.psweep.worker_wrapper';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'generated/api/psweep.psweep.func_wrapper';</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="prev" title="psweep.psweep.system" href="psweep.psweep.system.html" />
+    <link rel="next" title="psweep.psweep.gather_calc_templates" href="psweep.psweep.gather_calc_templates.html" />
+    <link rel="prev" title="psweep.psweep.fullpath" href="psweep.psweep.fullpath.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -208,6 +209,7 @@
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.filter_params_unique.html">psweep.psweep.filter_params_unique</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.flatten.html">psweep.psweep.flatten</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.fullpath.html">psweep.psweep.fullpath</a></li>
+<li class="toctree-l3 current active"><a class="current reference internal" href="#">psweep.psweep.func_wrapper</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.gather_calc_templates.html">psweep.psweep.gather_calc_templates</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.gather_machines.html">psweep.psweep.gather_machines</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.get_many_uuids.html">psweep.psweep.get_many_uuids</a></li>
@@ -232,7 +234,6 @@
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.run.html">psweep.psweep.run</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.stargrid.html">psweep.psweep.stargrid</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.system.html">psweep.psweep.system</a></li>
-<li class="toctree-l3 current active"><a class="current reference internal" href="#">psweep.psweep.worker_wrapper</a></li>
 </ul>
 </details></li>
 </ul>
@@ -306,7 +307,7 @@
       
       
       
-      <li><a href="../../_sources/generated/api/psweep.psweep.worker_wrapper.rst" target="_blank"
+      <li><a href="../../_sources/generated/api/psweep.psweep.func_wrapper.rst" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -390,7 +391,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>psweep.psweep.worker_wrapper</h1>
+    <h1>psweep.psweep.func_wrapper</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -400,7 +401,7 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#psweep.psweep.worker_wrapper"><code class="docutils literal notranslate"><span class="pre">worker_wrapper()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#psweep.psweep.func_wrapper"><code class="docutils literal notranslate"><span class="pre">func_wrapper()</span></code></a></li>
 </ul>
             </nav>
         </div>
@@ -412,15 +413,15 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="psweep-psweep-worker-wrapper">
-<h1>psweep.psweep.worker_wrapper<a class="headerlink" href="#psweep-psweep-worker-wrapper" title="Link to this heading">#</a></h1>
+  <section id="psweep-psweep-func-wrapper">
+<h1>psweep.psweep.func_wrapper<a class="headerlink" href="#psweep-psweep-func-wrapper" title="Link to this heading">#</a></h1>
 <dl class="py function">
-<dt class="sig sig-object py" id="psweep.psweep.worker_wrapper">
-<span class="sig-prename descclassname"><span class="pre">psweep.psweep.</span></span><span class="sig-name descname"><span class="pre">worker_wrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">worker</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tmpsave</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">simulate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/psweep/psweep.html#worker_wrapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psweep.psweep.worker_wrapper" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="psweep.psweep.func_wrapper">
+<span class="sig-prename descclassname"><span class="pre">psweep.psweep.</span></span><span class="sig-name descname"><span class="pre">func_wrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tmpsave</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">simulate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/psweep/psweep.html#func_wrapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psweep.psweep.func_wrapper" title="Link to this definition">#</a></dt>
 <dd><p>Add those prefix fields (e.g. <cite>_time_utc</cite>) to <cite>pset</cite> which can be
 determined at call time.</p>
-<p>Call worker on exactly one pset. Return updated pset built from
-<code class="docutils literal notranslate"><span class="pre">pset.update(worker(pset))</span></code>. Do verbose printing.</p>
+<p>Call <cite>func</cite> on exactly one pset. Return updated pset built from
+<code class="docutils literal notranslate"><span class="pre">pset.update(func(pset))</span></code>. Do verbose printing.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></span></p>
@@ -461,13 +462,22 @@ determined at call time.</p>
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="psweep.psweep.system.html"
+       href="psweep.psweep.fullpath.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">psweep.psweep.system</p>
+        <p class="prev-next-title">psweep.psweep.fullpath</p>
       </div>
+    </a>
+    <a class="right-next"
+       href="psweep.psweep.gather_calc_templates.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">psweep.psweep.gather_calc_templates</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
     </a>
 </div>
                 </footer>
@@ -485,7 +495,7 @@ determined at call time.</p>
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#psweep.psweep.worker_wrapper"><code class="docutils literal notranslate"><span class="pre">worker_wrapper()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#psweep.psweep.func_wrapper"><code class="docutils literal notranslate"><span class="pre">func_wrapper()</span></code></a></li>
 </ul>
   </nav></div>
 

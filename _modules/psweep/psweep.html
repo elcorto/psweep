@@ -208,6 +208,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.filter_params_unique.html">psweep.psweep.filter_params_unique</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.flatten.html">psweep.psweep.flatten</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.fullpath.html">psweep.psweep.fullpath</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.func_wrapper.html">psweep.psweep.func_wrapper</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.gather_calc_templates.html">psweep.psweep.gather_calc_templates</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.gather_machines.html">psweep.psweep.gather_machines</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.get_many_uuids.html">psweep.psweep.get_many_uuids</a></li>
@@ -232,7 +233,6 @@
 <li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.run.html">psweep.psweep.run</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.stargrid.html">psweep.psweep.stargrid</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.system.html">psweep.psweep.system</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.worker_wrapper.html">psweep.psweep.worker_wrapper</a></li>
 </ul>
 </details></li>
 </ul>
@@ -1346,11 +1346,11 @@ document.write(`
 <span class="c1"># results into a global df -- maybe useful for monitoring progress.</span>
 
 
-<div class="viewcode-block" id="worker_wrapper">
-<a class="viewcode-back" href="../../generated/api/psweep.psweep.worker_wrapper.html#psweep.psweep.worker_wrapper">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">worker_wrapper</span><span class="p">(</span>
+<div class="viewcode-block" id="func_wrapper">
+<a class="viewcode-back" href="../../generated/api/psweep.psweep.func_wrapper.html#psweep.psweep.func_wrapper">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">func_wrapper</span><span class="p">(</span>
     <span class="n">pset</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
-    <span class="n">worker</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span>
+    <span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
     <span class="n">tmpsave</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
@@ -1360,8 +1360,8 @@ document.write(`
 <span class="sd">    Add those prefix fields (e.g. `_time_utc`) to `pset` which can be</span>
 <span class="sd">    determined at call time.</span>
 
-<span class="sd">    Call worker on exactly one pset. Return updated pset built from</span>
-<span class="sd">    ``pset.update(worker(pset))``. Do verbose printing.</span>
+<span class="sd">    Call `func` on exactly one pset. Return updated pset built from</span>
+<span class="sd">    ``pset.update(func(pset))``. Do verbose printing.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">assert</span> <span class="s2">&quot;_pset_id&quot;</span> <span class="ow">in</span> <span class="n">pset</span>
     <span class="k">assert</span> <span class="s2">&quot;_run_id&quot;</span> <span class="ow">in</span> <span class="n">pset</span>
@@ -1379,7 +1379,7 @@ document.write(`
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Type of </span><span class="si">{</span><span class="n">verbose</span><span class="si">=}</span><span class="s2"> not understood.&quot;</span><span class="p">)</span>
     <span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">simulate</span><span class="p">:</span>
-        <span class="n">pset</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">worker</span><span class="p">(</span><span class="n">pset</span><span class="p">))</span>
+        <span class="n">pset</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">func</span><span class="p">(</span><span class="n">pset</span><span class="p">))</span>
     <span class="n">pset</span><span class="p">[</span><span class="s2">&quot;_pset_runtime&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t0</span>
     <span class="k">if</span> <span class="n">tmpsave</span><span class="p">:</span>
         <span class="n">fn</span> <span class="o">=</span> <span class="n">pj</span><span class="p">(</span>
@@ -1397,11 +1397,11 @@ document.write(`
 <a class="viewcode-back" href="../../generated/api/psweep.psweep.capture_logs_wrapper.html#psweep.psweep.capture_logs_wrapper">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">capture_logs_wrapper</span><span class="p">(</span>
     <span class="n">pset</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
-    <span class="n">worker</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span>
+    <span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span>
     <span class="n">capture_logs</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">db_field</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;_logs&quot;</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Capture and redirect stdout and stderr produced in worker().</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Capture and redirect stdout and stderr produced in func().</span>
 
 <span class="sd">    Note the limitations mentioned in [1]:</span>
 
@@ -1410,7 +1410,7 @@ document.write(`
 <span class="sd">        applications. It also has no effect on the output of subprocesses.</span>
 <span class="sd">        However, it is still a useful approach for many utility scripts.</span>
 
-<span class="sd">    So if users rely on playing with sys.stdout/stderr in worker(), then they</span>
+<span class="sd">    So if users rely on playing with sys.stdout/stderr in func(), then they</span>
 <span class="sd">    sould not use this feature and take care of logging themselves.</span>
 
 <span class="sd">    [1] https://docs.python.org/3/library/contextlib.html#contextlib.redirect_stdout</span>
@@ -1419,11 +1419,11 @@ document.write(`
     <span class="k">if</span> <span class="n">capture_logs</span> <span class="o">==</span> <span class="s2">&quot;file&quot;</span><span class="p">:</span>
         <span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">fn</span><span class="p">))</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fd</span><span class="p">,</span> <span class="n">redirect_stdout</span><span class="p">(</span><span class="n">fd</span><span class="p">),</span> <span class="n">redirect_stderr</span><span class="p">(</span><span class="n">fd</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">worker</span><span class="p">(</span><span class="n">pset</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="n">pset</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">capture_logs</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;db&quot;</span><span class="p">,</span> <span class="s2">&quot;db+file&quot;</span><span class="p">]:</span>
         <span class="k">with</span> <span class="n">StringIO</span><span class="p">()</span> <span class="k">as</span> <span class="n">fd</span><span class="p">:</span>
             <span class="k">with</span> <span class="n">redirect_stdout</span><span class="p">(</span><span class="n">fd</span><span class="p">),</span> <span class="n">redirect_stderr</span><span class="p">(</span><span class="n">fd</span><span class="p">):</span>
-                <span class="n">ret</span> <span class="o">=</span> <span class="n">worker</span><span class="p">(</span><span class="n">pset</span><span class="p">)</span>
+                <span class="n">ret</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="n">pset</span><span class="p">)</span>
             <span class="n">txt</span> <span class="o">=</span> <span class="n">fd</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span>
         <span class="n">ret</span><span class="p">[</span><span class="n">db_field</span><span class="p">]</span> <span class="o">=</span> <span class="n">txt</span>
         <span class="k">if</span> <span class="n">capture_logs</span> <span class="o">==</span> <span class="s2">&quot;db+file&quot;</span><span class="p">:</span>
@@ -1437,7 +1437,7 @@ document.write(`
 <div class="viewcode-block" id="run">
 <a class="viewcode-back" href="../../generated/api/psweep.psweep.run.html#psweep.psweep.run">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span>
-    <span class="n">worker</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span>
+    <span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span>
     <span class="n">params</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">dict</span><span class="p">],</span>
     <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">poolsize</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -1455,15 +1455,15 @@ document.write(`
     <span class="n">capture_logs</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Call `worker` for each `pset` in `params`. Populate a DataFrame with rows</span>
-<span class="sd">    from each call ``worker(pset)``.</span>
+<span class="sd">    Call `func` for each `pset` in `params`. Populate a DataFrame with rows</span>
+<span class="sd">    from each call ``func(pset)``.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    worker</span>
+<span class="sd">    func</span>
 <span class="sd">        must accept one parameter: `pset` (a dict ``{&#39;a&#39;: 1, &#39;b&#39;: &#39;foo&#39;,</span>
 <span class="sd">        ...}``), return either an update to `pset` or a new dict, result will</span>
-<span class="sd">        be processes as ``pset.update(worker(pset))``</span>
+<span class="sd">        be processes as ``pset.update(func(pset))``</span>
 <span class="sd">    params</span>
 <span class="sd">        each dict is a pset ``{&#39;a&#39;: 1, &#39;b&#39;: &#39;foo&#39;, ...}``</span>
 <span class="sd">    df</span>
@@ -1479,7 +1479,7 @@ document.write(`
 <span class="sd">        (pickle format only), default: &quot;calc/database.pk&quot;, see also</span>
 <span class="sd">        `database_dir`, `calc_dir` and `database_basename`</span>
 <span class="sd">    tmpsave</span>
-<span class="sd">        save the result dict from each ``pset.update(worker(pset))`` from each</span>
+<span class="sd">        save the result dict from each ``pset.update(func(pset))`` from each</span>
 <span class="sd">        `pset` to ``&lt;calc_dir&gt;/tmpsave/&lt;run_id&gt;/&lt;pset_id&gt;.pk`` (pickle format</span>
 <span class="sd">        only), the data is a dict, not a DataFrame row</span>
 <span class="sd">    verbose</span>
@@ -1491,8 +1491,8 @@ document.write(`
 <span class="sd">        per pset ``&lt;calc_dir&gt;/&lt;pset_id&gt;``. Will be added to the database in</span>
 <span class="sd">        ``_calc_dir`` field.</span>
 <span class="sd">    simulate</span>
-<span class="sd">        run everything in ``&lt;calc_dir&gt;.simulate``, don&#39;t call `worker`, i.e. save</span>
-<span class="sd">        what the run would create, but without the results from `worker`,</span>
+<span class="sd">        run everything in ``&lt;calc_dir&gt;.simulate``, don&#39;t call `func`, i.e. save</span>
+<span class="sd">        what the run would create, but without the results from `func`,</span>
 <span class="sd">        useful to check if `params` are correct before starting a production run</span>
 <span class="sd">    database_dir</span>
 <span class="sd">        Path for the database. Default is ``&lt;calc_dir&gt;``.</span>
@@ -1510,10 +1510,10 @@ document.write(`
 <span class="sd">        (parts of) a study.</span>
 <span class="sd">    capture_logs</span>
 <span class="sd">        {&#39;db&#39;, &#39;file&#39;, &#39;db+file&#39;, None}</span>
-<span class="sd">        Redirect stdout and stderr generated in ``worker()`` to database (&#39;db&#39;)</span>
+<span class="sd">        Redirect stdout and stderr generated in ``func()`` to database (&#39;db&#39;)</span>
 <span class="sd">        column ``_logs``, file ``&lt;calc_dir&gt;/&lt;pset_id&gt;/logs.txt``, or both. If</span>
 <span class="sd">        ``None`` then do nothing (default). Useful for capturing per-pset log</span>
-<span class="sd">        text, e.g. ``print()`` calls in `worker` will be captured.</span>
+<span class="sd">        text, e.g. ``print()`` calls in `func` will be captured.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -1589,29 +1589,29 @@ document.write(`
         <span class="n">pset</span><span class="p">[</span><span class="s2">&quot;_calc_dir&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">calc_dir</span>
 
     <span class="k">if</span> <span class="n">capture_logs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">worker</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span>
-            <span class="n">capture_logs_wrapper</span><span class="p">,</span> <span class="n">worker</span><span class="o">=</span><span class="n">worker</span><span class="p">,</span> <span class="n">capture_logs</span><span class="o">=</span><span class="n">capture_logs</span>
+        <span class="n">func</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span>
+            <span class="n">capture_logs_wrapper</span><span class="p">,</span> <span class="n">func</span><span class="o">=</span><span class="n">func</span><span class="p">,</span> <span class="n">capture_logs</span><span class="o">=</span><span class="n">capture_logs</span>
         <span class="p">)</span>
 
-    <span class="n">worker</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span>
-        <span class="n">worker_wrapper</span><span class="p">,</span>
-        <span class="n">worker</span><span class="o">=</span><span class="n">worker</span><span class="p">,</span>
+    <span class="n">func</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span>
+        <span class="n">func_wrapper</span><span class="p">,</span>
+        <span class="n">func</span><span class="o">=</span><span class="n">func</span><span class="p">,</span>
         <span class="n">tmpsave</span><span class="o">=</span><span class="n">tmpsave</span><span class="p">,</span>
         <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
         <span class="n">simulate</span><span class="o">=</span><span class="n">simulate</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="k">if</span> <span class="p">(</span><span class="n">poolsize</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">dask_client</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
-        <span class="n">results</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">worker</span><span class="p">,</span> <span class="n">params</span><span class="p">))</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">params</span><span class="p">))</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">assert</span> <span class="p">[</span><span class="n">poolsize</span><span class="p">,</span> <span class="n">dask_client</span><span class="p">]</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="p">(</span>
             <span class="s2">&quot;Use either poolsize or dask_client.&quot;</span>
         <span class="p">)</span>
         <span class="k">if</span> <span class="n">dask_client</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">with</span> <span class="n">mp</span><span class="o">.</span><span class="n">Pool</span><span class="p">(</span><span class="n">poolsize</span><span class="p">)</span> <span class="k">as</span> <span class="n">pool</span><span class="p">:</span>
-                <span class="n">results</span> <span class="o">=</span> <span class="n">pool</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">worker</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+                <span class="n">results</span> <span class="o">=</span> <span class="n">pool</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">futures</span> <span class="o">=</span> <span class="n">dask_client</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">worker</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+            <span class="n">futures</span> <span class="o">=</span> <span class="n">dask_client</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
             <span class="n">results</span> <span class="o">=</span> <span class="n">dask_client</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="n">futures</span><span class="p">)</span>
 
     <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">((</span><span class="n">df</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">results</span><span class="p">)),</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -1715,7 +1715,7 @@ document.write(`
 
 
 <span class="c1"># If we ever add a &quot;simulate&quot; kwd here: don&#39;t pass that thru to run() b/c</span>
-<span class="c1"># there this prevents worker() from being executed, but that&#39;s what we always</span>
+<span class="c1"># there this prevents func() from being executed, but that&#39;s what we always</span>
 <span class="c1"># want here since it writes only input files. Instead, just set calc_dir =</span>
 <span class="c1"># calc_dir_sim and copy the database as in run() and go. Don&#39;t copy the</span>
 <span class="c1"># run_*.sh scripts b/c they are generated afresh anyway.</span>
@@ -1763,7 +1763,7 @@ document.write(`
     <span class="n">machines</span> <span class="o">=</span> <span class="n">gather_machines</span><span class="p">(</span><span class="n">machine_templ_dir</span><span class="p">)</span>
     <span class="n">templates</span> <span class="o">=</span> <span class="n">calc_templates</span> <span class="o">+</span> <span class="p">[</span><span class="n">m</span><span class="o">.</span><span class="n">template</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">machines</span><span class="p">]</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">worker</span><span class="p">(</span><span class="n">pset</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">func</span><span class="p">(</span><span class="n">pset</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">template</span> <span class="ow">in</span> <span class="n">templates</span><span class="p">:</span>
             <span class="n">file_write</span><span class="p">(</span>
                 <span class="n">pj</span><span class="p">(</span><span class="n">calc_dir</span><span class="p">,</span> <span class="n">pset</span><span class="p">[</span><span class="s2">&quot;_pset_id&quot;</span><span class="p">],</span> <span class="n">template</span><span class="o">.</span><span class="n">targetname</span><span class="p">),</span>
@@ -1774,7 +1774,7 @@ document.write(`
         <span class="k">return</span> <span class="p">{}</span>
 
     <span class="n">df</span> <span class="o">=</span> <span class="n">run</span><span class="p">(</span>
-        <span class="n">worker</span><span class="p">,</span>
+        <span class="n">func</span><span class="p">,</span>
         <span class="n">params</span><span class="p">,</span>
         <span class="n">git</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwds</span><span class="p">,</span>

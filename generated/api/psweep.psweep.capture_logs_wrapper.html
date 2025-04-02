@@ -209,6 +209,7 @@
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.filter_params_unique.html">psweep.psweep.filter_params_unique</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.flatten.html">psweep.psweep.flatten</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.fullpath.html">psweep.psweep.fullpath</a></li>
+<li class="toctree-l3"><a class="reference internal" href="psweep.psweep.func_wrapper.html">psweep.psweep.func_wrapper</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.gather_calc_templates.html">psweep.psweep.gather_calc_templates</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.gather_machines.html">psweep.psweep.gather_machines</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.get_many_uuids.html">psweep.psweep.get_many_uuids</a></li>
@@ -233,7 +234,6 @@
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.run.html">psweep.psweep.run</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.stargrid.html">psweep.psweep.stargrid</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.system.html">psweep.psweep.system</a></li>
-<li class="toctree-l3"><a class="reference internal" href="psweep.psweep.worker_wrapper.html">psweep.psweep.worker_wrapper</a></li>
 </ul>
 </details></li>
 </ul>
@@ -417,8 +417,8 @@ document.write(`
 <h1>psweep.psweep.capture_logs_wrapper<a class="headerlink" href="#psweep-psweep-capture-logs-wrapper" title="Link to this heading">#</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="psweep.psweep.capture_logs_wrapper">
-<span class="sig-prename descclassname"><span class="pre">psweep.psweep.</span></span><span class="sig-name descname"><span class="pre">capture_logs_wrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">worker</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">capture_logs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db_field</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'_logs'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/psweep/psweep.html#capture_logs_wrapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psweep.psweep.capture_logs_wrapper" title="Link to this definition">#</a></dt>
-<dd><p>Capture and redirect stdout and stderr produced in worker().</p>
+<span class="sig-prename descclassname"><span class="pre">psweep.psweep.</span></span><span class="sig-name descname"><span class="pre">capture_logs_wrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">capture_logs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db_field</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'_logs'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/psweep/psweep.html#capture_logs_wrapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psweep.psweep.capture_logs_wrapper" title="Link to this definition">#</a></dt>
+<dd><p>Capture and redirect stdout and stderr produced in func().</p>
 <p>Note the limitations mentioned in [1]:
 :rtype: <span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></span></p>
 <blockquote>
@@ -427,7 +427,7 @@ manager is not suitable for use in library code and most threaded
 applications. It also has no effect on the output of subprocesses.
 However, it is still a useful approach for many utility scripts.</p>
 </div></blockquote>
-<p>So if users rely on playing with sys.stdout/stderr in worker(), then they
+<p>So if users rely on playing with sys.stdout/stderr in func(), then they
 sould not use this feature and take care of logging themselves.</p>
 <p>[1] <a class="reference external" href="https://docs.python.org/3/library/contextlib.html#contextlib.redirect_stdout">https://docs.python.org/3/library/contextlib.html#contextlib.redirect_stdout</a></p>
 </dd></dl>
