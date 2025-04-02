@@ -890,9 +890,9 @@ def stargrid(
 # results into a global df -- maybe useful for monitoring progress.
 
 
-def worker_wrapper(
+def func_wrapper(
     pset: dict,
-    worker: Callable,
+    func: Callable,
     *,
     tmpsave: bool = False,
     verbose: bool | Sequence[str] = False,
@@ -902,8 +902,8 @@ def worker_wrapper(
     Add those prefix fields (e.g. `_time_utc`) to `pset` which can be
     determined at call time.
 
-    Call worker on exactly one pset. Return updated pset built from
-    ``pset.update(worker(pset))``. Do verbose printing.
+    Call `func` on exactly one pset. Return updated pset built from
+    ``pset.update(func(pset))``. Do verbose printing.
     """
     assert "_pset_id" in pset
     assert "_run_id" in pset
@@ -921,7 +921,7 @@ def worker_wrapper(
             raise ValueError(f"Type of {verbose=} not understood.")
     t0 = time.time()
     if not simulate:
-        pset.update(worker(pset))
+        pset.update(func(pset))
     pset["_pset_runtime"] = time.time() - t0
     if tmpsave:
         fn = pj(
@@ -936,11 +936,11 @@ def worker_wrapper(
 
 def capture_logs_wrapper(
     pset: dict,
-    worker: Callable,
+    func: Callable,
     capture_logs: str,
     db_field: str = "_logs",
 ) -> dict:
-    """Capture and redirect stdout and stderr produced in worker().
+    """Capture and redirect stdout and stderr produced in func().
 
     Note the limitations mentioned in [1]:
 
@@ -949,7 +949,7 @@ def capture_logs_wrapper(
         applications. It also has no effect on the output of subprocesses.
         However, it is still a useful approach for many utility scripts.
 
-    So if users rely on playing with sys.stdout/stderr in worker(), then they
+    So if users rely on playing with sys.stdout/stderr in func(), then they
     sould not use this feature and take care of logging themselves.
 
     [1] https://docs.python.org/3/library/contextlib.html#contextlib.redirect_stdout
@@ -958,11 +958,11 @@ def capture_logs_wrapper(
     if capture_logs == "file":
         makedirs(os.path.dirname(fn))
         with open(fn, "w") as fd, redirect_stdout(fd), redirect_stderr(fd):
-            return worker(pset)
+            return func(pset)
     elif capture_logs in ["db", "db+file"]:
         with StringIO() as fd:
             with redirect_stdout(fd), redirect_stderr(fd):
-                ret = worker(pset)
+                ret = func(pset)
             txt = fd.getvalue()
         ret[db_field] = txt
         if capture_logs == "db+file":
@@ -973,7 +973,7 @@ def capture_logs_wrapper(
 
 
 def run(
-    worker: Callable,
+    func: Callable,
     params: Sequence[dict],
     df: pd.DataFrame = None,
     poolsize: int = None,
@@ -991,15 +991,15 @@ def run(
     capture_logs: str = None,
 ) -> pd.DataFrame:
     """
-    Call `worker` for each `pset` in `params`. Populate a DataFrame with rows
-    from each call ``worker(pset)``.
+    Call `func` for each `pset` in `params`. Populate a DataFrame with rows
+    from each call ``func(pset)``.
 
     Parameters
     ----------
-    worker
+    func
         must accept one parameter: `pset` (a dict ``{'a': 1, 'b': 'foo',
         ...}``), return either an update to `pset` or a new dict, result will
-        be processes as ``pset.update(worker(pset))``
+        be processes as ``pset.update(func(pset))``
     params
         each dict is a pset ``{'a': 1, 'b': 'foo', ...}``
     df
@@ -1015,7 +1015,7 @@ def run(
         (pickle format only), default: "calc/database.pk", see also
         `database_dir`, `calc_dir` and `database_basename`
     tmpsave
-        save the result dict from each ``pset.update(worker(pset))`` from each
+        save the result dict from each ``pset.update(func(pset))`` from each
         `pset` to ``<calc_dir>/tmpsave/<run_id>/<pset_id>.pk`` (pickle format
         only), the data is a dict, not a DataFrame row
     verbose
@@ -1027,8 +1027,8 @@ def run(
         per pset ``<calc_dir>/<pset_id>``. Will be added to the database in
         ``_calc_dir`` field.
     simulate
-        run everything in ``<calc_dir>.simulate``, don't call `worker`, i.e. save
-        what the run would create, but without the results from `worker`,
+        run everything in ``<calc_dir>.simulate``, don't call `func`, i.e. save
+        what the run would create, but without the results from `func`,
         useful to check if `params` are correct before starting a production run
     database_dir
         Path for the database. Default is ``<calc_dir>``.
@@ -1046,10 +1046,10 @@ def run(
         (parts of) a study.
     capture_logs
         {'db', 'file', 'db+file', None}
-        Redirect stdout and stderr generated in ``worker()`` to database ('db')
+        Redirect stdout and stderr generated in ``func()`` to database ('db')
         column ``_logs``, file ``<calc_dir>/<pset_id>/logs.txt``, or both. If
         ``None`` then do nothing (default). Useful for capturing per-pset log
-        text, e.g. ``print()`` calls in `worker` will be captured.
+        text, e.g. ``print()`` calls in `func` will be captured.
 
     Returns
     -------
@@ -1125,29 +1125,29 @@ def run(
         pset["_calc_dir"] = calc_dir
 
     if capture_logs is not None:
-        worker = partial(
-            capture_logs_wrapper, worker=worker, capture_logs=capture_logs
+        func = partial(
+            capture_logs_wrapper, func=func, capture_logs=capture_logs
         )
 
-    worker = partial(
-        worker_wrapper,
-        worker=worker,
+    func = partial(
+        func_wrapper,
+        func=func,
         tmpsave=tmpsave,
         verbose=verbose,
         simulate=simulate,
     )
 
     if (poolsize is None) and (dask_client is None):
-        results = list(map(worker, params))
+        results = list(map(func, params))
     else:
         assert [poolsize, dask_client].count(None) == 1, (
             "Use either poolsize or dask_client."
         )
         if dask_client is None:
             with mp.Pool(poolsize) as pool:
-                results = pool.map(worker, params)
+                results = pool.map(func, params)
         else:
-            futures = dask_client.map(worker, params)
+            futures = dask_client.map(func, params)
             results = dask_client.gather(futures)
 
     df = pd.concat((df, pd.DataFrame(results)), sort=False, ignore_index=True)
@@ -1232,7 +1232,7 @@ def gather_machines(machine_templ_dir):
 
 
 # If we ever add a "simulate" kwd here: don't pass that thru to run() b/c
-# there this prevents worker() from being executed, but that's what we always
+# there this prevents func() from being executed, but that's what we always
 # want here since it writes only input files. Instead, just set calc_dir =
 # calc_dir_sim and copy the database as in run() and go. Don't copy the
 # run_*.sh scripts b/c they are generated afresh anyway.
@@ -1278,7 +1278,7 @@ def prep_batch(
     machines = gather_machines(machine_templ_dir)
     templates = calc_templates + [m.template for m in machines]
 
-    def worker(pset):
+    def func(pset):
         for template in templates:
             file_write(
                 pj(calc_dir, pset["_pset_id"], template.targetname),
@@ -1289,7 +1289,7 @@ def prep_batch(
         return {}
 
     df = run(
-        worker,
+        func,
         params,
         git=False,
         **kwds,
