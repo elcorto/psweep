@@ -34,7 +34,8 @@ dependencies = [
 test = [
     "pytest",
     "pytest-xdist",
-    "packaging",
+    # Enable if we need it again, see test_pset_hash().
+    ##"packaging",
 ]
 
 # For installing the correct ruff version in CI, see
