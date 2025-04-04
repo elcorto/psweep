@@ -70,6 +70,13 @@ dask = [
 psweep-checkdir = "psweep.cli:check_calc_dir"
 
 
+[project.urls]
+Homepage = "https://github.com/elcorto/psweep"
+Documentation = "https://elcorto.github.io/psweep"
+Source = "https://github.com/elcorto/psweep.git"
+Issues = "https://github.com/elcorto/psweep/issues"
+
+
 # https://setuptools.pypa.io/en/latest/userguide/pyproject_config.html
 [tool.setuptools]
 script-files = [
