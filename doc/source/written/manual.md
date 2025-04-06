@@ -187,9 +187,10 @@ per pset). Using `ps.run(... poolsize=...)` runs `func` in parallel on
 `a` and `b`. We *recommend* but not require you to name all fields (dict keys)
 generated in `func()` such as `result_` with a trailing or *postfix*
 underscore. That way you can in the database clearly distinguish between
-book-keeping (`_foo`), pset (`a`, `b`) and result-type fields (`bar_`). But
-again, this is only a suggestion, you can name the fields in a `pset` and the
-ones created in `func()` any way you like. See [this section for more
+book-keeping (`_foo`), `pset` (`a`, `b`) and result-type fields (`bar_`). This
+is only a suggestion, you can name the fields in a `pset` and the ones created
+in `func()` any way you like. However, we rely on this convention for all
+functionality based on `pset` hashes. See [this section for more
 details](s:more-on-db-field-names).
 
 
@@ -515,11 +516,8 @@ only add calculations for new `pset`s.
 ### More details on naming database fields
 
 We implement the convention to ignore fields starting and ending in an
-underscore at the moment only internally in `ps.pset_hash()` to ensure that the
-hash includes only `pset` variables. However, when `ps.run()` is called, the
-hash is calculated *before* book-keeping fields like `_pset_id` are added and
-`func()` is called to, for instance, return `{'result_': 1.234}` and update the
-`pset`. Therefore, this convention is in fact not needed. It only takes effect
+underscore in `ps.pset_hash()` (and all functions that use it, in particular
+`ps.run()`) to ensure that the hash includes only `pset` variables. For example
 should you ever want to re-calculate the hash, as in
 
 ```py
@@ -534,11 +532,44 @@ should you ever want to re-calculate the hash, as in
 3  4  79ba178b3895a603bf9d84dea82e034791e8fe30  bf5bf881-3273-4932-a3f3-9c117bca921b  ...  2.606486  79ba178b3895a603bf9d84dea82e034791e8fe30
 ```
 
-Here the hash goes only over the `a` field, so `_pset_hash` and `_pset_hash_new`
+then the hash goes only over the `a` field, ignoring `_pset_id`, any other
+prefix field, as well as `result_`. Thus, `_pset_hash` and `_pset_hash_new`
 must be the same.
 
 We may provide tooling for that in the future. See also
 https://github.com/elcorto/psweep/issues/15 .
+
+If you don't use any functionality based on pset hashes, such as filtering
+duplicate `pset`s, then this doesn't affect you at all. For example you
+can have prefix or postfix names in your params.
+
+```py
+>>> a=ps.plist("_a", [1,2])
+>>> b=ps.plist("b_", [77,88])
+>>> df=ps.run(func=lambda pset: {"result": pset["_a"] + pset["b_"]},
+...           params=ps.pgrid(a, b),
+...           save=False)
+>>> ps.df_print(df, cols=["_a", "b_", "result"])
+ _a  b_  result
+  1  77      78
+  1  88      89
+  2  77      79
+  2  88      90
+```
+
+However in this case, the hash calculation got handed an empty `pset` (since `_a`
+and `b_` are ignored), so the hash is the same for each `pset`.
+
+```py
+>>> ps.pset_hash({})
+'62977be8e45d8a56a5537c11dfd5d2fd8dda69e0'
+
+>>> df._pset_hash
+0    62977be8e45d8a56a5537c11dfd5d2fd8dda69e0
+1    62977be8e45d8a56a5537c11dfd5d2fd8dda69e0
+2    62977be8e45d8a56a5537c11dfd5d2fd8dda69e0
+3    62977be8e45d8a56a5537c11dfd5d2fd8dda69e0
+```
 
 
 ## Best practices
