@@ -639,6 +639,18 @@ def df_filter_conds(
     return df[msk]
 
 
+def filter_cols(cols: Sequence[str], kind: str = "pset") -> Sequence[str]:
+    if kind == "pset":
+        filt = _get_col_filter(skip_prefix_cols=True, skip_postfix_cols=True)
+    elif kind in ["pre", "prefix"]:
+        filt = lambda key: key.startswith("_")
+    elif kind in ["post", "postfix"]:
+        filt = lambda key: key.endswith("_")
+    else:
+        raise ValueError(f"{kind=} not supported")
+    return list(filter(filt, cols))
+
+
 # -----------------------------------------------------------------------------
 # building params
 # -----------------------------------------------------------------------------
