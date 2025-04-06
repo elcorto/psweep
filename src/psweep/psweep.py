@@ -78,7 +78,7 @@ def fullpath(path: str) -> str:
 
 
 def itr(func: Callable) -> Callable:
-    """Wrap `func` to allow pasing args not as sequence.
+    """Wrap `func` to allow passing args not as sequence.
 
     Assuming ``func()`` requires a sequence as input: ``func([a,b,c])``, allow
     passing ``func(a,b,c)``.
@@ -990,7 +990,7 @@ def capture_logs_wrapper(
         However, it is still a useful approach for many utility scripts.
 
     So if users rely on playing with sys.stdout/stderr in func(), then they
-    sould not use this feature and take care of logging themselves.
+    should not use this feature and take care of logging themselves.
 
     [1] https://docs.python.org/3/library/contextlib.html#contextlib.redirect_stdout
     """
