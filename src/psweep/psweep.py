@@ -176,7 +176,12 @@ def pset_hash(
     raise_error=True,
     **kwds,
 ):
-    """Reproducible hash of a dict for usage in database (hash of a `pset`)."""
+    """Reproducible hash of a dict for usage in database (hash of a `pset`).
+
+    We implement the convention to ignore prefix fields (book-keeping) and
+    postfix fields (results). You can pass `skip_prefix_cols` /
+    `skip_postfix_cols` to change that (see :func:`_get_col_filter`).
+    """
 
     # We target "reproducible" hashes, i.e. not what Python's ``hash`` function
     # does, for instance for two interpreter sessions::
@@ -766,7 +771,11 @@ def pgrid(plists: Sequence[Sequence[dict]]) -> Sequence[dict]:
 def filter_params_unique(params: Sequence[dict], **kwds) -> Sequence[dict]:
     """Reduce params to unique psets.
 
-    Use pset["_pset_hash"]  if present, else calculate hash on the fly.
+    Use ``pset["_pset_hash"]`` if present, else calculate hash on the fly.
+
+    We implement the convention to ignore prefix fields (book-keeping) and
+    postfix fields (results). You can pass `skip_prefix_cols` /
+    `skip_postfix_cols` to change that (see :func:`_get_col_filter`).
 
     Parameters
     ----------
@@ -784,7 +793,11 @@ def filter_params_dup_hash(
 ) -> Sequence[dict]:
     """Return params with psets whose hash is not in `hashes`.
 
-    Use pset["_pset_hash"]  if present, else calculate hash on the fly.
+    Use ``pset["_pset_hash"]`` if present, else calculate hash on the fly.
+
+    We implement the convention to ignore prefix fields (book-keeping) and
+    postfix fields (results). You can pass `skip_prefix_cols` /
+    `skip_postfix_cols` to change that (see :func:`_get_col_filter`).
 
     Parameters
     ----------
@@ -803,7 +816,7 @@ def stargrid(
     vary_labels: Sequence[str] = None,
     vary_label_col: str = "_vary",
     skip_dups=True,
-    **kwds
+    **kwds,
 ) -> Sequence[dict]:
     """
     Helper to create a specific param sampling pattern.
@@ -811,9 +824,28 @@ def stargrid(
     Vary params in a "star" pattern (and not a full pgrid) around constant
     values (middle of the "star").
 
-    When doing that, duplicate psets can occur. By default try to filter them
-    out (using :func:`filter_params_unique`) but ignore hash calculation errors
-    and return non-reduced params in that case.
+    Parameters
+    ----------
+    const
+        constant params
+    vary
+        list of plists
+    vary_labels
+        database col names for parameters in `vary`
+    skip_dups
+        filter duplicate psets (see Notes below)
+    kwds
+        passed to :func:`filter_params_unique`
+
+    Notes
+    -----
+    `skip_dups`: When creating a star pattern, duplicate psets can occur. By
+    default try to filter them out (using :func:`filter_params_unique`) but
+    ignore hash calculation errors and return non-reduced params in that case.
+
+    We implement the convention to ignore prefix fields (book-keeping) and
+    postfix fields (results). You can pass `skip_prefix_cols` /
+    `skip_postfix_cols` to change that (see :func:`_get_col_filter`).
 
     Examples
     --------
@@ -880,11 +912,7 @@ def stargrid(
 
     if skip_dups:
         try:
-            return filter_params_unique(
-                params,
-                raise_error=True,
-                **kwds
-            )
+            return filter_params_unique(params, raise_error=True, **kwds)
         except PsweepHashError:
             return params
     else:
@@ -1067,6 +1095,16 @@ def run(
     -------
     df
         The database build from `params`.
+
+    Notes
+    -----
+    prefix/postfix default behavior: The package-wide default is defined in
+    :func:`_get_col_filter`. All affected functions can change their runtime
+    behavior via setting `skip_prefix_cols` and `skip_prefix_cols`, when used
+    individually. Here this affects :func:`pset_hash` and
+    :func:`filter_params_dup_hash`. However we do *not* offer the option to set
+    those in order not complexify the API too much. This may change as our
+    requirements evolve.
     """
 
     # Don't in-place alter dicts in params we get as input.
