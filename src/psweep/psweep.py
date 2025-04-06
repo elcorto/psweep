@@ -803,6 +803,7 @@ def stargrid(
     vary_labels: Sequence[str] = None,
     vary_label_col: str = "_vary",
     skip_dups=True,
+    **kwds
 ) -> Sequence[dict]:
     """
     Helper to create a specific param sampling pattern.
@@ -882,8 +883,7 @@ def stargrid(
             return filter_params_unique(
                 params,
                 raise_error=True,
-                skip_prefix_cols=True,
-                skip_postfix_cols=True,
+                **kwds
             )
         except PsweepHashError:
             return params
