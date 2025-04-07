@@ -675,9 +675,17 @@ def test_pset_hash_skip_cols():
     ],
 )
 def test_pset_hash_recalc_from_df(non_py_type):
-    params = ps.plist(
-        "a", [1, "3", np.sin, [], None, 1.23, dummy_func, non_py_type]
+    stuff = ps.plist(
+        "stuff", [1, "3", np.sin, [], None, 1.23, dummy_func, non_py_type]
     )
+    plists = [
+        stuff,
+        ps.plist("py_int", range(len(stuff))),
+        ps.plist("py_int_from_np", np.arange(len(stuff)).tolist()),
+        ps.plist("py_int_intspace", ps.intspace(1, 1000, len(stuff)).tolist()),
+        ps.plist("py_float_from_np", np.random.rand(len(stuff)).tolist()),
+    ]
+    params = ps.pgrid([zip(*plists)])
     df = ps.run(lambda pset: {}, params, save=False)
     for idx, row in df.iterrows():
         df.at[idx, "_pset_hash_new"] = ps.pset_hash(row.to_dict())
