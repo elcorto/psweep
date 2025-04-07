@@ -1247,3 +1247,12 @@ def test_file_template_raise_error_on_unfilled_placeholder():
         tmpl = ps.FileTemplate(fd.name)
         with pytest.raises(jinja2.exceptions.UndefinedError):
             tmpl.fill(pset, mode="jinja")
+
+
+def test_filter_cols():
+    cols = ["_foo", "a", "b", "bar_"]
+    assert ps.filter_cols(cols, "pset") == ["a", "b"]
+    for kind in ["pre", "prefix"]:
+        assert ps.filter_cols(cols, kind) == ["_foo"]
+    for kind in ["post", "postfix"]:
+        assert ps.filter_cols(cols, kind) == ["bar_"]
