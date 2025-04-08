@@ -151,6 +151,25 @@ class PsweepHashError(TypeError):
     pass
 
 
+def _get_col_filter(skip_prefix_cols=True, skip_postfix_cols=True):
+    """Implement the package-wide prefix/postfix default convention.
+
+    By default, we ignore prefix fields (book-keeping) and postfix fields
+    (results).
+
+    All functions affected can still pass in `skip_prefix_cols` and
+    `skip_postfix_cols` to change that.
+    """
+    if skip_prefix_cols and skip_postfix_cols:
+        return lambda key: not (key.startswith("_") or key.endswith("_"))
+    elif skip_prefix_cols:
+        return lambda key: not key.startswith("_")
+    elif skip_postfix_cols:
+        return lambda key: not key.endswith("_")
+    else:
+        return lambda key: True
+
+
 def pset_hash(
     dct: dict,
     method=PSET_HASH_ALG,
