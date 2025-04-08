@@ -174,9 +174,7 @@ def pset_hash(
     dct: dict,
     method=PSET_HASH_ALG,
     raise_error=True,
-    skip_special_cols=None,
-    skip_prefix_cols=True,
-    skip_postfix_cols=True,
+    **kwds,
 ):
     """Reproducible hash of a dict for usage in database (hash of a `pset`)."""
 
@@ -215,25 +213,8 @@ def pset_hash(
     # [2] https://ourpython.com/python/deterministic-recursive-hashing-in-python
     # [3] https://stackoverflow.com/a/52175075
     assert isinstance(dct, dict), f"{dct=} is not a dict but {type(dct)=}"
-    if skip_special_cols is not None:
-        warnings.warn(
-            "skip_special_cols is deprecated, use skip_prefix_cols",
-            DeprecationWarning,
-        )
-        skip_prefix_cols = skip_special_cols
-    skip_cols_test = None
-    if skip_prefix_cols and skip_postfix_cols:
-        skip_cols_test = lambda key: key.startswith("_") or key.endswith("_")
-    elif skip_prefix_cols:
-        skip_cols_test = lambda key: key.startswith("_")
-    elif skip_postfix_cols:
-        skip_cols_test = lambda key: key.endswith("_")
-    if skip_cols_test is not None:
-        _dct = {
-            key: val for key, val in dct.items() if not skip_cols_test(key)
-        }
-    else:
-        _dct = dct
+    filt = _get_col_filter(**kwds)
+    _dct = {key: val for key, val in dct.items() if filt(key)}
     # joblib can hash "anything" so we didn't come up with an input that
     # actually fails to hash. As such, TypeError is just a guess here. But
     # still we don't catch ValueError raised when an invalid hash_name is
