@@ -664,9 +664,6 @@ def test_pset_hash_skip_cols():
         d_pre_post, skip_prefix_cols=False, skip_postfix_cols=False
     ) == f_hash(d_pre_post)
 
-    with pytest.deprecated_call():
-        ps.pset_hash(d_pre_post, skip_special_cols=True)
-
 
 @pytest.mark.parametrize(
     "non_py_type",
