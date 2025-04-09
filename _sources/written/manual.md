@@ -51,7 +51,7 @@ calculate and store the result of a calculation for each parameter combination.
 >>> df = ps.run(func, params)
 ```
 
-`pgrid()` produces a list `params` of parameter sets (dicts `{'a': ..., 'b':
+{func}`~psweep.psweep.pgrid` produces a list `params` of parameter sets (dicts `{'a': ..., 'b':
 ...}`) to loop over:
 
 ```
@@ -63,7 +63,7 @@ calculate and store the result of a calculation for each parameter combination.
  {'a': 3, 'b': 99}]
 ```
 
-`run()` returns a database of results (`pandas` DataFrame `df`) and saves a
+{func}`~psweep.psweep.run` returns a database of results (`pandas` DataFrame `df`) and saves a
 pickled file `calc/database.pk` by default:
 
 ```py
@@ -175,21 +175,22 @@ The `pset`s form the rows of a `pandas` DataFrame, which we use to store the
 pset and the result from each `func(pset)`.
 
 The idea is now to run `func` in a loop over all `pset`s in `params`. You do this
-using the `ps.run()` helper function. The function adds some special
-columns such as `_run_id` (once per `ps.run()` call) or `_pset_id` (once
+using the {func}`~psweep.psweep.run` helper function. The function adds some special
+columns such as `_run_id` (once per {func}`~psweep.psweep.run` call) or `_pset_id` (once
 per pset). Using `ps.run(... poolsize=...)` runs `func` in parallel on
 `params` using `multiprocessing.Pool`.
 
 ## Naming of database fields
 
-`ps.run()` will add book-keeping fields starting with an underscore prefix
+{func}`~psweep.psweep.run` will add book-keeping fields starting with an underscore prefix
 (e.g. `_pset_id`). By doing that, they can be distinguished from `pset` fields
 `a` and `b`. We *recommend* but not require you to name all fields (dict keys)
 generated in `func()` such as `result_` with a trailing or *postfix*
 underscore. That way you can in the database clearly distinguish between
-book-keeping (`_foo`), pset (`a`, `b`) and result-type fields (`bar_`). But
-again, this is only a suggestion, you can name the fields in a `pset` and the
-ones created in `func()` any way you like. See [this section for more
+book-keeping (`_foo`), `pset` (`a`, `b`) and result-type fields (`bar_`). This
+is only a suggestion, you can name the fields in a `pset` and the ones created
+in `func()` any way you like. However, we rely on this convention for all
+functionality based on `pset` hashes. See [this section for more
 details](s:more-on-db-field-names).
 
 
@@ -198,7 +199,7 @@ details](s:more-on-db-field-names).
 This package offers some very simple helper functions which assist in creating
 `params`. Basically, we define the to-be-varied parameters and then use
 something like `itertools.product()` to loop over them to create `params`,
-which is passed to `ps.run()` to actually perform the loop over all
+which is passed to {func}`~psweep.psweep.run` to actually perform the loop over all
 `pset`s.
 
 ```py
@@ -224,12 +225,12 @@ which is passed to `ps.run()` to actually perform the loop over all
  {'a': 2, 'b': 'yy'}]
 ```
 
-Here we used the helper function `itr2params()` which accepts an iterator
+Here we used the helper function {func}`~psweep.psweep.itr2params` which accepts an iterator
 that represents the loops over params. It merges dicts to `pset`s and also deals
 with nesting when using `zip()` (see below).
 
 The last pattern is so common that we have a short-cut function
-`pgrid()`, which basically does `itr2params(product(a,b))`.
+{func}`~psweep.psweep.pgrid`, which basically does `itr2params(product(a,b))`.
 
 ```py
 >>> ps.pgrid(a,b)
@@ -239,7 +240,7 @@ The last pattern is so common that we have a short-cut function
  {'a': 2, 'b': 'yy'}]
 ```
 
-`pgrid()` accepts either a sequence or individual args (but please
+{func}`~psweep.psweep.pgrid` accepts either a sequence or individual args (but please
 check the "pgrid gotchas" section below for some corner cases).
 
 ```py
@@ -249,8 +250,8 @@ check the "pgrid gotchas" section below for some corner cases).
 
 So the logic of the param study is entirely contained in the creation of
 `params`. For instance, if parameters shall be varied together (say `a` and
-`b`), then use `zip`. The nesting from `zip()` is flattened in `itr2params()`
-and `pgrid()`.
+`b`), then use `zip`. The nesting from `zip()` is flattened in {func}`~psweep.psweep.itr2params`
+and {func}`~psweep.psweep.pgrid`.
 
 ```py
 >>> ##ps.itr2params(zip(a, b))
@@ -288,7 +289,7 @@ If you want to add a parameter which is constant, use a list of length one.
  {'a': 2, 'b': 'yy', 'c': 'Z',  'const': 1.23}]
 ```
 
-Besides `pgrid()`, we have another convenience function `stargrid()`, which
+Besides {func}`~psweep.psweep.pgrid`, we have another convenience function {func}`~psweep.psweep.stargrid`, which
 creates a specific param sampling pattern, where we vary params in a "star"
 pattern (and not a full pgrid) around constant values (middle of the "star").
 
@@ -314,7 +315,7 @@ sampled before the actual calculations. This has proven to be very
 practical as it helps detecting errors early.
 
 You are, by the way, of course not restricted to use simple nested loops
-over parameters using `pgrid()` (which uses `itertools.product()`). You
+over parameters using {func}`~psweep.psweep.pgrid` (which uses `itertools.product()`). You
 are totally free in how to create `params`, be it using other fancy
 stuff from `itertools` or explicit loops. Of course you can also define
 a static `params` list
@@ -416,9 +417,9 @@ will return an iterator whose length is `min(len(a), len(b))`.
 
 ## The database
 
-By default, `ps.run()` writes a database `calc/database.pk` (a pickled
+By default, {func}`~psweep.psweep.run` writes a database `calc/database.pk` (a pickled
 DataFrame) with the default `calc_dir='calc'`. You can turn that off using
-`save=False` if you want. If you run `ps.run()` again
+`save=False` if you want. If you run {func}`~psweep.psweep.run` again
 
 ```py
 >>> ps.run(func, params)
@@ -444,8 +445,8 @@ It is important to get the difference between the two special fields
 
 Both are random UUIDs. They are used to uniquely identify things.
 
-Once per `ps.run()` call, a `_run_id` and `_run_seq` is created. Which
-means that when you call `ps.run()` multiple times *using the same
+Once per {func}`~psweep.psweep.run` call, a `_run_id` and `_run_seq` is created. Which
+means that when you call {func}`~psweep.psweep.run` multiple times *using the same
 database* as just shown, you will see multiple (in this case two) `_run_id`
 and `_run_seq` values.
 
@@ -459,13 +460,13 @@ and `_run_seq` values.
 969592bc-65e6-4315-9e6b-5d64b6eaa0b3  162a7b8c-3ab5-41bb-92cd-1e5d0db0842f         1          5
 ```
 
-Each `ps.run()` call in turn calls `func(pset)` for each pset in `params`.
+Each {func}`~psweep.psweep.run` call in turn calls `func(pset)` for each pset in `params`.
 Each `func` invocation creates a unique `_pset_id` and increment the integer
 counter `_pset_seq`. Thus, we have a very simple, yet powerful one-to-one
 mapping and a way to refer to a specific pset.
 
 An interesting special case (see `examples/vary_1_param_repeat_same.py`) is
-when you call `ps.run()` multiple times using *the exact same* `params`,
+when you call {func}`~psweep.psweep.run` multiple times using *the exact same* `params`,
 
 ```py
 >>> ps.run(func, params)
@@ -497,7 +498,7 @@ UUIDs for `_pset_id`, those calculations can still be distinguished.
 As mentioned, we create a hash for each `pset`, which is stored in the
 `_pset_hash` database column. This unlocks powerful database filter options.
 
-As shown above, when calling `run()` twice
+As shown above, when calling {func}`~psweep.psweep.run` twice
 with the same `params` you get a second set of calculations. But suppose you
 have a script where you keep modifying the way you create `params` and you just
 want to add some more scans *without* removing the code that generated the old
@@ -515,11 +516,8 @@ only add calculations for new `pset`s.
 ### More details on naming database fields
 
 We implement the convention to ignore fields starting and ending in an
-underscore at the moment only internally in `ps.pset_hash()` to ensure that the
-hash includes only `pset` variables. However, when `ps.run()` is called, the
-hash is calculated *before* book-keeping fields like `_pset_id` are added and
-`func()` is called to, for instance, return `{'result_': 1.234}` and update the
-`pset`. Therefore, this convention is in fact not needed. It only takes effect
+underscore in {func}`~psweep.psweep.pset_hash` (and all functions that use it, in particular
+{func}`~psweep.psweep.run`) to ensure that the hash includes only `pset` variables. For example
 should you ever want to re-calculate the hash, as in
 
 ```py
@@ -534,11 +532,44 @@ should you ever want to re-calculate the hash, as in
 3  4  79ba178b3895a603bf9d84dea82e034791e8fe30  bf5bf881-3273-4932-a3f3-9c117bca921b  ...  2.606486  79ba178b3895a603bf9d84dea82e034791e8fe30
 ```
 
-Here the hash goes only over the `a` field, so `_pset_hash` and `_pset_hash_new`
+then the hash goes only over the `a` field, ignoring `_pset_id`, any other
+prefix field, as well as `result_`. Thus, `_pset_hash` and `_pset_hash_new`
 must be the same.
 
 We may provide tooling for that in the future. See also
 https://github.com/elcorto/psweep/issues/15 .
+
+If you don't use any functionality based on pset hashes, such as filtering
+duplicate `pset`s, then this doesn't affect you at all. For example you
+can have prefix or postfix names in your params.
+
+```py
+>>> a=ps.plist("_a", [1,2])
+>>> b=ps.plist("b_", [77,88])
+>>> df=ps.run(func=lambda pset: {"result": pset["_a"] + pset["b_"]},
+...           params=ps.pgrid(a, b),
+...           save=False)
+>>> ps.df_print(df, cols=["_a", "b_", "result"])
+ _a  b_  result
+  1  77      78
+  1  88      89
+  2  77      79
+  2  88      90
+```
+
+However in this case, the hash calculation got handed an empty `pset` (since `_a`
+and `b_` are ignored), so the hash is the same for each `pset`.
+
+```py
+>>> ps.pset_hash({})
+'62977be8e45d8a56a5537c11dfd5d2fd8dda69e0'
+
+>>> df._pset_hash
+0    62977be8e45d8a56a5537c11dfd5d2fd8dda69e0
+1    62977be8e45d8a56a5537c11dfd5d2fd8dda69e0
+2    62977be8e45d8a56a5537c11dfd5d2fd8dda69e0
+3    62977be8e45d8a56a5537c11dfd5d2fd8dda69e0
+```
 
 
 ## Best practices
@@ -591,7 +622,7 @@ row added for each call to `func` by returning a dict `{"cmd": cmd}` with the
 shell `cmd` we call in order to have that in the database.
 
 Also note how we use the special fields `_pset_id` and `_calc_dir`, which are
-added in `ps.run()` to `pset` *before* `func` is called.
+added in {func}`~psweep.psweep.run` to `pset` *before* `func` is called.
 
 After the run, we have four dirs for each pset, each simply named with
 `_pset_id`:
@@ -659,7 +690,7 @@ ps.df_write("calc/database_eval.pk", df)
 
 See `examples/multiple_local_1d_scans/` and `examples/*repeat*`.
 
-You can backup old calc dirs when repeating calls to `ps.run()` using the
+You can backup old calc dirs when repeating calls to {func}`~psweep.psweep.run` using the
 `backup` keyword.
 
 ```py
@@ -682,7 +713,7 @@ $ mv calc.bak_2021-03-19T2* calc
 
 For any non-trivial work, you won't use an interactive session. Instead, you
 will have a driver script (say `input.py`, or a jupyter notebook, or ...) which
-defines `params` and starts `ps.run()`. Also in a common workflow, you
+defines `params` and starts {func}`~psweep.psweep.run`. Also in a common workflow, you
 won't define `params` and run a study once. Instead you will first have an idea
 about which parameter values to scan. You will start with a coarse grid of
 parameters and then inspect the results and identify regions where you need
@@ -788,7 +819,7 @@ between 10 and 100, while 'b' was constant, ...". You get the idea.
 
 To ease post-processing, it can be useful practice to add a constant parameter
 named "study" or "scan" to label a certain range of runs. If you, for instance,
-have 5 runs (meaning 5 calls to `ps.run()`) where you scan values for
+have 5 runs (meaning 5 calls to {func}`~psweep.psweep.run`) where you scan values for
 parameter 'a' while keeping parameters 'b' and 'c' constant, you'll have 5
 `_run_id` values. When querying the database later, you could limit by
 `_run_id` if you know the values:
@@ -1205,7 +1236,7 @@ workloads. See the [Pros and Cons](s:template-pro-con) section below.
 
 ```
 
-The central function to use is `ps.prep_batch()`. See `examples/batch_templates`
+The central function to use is {func}`~psweep.psweep.prep_batch`. See `examples/batch_templates`
 for a full example.
 
 The workflow is based on **template files**. They are processed using
@@ -1226,7 +1257,7 @@ you need to escape the `$` with `$$foo`, else they will be treated as
 placeholders.
 ```
 
-We piggy-back on the `run()` workflow from above to, instead of running jobs
+We piggy-back on the {func}`~psweep.psweep.run` workflow from above to, instead of running jobs
 with it, just **create batch scripts using template files**.
 
 You can use the proposed workflow below directly on the remote machine (need to
@@ -1598,8 +1629,8 @@ Unsurprisingly, there is a huge pile of similar tools. This project is super
 small and as such of course lacks a lot of features that other packages offer.
 We only
 
-* provide simple helpers to set up the params (`plist()`, `pgrid()`,
-`stargrid()`)
+* provide simple helpers to set up the params ({func}`~psweep.psweep.plist`, {func}`~psweep.psweep.pgrid`,
+{func}`~psweep.psweep.stargrid`)
 * hook into the `concurrent.futures` API (`multiprocessing` or `dask`) for
   parallel (HPC) runs / provide a template workflow for HPC runs
 * give you a `DataFrame` with useful metadata

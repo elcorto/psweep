@@ -196,6 +196,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../generated/api/psweep.psweep.PANDAS_TIME_UNIT.html">psweep.psweep.PANDAS_TIME_UNIT</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../generated/api/psweep.psweep.PSET_HASH_ALG.html">psweep.psweep.PSET_HASH_ALG</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../generated/api/psweep.psweep.PsweepHashError.html">psweep.psweep.PsweepHashError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../generated/api/psweep.psweep._get_col_filter.html">psweep.psweep._get_col_filter</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../generated/api/psweep.psweep.capture_logs_wrapper.html">psweep.psweep.capture_logs_wrapper</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../generated/api/psweep.psweep.check_calc_dir.html">psweep.psweep.check_calc_dir</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../generated/api/psweep.psweep.df_filter_conds.html">psweep.psweep.df_filter_conds</a></li>
@@ -205,6 +206,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../generated/api/psweep.psweep.df_write.html">psweep.psweep.df_write</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../generated/api/psweep.psweep.file_read.html">psweep.psweep.file_read</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../generated/api/psweep.psweep.file_write.html">psweep.psweep.file_write</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../generated/api/psweep.psweep.filter_cols.html">psweep.psweep.filter_cols</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../generated/api/psweep.psweep.filter_params_dup_hash.html">psweep.psweep.filter_params_dup_hash</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../generated/api/psweep.psweep.filter_params_unique.html">psweep.psweep.filter_params_unique</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../generated/api/psweep.psweep.flatten.html">psweep.psweep.flatten</a></li>
@@ -524,7 +526,7 @@ calculate and store the result of a calculation for each parameter combination.<
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
 </pre></div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">pgrid()</span></code> produces a list <code class="docutils literal notranslate"><span class="pre">params</span></code> of parameter sets (dicts <code class="docutils literal notranslate"><span class="pre">{'a':</span> <span class="pre">...,</span> <span class="pre">'b':</span> <span class="pre">...}</span></code>) to loop over:</p>
+<p><a class="reference internal" href="../generated/api/psweep.psweep.pgrid.html#psweep.psweep.pgrid" title="psweep.psweep.pgrid"><code class="xref py py-func docutils literal notranslate"><span class="pre">pgrid()</span></code></a> produces a list <code class="docutils literal notranslate"><span class="pre">params</span></code> of parameter sets (dicts <code class="docutils literal notranslate"><span class="pre">{'a':</span> <span class="pre">...,</span> <span class="pre">'b':</span> <span class="pre">...}</span></code>) to loop over:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="mi">88</span><span class="p">},</span>
  <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="mi">99</span><span class="p">},</span>
  <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="mi">88</span><span class="p">},</span>
@@ -533,7 +535,7 @@ calculate and store the result of a calculation for each parameter combination.<
  <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="mi">99</span><span class="p">}]</span>
 </pre></div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">run()</span></code> returns a database of results (<code class="docutils literal notranslate"><span class="pre">pandas</span></code> DataFrame <code class="docutils literal notranslate"><span class="pre">df</span></code>) and saves a
+<p><a class="reference internal" href="../generated/api/psweep.psweep.run.html#psweep.psweep.run" title="psweep.psweep.run"><code class="xref py py-func docutils literal notranslate"><span class="pre">run()</span></code></a> returns a database of results (<code class="docutils literal notranslate"><span class="pre">pandas</span></code> DataFrame <code class="docutils literal notranslate"><span class="pre">df</span></code>) and saves a
 pickled file <code class="docutils literal notranslate"><span class="pre">calc/database.pk</span></code> by default:</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s2">&quot;display.max_columns&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
@@ -628,21 +630,22 @@ also return an empty dict if you record results in another way (see the
 <p>The <code class="docutils literal notranslate"><span class="pre">pset</span></code>s form the rows of a <code class="docutils literal notranslate"><span class="pre">pandas</span></code> DataFrame, which we use to store the
 pset and the result from each <code class="docutils literal notranslate"><span class="pre">func(pset)</span></code>.</p>
 <p>The idea is now to run <code class="docutils literal notranslate"><span class="pre">func</span></code> in a loop over all <code class="docutils literal notranslate"><span class="pre">pset</span></code>s in <code class="docutils literal notranslate"><span class="pre">params</span></code>. You do this
-using the <code class="docutils literal notranslate"><span class="pre">ps.run()</span></code> helper function. The function adds some special
-columns such as <code class="docutils literal notranslate"><span class="pre">_run_id</span></code> (once per <code class="docutils literal notranslate"><span class="pre">ps.run()</span></code> call) or <code class="docutils literal notranslate"><span class="pre">_pset_id</span></code> (once
+using the <a class="reference internal" href="../generated/api/psweep.psweep.run.html#psweep.psweep.run" title="psweep.psweep.run"><code class="xref py py-func docutils literal notranslate"><span class="pre">run()</span></code></a> helper function. The function adds some special
+columns such as <code class="docutils literal notranslate"><span class="pre">_run_id</span></code> (once per <a class="reference internal" href="../generated/api/psweep.psweep.run.html#psweep.psweep.run" title="psweep.psweep.run"><code class="xref py py-func docutils literal notranslate"><span class="pre">run()</span></code></a> call) or <code class="docutils literal notranslate"><span class="pre">_pset_id</span></code> (once
 per pset). Using <code class="docutils literal notranslate"><span class="pre">ps.run(...</span> <span class="pre">poolsize=...)</span></code> runs <code class="docutils literal notranslate"><span class="pre">func</span></code> in parallel on
 <code class="docutils literal notranslate"><span class="pre">params</span></code> using <code class="docutils literal notranslate"><span class="pre">multiprocessing.Pool</span></code>.</p>
 </section>
 <section id="naming-of-database-fields">
 <h2>Naming of database fields<a class="headerlink" href="#naming-of-database-fields" title="Link to this heading">#</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">ps.run()</span></code> will add book-keeping fields starting with an underscore prefix
+<p><a class="reference internal" href="../generated/api/psweep.psweep.run.html#psweep.psweep.run" title="psweep.psweep.run"><code class="xref py py-func docutils literal notranslate"><span class="pre">run()</span></code></a> will add book-keeping fields starting with an underscore prefix
 (e.g. <code class="docutils literal notranslate"><span class="pre">_pset_id</span></code>). By doing that, they can be distinguished from <code class="docutils literal notranslate"><span class="pre">pset</span></code> fields
 <code class="docutils literal notranslate"><span class="pre">a</span></code> and <code class="docutils literal notranslate"><span class="pre">b</span></code>. We <em>recommend</em> but not require you to name all fields (dict keys)
 generated in <code class="docutils literal notranslate"><span class="pre">func()</span></code> such as <code class="docutils literal notranslate"><span class="pre">result_</span></code> with a trailing or <em>postfix</em>
 underscore. That way you can in the database clearly distinguish between
-book-keeping (<code class="docutils literal notranslate"><span class="pre">_foo</span></code>), pset (<code class="docutils literal notranslate"><span class="pre">a</span></code>, <code class="docutils literal notranslate"><span class="pre">b</span></code>) and result-type fields (<code class="docutils literal notranslate"><span class="pre">bar_</span></code>). But
-again, this is only a suggestion, you can name the fields in a <code class="docutils literal notranslate"><span class="pre">pset</span></code> and the
-ones created in <code class="docutils literal notranslate"><span class="pre">func()</span></code> any way you like. See <a class="reference internal" href="#s-more-on-db-field-names"><span class="std std-ref">this section for more
+book-keeping (<code class="docutils literal notranslate"><span class="pre">_foo</span></code>), <code class="docutils literal notranslate"><span class="pre">pset</span></code> (<code class="docutils literal notranslate"><span class="pre">a</span></code>, <code class="docutils literal notranslate"><span class="pre">b</span></code>) and result-type fields (<code class="docutils literal notranslate"><span class="pre">bar_</span></code>). This
+is only a suggestion, you can name the fields in a <code class="docutils literal notranslate"><span class="pre">pset</span></code> and the ones created
+in <code class="docutils literal notranslate"><span class="pre">func()</span></code> any way you like. However, we rely on this convention for all
+functionality based on <code class="docutils literal notranslate"><span class="pre">pset</span></code> hashes. See <a class="reference internal" href="#s-more-on-db-field-names"><span class="std std-ref">this section for more
 details</span></a>.</p>
 </section>
 <section id="building-parameter-grids">
@@ -650,7 +653,7 @@ details</span></a>.</p>
 <p>This package offers some very simple helper functions which assist in creating
 <code class="docutils literal notranslate"><span class="pre">params</span></code>. Basically, we define the to-be-varied parameters and then use
 something like <code class="docutils literal notranslate"><span class="pre">itertools.product()</span></code> to loop over them to create <code class="docutils literal notranslate"><span class="pre">params</span></code>,
-which is passed to <code class="docutils literal notranslate"><span class="pre">ps.run()</span></code> to actually perform the loop over all
+which is passed to <a class="reference internal" href="../generated/api/psweep.psweep.run.html#psweep.psweep.run" title="psweep.psweep.run"><code class="xref py py-func docutils literal notranslate"><span class="pre">run()</span></code></a> to actually perform the loop over all
 <code class="docutils literal notranslate"><span class="pre">pset</span></code>s.</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="kn">import</span> <span class="n">product</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">psweep</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ps</span>
@@ -674,11 +677,11 @@ which is passed to <code class="docutils literal notranslate"><span class="pre">
 <span class="go"> {&#39;a&#39;: 2, &#39;b&#39;: &#39;yy&#39;}]</span>
 </pre></div>
 </div>
-<p>Here we used the helper function <code class="docutils literal notranslate"><span class="pre">itr2params()</span></code> which accepts an iterator
+<p>Here we used the helper function <a class="reference internal" href="../generated/api/psweep.psweep.itr2params.html#psweep.psweep.itr2params" title="psweep.psweep.itr2params"><code class="xref py py-func docutils literal notranslate"><span class="pre">itr2params()</span></code></a> which accepts an iterator
 that represents the loops over params. It merges dicts to <code class="docutils literal notranslate"><span class="pre">pset</span></code>s and also deals
 with nesting when using <code class="docutils literal notranslate"><span class="pre">zip()</span></code> (see below).</p>
 <p>The last pattern is so common that we have a short-cut function
-<code class="docutils literal notranslate"><span class="pre">pgrid()</span></code>, which basically does <code class="docutils literal notranslate"><span class="pre">itr2params(product(a,b))</span></code>.</p>
+<a class="reference internal" href="../generated/api/psweep.psweep.pgrid.html#psweep.psweep.pgrid" title="psweep.psweep.pgrid"><code class="xref py py-func docutils literal notranslate"><span class="pre">pgrid()</span></code></a>, which basically does <code class="docutils literal notranslate"><span class="pre">itr2params(product(a,b))</span></code>.</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">pgrid</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">)</span>
 <span class="go">[{&#39;a&#39;: 1, &#39;b&#39;: &#39;xx&#39;},</span>
 <span class="go"> {&#39;a&#39;: 1, &#39;b&#39;: &#39;yy&#39;},</span>
@@ -686,7 +689,7 @@ with nesting when using <code class="docutils literal notranslate"><span class="
 <span class="go"> {&#39;a&#39;: 2, &#39;b&#39;: &#39;yy&#39;}]</span>
 </pre></div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">pgrid()</span></code> accepts either a sequence or individual args (but please
+<p><a class="reference internal" href="../generated/api/psweep.psweep.pgrid.html#psweep.psweep.pgrid" title="psweep.psweep.pgrid"><code class="xref py py-func docutils literal notranslate"><span class="pre">pgrid()</span></code></a> accepts either a sequence or individual args (but please
 check the “pgrid gotchas” section below for some corner cases).</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">pgrid</span><span class="p">([</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">pgrid</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">)</span>
@@ -694,8 +697,8 @@ check the “pgrid gotchas” section below for some corner cases).</p>
 </div>
 <p>So the logic of the param study is entirely contained in the creation of
 <code class="docutils literal notranslate"><span class="pre">params</span></code>. For instance, if parameters shall be varied together (say <code class="docutils literal notranslate"><span class="pre">a</span></code> and
-<code class="docutils literal notranslate"><span class="pre">b</span></code>), then use <code class="docutils literal notranslate"><span class="pre">zip</span></code>. The nesting from <code class="docutils literal notranslate"><span class="pre">zip()</span></code> is flattened in <code class="docutils literal notranslate"><span class="pre">itr2params()</span></code>
-and <code class="docutils literal notranslate"><span class="pre">pgrid()</span></code>.</p>
+<code class="docutils literal notranslate"><span class="pre">b</span></code>), then use <code class="docutils literal notranslate"><span class="pre">zip</span></code>. The nesting from <code class="docutils literal notranslate"><span class="pre">zip()</span></code> is flattened in <a class="reference internal" href="../generated/api/psweep.psweep.itr2params.html#psweep.psweep.itr2params" title="psweep.psweep.itr2params"><code class="xref py py-func docutils literal notranslate"><span class="pre">itr2params()</span></code></a>
+and <a class="reference internal" href="../generated/api/psweep.psweep.pgrid.html#psweep.psweep.pgrid" title="psweep.psweep.pgrid"><code class="xref py py-func docutils literal notranslate"><span class="pre">pgrid()</span></code></a>.</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1">##ps.itr2params(zip(a, b))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">pgrid</span><span class="p">([</span><span class="nb">zip</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)])</span>
 <span class="go">[{&#39;a&#39;: 1, &#39;b&#39;: &#39;xx&#39;},</span>
@@ -727,7 +730,7 @@ different lengths.</p>
 <span class="go"> {&#39;a&#39;: 2, &#39;b&#39;: &#39;yy&#39;, &#39;c&#39;: &#39;Z&#39;,  &#39;const&#39;: 1.23}]</span>
 </pre></div>
 </div>
-<p>Besides <code class="docutils literal notranslate"><span class="pre">pgrid()</span></code>, we have another convenience function <code class="docutils literal notranslate"><span class="pre">stargrid()</span></code>, which
+<p>Besides <a class="reference internal" href="../generated/api/psweep.psweep.pgrid.html#psweep.psweep.pgrid" title="psweep.psweep.pgrid"><code class="xref py py-func docutils literal notranslate"><span class="pre">pgrid()</span></code></a>, we have another convenience function <a class="reference internal" href="../generated/api/psweep.psweep.stargrid.html#psweep.psweep.stargrid" title="psweep.psweep.stargrid"><code class="xref py py-func docutils literal notranslate"><span class="pre">stargrid()</span></code></a>, which
 creates a specific param sampling pattern, where we vary params in a “star”
 pattern (and not a full pgrid) around constant values (middle of the “star”).</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">const</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">77</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
@@ -749,7 +752,7 @@ want to do just a “line scan” for each parameter around known good values.</
 sampled before the actual calculations. This has proven to be very
 practical as it helps detecting errors early.</p>
 <p>You are, by the way, of course not restricted to use simple nested loops
-over parameters using <code class="docutils literal notranslate"><span class="pre">pgrid()</span></code> (which uses <code class="docutils literal notranslate"><span class="pre">itertools.product()</span></code>). You
+over parameters using <a class="reference internal" href="../generated/api/psweep.psweep.pgrid.html#psweep.psweep.pgrid" title="psweep.psweep.pgrid"><code class="xref py py-func docutils literal notranslate"><span class="pre">pgrid()</span></code></a> (which uses <code class="docutils literal notranslate"><span class="pre">itertools.product()</span></code>). You
 are totally free in how to create <code class="docutils literal notranslate"><span class="pre">params</span></code>, be it using other fancy
 stuff from <code class="docutils literal notranslate"><span class="pre">itertools</span></code> or explicit loops. Of course you can also define
 a static <code class="docutils literal notranslate"><span class="pre">params</span></code> list</p>
@@ -833,9 +836,9 @@ will return an iterator whose length is <code class="docutils literal notranslat
 </section>
 <section id="the-database">
 <h2>The database<a class="headerlink" href="#the-database" title="Link to this heading">#</a></h2>
-<p>By default, <code class="docutils literal notranslate"><span class="pre">ps.run()</span></code> writes a database <code class="docutils literal notranslate"><span class="pre">calc/database.pk</span></code> (a pickled
+<p>By default, <a class="reference internal" href="../generated/api/psweep.psweep.run.html#psweep.psweep.run" title="psweep.psweep.run"><code class="xref py py-func docutils literal notranslate"><span class="pre">run()</span></code></a> writes a database <code class="docutils literal notranslate"><span class="pre">calc/database.pk</span></code> (a pickled
 DataFrame) with the default <code class="docutils literal notranslate"><span class="pre">calc_dir='calc'</span></code>. You can turn that off using
-<code class="docutils literal notranslate"><span class="pre">save=False</span></code> if you want. If you run <code class="docutils literal notranslate"><span class="pre">ps.run()</span></code> again</p>
+<code class="docutils literal notranslate"><span class="pre">save=False</span></code> if you want. If you run <a class="reference internal" href="../generated/api/psweep.psweep.run.html#psweep.psweep.run" title="psweep.psweep.run"><code class="xref py py-func docutils literal notranslate"><span class="pre">run()</span></code></a> again</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">other_params</span><span class="p">)</span>
 </pre></div>
@@ -855,8 +858,8 @@ session when you pass in <code class="docutils literal notranslate"><span class=
 <p>It is important to get the difference between the two special fields
 <code class="docutils literal notranslate"><span class="pre">_run_id</span></code> and <code class="docutils literal notranslate"><span class="pre">_pset_id</span></code>, the most important one being <code class="docutils literal notranslate"><span class="pre">_pset_id</span></code>.</p>
 <p>Both are random UUIDs. They are used to uniquely identify things.</p>
-<p>Once per <code class="docutils literal notranslate"><span class="pre">ps.run()</span></code> call, a <code class="docutils literal notranslate"><span class="pre">_run_id</span></code> and <code class="docutils literal notranslate"><span class="pre">_run_seq</span></code> is created. Which
-means that when you call <code class="docutils literal notranslate"><span class="pre">ps.run()</span></code> multiple times <em>using the same
+<p>Once per <a class="reference internal" href="../generated/api/psweep.psweep.run.html#psweep.psweep.run" title="psweep.psweep.run"><code class="xref py py-func docutils literal notranslate"><span class="pre">run()</span></code></a> call, a <code class="docutils literal notranslate"><span class="pre">_run_id</span></code> and <code class="docutils literal notranslate"><span class="pre">_run_seq</span></code> is created. Which
+means that when you call <a class="reference internal" href="../generated/api/psweep.psweep.run.html#psweep.psweep.run" title="psweep.psweep.run"><code class="xref py py-func docutils literal notranslate"><span class="pre">run()</span></code></a> multiple times <em>using the same
 database</em> as just shown, you will see multiple (in this case two) <code class="docutils literal notranslate"><span class="pre">_run_id</span></code>
 and <code class="docutils literal notranslate"><span class="pre">_run_seq</span></code> values.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>                             <span class="n">_run_id</span>                              <span class="n">_pset_id</span>  <span class="n">_run_seq</span>  <span class="n">_pset_seq</span>
@@ -868,12 +871,12 @@ and <code class="docutils literal notranslate"><span class="pre">_run_seq</span>
 <span class="mi">969592</span><span class="n">bc</span><span class="o">-</span><span class="mf">65e6</span><span class="o">-</span><span class="mi">4315</span><span class="o">-</span><span class="mf">9e6</span><span class="n">b</span><span class="o">-</span><span class="mi">5</span><span class="n">d64b6eaa0b3</span>  <span class="mi">162</span><span class="n">a7b8c</span><span class="o">-</span><span class="mi">3</span><span class="n">ab5</span><span class="o">-</span><span class="mi">41</span><span class="n">bb</span><span class="o">-</span><span class="mi">92</span><span class="n">cd</span><span class="o">-</span><span class="mf">1e5</span><span class="n">d0db0842f</span>         <span class="mi">1</span>          <span class="mi">5</span>
 </pre></div>
 </div>
-<p>Each <code class="docutils literal notranslate"><span class="pre">ps.run()</span></code> call in turn calls <code class="docutils literal notranslate"><span class="pre">func(pset)</span></code> for each pset in <code class="docutils literal notranslate"><span class="pre">params</span></code>.
+<p>Each <a class="reference internal" href="../generated/api/psweep.psweep.run.html#psweep.psweep.run" title="psweep.psweep.run"><code class="xref py py-func docutils literal notranslate"><span class="pre">run()</span></code></a> call in turn calls <code class="docutils literal notranslate"><span class="pre">func(pset)</span></code> for each pset in <code class="docutils literal notranslate"><span class="pre">params</span></code>.
 Each <code class="docutils literal notranslate"><span class="pre">func</span></code> invocation creates a unique <code class="docutils literal notranslate"><span class="pre">_pset_id</span></code> and increment the integer
 counter <code class="docutils literal notranslate"><span class="pre">_pset_seq</span></code>. Thus, we have a very simple, yet powerful one-to-one
 mapping and a way to refer to a specific pset.</p>
 <p>An interesting special case (see <code class="docutils literal notranslate"><span class="pre">examples/vary_1_param_repeat_same.py</span></code>) is
-when you call <code class="docutils literal notranslate"><span class="pre">ps.run()</span></code> multiple times using <em>the exact same</em> <code class="docutils literal notranslate"><span class="pre">params</span></code>,</p>
+when you call <a class="reference internal" href="../generated/api/psweep.psweep.run.html#psweep.psweep.run" title="psweep.psweep.run"><code class="xref py py-func docutils literal notranslate"><span class="pre">run()</span></code></a> multiple times using <em>the exact same</em> <code class="docutils literal notranslate"><span class="pre">params</span></code>,</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
 </pre></div>
@@ -898,7 +901,7 @@ UUIDs for <code class="docutils literal notranslate"><span class="pre">_pset_id<
 <h3>Filter by <code class="docutils literal notranslate"><span class="pre">pset</span></code> hashes<a class="headerlink" href="#filter-by-pset-hashes" title="Link to this heading">#</a></h3>
 <p>As mentioned, we create a hash for each <code class="docutils literal notranslate"><span class="pre">pset</span></code>, which is stored in the
 <code class="docutils literal notranslate"><span class="pre">_pset_hash</span></code> database column. This unlocks powerful database filter options.</p>
-<p>As shown above, when calling <code class="docutils literal notranslate"><span class="pre">run()</span></code> twice
+<p>As shown above, when calling <a class="reference internal" href="../generated/api/psweep.psweep.run.html#psweep.psweep.run" title="psweep.psweep.run"><code class="xref py py-func docutils literal notranslate"><span class="pre">run()</span></code></a> twice
 with the same <code class="docutils literal notranslate"><span class="pre">params</span></code> you get a second set of calculations. But suppose you
 have a script where you keep modifying the way you create <code class="docutils literal notranslate"><span class="pre">params</span></code> and you just
 want to add some more scans <em>without</em> removing the code that generated the old
@@ -912,11 +915,8 @@ only add calculations for new <code class="docutils literal notranslate"><span c
 <section id="more-details-on-naming-database-fields">
 <span id="s-more-on-db-field-names"></span><h3>More details on naming database fields<a class="headerlink" href="#more-details-on-naming-database-fields" title="Link to this heading">#</a></h3>
 <p>We implement the convention to ignore fields starting and ending in an
-underscore at the moment only internally in <code class="docutils literal notranslate"><span class="pre">ps.pset_hash()</span></code> to ensure that the
-hash includes only <code class="docutils literal notranslate"><span class="pre">pset</span></code> variables. However, when <code class="docutils literal notranslate"><span class="pre">ps.run()</span></code> is called, the
-hash is calculated <em>before</em> book-keeping fields like <code class="docutils literal notranslate"><span class="pre">_pset_id</span></code> are added and
-<code class="docutils literal notranslate"><span class="pre">func()</span></code> is called to, for instance, return <code class="docutils literal notranslate"><span class="pre">{'result_':</span> <span class="pre">1.234}</span></code> and update the
-<code class="docutils literal notranslate"><span class="pre">pset</span></code>. Therefore, this convention is in fact not needed. It only takes effect
+underscore in <a class="reference internal" href="../generated/api/psweep.psweep.pset_hash.html#psweep.psweep.pset_hash" title="psweep.psweep.pset_hash"><code class="xref py py-func docutils literal notranslate"><span class="pre">pset_hash()</span></code></a> (and all functions that use it, in particular
+<a class="reference internal" href="../generated/api/psweep.psweep.run.html#psweep.psweep.run" title="psweep.psweep.run"><code class="xref py py-func docutils literal notranslate"><span class="pre">run()</span></code></a>) to ensure that the hash includes only <code class="docutils literal notranslate"><span class="pre">pset</span></code> variables. For example
 should you ever want to re-calculate the hash, as in</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
 <span class="gp">... </span>   <span class="n">df</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="s2">&quot;_pset_hash_new&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">pset_hash</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">to_dict</span><span class="p">())</span>
@@ -929,10 +929,39 @@ should you ever want to re-calculate the hash, as in</p>
 <span class="go">3  4  79ba178b3895a603bf9d84dea82e034791e8fe30  bf5bf881-3273-4932-a3f3-9c117bca921b  ...  2.606486  79ba178b3895a603bf9d84dea82e034791e8fe30</span>
 </pre></div>
 </div>
-<p>Here the hash goes only over the <code class="docutils literal notranslate"><span class="pre">a</span></code> field, so <code class="docutils literal notranslate"><span class="pre">_pset_hash</span></code> and <code class="docutils literal notranslate"><span class="pre">_pset_hash_new</span></code>
+<p>then the hash goes only over the <code class="docutils literal notranslate"><span class="pre">a</span></code> field, ignoring <code class="docutils literal notranslate"><span class="pre">_pset_id</span></code>, any other
+prefix field, as well as <code class="docutils literal notranslate"><span class="pre">result_</span></code>. Thus, <code class="docutils literal notranslate"><span class="pre">_pset_hash</span></code> and <code class="docutils literal notranslate"><span class="pre">_pset_hash_new</span></code>
 must be the same.</p>
 <p>We may provide tooling for that in the future. See also
 <a class="github reference external" href="https://github.com/elcorto/psweep/issues/15">elcorto/psweep#15</a> .</p>
+<p>If you don’t use any functionality based on pset hashes, such as filtering
+duplicate <code class="docutils literal notranslate"><span class="pre">pset</span></code>s, then this doesn’t affect you at all. For example you
+can have prefix or postfix names in your params.</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="o">=</span><span class="n">ps</span><span class="o">.</span><span class="n">plist</span><span class="p">(</span><span class="s2">&quot;_a&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span><span class="o">=</span><span class="n">ps</span><span class="o">.</span><span class="n">plist</span><span class="p">(</span><span class="s2">&quot;b_&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mi">77</span><span class="p">,</span><span class="mi">88</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span><span class="o">=</span><span class="n">ps</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="k">lambda</span> <span class="n">pset</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="n">pset</span><span class="p">[</span><span class="s2">&quot;_a&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">pset</span><span class="p">[</span><span class="s2">&quot;b_&quot;</span><span class="p">]},</span>
+<span class="gp">... </span>          <span class="n">params</span><span class="o">=</span><span class="n">ps</span><span class="o">.</span><span class="n">pgrid</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">),</span>
+<span class="gp">... </span>          <span class="n">save</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">df_print</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;_a&quot;</span><span class="p">,</span> <span class="s2">&quot;b_&quot;</span><span class="p">,</span> <span class="s2">&quot;result&quot;</span><span class="p">])</span>
+<span class="go"> _a  b_  result</span>
+<span class="go">  1  77      78</span>
+<span class="go">  1  88      89</span>
+<span class="go">  2  77      79</span>
+<span class="go">  2  88      90</span>
+</pre></div>
+</div>
+<p>However in this case, the hash calculation got handed an empty <code class="docutils literal notranslate"><span class="pre">pset</span></code> (since <code class="docutils literal notranslate"><span class="pre">_a</span></code>
+and <code class="docutils literal notranslate"><span class="pre">b_</span></code> are ignored), so the hash is the same for each <code class="docutils literal notranslate"><span class="pre">pset</span></code>.</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ps</span><span class="o">.</span><span class="n">pset_hash</span><span class="p">({})</span>
+<span class="go">&#39;62977be8e45d8a56a5537c11dfd5d2fd8dda69e0&#39;</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span><span class="o">.</span><span class="n">_pset_hash</span>
+<span class="go">0    62977be8e45d8a56a5537c11dfd5d2fd8dda69e0</span>
+<span class="go">1    62977be8e45d8a56a5537c11dfd5d2fd8dda69e0</span>
+<span class="go">2    62977be8e45d8a56a5537c11dfd5d2fd8dda69e0</span>
+<span class="go">3    62977be8e45d8a56a5537c11dfd5d2fd8dda69e0</span>
+</pre></div>
+</div>
 </section>
 </section>
 <section id="best-practices">
@@ -979,7 +1008,7 @@ external command in <code class="docutils literal notranslate"><span class="pre"
 row added for each call to <code class="docutils literal notranslate"><span class="pre">func</span></code> by returning a dict <code class="docutils literal notranslate"><span class="pre">{&quot;cmd&quot;:</span> <span class="pre">cmd}</span></code> with the
 shell <code class="docutils literal notranslate"><span class="pre">cmd</span></code> we call in order to have that in the database.</p>
 <p>Also note how we use the special fields <code class="docutils literal notranslate"><span class="pre">_pset_id</span></code> and <code class="docutils literal notranslate"><span class="pre">_calc_dir</span></code>, which are
-added in <code class="docutils literal notranslate"><span class="pre">ps.run()</span></code> to <code class="docutils literal notranslate"><span class="pre">pset</span></code> <em>before</em> <code class="docutils literal notranslate"><span class="pre">func</span></code> is called.</p>
+added in <a class="reference internal" href="../generated/api/psweep.psweep.run.html#psweep.psweep.run" title="psweep.psweep.run"><code class="xref py py-func docutils literal notranslate"><span class="pre">run()</span></code></a> to <code class="docutils literal notranslate"><span class="pre">pset</span></code> <em>before</em> <code class="docutils literal notranslate"><span class="pre">func</span></code> is called.</p>
 <p>After the run, we have four dirs for each pset, each simply named with
 <code class="docutils literal notranslate"><span class="pre">_pset_id</span></code>:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>calc
@@ -1039,7 +1068,7 @@ convention which makes sense in the long run.</p>
 <section id="iterative-extension-of-a-parameter-study">
 <h3>Iterative extension of a parameter study<a class="headerlink" href="#iterative-extension-of-a-parameter-study" title="Link to this heading">#</a></h3>
 <p>See <code class="docutils literal notranslate"><span class="pre">examples/multiple_local_1d_scans/</span></code> and <code class="docutils literal notranslate"><span class="pre">examples/*repeat*</span></code>.</p>
-<p>You can backup old calc dirs when repeating calls to <code class="docutils literal notranslate"><span class="pre">ps.run()</span></code> using the
+<p>You can backup old calc dirs when repeating calls to <a class="reference internal" href="../generated/api/psweep.psweep.run.html#psweep.psweep.run" title="psweep.psweep.run"><code class="xref py py-func docutils literal notranslate"><span class="pre">run()</span></code></a> using the
 <code class="docutils literal notranslate"><span class="pre">backup</span></code> keyword.</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">backup</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
@@ -1056,7 +1085,7 @@ $<span class="w"> </span>mv<span class="w"> </span>calc.bak_2021-03-19T2*<span c
 </div>
 <p>For any non-trivial work, you won’t use an interactive session. Instead, you
 will have a driver script (say <code class="docutils literal notranslate"><span class="pre">input.py</span></code>, or a jupyter notebook, or …) which
-defines <code class="docutils literal notranslate"><span class="pre">params</span></code> and starts <code class="docutils literal notranslate"><span class="pre">ps.run()</span></code>. Also in a common workflow, you
+defines <code class="docutils literal notranslate"><span class="pre">params</span></code> and starts <a class="reference internal" href="../generated/api/psweep.psweep.run.html#psweep.psweep.run" title="psweep.psweep.run"><code class="xref py py-func docutils literal notranslate"><span class="pre">run()</span></code></a>. Also in a common workflow, you
 won’t define <code class="docutils literal notranslate"><span class="pre">params</span></code> and run a study once. Instead you will first have an idea
 about which parameter values to scan. You will start with a coarse grid of
 parameters and then inspect the results and identify regions where you need
@@ -1143,7 +1172,7 @@ Ninja skills here, e.g. “give me all <code class="docutils literal notranslate
 between 10 and 100, while ‘b’ was constant, …”. You get the idea.</p>
 <p>To ease post-processing, it can be useful practice to add a constant parameter
 named “study” or “scan” to label a certain range of runs. If you, for instance,
-have 5 runs (meaning 5 calls to <code class="docutils literal notranslate"><span class="pre">ps.run()</span></code>) where you scan values for
+have 5 runs (meaning 5 calls to <a class="reference internal" href="../generated/api/psweep.psweep.run.html#psweep.psweep.run" title="psweep.psweep.run"><code class="xref py py-func docutils literal notranslate"><span class="pre">run()</span></code></a>) where you scan values for
 parameter ‘a’ while keeping parameters ‘b’ and ‘c’ constant, you’ll have 5
 <code class="docutils literal notranslate"><span class="pre">_run_id</span></code> values. When querying the database later, you could limit by
 <code class="docutils literal notranslate"><span class="pre">_run_id</span></code> if you know the values:</p>
@@ -1572,7 +1601,7 @@ revolves around maximal user control of each step of the workflow.</p>
 <p>This workflow, while being the most general, might not be ideal for all
 workloads. See the <a class="reference internal" href="#s-template-pro-con"><span class="std std-ref">Pros and Cons</span></a> section below.</p>
 </div>
-<p>The central function to use is <code class="docutils literal notranslate"><span class="pre">ps.prep_batch()</span></code>. See <code class="docutils literal notranslate"><span class="pre">examples/batch_templates</span></code>
+<p>The central function to use is <a class="reference internal" href="../generated/api/psweep.psweep.prep_batch.html#psweep.psweep.prep_batch" title="psweep.psweep.prep_batch"><code class="xref py py-func docutils literal notranslate"><span class="pre">prep_batch()</span></code></a>. See <code class="docutils literal notranslate"><span class="pre">examples/batch_templates</span></code>
 for a full example.</p>
 <p>The workflow is based on <strong>template files</strong>. They are processed using
 <a class="reference external" href="https://github.com/pallets/jinja">jinja</a> to replace each <code class="docutils literal notranslate"><span class="pre">{{foo}}</span></code> or <code class="docutils literal notranslate"><span class="pre">{{</span> <span class="pre">foo</span> <span class="pre">}}</span></code>
@@ -1590,7 +1619,7 @@ is <code class="docutils literal notranslate"><span class="pre">template_mode=&q
 you need to escape the <code class="docutils literal notranslate"><span class="pre">$</span></code> with <code class="docutils literal notranslate"><span class="pre">$$foo</span></code>, else they will be treated as
 placeholders.</p>
 </div>
-<p>We piggy-back on the <code class="docutils literal notranslate"><span class="pre">run()</span></code> workflow from above to, instead of running jobs
+<p>We piggy-back on the <a class="reference internal" href="../generated/api/psweep.psweep.run.html#psweep.psweep.run" title="psweep.psweep.run"><code class="xref py py-func docutils literal notranslate"><span class="pre">run()</span></code></a> workflow from above to, instead of running jobs
 with it, just <strong>create batch scripts using template files</strong>.</p>
 <p>You can use the proposed workflow below directly on the remote machine (need to
 install <code class="docutils literal notranslate"><span class="pre">psweep</span></code> there) or run it locally and use a copy-to-cluster workflow.
@@ -1931,8 +1960,8 @@ analyze the results”.</p>
 small and as such of course lacks a lot of features that other packages offer.
 We only</p>
 <ul class="simple">
-<li><p>provide simple helpers to set up the params (<code class="docutils literal notranslate"><span class="pre">plist()</span></code>, <code class="docutils literal notranslate"><span class="pre">pgrid()</span></code>,
-<code class="docutils literal notranslate"><span class="pre">stargrid()</span></code>)</p></li>
+<li><p>provide simple helpers to set up the params (<a class="reference internal" href="../generated/api/psweep.psweep.plist.html#psweep.psweep.plist" title="psweep.psweep.plist"><code class="xref py py-func docutils literal notranslate"><span class="pre">plist()</span></code></a>, <a class="reference internal" href="../generated/api/psweep.psweep.pgrid.html#psweep.psweep.pgrid" title="psweep.psweep.pgrid"><code class="xref py py-func docutils literal notranslate"><span class="pre">pgrid()</span></code></a>,
+<a class="reference internal" href="../generated/api/psweep.psweep.stargrid.html#psweep.psweep.stargrid" title="psweep.psweep.stargrid"><code class="xref py py-func docutils literal notranslate"><span class="pre">stargrid()</span></code></a>)</p></li>
 <li><p>hook into the <code class="docutils literal notranslate"><span class="pre">concurrent.futures</span></code> API (<code class="docutils literal notranslate"><span class="pre">multiprocessing</span></code> or <code class="docutils literal notranslate"><span class="pre">dask</span></code>) for
 parallel (HPC) runs / provide a template workflow for HPC runs</p></li>
 <li><p>give you a <code class="docutils literal notranslate"><span class="pre">DataFrame</span></code> with useful metadata</p></li>

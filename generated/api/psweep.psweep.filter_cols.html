@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>psweep.psweep.gather_calc_templates &#8212; psweep</title>
+    <title>psweep.psweep.filter_cols &#8212; psweep</title>
   
   
   
@@ -57,11 +57,11 @@
     <script async="async" src="../../_static/sphinx-thebe.js?v=c100c467"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'generated/api/psweep.psweep.gather_calc_templates';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'generated/api/psweep.psweep.filter_cols';</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="psweep.psweep.gather_machines" href="psweep.psweep.gather_machines.html" />
-    <link rel="prev" title="psweep.psweep.func_wrapper" href="psweep.psweep.func_wrapper.html" />
+    <link rel="next" title="psweep.psweep.filter_params_dup_hash" href="psweep.psweep.filter_params_dup_hash.html" />
+    <link rel="prev" title="psweep.psweep.file_write" href="psweep.psweep.file_write.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -206,13 +206,13 @@
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.df_write.html">psweep.psweep.df_write</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.file_read.html">psweep.psweep.file_read</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.file_write.html">psweep.psweep.file_write</a></li>
-<li class="toctree-l3"><a class="reference internal" href="psweep.psweep.filter_cols.html">psweep.psweep.filter_cols</a></li>
+<li class="toctree-l3 current active"><a class="current reference internal" href="#">psweep.psweep.filter_cols</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.filter_params_dup_hash.html">psweep.psweep.filter_params_dup_hash</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.filter_params_unique.html">psweep.psweep.filter_params_unique</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.flatten.html">psweep.psweep.flatten</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.fullpath.html">psweep.psweep.fullpath</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.func_wrapper.html">psweep.psweep.func_wrapper</a></li>
-<li class="toctree-l3 current active"><a class="current reference internal" href="#">psweep.psweep.gather_calc_templates</a></li>
+<li class="toctree-l3"><a class="reference internal" href="psweep.psweep.gather_calc_templates.html">psweep.psweep.gather_calc_templates</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.gather_machines.html">psweep.psweep.gather_machines</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.get_many_uuids.html">psweep.psweep.get_many_uuids</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.get_uuid.html">psweep.psweep.get_uuid</a></li>
@@ -309,7 +309,7 @@
       
       
       
-      <li><a href="../../_sources/generated/api/psweep.psweep.gather_calc_templates.rst" target="_blank"
+      <li><a href="../../_sources/generated/api/psweep.psweep.filter_cols.rst" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -393,7 +393,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>psweep.psweep.gather_calc_templates</h1>
+    <h1>psweep.psweep.filter_cols</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -403,7 +403,7 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#psweep.psweep.gather_calc_templates"><code class="docutils literal notranslate"><span class="pre">gather_calc_templates()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#psweep.psweep.filter_cols"><code class="docutils literal notranslate"><span class="pre">filter_cols()</span></code></a></li>
 </ul>
             </nav>
         </div>
@@ -415,12 +415,17 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="psweep-psweep-gather-calc-templates">
-<h1>psweep.psweep.gather_calc_templates<a class="headerlink" href="#psweep-psweep-gather-calc-templates" title="Link to this heading">#</a></h1>
+  <section id="psweep-psweep-filter-cols">
+<h1>psweep.psweep.filter_cols<a class="headerlink" href="#psweep-psweep-filter-cols" title="Link to this heading">#</a></h1>
 <dl class="py function">
-<dt class="sig sig-object py" id="psweep.psweep.gather_calc_templates">
-<span class="sig-prename descclassname"><span class="pre">psweep.psweep.</span></span><span class="sig-name descname"><span class="pre">gather_calc_templates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">calc_templ_dir</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/psweep/psweep.html#gather_calc_templates"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psweep.psweep.gather_calc_templates" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dt class="sig sig-object py" id="psweep.psweep.filter_cols">
+<span class="sig-prename descclassname"><span class="pre">psweep.psweep.</span></span><span class="sig-name descname"><span class="pre">filter_cols</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cols</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'pset'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/psweep/psweep.html#filter_cols"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psweep.psweep.filter_cols" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span></p>
+</dd>
+</dl>
+</dd></dl>
 
 </section>
 
@@ -455,20 +460,20 @@ document.write(`
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="psweep.psweep.func_wrapper.html"
+       href="psweep.psweep.file_write.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">psweep.psweep.func_wrapper</p>
+        <p class="prev-next-title">psweep.psweep.file_write</p>
       </div>
     </a>
     <a class="right-next"
-       href="psweep.psweep.gather_machines.html"
+       href="psweep.psweep.filter_params_dup_hash.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">psweep.psweep.gather_machines</p>
+        <p class="prev-next-title">psweep.psweep.filter_params_dup_hash</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -488,7 +493,7 @@ document.write(`
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#psweep.psweep.gather_calc_templates"><code class="docutils literal notranslate"><span class="pre">gather_calc_templates()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#psweep.psweep.filter_cols"><code class="docutils literal notranslate"><span class="pre">filter_cols()</span></code></a></li>
 </ul>
   </nav></div>
 
