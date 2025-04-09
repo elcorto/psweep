@@ -196,7 +196,6 @@
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.PANDAS_TIME_UNIT.html">psweep.psweep.PANDAS_TIME_UNIT</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.PSET_HASH_ALG.html">psweep.psweep.PSET_HASH_ALG</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.PsweepHashError.html">psweep.psweep.PsweepHashError</a></li>
-<li class="toctree-l3"><a class="reference internal" href="psweep.psweep._get_col_filter.html">psweep.psweep._get_col_filter</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.capture_logs_wrapper.html">psweep.psweep.capture_logs_wrapper</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.check_calc_dir.html">psweep.psweep.check_calc_dir</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.df_filter_conds.html">psweep.psweep.df_filter_conds</a></li>
@@ -206,7 +205,6 @@
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.df_write.html">psweep.psweep.df_write</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.file_read.html">psweep.psweep.file_read</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.file_write.html">psweep.psweep.file_write</a></li>
-<li class="toctree-l3"><a class="reference internal" href="psweep.psweep.filter_cols.html">psweep.psweep.filter_cols</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.filter_params_dup_hash.html">psweep.psweep.filter_params_dup_hash</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.filter_params_unique.html">psweep.psweep.filter_params_unique</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.flatten.html">psweep.psweep.flatten</a></li>
@@ -419,11 +417,8 @@ document.write(`
 <h1>psweep.psweep.pset_hash<a class="headerlink" href="#psweep-psweep-pset-hash" title="Link to this heading">#</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="psweep.psweep.pset_hash">
-<span class="sig-prename descclassname"><span class="pre">psweep.psweep.</span></span><span class="sig-name descname"><span class="pre">pset_hash</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dct</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'sha1'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raise_error</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwds</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/psweep/psweep.html#pset_hash"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psweep.psweep.pset_hash" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">psweep.psweep.</span></span><span class="sig-name descname"><span class="pre">pset_hash</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dct</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'sha1'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raise_error</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_special_cols</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_prefix_cols</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_postfix_cols</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/psweep/psweep.html#pset_hash"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psweep.psweep.pset_hash" title="Link to this definition">#</a></dt>
 <dd><p>Reproducible hash of a dict for usage in database (hash of a <cite>pset</cite>).</p>
-<p>We implement the convention to ignore prefix fields (book-keeping) and
-postfix fields (results). You can pass <cite>skip_prefix_cols</cite> /
-<cite>skip_postfix_cols</cite> to change that (see <a class="reference internal" href="psweep.psweep._get_col_filter.html#psweep.psweep._get_col_filter" title="psweep.psweep._get_col_filter"><code class="xref py py-func docutils literal notranslate"><span class="pre">_get_col_filter()</span></code></a>).</p>
 </dd></dl>
 
 </section>

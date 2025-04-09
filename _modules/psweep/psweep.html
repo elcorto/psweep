@@ -195,7 +195,6 @@
 <li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.PANDAS_TIME_UNIT.html">psweep.psweep.PANDAS_TIME_UNIT</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.PSET_HASH_ALG.html">psweep.psweep.PSET_HASH_ALG</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.PsweepHashError.html">psweep.psweep.PsweepHashError</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep._get_col_filter.html">psweep.psweep._get_col_filter</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.capture_logs_wrapper.html">psweep.psweep.capture_logs_wrapper</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.check_calc_dir.html">psweep.psweep.check_calc_dir</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.df_filter_conds.html">psweep.psweep.df_filter_conds</a></li>
@@ -205,7 +204,6 @@
 <li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.df_write.html">psweep.psweep.df_write</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.file_read.html">psweep.psweep.file_read</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.file_write.html">psweep.psweep.file_write</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.filter_cols.html">psweep.psweep.filter_cols</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.filter_params_dup_hash.html">psweep.psweep.filter_params_dup_hash</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.filter_params_unique.html">psweep.psweep.filter_params_unique</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.flatten.html">psweep.psweep.flatten</a></li>
@@ -448,7 +446,7 @@ document.write(`
 <div class="viewcode-block" id="itr">
 <a class="viewcode-back" href="../../generated/api/psweep.psweep.itr.html#psweep.psweep.itr">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">itr</span><span class="p">(</span><span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Wrap `func` to allow passing args not as sequence.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Wrap `func` to allow pasing args not as sequence.</span>
 
 <span class="sd">    Assuming ``func()`` requires a sequence as input: ``func([a,b,c])``, allow</span>
 <span class="sd">    passing ``func(a,b,c)``.</span>
@@ -543,42 +541,17 @@ document.write(`
 
 
 
-<div class="viewcode-block" id="_get_col_filter">
-<a class="viewcode-back" href="../../generated/api/psweep.psweep._get_col_filter.html#psweep.psweep._get_col_filter">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">_get_col_filter</span><span class="p">(</span><span class="n">skip_prefix_cols</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">skip_postfix_cols</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Implement the package-wide prefix/postfix default convention.</span>
-
-<span class="sd">    By default, we ignore prefix fields (book-keeping) and postfix fields</span>
-<span class="sd">    (results).</span>
-
-<span class="sd">    All functions affected can still pass in `skip_prefix_cols` and</span>
-<span class="sd">    `skip_postfix_cols` to change that.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">skip_prefix_cols</span> <span class="ow">and</span> <span class="n">skip_postfix_cols</span><span class="p">:</span>
-        <span class="k">return</span> <span class="k">lambda</span> <span class="n">key</span><span class="p">:</span> <span class="ow">not</span> <span class="p">(</span><span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">key</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">))</span>
-    <span class="k">elif</span> <span class="n">skip_prefix_cols</span><span class="p">:</span>
-        <span class="k">return</span> <span class="k">lambda</span> <span class="n">key</span><span class="p">:</span> <span class="ow">not</span> <span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">skip_postfix_cols</span><span class="p">:</span>
-        <span class="k">return</span> <span class="k">lambda</span> <span class="n">key</span><span class="p">:</span> <span class="ow">not</span> <span class="n">key</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="k">lambda</span> <span class="n">key</span><span class="p">:</span> <span class="kc">True</span></div>
-
-
-
 <div class="viewcode-block" id="pset_hash">
 <a class="viewcode-back" href="../../generated/api/psweep.psweep.pset_hash.html#psweep.psweep.pset_hash">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">pset_hash</span><span class="p">(</span>
     <span class="n">dct</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
     <span class="n">method</span><span class="o">=</span><span class="n">PSET_HASH_ALG</span><span class="p">,</span>
     <span class="n">raise_error</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-    <span class="o">**</span><span class="n">kwds</span><span class="p">,</span>
+    <span class="n">skip_special_cols</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">skip_prefix_cols</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">skip_postfix_cols</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Reproducible hash of a dict for usage in database (hash of a `pset`).</span>
-
-<span class="sd">    We implement the convention to ignore prefix fields (book-keeping) and</span>
-<span class="sd">    postfix fields (results). You can pass `skip_prefix_cols` /</span>
-<span class="sd">    `skip_postfix_cols` to change that (see :func:`_get_col_filter`).</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Reproducible hash of a dict for usage in database (hash of a `pset`).&quot;&quot;&quot;</span>
 
     <span class="c1"># We target &quot;reproducible&quot; hashes, i.e. not what Python&#39;s ``hash`` function</span>
     <span class="c1"># does, for instance for two interpreter sessions::</span>
@@ -615,8 +588,25 @@ document.write(`
     <span class="c1"># [2] https://ourpython.com/python/deterministic-recursive-hashing-in-python</span>
     <span class="c1"># [3] https://stackoverflow.com/a/52175075</span>
     <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dct</span><span class="p">,</span> <span class="nb">dict</span><span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dct</span><span class="si">=}</span><span class="s2"> is not a dict but </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">dct</span><span class="p">)</span><span class="si">=}</span><span class="s2">&quot;</span>
-    <span class="n">filt</span> <span class="o">=</span> <span class="n">_get_col_filter</span><span class="p">(</span><span class="o">**</span><span class="n">kwds</span><span class="p">)</span>
-    <span class="n">_dct</span> <span class="o">=</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="n">val</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">dct</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">filt</span><span class="p">(</span><span class="n">key</span><span class="p">)}</span>
+    <span class="k">if</span> <span class="n">skip_special_cols</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+            <span class="s2">&quot;skip_special_cols is deprecated, use skip_prefix_cols&quot;</span><span class="p">,</span>
+            <span class="ne">DeprecationWarning</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">skip_prefix_cols</span> <span class="o">=</span> <span class="n">skip_special_cols</span>
+    <span class="n">skip_cols_test</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">skip_prefix_cols</span> <span class="ow">and</span> <span class="n">skip_postfix_cols</span><span class="p">:</span>
+        <span class="n">skip_cols_test</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">key</span><span class="p">:</span> <span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">key</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">skip_prefix_cols</span><span class="p">:</span>
+        <span class="n">skip_cols_test</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">key</span><span class="p">:</span> <span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">skip_postfix_cols</span><span class="p">:</span>
+        <span class="n">skip_cols_test</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">key</span><span class="p">:</span> <span class="n">key</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">skip_cols_test</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">_dct</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">key</span><span class="p">:</span> <span class="n">val</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">dct</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">skip_cols_test</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">_dct</span> <span class="o">=</span> <span class="n">dct</span>
     <span class="c1"># joblib can hash &quot;anything&quot; so we didn&#39;t come up with an input that</span>
     <span class="c1"># actually fails to hash. As such, TypeError is just a guess here. But</span>
     <span class="c1"># still we don&#39;t catch ValueError raised when an invalid hash_name is</span>
@@ -1084,21 +1074,6 @@ document.write(`
 
 
 
-<div class="viewcode-block" id="filter_cols">
-<a class="viewcode-back" href="../../generated/api/psweep.psweep.filter_cols.html#psweep.psweep.filter_cols">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">filter_cols</span><span class="p">(</span><span class="n">cols</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">kind</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;pset&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-    <span class="k">if</span> <span class="n">kind</span> <span class="o">==</span> <span class="s2">&quot;pset&quot;</span><span class="p">:</span>
-        <span class="n">filt</span> <span class="o">=</span> <span class="n">_get_col_filter</span><span class="p">(</span><span class="n">skip_prefix_cols</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">skip_postfix_cols</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">kind</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;pre&quot;</span><span class="p">,</span> <span class="s2">&quot;prefix&quot;</span><span class="p">]:</span>
-        <span class="n">filt</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">key</span><span class="p">:</span> <span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">kind</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;post&quot;</span><span class="p">,</span> <span class="s2">&quot;postfix&quot;</span><span class="p">]:</span>
-        <span class="n">filt</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">key</span><span class="p">:</span> <span class="n">key</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">kind</span><span class="si">=}</span><span class="s2"> not supported&quot;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="n">filt</span><span class="p">,</span> <span class="n">cols</span><span class="p">))</span></div>
-
-
-
 <span class="c1"># -----------------------------------------------------------------------------</span>
 <span class="c1"># building params</span>
 <span class="c1"># -----------------------------------------------------------------------------</span>
@@ -1228,11 +1203,7 @@ document.write(`
 <span class="k">def</span><span class="w"> </span><span class="nf">filter_params_unique</span><span class="p">(</span><span class="n">params</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">dict</span><span class="p">],</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Reduce params to unique psets.</span>
 
-<span class="sd">    Use ``pset[&quot;_pset_hash&quot;]`` if present, else calculate hash on the fly.</span>
-
-<span class="sd">    We implement the convention to ignore prefix fields (book-keeping) and</span>
-<span class="sd">    postfix fields (results). You can pass `skip_prefix_cols` /</span>
-<span class="sd">    `skip_postfix_cols` to change that (see :func:`_get_col_filter`).</span>
+<span class="sd">    Use pset[&quot;_pset_hash&quot;]  if present, else calculate hash on the fly.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -1253,11 +1224,7 @@ document.write(`
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return params with psets whose hash is not in `hashes`.</span>
 
-<span class="sd">    Use ``pset[&quot;_pset_hash&quot;]`` if present, else calculate hash on the fly.</span>
-
-<span class="sd">    We implement the convention to ignore prefix fields (book-keeping) and</span>
-<span class="sd">    postfix fields (results). You can pass `skip_prefix_cols` /</span>
-<span class="sd">    `skip_postfix_cols` to change that (see :func:`_get_col_filter`).</span>
+<span class="sd">    Use pset[&quot;_pset_hash&quot;]  if present, else calculate hash on the fly.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -1279,7 +1246,6 @@ document.write(`
     <span class="n">vary_labels</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">vary_label_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;_vary&quot;</span><span class="p">,</span>
     <span class="n">skip_dups</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-    <span class="o">**</span><span class="n">kwds</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Helper to create a specific param sampling pattern.</span>
@@ -1287,28 +1253,9 @@ document.write(`
 <span class="sd">    Vary params in a &quot;star&quot; pattern (and not a full pgrid) around constant</span>
 <span class="sd">    values (middle of the &quot;star&quot;).</span>
 
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    const</span>
-<span class="sd">        constant params</span>
-<span class="sd">    vary</span>
-<span class="sd">        list of plists</span>
-<span class="sd">    vary_labels</span>
-<span class="sd">        database col names for parameters in `vary`</span>
-<span class="sd">    skip_dups</span>
-<span class="sd">        filter duplicate psets (see Notes below)</span>
-<span class="sd">    kwds</span>
-<span class="sd">        passed to :func:`filter_params_unique`</span>
-
-<span class="sd">    Notes</span>
-<span class="sd">    -----</span>
-<span class="sd">    `skip_dups`: When creating a star pattern, duplicate psets can occur. By</span>
-<span class="sd">    default try to filter them out (using :func:`filter_params_unique`) but</span>
-<span class="sd">    ignore hash calculation errors and return non-reduced params in that case.</span>
-
-<span class="sd">    We implement the convention to ignore prefix fields (book-keeping) and</span>
-<span class="sd">    postfix fields (results). You can pass `skip_prefix_cols` /</span>
-<span class="sd">    `skip_postfix_cols` to change that (see :func:`_get_col_filter`).</span>
+<span class="sd">    When doing that, duplicate psets can occur. By default try to filter them</span>
+<span class="sd">    out (using :func:`filter_params_unique`) but ignore hash calculation errors</span>
+<span class="sd">    and return non-reduced params in that case.</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
@@ -1375,7 +1322,12 @@ document.write(`
 
     <span class="k">if</span> <span class="n">skip_dups</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">filter_params_unique</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">raise_error</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">filter_params_unique</span><span class="p">(</span>
+                <span class="n">params</span><span class="p">,</span>
+                <span class="n">raise_error</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">skip_prefix_cols</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">skip_postfix_cols</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="p">)</span>
         <span class="k">except</span> <span class="n">PsweepHashError</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">params</span>
     <span class="k">else</span><span class="p">:</span>
@@ -1459,7 +1411,7 @@ document.write(`
 <span class="sd">        However, it is still a useful approach for many utility scripts.</span>
 
 <span class="sd">    So if users rely on playing with sys.stdout/stderr in func(), then they</span>
-<span class="sd">    should not use this feature and take care of logging themselves.</span>
+<span class="sd">    sould not use this feature and take care of logging themselves.</span>
 
 <span class="sd">    [1] https://docs.python.org/3/library/contextlib.html#contextlib.redirect_stdout</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -1567,16 +1519,6 @@ document.write(`
 <span class="sd">    -------</span>
 <span class="sd">    df</span>
 <span class="sd">        The database build from `params`.</span>
-
-<span class="sd">    Notes</span>
-<span class="sd">    -----</span>
-<span class="sd">    prefix/postfix default behavior: The package-wide default is defined in</span>
-<span class="sd">    :func:`_get_col_filter`. All affected functions can change their runtime</span>
-<span class="sd">    behavior via setting `skip_prefix_cols` and `skip_prefix_cols`, when used</span>
-<span class="sd">    individually. Here this affects :func:`pset_hash` and</span>
-<span class="sd">    :func:`filter_params_dup_hash`. However we do *not* offer the option to set</span>
-<span class="sd">    those in order not complexify the API too much. This may change as our</span>
-<span class="sd">    requirements evolve.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># Don&#39;t in-place alter dicts in params we get as input.</span>

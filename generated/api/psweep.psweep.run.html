@@ -196,7 +196,6 @@
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.PANDAS_TIME_UNIT.html">psweep.psweep.PANDAS_TIME_UNIT</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.PSET_HASH_ALG.html">psweep.psweep.PSET_HASH_ALG</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.PsweepHashError.html">psweep.psweep.PsweepHashError</a></li>
-<li class="toctree-l3"><a class="reference internal" href="psweep.psweep._get_col_filter.html">psweep.psweep._get_col_filter</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.capture_logs_wrapper.html">psweep.psweep.capture_logs_wrapper</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.check_calc_dir.html">psweep.psweep.check_calc_dir</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.df_filter_conds.html">psweep.psweep.df_filter_conds</a></li>
@@ -206,7 +205,6 @@
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.df_write.html">psweep.psweep.df_write</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.file_read.html">psweep.psweep.file_read</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.file_write.html">psweep.psweep.file_write</a></li>
-<li class="toctree-l3"><a class="reference internal" href="psweep.psweep.filter_cols.html">psweep.psweep.filter_cols</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.filter_params_dup_hash.html">psweep.psweep.filter_params_dup_hash</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.filter_params_unique.html">psweep.psweep.filter_params_unique</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.flatten.html">psweep.psweep.flatten</a></li>
@@ -478,14 +476,6 @@ text, e.g. <code class="docutils literal notranslate"><span class="pre">print()<
 <dd class="field-odd"><p><em>df</em> – The database build from <cite>params</cite>.</p>
 </dd>
 </dl>
-<p class="rubric">Notes</p>
-<p>prefix/postfix default behavior: The package-wide default is defined in
-<a class="reference internal" href="psweep.psweep._get_col_filter.html#psweep.psweep._get_col_filter" title="psweep.psweep._get_col_filter"><code class="xref py py-func docutils literal notranslate"><span class="pre">_get_col_filter()</span></code></a>. All affected functions can change their runtime
-behavior via setting <cite>skip_prefix_cols</cite> and <cite>skip_prefix_cols</cite>, when used
-individually. Here this affects <a class="reference internal" href="psweep.psweep.pset_hash.html#psweep.psweep.pset_hash" title="psweep.psweep.pset_hash"><code class="xref py py-func docutils literal notranslate"><span class="pre">pset_hash()</span></code></a> and
-<a class="reference internal" href="psweep.psweep.filter_params_dup_hash.html#psweep.psweep.filter_params_dup_hash" title="psweep.psweep.filter_params_dup_hash"><code class="xref py py-func docutils literal notranslate"><span class="pre">filter_params_dup_hash()</span></code></a>. However we do <em>not</em> offer the option to set
-those in order not complexify the API too much. This may change as our
-requirements evolve.</p>
 </dd></dl>
 
 </section>

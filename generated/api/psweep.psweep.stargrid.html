@@ -196,7 +196,6 @@
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.PANDAS_TIME_UNIT.html">psweep.psweep.PANDAS_TIME_UNIT</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.PSET_HASH_ALG.html">psweep.psweep.PSET_HASH_ALG</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.PsweepHashError.html">psweep.psweep.PsweepHashError</a></li>
-<li class="toctree-l3"><a class="reference internal" href="psweep.psweep._get_col_filter.html">psweep.psweep._get_col_filter</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.capture_logs_wrapper.html">psweep.psweep.capture_logs_wrapper</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.check_calc_dir.html">psweep.psweep.check_calc_dir</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.df_filter_conds.html">psweep.psweep.df_filter_conds</a></li>
@@ -206,7 +205,6 @@
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.df_write.html">psweep.psweep.df_write</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.file_read.html">psweep.psweep.file_read</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.file_write.html">psweep.psweep.file_write</a></li>
-<li class="toctree-l3"><a class="reference internal" href="psweep.psweep.filter_cols.html">psweep.psweep.filter_cols</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.filter_params_dup_hash.html">psweep.psweep.filter_params_dup_hash</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.filter_params_unique.html">psweep.psweep.filter_params_unique</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.flatten.html">psweep.psweep.flatten</a></li>
@@ -419,31 +417,18 @@ document.write(`
 <h1>psweep.psweep.stargrid<a class="headerlink" href="#psweep-psweep-stargrid" title="Link to this heading">#</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="psweep.psweep.stargrid">
-<span class="sig-prename descclassname"><span class="pre">psweep.psweep.</span></span><span class="sig-name descname"><span class="pre">stargrid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">const</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vary</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vary_labels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vary_label_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'_vary'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_dups</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwds</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/psweep/psweep.html#stargrid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psweep.psweep.stargrid" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">psweep.psweep.</span></span><span class="sig-name descname"><span class="pre">stargrid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">const</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vary</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vary_labels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vary_label_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'_vary'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_dups</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/psweep/psweep.html#stargrid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psweep.psweep.stargrid" title="Link to this definition">#</a></dt>
 <dd><p>Helper to create a specific param sampling pattern.</p>
 <p>Vary params in a “star” pattern (and not a full pgrid) around constant
 values (middle of the “star”).</p>
+<p>When doing that, duplicate psets can occur. By default try to filter them
+out (using <a class="reference internal" href="psweep.psweep.filter_params_unique.html#psweep.psweep.filter_params_unique" title="psweep.psweep.filter_params_unique"><code class="xref py py-func docutils literal notranslate"><span class="pre">filter_params_unique()</span></code></a>) but ignore hash calculation errors
+and return non-reduced params in that case.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>const</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></span>) – constant params</p></li>
-<li><p><strong>vary</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>]]</span>) – list of plists</p></li>
-<li><p><strong>vary_labels</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span>) – database col names for parameters in <cite>vary</cite></p></li>
-<li><p><strong>skip_dups</strong> – filter duplicate psets (see Notes below)</p></li>
-<li><p><strong>kwds</strong> – passed to <a class="reference internal" href="psweep.psweep.filter_params_unique.html#psweep.psweep.filter_params_unique" title="psweep.psweep.filter_params_unique"><code class="xref py py-func docutils literal notranslate"><span class="pre">filter_params_unique()</span></code></a></p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>]</span></p>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>]</span></p>
 </dd>
 </dl>
-<p class="rubric">Notes</p>
-<p><cite>skip_dups</cite>: When creating a star pattern, duplicate psets can occur. By
-default try to filter them out (using <a class="reference internal" href="psweep.psweep.filter_params_unique.html#psweep.psweep.filter_params_unique" title="psweep.psweep.filter_params_unique"><code class="xref py py-func docutils literal notranslate"><span class="pre">filter_params_unique()</span></code></a>) but
-ignore hash calculation errors and return non-reduced params in that case.</p>
-<p>We implement the convention to ignore prefix fields (book-keeping) and
-postfix fields (results). You can pass <cite>skip_prefix_cols</cite> /
-<cite>skip_postfix_cols</cite> to change that (see <a class="reference internal" href="psweep.psweep._get_col_filter.html#psweep.psweep._get_col_filter" title="psweep.psweep._get_col_filter"><code class="xref py py-func docutils literal notranslate"><span class="pre">_get_col_filter()</span></code></a>).</p>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">psweep</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ps</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">const</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">77</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>

@@ -23,7 +23,6 @@ psweep
    PANDAS_TIME_UNIT
    PSET_HASH_ALG
    PsweepHashError
-   _get_col_filter
    capture_logs_wrapper
    check_calc_dir
    df_filter_conds
@@ -33,7 +32,6 @@ psweep
    df_write
    file_read
    file_write
-   filter_cols
    filter_params_dup_hash
    filter_params_unique
    flatten

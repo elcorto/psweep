@@ -196,7 +196,6 @@
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.PANDAS_TIME_UNIT.html">psweep.psweep.PANDAS_TIME_UNIT</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.PSET_HASH_ALG.html">psweep.psweep.PSET_HASH_ALG</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.PsweepHashError.html">psweep.psweep.PsweepHashError</a></li>
-<li class="toctree-l3"><a class="reference internal" href="psweep.psweep._get_col_filter.html">psweep.psweep._get_col_filter</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.capture_logs_wrapper.html">psweep.psweep.capture_logs_wrapper</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.check_calc_dir.html">psweep.psweep.check_calc_dir</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.df_filter_conds.html">psweep.psweep.df_filter_conds</a></li>
@@ -206,7 +205,6 @@
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.df_write.html">psweep.psweep.df_write</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.file_read.html">psweep.psweep.file_read</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.file_write.html">psweep.psweep.file_write</a></li>
-<li class="toctree-l3"><a class="reference internal" href="psweep.psweep.filter_cols.html">psweep.psweep.filter_cols</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.filter_params_dup_hash.html">psweep.psweep.filter_params_dup_hash</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.filter_params_unique.html">psweep.psweep.filter_params_unique</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.flatten.html">psweep.psweep.flatten</a></li>
@@ -430,37 +428,31 @@ document.write(`
 <tr class="row-odd"><td><p><a class="reference internal" href="psweep.psweep.PsweepHashError.html#psweep.psweep.PsweepHashError" title="psweep.psweep.PsweepHashError"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PsweepHashError</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="psweep.psweep._get_col_filter.html#psweep.psweep._get_col_filter" title="psweep.psweep._get_col_filter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_get_col_filter</span></code></a>([skip_prefix_cols, ...])</p></td>
-<td><p>Implement the package-wide prefix/postfix default convention.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="psweep.psweep.capture_logs_wrapper.html#psweep.psweep.capture_logs_wrapper" title="psweep.psweep.capture_logs_wrapper"><code class="xref py py-obj docutils literal notranslate"><span class="pre">capture_logs_wrapper</span></code></a>(pset, func, capture_logs)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="psweep.psweep.capture_logs_wrapper.html#psweep.psweep.capture_logs_wrapper" title="psweep.psweep.capture_logs_wrapper"><code class="xref py py-obj docutils literal notranslate"><span class="pre">capture_logs_wrapper</span></code></a>(pset, func, capture_logs)</p></td>
 <td><p>Capture and redirect stdout and stderr produced in func().</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="psweep.psweep.check_calc_dir.html#psweep.psweep.check_calc_dir" title="psweep.psweep.check_calc_dir"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_calc_dir</span></code></a>(calc_dir, df)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="psweep.psweep.check_calc_dir.html#psweep.psweep.check_calc_dir" title="psweep.psweep.check_calc_dir"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_calc_dir</span></code></a>(calc_dir, df)</p></td>
 <td><p>Check calc dir for consistency with database.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="psweep.psweep.df_filter_conds.html#psweep.psweep.df_filter_conds" title="psweep.psweep.df_filter_conds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df_filter_conds</span></code></a>(df, conds[, op])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="psweep.psweep.df_filter_conds.html#psweep.psweep.df_filter_conds" title="psweep.psweep.df_filter_conds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df_filter_conds</span></code></a>(df, conds[, op])</p></td>
 <td><p>Filter DataFrame using bool arrays/Series/DataFrames in <cite>conds</cite>.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="psweep.psweep.df_print.html#psweep.psweep.df_print" title="psweep.psweep.df_print"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df_print</span></code></a>(df[, index, special_cols, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="psweep.psweep.df_print.html#psweep.psweep.df_print" title="psweep.psweep.df_print"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df_print</span></code></a>(df[, index, special_cols, ...])</p></td>
 <td><p>Print DataFrame, by default without the index and prefix columns such as <cite>_pset_id</cite>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="psweep.psweep.df_read.html#psweep.psweep.df_read" title="psweep.psweep.df_read"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df_read</span></code></a>(fn[, fmt])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="psweep.psweep.df_read.html#psweep.psweep.df_read" title="psweep.psweep.df_read"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df_read</span></code></a>(fn[, fmt])</p></td>
 <td><p>Read DataFrame from file <cite>fn</cite>.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="psweep.psweep.df_to_json.html#psweep.psweep.df_to_json" title="psweep.psweep.df_to_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df_to_json</span></code></a>(df, **kwds)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="psweep.psweep.df_to_json.html#psweep.psweep.df_to_json" title="psweep.psweep.df_to_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df_to_json</span></code></a>(df, **kwds)</p></td>
 <td><p>Like <cite>df.to_json</cite> but with defaults for orient, date_unit, date_format, double_precision.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="psweep.psweep.df_write.html#psweep.psweep.df_write" title="psweep.psweep.df_write"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df_write</span></code></a>(fn, df[, fmt])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="psweep.psweep.df_write.html#psweep.psweep.df_write" title="psweep.psweep.df_write"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df_write</span></code></a>(fn, df[, fmt])</p></td>
 <td><p>Write DataFrame to disk.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="psweep.psweep.file_read.html#psweep.psweep.file_read" title="psweep.psweep.file_read"><code class="xref py py-obj docutils literal notranslate"><span class="pre">file_read</span></code></a>(fn)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="psweep.psweep.file_read.html#psweep.psweep.file_read" title="psweep.psweep.file_read"><code class="xref py py-obj docutils literal notranslate"><span class="pre">file_read</span></code></a>(fn)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="psweep.psweep.file_write.html#psweep.psweep.file_write" title="psweep.psweep.file_write"><code class="xref py py-obj docutils literal notranslate"><span class="pre">file_write</span></code></a>(fn, txt[, mode])</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="psweep.psweep.filter_cols.html#psweep.psweep.filter_cols" title="psweep.psweep.filter_cols"><code class="xref py py-obj docutils literal notranslate"><span class="pre">filter_cols</span></code></a>(cols[, kind])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="psweep.psweep.file_write.html#psweep.psweep.file_write" title="psweep.psweep.file_write"><code class="xref py py-obj docutils literal notranslate"><span class="pre">file_write</span></code></a>(fn, txt[, mode])</p></td>
 <td><p></p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="psweep.psweep.filter_params_dup_hash.html#psweep.psweep.filter_params_dup_hash" title="psweep.psweep.filter_params_dup_hash"><code class="xref py py-obj docutils literal notranslate"><span class="pre">filter_params_dup_hash</span></code></a>(params, hashes, **kwds)</p></td>
@@ -509,7 +501,7 @@ document.write(`
 <td><p></p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="psweep.psweep.itr.html#psweep.psweep.itr" title="psweep.psweep.itr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">itr</span></code></a>(func)</p></td>
-<td><p>Wrap <cite>func</cite> to allow passing args not as sequence.</p></td>
+<td><p>Wrap <cite>func</cite> to allow pasing args not as sequence.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="psweep.psweep.itr2params.html#psweep.psweep.itr2params" title="psweep.psweep.itr2params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">itr2params</span></code></a>(loops)</p></td>
 <td><p>Transform the (possibly nested) result of a loop over plists (or whatever has been used to create psets) to a proper list of psets by flattening and merging dicts.</p></td>
@@ -538,7 +530,7 @@ document.write(`
 <tr class="row-odd"><td><p><a class="reference internal" href="psweep.psweep.prep_batch.html#psweep.psweep.prep_batch" title="psweep.psweep.prep_batch"><code class="xref py py-obj docutils literal notranslate"><span class="pre">prep_batch</span></code></a>(params, *[, calc_templ_dir, ...])</p></td>
 <td><p>Write files based on templates.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="psweep.psweep.pset_hash.html#psweep.psweep.pset_hash" title="psweep.psweep.pset_hash"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pset_hash</span></code></a>(dct[, method, raise_error])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="psweep.psweep.pset_hash.html#psweep.psweep.pset_hash" title="psweep.psweep.pset_hash"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pset_hash</span></code></a>(dct[, method, raise_error, ...])</p></td>
 <td><p>Reproducible hash of a dict for usage in database (hash of a <cite>pset</cite>).</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="psweep.psweep.run.html#psweep.psweep.run" title="psweep.psweep.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code></a>(func, params[, df, poolsize, ...])</p></td>
