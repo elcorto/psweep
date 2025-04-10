@@ -301,8 +301,12 @@ def test_simulate():
         assert df.equals(ps.df_read(dbfn))
         assert df_sim.equals(ps.df_read(dbfn_sim))
 
+        for col in df.columns:
+            assert df.iloc[:4][col].equals(df_sim.iloc[:4][col]), (
+                f"{df.iloc[:4][col]=}\n{df_sim.iloc[:4][col]=}"
+            )
         assert df.iloc[:4].equals(df_sim.iloc[:4])
-        assert np.isnan(df_sim.result_.values[-2:]).all()
+        assert pd.isna(df_sim.result_.values[-2:]).all()
 
         df2 = ps.run(func_a, params_sim, calc_dir=calc_dir)
         assert len(df2) == 6
@@ -1264,3 +1268,178 @@ def test_filter_cols():
         assert ps.filter_cols(cols, kind) == ["_foo"]
     for kind in ["post", "postfix"]:
         assert ps.filter_cols(cols, kind) == ["bar_"]
+
+
+@pytest.mark.parametrize("fill_value", [np.nan, pd.NA])
+def test_df_update_pset_cols(fill_value):
+    df = pd.DataFrame(dict(a=[1, 2.34], b=["xx", "yy"]), dtype=object)
+
+    # Add _pset_hash column if there is none since we call
+    # df_refresh_pset_hash().
+    ps.df_update_pset_cols(df, pset_cols=["a", "b"])
+    assert set(df.columns) == {"a", "b", "_pset_hash"}
+
+    ps.df_update_pset_cols(
+        df, pset_cols=["a", "b", "c"], fill_value=fill_value
+    )
+    assert (
+        ps.pset_hash(dict(a=1, b="xx", c=fill_value))
+        == df._pset_hash.values[0]
+    )
+    assert (
+        ps.pset_hash(dict(a=2.34, b="yy", c=fill_value))
+        == df._pset_hash.values[1]
+    )
+
+
+# Using pd.NA works. None and np.nan make pandas cast stuff, even though we
+# have dtype=object and try hard to prevent it from doing that.
+@pytest.mark.parametrize(
+    "na_val",
+    [
+        pd.NA,
+        pytest.param(None, marks=pytest.mark.xfail),
+        pytest.param(np.nan, marks=pytest.mark.xfail),
+    ],
+)
+def test_params_from_df(na_val):
+    params = ps.pgrid(
+        ps.plist(
+            "a",
+            [
+                1.23,
+                5,
+                na_val,
+                np.float32(1.23),
+                np.float64(1.23),
+                np.int64(123),
+                np.complex128(1.0, 3.0),
+            ],
+        ),
+        ps.plist(
+            "b",
+            [
+                None,
+                ##np.nan,
+                pd.NA,
+                np.sin,
+                "xx",
+                DummyClass,
+                DummyClass(),
+                dummy_func,
+                1.2,
+                33,
+                [],
+                (),
+                set(),
+                dict(),
+                [1, 2.0],
+                (1, 2),
+                set((1, 2, 3)),
+                dict(a=1, b=2),
+                [pd.NA, 1],
+                [None, 1],
+                [None, None],
+                [pd.NA, pd.NA],
+            ],
+        ),
+    )
+    df = ps.run(func=lambda pset: {}, params=params, save=False)
+    for idx, pset in enumerate(ps.params_from_df(df)):
+        assert df.loc[idx, "_pset_hash"] == ps.pset_hash(pset), (
+            f"{df.dtypes=}\n{pset=}"
+        )
+
+
+def test_run_skip_dups_add_row_by_hand():
+    params1 = ps.pgrid(
+        [zip(ps.plist("a", [1, 2, 3]), ps.plist("b", [None, np.sin, "xx"]))]
+    )
+    df1 = ps.run(func=lambda pset: {}, params=params1, save=False)
+    assert df1._pset_hash.values[0] == ps.pset_hash(dict(a=1, b=None))
+    assert df1._pset_hash.values[1] == ps.pset_hash(dict(a=2, b=np.sin))
+    assert df1._pset_hash.values[2] == ps.pset_hash(dict(a=3, b="xx"))
+
+    params2 = ps.pgrid(
+        [
+            zip(
+                ps.plist("a", [1, 2, 3, 4]),
+                ps.plist("b", [None, np.sin, "xx", 1.23]),
+                # Using None or np.nan as "missing" marker will cast the "c"
+                # column to float64, while pd.NA will perve the col's type.
+                ps.plist("c", [pd.NA] * 3 + [77]),
+            )
+        ]
+    )
+    df2 = ps.run(
+        func=lambda pset: {}, params=params2, save=False, skip_dups=True
+    )
+    assert len(df2) == 4
+    assert df2._pset_hash.values[0] == ps.pset_hash(dict(a=1, b=None, c=pd.NA))
+    assert df2._pset_hash.values[1] == ps.pset_hash(
+        dict(a=2, b=np.sin, c=pd.NA)
+    )
+    assert df2._pset_hash.values[2] == ps.pset_hash(dict(a=3, b="xx", c=pd.NA))
+    assert df2._pset_hash.values[3] == ps.pset_hash(dict(a=4, b=1.23, c=77))
+
+
+@pytest.mark.parametrize(
+    "na_val",
+    [
+        pd.NA,
+        None,
+        pytest.param(np.nan, marks=pytest.mark.xfail),
+    ],
+)
+def test_run_skip_dups_simulate_workflow(na_val):
+    params1 = ps.pgrid(
+        ps.plist("a", [1, 2, 3]), ps.plist("b", [None, np.sin, "xx"])
+    )
+    df1 = ps.run(
+        func=lambda pset: {}, params=params1, save=False, fill_value=na_val
+    )
+    assert params1 == ps.params_from_df(df1)
+
+    # Manually add column
+    ps.df_update_pset_cols(df1, pset_cols=["a", "b", "c"], fill_value=na_val)
+    assert pd.isna(df1.c).all()
+    assert all(x is na_val for x in df1.c)
+
+    # params extended with "c" column, now filled with na_val
+    params1_new = ps.params_from_df(df1)
+
+    # new params for second run
+    params_to_add = ps.pgrid(
+        ps.plist("a", [4, 5]),
+        ps.plist("b", [DummyClass, DummyClass()]),
+        ps.plist("c", [np.cos, 1.23]),
+    )
+
+    # Combine params. Using skip_dups=True, params1_new should be ignored. This
+    # works b/c in run(), df1 is updated first to also have a "c" column with
+    # na_val in it and df1._pset_hash is recalculated.
+    params2 = params1_new + params_to_add
+
+    df2 = ps.run(
+        func=lambda pset: {},
+        params=params2,
+        df=df1,
+        save=False,
+        skip_dups=True,
+        fill_value=na_val,
+    )
+    assert df2[: len(df1)].equals(df1)
+    assert pd.isna(df2[: len(df1)].c).all()
+    assert all(x is na_val for x in df2[: len(df1)].c)
+    assert params2 == ps.params_from_df(df2)
+
+
+def test_prefix_postfix_pset_names():
+    a = ps.plist("_a", [1, 2])
+    b = ps.plist("b_", [77, 88])
+    df = ps.run(
+        func=lambda pset: {"result": pset["_a"] + pset["b_"]},
+        params=ps.pgrid(a, b),
+        save=False,
+    )
+    assert df._pset_hash.values.tolist() == [ps.pset_hash({})] * 4
