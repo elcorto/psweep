@@ -656,6 +656,15 @@ def filter_cols(cols: Sequence[str], kind: str = "pset") -> Sequence[str]:
     return list(filter(filt, cols))
 
 
+def params_from_df(df):
+    params = []
+    for row in df[filter_cols(df.columns, kind="pset")].itertuples():
+        row_dct = row._asdict()
+        row_dct.pop("Index")
+        params.append(row_dct)
+    return params
+
+
 # -----------------------------------------------------------------------------
 # building params
 # -----------------------------------------------------------------------------
