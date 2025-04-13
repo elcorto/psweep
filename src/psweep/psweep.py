@@ -644,6 +644,47 @@ def df_filter_conds(
     return df[msk]
 
 
+# We don't pass **kwds down to pset_hash() as we do in other functions that use
+# it. This is inconsistent. However, this feature is very much unused anyway,
+# so maybe better remove it and enforce the default from _get_col_filter()
+# package-wide.
+def df_refresh_pset_hash(df: pd.DataFrame, copy: bool = False) -> pd.DataFrame:
+    """Add or update ``_pset_hash`` column."""
+    # itertuples preserves type, while iterrows doesn't (see iterrows
+    # docstring).
+    df_out = df.copy() if copy else df
+    hsh = []
+    for row in df.itertuples():
+        row_dct = row._asdict()
+        row_dct.pop("Index")
+        hsh.append(pset_hash(row_dct))
+    df_out["_pset_hash"] = hsh
+    return df_out
+
+
+def df_update_pset_cols(
+    df: pd.DataFrame,
+    pset_cols: Sequence["str"],
+    fill_value=pd.NA,
+    copy: bool = False,
+) -> pd.DataFrame:
+    """
+    Make sure that `df` has at least `pset_cols` columns. If not, add
+    missing columns, fill with `fill_value`. Always refresh ``_pset_hash``.
+    """
+    df_out = df.copy() if copy else df
+    old_pset_cols = set(filter_cols(df.columns, kind="pset"))
+    new_pset_cols = set(pset_cols)
+    assert len(new_pset_cols) >= len(old_pset_cols), (
+        f"{old_pset_cols=} {new_pset_cols=}: "
+        f"{len(new_pset_cols)=} < {len(old_pset_cols)=}"
+    )
+    if old_pset_cols != new_pset_cols:
+        for col in new_pset_cols - old_pset_cols:
+            df_out[col] = fill_value
+    return df_refresh_pset_hash(df_out, copy=False)
+
+
 def filter_cols(cols: Sequence[str], kind: str = "pset") -> Sequence[str]:
     if kind == "pset":
         filt = _get_col_filter(skip_prefix_cols=True, skip_postfix_cols=True)
