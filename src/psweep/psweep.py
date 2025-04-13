@@ -1079,6 +1079,7 @@ def run(
     git: bool = False,
     skip_dups: bool = False,
     capture_logs: str = None,
+    fill_value=pd.NA,
 ) -> pd.DataFrame:
     """
     Call `func` for each `pset` in `params`. Populate a DataFrame with rows
@@ -1140,6 +1141,12 @@ def run(
         column ``_logs``, file ``<calc_dir>/<pset_id>/logs.txt``, or both. If
         ``None`` then do nothing (default). Useful for capturing per-pset log
         text, e.g. ``print()`` calls in `func` will be captured.
+    fill_value
+        NA value used for missing values in the database DataFrame. ``np.nan``
+        causes problems (`pandas` casts types even when ``dtype=object``), so
+        we stick to ``pd.NA``. Note that we do not regard None as NA and try to
+        preserve it. This is not what ``pd.isna()`` does, so we might change
+        our stance if needed in the future.
 
     Returns
     -------
@@ -1186,7 +1193,7 @@ def run(
         if os.path.exists(database_fn):
             df = df_read(database_fn)
         else:
-            df = pd.DataFrame()
+            df = pd.DataFrame(dtype=object)
 
     if len(df) == 0:
         pset_seq_old = -1
@@ -1210,8 +1217,14 @@ def run(
     for pset in params:
         pset["_pset_hash"] = pset_hash(pset)
 
-    if skip_dups and len(df) > 0:
-        params = filter_params_dup_hash(params, df._pset_hash.values)
+    if len(df) > 0:
+        df = df_update_pset_cols(
+            df,
+            pset_cols=set(itertools.chain.from_iterable(params)),
+            fill_value=fill_value,
+        )
+        if skip_dups:
+            params = filter_params_dup_hash(params, df._pset_hash.values)
 
     run_id = get_uuid(existing=df._run_id.values if len(df) > 0 else [])
     pset_ids = get_many_uuids(
@@ -1250,7 +1263,33 @@ def run(
             futures = dask_client.map(func, params)
             results = dask_client.gather(futures)
 
-    df = pd.concat((df, pd.DataFrame(results)), sort=False, ignore_index=True)
+    df = pd.concat(
+        (df, pd.DataFrame(results, dtype=object)),
+        sort=False,
+        ignore_index=True,
+    )
+
+    # pd.concat() can convert pd.NA back to NaN, fix that. Prevent converting
+    # None values, which are also treated as NA by ps.isna().
+    def apply_func(x):
+        isna_result = pd.isna(x)
+        if hasattr(isna_result, "__len__"):
+            if len(x) == 0:
+                return x
+            else:
+                return (
+                    [fill_value] * len(x)
+                    if isna_result.all() and (not x == [None] * len(x))
+                    else x
+                )
+        else:
+            return fill_value if isna_result and (not x is None) else x
+
+    for col in df.columns:
+        df[col] = df[col].apply(apply_func)
+
+    # apply() changes dtype=object back to native types again, revert to object
+    df = df.astype(object)
 
     if save:
         df_write(database_fn, df)
