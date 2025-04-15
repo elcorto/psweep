@@ -1144,9 +1144,7 @@ def run(
     fill_value
         NA value used for missing values in the database DataFrame. ``np.nan``
         causes problems (`pandas` casts types even when ``dtype=object``), so
-        we stick to ``pd.NA``. Note that we do not regard None as NA and try to
-        preserve it. This is not what ``pd.isna()`` does, so we might change
-        our stance if needed in the future.
+        we stick to ``pd.NA``.
 
     Returns
     -------
@@ -1269,21 +1267,14 @@ def run(
         ignore_index=True,
     )
 
-    # pd.concat() can convert pd.NA back to NaN, fix that. Prevent converting
-    # None values, which are also treated as NA by ps.isna().
+    # pd.concat() can convert pd.NA back to NaN, fix that. If the element is
+    # not "scalar", then give up and don't touch it.
     def apply_func(x):
         isna_result = pd.isna(x)
         if hasattr(isna_result, "__len__"):
-            if len(x) == 0:
-                return x
-            else:
-                return (
-                    [fill_value] * len(x)
-                    if isna_result.all() and (not x == [None] * len(x))
-                    else x
-                )
+            return x
         else:
-            return fill_value if isna_result and (not x is None) else x
+            return fill_value if isna_result else x
 
     for col in df.columns:
         df[col] = df[col].apply(apply_func)

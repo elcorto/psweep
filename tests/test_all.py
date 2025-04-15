@@ -1319,7 +1319,7 @@ def test_params_from_df(na_val):
         ps.plist(
             "b",
             [
-                None,
+                ##None,
                 ##np.nan,
                 pd.NA,
                 np.sin,
@@ -1341,6 +1341,10 @@ def test_params_from_df(na_val):
                 [None, 1],
                 [None, None],
                 [pd.NA, pd.NA],
+                np.array([1.2]),
+                np.array([1.2, 4.5]),
+                np.random.rand(3, 4),
+                np.array([pd.NA] * 6).reshape(2, 3),
             ],
         ),
     )
@@ -1353,18 +1357,19 @@ def test_params_from_df(na_val):
 
 def test_run_skip_dups_add_row_by_hand():
     params1 = ps.pgrid(
-        [zip(ps.plist("a", [1, 2, 3]), ps.plist("b", [None, np.sin, "xx"]))]
+        [zip(ps.plist("a", [1, 2, 3]), ps.plist("b", [pd.NA, np.sin, "xx"]))]
     )
     df1 = ps.run(func=lambda pset: {}, params=params1, save=False)
-    assert df1._pset_hash.values[0] == ps.pset_hash(dict(a=1, b=None))
+    assert df1._pset_hash.values[0] == ps.pset_hash(dict(a=1, b=pd.NA))
     assert df1._pset_hash.values[1] == ps.pset_hash(dict(a=2, b=np.sin))
     assert df1._pset_hash.values[2] == ps.pset_hash(dict(a=3, b="xx"))
+    assert params1 == ps.params_from_df(df1)
 
     params2 = ps.pgrid(
         [
             zip(
                 ps.plist("a", [1, 2, 3, 4]),
-                ps.plist("b", [None, np.sin, "xx", 1.23]),
+                ps.plist("b", [pd.NA, np.sin, "xx", 1.23]),
                 # Using None or np.nan as "missing" marker will cast the "c"
                 # column to float64, while pd.NA will perve the col's type.
                 ps.plist("c", [pd.NA] * 3 + [77]),
@@ -1375,25 +1380,28 @@ def test_run_skip_dups_add_row_by_hand():
         func=lambda pset: {}, params=params2, save=False, skip_dups=True
     )
     assert len(df2) == 4
-    assert df2._pset_hash.values[0] == ps.pset_hash(dict(a=1, b=None, c=pd.NA))
+    assert df2._pset_hash.values[0] == ps.pset_hash(
+        dict(a=1, b=pd.NA, c=pd.NA)
+    )
     assert df2._pset_hash.values[1] == ps.pset_hash(
         dict(a=2, b=np.sin, c=pd.NA)
     )
     assert df2._pset_hash.values[2] == ps.pset_hash(dict(a=3, b="xx", c=pd.NA))
     assert df2._pset_hash.values[3] == ps.pset_hash(dict(a=4, b=1.23, c=77))
+    assert params2 == ps.params_from_df(df2)
 
 
 @pytest.mark.parametrize(
     "na_val",
     [
         pd.NA,
-        None,
+        pytest.param(None, marks=pytest.mark.xfail),
         pytest.param(np.nan, marks=pytest.mark.xfail),
     ],
 )
 def test_run_skip_dups_simulate_workflow(na_val):
     params1 = ps.pgrid(
-        ps.plist("a", [1, 2, 3]), ps.plist("b", [None, np.sin, "xx"])
+        ps.plist("a", [1, 2, 3]), ps.plist("b", [pd.NA, np.sin, "xx"])
     )
     df1 = ps.run(
         func=lambda pset: {}, params=params1, save=False, fill_value=na_val
