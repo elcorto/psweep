@@ -156,9 +156,6 @@ def _get_col_filter(skip_prefix_cols=True, skip_postfix_cols=True):
 
     By default, we ignore prefix fields (book-keeping) and postfix fields
     (results).
-
-    All functions affected can still pass in `skip_prefix_cols` and
-    `skip_postfix_cols` to change that.
     """
     if skip_prefix_cols and skip_postfix_cols:
         return lambda key: not (key.startswith("_") or key.endswith("_"))
@@ -644,10 +641,6 @@ def df_filter_conds(
     return df[msk]
 
 
-# We don't pass **kwds down to pset_hash() as we do in other functions that use
-# it. This is inconsistent. However, this feature is very much unused anyway,
-# so maybe better remove it and enforce the default from _get_col_filter()
-# package-wide.
 def df_refresh_pset_hash(df: pd.DataFrame, copy: bool = False) -> pd.DataFrame:
     """Add or update ``_pset_hash`` column."""
     # itertuples preserves type, while iterrows doesn't (see iterrows
@@ -818,45 +811,33 @@ def pgrid(plists: Sequence[Sequence[dict]]) -> Sequence[dict]:
     return itr2params(itertools.product(*plists))
 
 
-def filter_params_unique(params: Sequence[dict], **kwds) -> Sequence[dict]:
+def filter_params_unique(params: Sequence[dict]) -> Sequence[dict]:
     """Reduce params to unique psets.
 
     Use ``pset["_pset_hash"]`` if present, else calculate hash on the fly.
 
-    We implement the convention to ignore prefix fields (book-keeping) and
-    postfix fields (results). You can pass `skip_prefix_cols` /
-    `skip_postfix_cols` to change that (see :func:`_get_col_filter`).
-
     Parameters
     ----------
     params
-    kwds
-        passed to :func:`pset_hash`
     """
-    get_hash = lambda pset: pset.get("_pset_hash", pset_hash(pset, **kwds))
+    get_hash = lambda pset: pset.get("_pset_hash", pset_hash(pset))
     msk = np.unique([get_hash(pset) for pset in params], return_index=True)[1]
     return [params[ii] for ii in np.sort(msk)]
 
 
 def filter_params_dup_hash(
-    params: Sequence[dict], hashes: Sequence[str], **kwds
+    params: Sequence[dict], hashes: Sequence[str]
 ) -> Sequence[dict]:
     """Return params with psets whose hash is not in `hashes`.
 
     Use ``pset["_pset_hash"]`` if present, else calculate hash on the fly.
 
-    We implement the convention to ignore prefix fields (book-keeping) and
-    postfix fields (results). You can pass `skip_prefix_cols` /
-    `skip_postfix_cols` to change that (see :func:`_get_col_filter`).
-
     Parameters
     ----------
     params
     hashes
-    kwds
-        passed to :func:`pset_hash`
     """
-    get_hash = lambda pset: pset.get("_pset_hash", pset_hash(pset, **kwds))
+    get_hash = lambda pset: pset.get("_pset_hash", pset_hash(pset))
     return [pset for pset in params if get_hash(pset) not in hashes]
 
 
@@ -866,7 +847,6 @@ def stargrid(
     vary_labels: Sequence[str] = None,
     vary_label_col: str = "_vary",
     skip_dups=True,
-    **kwds,
 ) -> Sequence[dict]:
     """
     Helper to create a specific param sampling pattern.
@@ -884,18 +864,12 @@ def stargrid(
         database col names for parameters in `vary`
     skip_dups
         filter duplicate psets (see Notes below)
-    kwds
-        passed to :func:`filter_params_unique`
 
     Notes
     -----
     `skip_dups`: When creating a star pattern, duplicate psets can occur. By
     default try to filter them out (using :func:`filter_params_unique`) but
     ignore hash calculation errors and return non-reduced params in that case.
-
-    We implement the convention to ignore prefix fields (book-keeping) and
-    postfix fields (results). You can pass `skip_prefix_cols` /
-    `skip_postfix_cols` to change that (see :func:`_get_col_filter`).
 
     Examples
     --------
@@ -962,7 +936,7 @@ def stargrid(
 
     if skip_dups:
         try:
-            return filter_params_unique(params, raise_error=True, **kwds)
+            return filter_params_unique(params)
         except PsweepHashError:
             return params
     else:
@@ -1150,16 +1124,6 @@ def run(
     -------
     df
         The database build from `params`.
-
-    Notes
-    -----
-    prefix/postfix default behavior: The package-wide default is defined in
-    :func:`_get_col_filter`. All affected functions can change their runtime
-    behavior via setting `skip_prefix_cols` and `skip_prefix_cols`, when used
-    individually. Here this affects :func:`pset_hash` and
-    :func:`filter_params_dup_hash`. However we do *not* offer the option to set
-    those in order not complexify the API too much. This may change as our
-    requirements evolve.
     """
 
     # Don't in-place alter dicts in params we get as input.
