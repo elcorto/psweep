@@ -26,4 +26,4 @@ if __name__ == "__main__":
         "a",
         "result_",
     ]
-    ps.df_print(df[cols])
+    ps.df_print(df, cols=cols)
