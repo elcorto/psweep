@@ -1275,7 +1275,7 @@ def test_df_update_pset_cols(fill_value):
     df = pd.DataFrame(dict(a=[1, 2.34], b=["xx", "yy"]), dtype=object)
 
     # Add _pset_hash column if there is none since we call
-    # df_refresh_pset_hash().
+    # df_update_pset_hash().
     ps.df_update_pset_cols(df, pset_cols=["a", "b"])
     assert set(df.columns) == {"a", "b", "_pset_hash"}
 

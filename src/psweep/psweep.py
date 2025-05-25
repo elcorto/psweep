@@ -641,7 +641,7 @@ def df_filter_conds(
     return df[msk]
 
 
-def df_refresh_pset_hash(df: pd.DataFrame, copy: bool = False) -> pd.DataFrame:
+def df_update_pset_hash(df: pd.DataFrame, copy: bool = False) -> pd.DataFrame:
     """Add or update ``_pset_hash`` column."""
     # itertuples preserves type, while iterrows doesn't (see iterrows
     # docstring).
@@ -675,7 +675,7 @@ def df_update_pset_cols(
     if old_pset_cols != new_pset_cols:
         for col in new_pset_cols - old_pset_cols:
             df_out[col] = fill_value
-    return df_refresh_pset_hash(df_out, copy=False)
+    return df_update_pset_hash(df_out, copy=False)
 
 
 def filter_cols(cols: Sequence[str], kind: str = "pset") -> Sequence[str]:
