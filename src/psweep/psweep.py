@@ -657,7 +657,7 @@ def df_refresh_pset_hash(df: pd.DataFrame, copy: bool = False) -> pd.DataFrame:
 
 def df_update_pset_cols(
     df: pd.DataFrame,
-    pset_cols: Sequence["str"],
+    pset_cols: Sequence["str"] | set[str],
     fill_value=pd.NA,
     copy: bool = False,
 ) -> pd.DataFrame:
