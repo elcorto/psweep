@@ -1302,7 +1302,7 @@ def test_df_update_pset_cols(fill_value):
         pytest.param(np.nan, marks=pytest.mark.xfail),
     ],
 )
-def test_params_from_df(na_val):
+def test_df_extract_params(na_val):
     params = ps.pgrid(
         ps.plist(
             "a",
@@ -1349,7 +1349,7 @@ def test_params_from_df(na_val):
         ),
     )
     df = ps.run(func=lambda pset: {}, params=params, save=False)
-    for idx, pset in enumerate(ps.params_from_df(df)):
+    for idx, pset in enumerate(ps.df_extract_params(df)):
         assert df.loc[idx, "_pset_hash"] == ps.pset_hash(pset), (
             f"{df.dtypes=}\n{pset=}"
         )
@@ -1363,7 +1363,7 @@ def test_run_skip_dups_add_row_by_hand():
     assert df1._pset_hash.values[0] == ps.pset_hash(dict(a=1, b=pd.NA))
     assert df1._pset_hash.values[1] == ps.pset_hash(dict(a=2, b=np.sin))
     assert df1._pset_hash.values[2] == ps.pset_hash(dict(a=3, b="xx"))
-    assert params1 == ps.params_from_df(df1)
+    assert params1 == ps.df_extract_params(df1)
 
     params2 = ps.pgrid(
         [
@@ -1388,7 +1388,7 @@ def test_run_skip_dups_add_row_by_hand():
     )
     assert df2._pset_hash.values[2] == ps.pset_hash(dict(a=3, b="xx", c=pd.NA))
     assert df2._pset_hash.values[3] == ps.pset_hash(dict(a=4, b=1.23, c=77))
-    assert params2 == ps.params_from_df(df2)
+    assert params2 == ps.df_extract_params(df2)
 
 
 @pytest.mark.parametrize(
@@ -1406,7 +1406,7 @@ def test_run_skip_dups_simulate_workflow(na_val):
     df1 = ps.run(
         func=lambda pset: {}, params=params1, save=False, fill_value=na_val
     )
-    assert params1 == ps.params_from_df(df1)
+    assert params1 == ps.df_extract_params(df1)
 
     # Manually add column
     ps.df_update_pset_cols(df1, pset_cols=["a", "b", "c"], fill_value=na_val)
@@ -1414,7 +1414,7 @@ def test_run_skip_dups_simulate_workflow(na_val):
     assert all(x is na_val for x in df1.c)
 
     # params extended with "c" column, now filled with na_val
-    params1_new = ps.params_from_df(df1)
+    params1_new = ps.df_extract_params(df1)
 
     # new params for second run
     params_to_add = ps.pgrid(
@@ -1439,7 +1439,7 @@ def test_run_skip_dups_simulate_workflow(na_val):
     assert df2[: len(df1)].equals(df1)
     assert pd.isna(df2[: len(df1)].c).all()
     assert all(x is na_val for x in df2[: len(df1)].c)
-    assert params2 == ps.params_from_df(df2)
+    assert params2 == ps.df_extract_params(df2)
 
 
 def test_prefix_postfix_pset_names():

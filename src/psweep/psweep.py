@@ -678,6 +678,39 @@ def df_update_pset_cols(
     return df_update_pset_hash(df_out, copy=False)
 
 
+def df_extract_params(df: pd.DataFrame) -> Sequence[dict]:
+    """Extract `params` (list of `pset`s) from `df`. Limit columns to
+    ``kind="pset"`` (see :func:`filter_cols`). This will reproduce the `params`
+    fed to :func:`run` when following the prefix/postfix convention (see
+    :func:`_get_col_filter`), meaning that the pset hashes will be the same.
+
+    Examples
+    --------
+    >>> params=ps.pgrid(ps.plist("a", [1,2,3]), ps.plist("b", [77,88]))
+    >>> df=ps.run(func=lambda pset: dict(result_=rand()), params=params, save=False)
+    >>> params
+    [{'a': 1, 'b': 77},
+     {'a': 1, 'b': 88},
+     {'a': 2, 'b': 77},
+     {'a': 2, 'b': 88},
+     {'a': 3, 'b': 77},
+     {'a': 3, 'b': 88}]
+    >>> ps.df_extract_params(df)
+    [{'a': 1, 'b': 77},
+     {'a': 1, 'b': 88},
+     {'a': 2, 'b': 77},
+     {'a': 2, 'b': 88},
+     {'a': 3, 'b': 77},
+     {'a': 3, 'b': 88}]
+    """
+    params = []
+    for row in df[filter_cols(df.columns, kind="pset")].itertuples():
+        row_dct = row._asdict()
+        row_dct.pop("Index")
+        params.append(row_dct)
+    return params
+
+
 def filter_cols(cols: Sequence[str], kind: str = "pset") -> Sequence[str]:
     if kind == "pset":
         filt = _get_col_filter(skip_prefix_cols=True, skip_postfix_cols=True)
@@ -688,15 +721,6 @@ def filter_cols(cols: Sequence[str], kind: str = "pset") -> Sequence[str]:
     else:
         raise ValueError(f"{kind=} not supported")
     return list(filter(filt, cols))
-
-
-def params_from_df(df):
-    params = []
-    for row in df[filter_cols(df.columns, kind="pset")].itertuples():
-        row_dct = row._asdict()
-        row_dct.pop("Index")
-        params.append(row_dct)
-    return params
 
 
 # -----------------------------------------------------------------------------

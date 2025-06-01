@@ -59,10 +59,10 @@ if __name__ == "__main__":
     ps.df_print(df_1)
 
     # Show how to extract the varied params easily from a df. Here of course we
-    # could use "params" directly, but we show how to use params_from_df()
+    # could use "params" directly, but we show how to use df_extract_params()
     # since in a real world setting, calculations won't usually live in one
     # script, but instead read in df_1 from disk, for instance.
-    params_1 = ps.params_from_df(df_1)
+    params_1 = ps.df_extract_params(df_1)
     assert params_1 == params
 
     # Second run. Here we show an interesting case of using pgrid(). Usually we
@@ -75,7 +75,7 @@ if __name__ == "__main__":
     # just lists of dicts and pgrid() doesn't care where they come from and
     # indeed how *long* the dicts are. We use that to link up params_1 from
     # study 1 and plist("c", [77, 88]) in study 2. Cool, eh? As an additional
-    # trick, we zip() together params_1 and result_1_, since params_from_df()
+    # trick, we zip() together params_1 and result_1_, since df_extract_params()
     # extracts only pset-type columns, not prefix and postfix ones.
     params = ps.pgrid(
         zip(params_1, ps.plist("result_1", df_1.result_1_.values)),
