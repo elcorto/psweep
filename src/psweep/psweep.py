@@ -679,15 +679,18 @@ def df_update_pset_cols(
 
 
 def df_extract_params(df: pd.DataFrame) -> Sequence[dict]:
-    """Extract `params` (list of `pset`s) from `df`. Limit columns to
-    ``kind="pset"`` (see :func:`filter_cols`). This will reproduce the `params`
-    fed to :func:`run` when following the prefix/postfix convention (see
-    :func:`_get_col_filter`), meaning that the pset hashes will be the same.
+    """Extract `params` (list of psets) from `df`.
+
+    Limit columns to ``kind="pset"`` (see :func:`filter_cols`). This will
+    reproduce the `params` fed to :func:`run` when following the prefix/postfix
+    convention (see :func:`_get_col_filter`), meaning that the pset hashes will
+    be the same.
 
     Examples
     --------
+    >>> import psweep as ps
+    >>> from numpy.random import rand
     >>> params=ps.pgrid(ps.plist("a", [1,2,3]), ps.plist("b", [77,88]))
-    >>> df=ps.run(func=lambda pset: dict(result_=rand()), params=params, save=False)
     >>> params
     [{'a': 1, 'b': 77},
      {'a': 1, 'b': 88},
@@ -695,6 +698,8 @@ def df_extract_params(df: pd.DataFrame) -> Sequence[dict]:
      {'a': 2, 'b': 88},
      {'a': 3, 'b': 77},
      {'a': 3, 'b': 88}]
+
+    >>> df=ps.run(func=lambda pset: dict(result_=rand()), params=params, save=False)
     >>> ps.df_extract_params(df)
     [{'a': 1, 'b': 77},
      {'a': 1, 'b': 88},
