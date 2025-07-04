@@ -1451,3 +1451,10 @@ def test_prefix_postfix_pset_names():
         save=False,
     )
     assert df._pset_hash.values.tolist() == [ps.pset_hash({})] * 4
+
+
+def test_json_io(tmp_path):
+    dct = dict(a=1, b="b", c=dict(d=23.4, f=dict(g=None)))
+    fn = tmp_path / "foo.json"
+    ps.json_write(fn, dct)
+    assert ps.json_read(fn) == dct

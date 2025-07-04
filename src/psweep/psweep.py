@@ -16,6 +16,7 @@ import sys
 import time
 import uuid
 import warnings
+import json
 
 import joblib
 import numpy as np
@@ -145,6 +146,15 @@ def pickle_write(fn: str, obj):
 def pickle_read(fn: str):
     with open(fn, "rb") as fd:
         return pickle.load(fd)
+
+
+def json_write(fn: str, obj):
+    file_write(fn, json.dumps(obj, indent=2))
+
+
+def json_read(fn: str):
+    with open(fn, "r") as fd:
+        return json.load(fd)
 
 
 class PsweepHashError(TypeError):
