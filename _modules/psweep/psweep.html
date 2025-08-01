@@ -31,7 +31,7 @@
     <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
     <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
   
@@ -198,10 +198,13 @@
 <li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep._get_col_filter.html">psweep.psweep._get_col_filter</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.capture_logs_wrapper.html">psweep.psweep.capture_logs_wrapper</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.check_calc_dir.html">psweep.psweep.check_calc_dir</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.df_extract_params.html">psweep.psweep.df_extract_params</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.df_filter_conds.html">psweep.psweep.df_filter_conds</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.df_print.html">psweep.psweep.df_print</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.df_read.html">psweep.psweep.df_read</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.df_to_json.html">psweep.psweep.df_to_json</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.df_update_pset_cols.html">psweep.psweep.df_update_pset_cols</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.df_update_pset_hash.html">psweep.psweep.df_update_pset_hash</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.df_write.html">psweep.psweep.df_write</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.file_read.html">psweep.psweep.file_read</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.file_write.html">psweep.psweep.file_write</a></li>
@@ -223,6 +226,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.is_seq.html">psweep.psweep.is_seq</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.itr.html">psweep.psweep.itr</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.itr2params.html">psweep.psweep.itr2params</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.json_read.html">psweep.psweep.json_read</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.json_write.html">psweep.psweep.json_write</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.logspace.html">psweep.psweep.logspace</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.makedirs.html">psweep.psweep.makedirs</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.merge_dicts.html">psweep.psweep.merge_dicts</a></li>
@@ -375,6 +380,7 @@ document.write(`
 <span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">uuid</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">joblib</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
@@ -536,6 +542,21 @@ document.write(`
 
 
 
+<div class="viewcode-block" id="json_write">
+<a class="viewcode-back" href="../../generated/api/psweep.psweep.json_write.html#psweep.psweep.json_write">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">json_write</span><span class="p">(</span><span class="n">fn</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+    <span class="n">file_write</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span></div>
+
+
+
+<div class="viewcode-block" id="json_read">
+<a class="viewcode-back" href="../../generated/api/psweep.psweep.json_read.html#psweep.psweep.json_read">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">json_read</span><span class="p">(</span><span class="n">fn</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fd</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">fd</span><span class="p">)</span></div>
+
+
+
 <div class="viewcode-block" id="PsweepHashError">
 <a class="viewcode-back" href="../../generated/api/psweep.psweep.PsweepHashError.html#psweep.psweep.PsweepHashError">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">PsweepHashError</span><span class="p">(</span><span class="ne">TypeError</span><span class="p">):</span>
@@ -550,9 +571,6 @@ document.write(`
 
 <span class="sd">    By default, we ignore prefix fields (book-keeping) and postfix fields</span>
 <span class="sd">    (results).</span>
-
-<span class="sd">    All functions affected can still pass in `skip_prefix_cols` and</span>
-<span class="sd">    `skip_postfix_cols` to change that.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">skip_prefix_cols</span> <span class="ow">and</span> <span class="n">skip_postfix_cols</span><span class="p">:</span>
         <span class="k">return</span> <span class="k">lambda</span> <span class="n">key</span><span class="p">:</span> <span class="ow">not</span> <span class="p">(</span><span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">key</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">))</span>
@@ -1084,6 +1102,90 @@ document.write(`
 
 
 
+<div class="viewcode-block" id="df_update_pset_hash">
+<a class="viewcode-back" href="../../generated/api/psweep.psweep.df_update_pset_hash.html#psweep.psweep.df_update_pset_hash">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">df_update_pset_hash</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">copy</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add or update ``_pset_hash`` column.&quot;&quot;&quot;</span>
+    <span class="c1"># itertuples preserves type, while iterrows doesn&#39;t (see iterrows</span>
+    <span class="c1"># docstring).</span>
+    <span class="n">df_out</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span> <span class="k">if</span> <span class="n">copy</span> <span class="k">else</span> <span class="n">df</span>
+    <span class="n">hsh</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">itertuples</span><span class="p">():</span>
+        <span class="n">row_dct</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">_asdict</span><span class="p">()</span>
+        <span class="n">row_dct</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;Index&quot;</span><span class="p">)</span>
+        <span class="n">hsh</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pset_hash</span><span class="p">(</span><span class="n">row_dct</span><span class="p">))</span>
+    <span class="n">df_out</span><span class="p">[</span><span class="s2">&quot;_pset_hash&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">hsh</span>
+    <span class="k">return</span> <span class="n">df_out</span></div>
+
+
+
+<div class="viewcode-block" id="df_update_pset_cols">
+<a class="viewcode-back" href="../../generated/api/psweep.psweep.df_update_pset_cols.html#psweep.psweep.df_update_pset_cols">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">df_update_pset_cols</span><span class="p">(</span>
+    <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">pset_cols</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="s2">&quot;str&quot;</span><span class="p">]</span> <span class="o">|</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+    <span class="n">fill_value</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">NA</span><span class="p">,</span>
+    <span class="n">copy</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Make sure that `df` has at least `pset_cols` columns. If not, add</span>
+<span class="sd">    missing columns, fill with `fill_value`. Always refresh ``_pset_hash``.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">df_out</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span> <span class="k">if</span> <span class="n">copy</span> <span class="k">else</span> <span class="n">df</span>
+    <span class="n">old_pset_cols</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">filter_cols</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;pset&quot;</span><span class="p">))</span>
+    <span class="n">new_pset_cols</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">pset_cols</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">new_pset_cols</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">old_pset_cols</span><span class="p">),</span> <span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">old_pset_cols</span><span class="si">=}</span><span class="s2"> </span><span class="si">{</span><span class="n">new_pset_cols</span><span class="si">=}</span><span class="s2">: &quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">new_pset_cols</span><span class="p">)</span><span class="si">=}</span><span class="s2"> &lt; </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">old_pset_cols</span><span class="p">)</span><span class="si">=}</span><span class="s2">&quot;</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="n">old_pset_cols</span> <span class="o">!=</span> <span class="n">new_pset_cols</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">new_pset_cols</span> <span class="o">-</span> <span class="n">old_pset_cols</span><span class="p">:</span>
+            <span class="n">df_out</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">fill_value</span>
+    <span class="k">return</span> <span class="n">df_update_pset_hash</span><span class="p">(</span><span class="n">df_out</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="df_extract_params">
+<a class="viewcode-back" href="../../generated/api/psweep.psweep.df_extract_params.html#psweep.psweep.df_extract_params">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">df_extract_params</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract `params` (list of psets) from `df`.</span>
+
+<span class="sd">    Limit columns to ``kind=&quot;pset&quot;`` (see :func:`filter_cols`). This will</span>
+<span class="sd">    reproduce the `params` fed to :func:`run` when following the prefix/postfix</span>
+<span class="sd">    convention (see :func:`_get_col_filter`), meaning that the pset hashes will</span>
+<span class="sd">    be the same.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; import psweep as ps</span>
+<span class="sd">    &gt;&gt;&gt; from numpy.random import rand</span>
+<span class="sd">    &gt;&gt;&gt; params=ps.pgrid(ps.plist(&quot;a&quot;, [1,2,3]), ps.plist(&quot;b&quot;, [77,88]))</span>
+<span class="sd">    &gt;&gt;&gt; params</span>
+<span class="sd">    [{&#39;a&#39;: 1, &#39;b&#39;: 77},</span>
+<span class="sd">     {&#39;a&#39;: 1, &#39;b&#39;: 88},</span>
+<span class="sd">     {&#39;a&#39;: 2, &#39;b&#39;: 77},</span>
+<span class="sd">     {&#39;a&#39;: 2, &#39;b&#39;: 88},</span>
+<span class="sd">     {&#39;a&#39;: 3, &#39;b&#39;: 77},</span>
+<span class="sd">     {&#39;a&#39;: 3, &#39;b&#39;: 88}]</span>
+
+<span class="sd">    &gt;&gt;&gt; df=ps.run(func=lambda pset: dict(result_=rand()), params=params, save=False)</span>
+<span class="sd">    &gt;&gt;&gt; ps.df_extract_params(df)</span>
+<span class="sd">    [{&#39;a&#39;: 1, &#39;b&#39;: 77},</span>
+<span class="sd">     {&#39;a&#39;: 1, &#39;b&#39;: 88},</span>
+<span class="sd">     {&#39;a&#39;: 2, &#39;b&#39;: 77},</span>
+<span class="sd">     {&#39;a&#39;: 2, &#39;b&#39;: 88},</span>
+<span class="sd">     {&#39;a&#39;: 3, &#39;b&#39;: 77},</span>
+<span class="sd">     {&#39;a&#39;: 3, &#39;b&#39;: 88}]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">df</span><span class="p">[</span><span class="n">filter_cols</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;pset&quot;</span><span class="p">)]</span><span class="o">.</span><span class="n">itertuples</span><span class="p">():</span>
+        <span class="n">row_dct</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">_asdict</span><span class="p">()</span>
+        <span class="n">row_dct</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;Index&quot;</span><span class="p">)</span>
+        <span class="n">params</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row_dct</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">params</span></div>
+
+
+
 <div class="viewcode-block" id="filter_cols">
 <a class="viewcode-back" href="../../generated/api/psweep.psweep.filter_cols.html#psweep.psweep.filter_cols">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">filter_cols</span><span class="p">(</span><span class="n">cols</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">kind</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;pset&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
@@ -1225,22 +1327,16 @@ document.write(`
 
 <div class="viewcode-block" id="filter_params_unique">
 <a class="viewcode-back" href="../../generated/api/psweep.psweep.filter_params_unique.html#psweep.psweep.filter_params_unique">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">filter_params_unique</span><span class="p">(</span><span class="n">params</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">dict</span><span class="p">],</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">filter_params_unique</span><span class="p">(</span><span class="n">params</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">dict</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Reduce params to unique psets.</span>
 
 <span class="sd">    Use ``pset[&quot;_pset_hash&quot;]`` if present, else calculate hash on the fly.</span>
 
-<span class="sd">    We implement the convention to ignore prefix fields (book-keeping) and</span>
-<span class="sd">    postfix fields (results). You can pass `skip_prefix_cols` /</span>
-<span class="sd">    `skip_postfix_cols` to change that (see :func:`_get_col_filter`).</span>
-
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    params</span>
-<span class="sd">    kwds</span>
-<span class="sd">        passed to :func:`pset_hash`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">get_hash</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">pset</span><span class="p">:</span> <span class="n">pset</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;_pset_hash&quot;</span><span class="p">,</span> <span class="n">pset_hash</span><span class="p">(</span><span class="n">pset</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">))</span>
+    <span class="n">get_hash</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">pset</span><span class="p">:</span> <span class="n">pset</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;_pset_hash&quot;</span><span class="p">,</span> <span class="n">pset_hash</span><span class="p">(</span><span class="n">pset</span><span class="p">))</span>
     <span class="n">msk</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">([</span><span class="n">get_hash</span><span class="p">(</span><span class="n">pset</span><span class="p">)</span> <span class="k">for</span> <span class="n">pset</span> <span class="ow">in</span> <span class="n">params</span><span class="p">],</span> <span class="n">return_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
     <span class="k">return</span> <span class="p">[</span><span class="n">params</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">msk</span><span class="p">)]</span></div>
 
@@ -1249,24 +1345,18 @@ document.write(`
 <div class="viewcode-block" id="filter_params_dup_hash">
 <a class="viewcode-back" href="../../generated/api/psweep.psweep.filter_params_dup_hash.html#psweep.psweep.filter_params_dup_hash">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">filter_params_dup_hash</span><span class="p">(</span>
-    <span class="n">params</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">dict</span><span class="p">],</span> <span class="n">hashes</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="o">**</span><span class="n">kwds</span>
+    <span class="n">params</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">dict</span><span class="p">],</span> <span class="n">hashes</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return params with psets whose hash is not in `hashes`.</span>
 
 <span class="sd">    Use ``pset[&quot;_pset_hash&quot;]`` if present, else calculate hash on the fly.</span>
 
-<span class="sd">    We implement the convention to ignore prefix fields (book-keeping) and</span>
-<span class="sd">    postfix fields (results). You can pass `skip_prefix_cols` /</span>
-<span class="sd">    `skip_postfix_cols` to change that (see :func:`_get_col_filter`).</span>
-
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    params</span>
 <span class="sd">    hashes</span>
-<span class="sd">    kwds</span>
-<span class="sd">        passed to :func:`pset_hash`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">get_hash</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">pset</span><span class="p">:</span> <span class="n">pset</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;_pset_hash&quot;</span><span class="p">,</span> <span class="n">pset_hash</span><span class="p">(</span><span class="n">pset</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">))</span>
+    <span class="n">get_hash</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">pset</span><span class="p">:</span> <span class="n">pset</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;_pset_hash&quot;</span><span class="p">,</span> <span class="n">pset_hash</span><span class="p">(</span><span class="n">pset</span><span class="p">))</span>
     <span class="k">return</span> <span class="p">[</span><span class="n">pset</span> <span class="k">for</span> <span class="n">pset</span> <span class="ow">in</span> <span class="n">params</span> <span class="k">if</span> <span class="n">get_hash</span><span class="p">(</span><span class="n">pset</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">hashes</span><span class="p">]</span></div>
 
 
@@ -1279,7 +1369,6 @@ document.write(`
     <span class="n">vary_labels</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">vary_label_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;_vary&quot;</span><span class="p">,</span>
     <span class="n">skip_dups</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-    <span class="o">**</span><span class="n">kwds</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Helper to create a specific param sampling pattern.</span>
@@ -1297,18 +1386,12 @@ document.write(`
 <span class="sd">        database col names for parameters in `vary`</span>
 <span class="sd">    skip_dups</span>
 <span class="sd">        filter duplicate psets (see Notes below)</span>
-<span class="sd">    kwds</span>
-<span class="sd">        passed to :func:`filter_params_unique`</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
 <span class="sd">    `skip_dups`: When creating a star pattern, duplicate psets can occur. By</span>
 <span class="sd">    default try to filter them out (using :func:`filter_params_unique`) but</span>
 <span class="sd">    ignore hash calculation errors and return non-reduced params in that case.</span>
-
-<span class="sd">    We implement the convention to ignore prefix fields (book-keeping) and</span>
-<span class="sd">    postfix fields (results). You can pass `skip_prefix_cols` /</span>
-<span class="sd">    `skip_postfix_cols` to change that (see :func:`_get_col_filter`).</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
@@ -1375,7 +1458,7 @@ document.write(`
 
     <span class="k">if</span> <span class="n">skip_dups</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">filter_params_unique</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">raise_error</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">filter_params_unique</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">PsweepHashError</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">params</span>
     <span class="k">else</span><span class="p">:</span>
@@ -1501,6 +1584,7 @@ document.write(`
     <span class="n">git</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">skip_dups</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">capture_logs</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">fill_value</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">NA</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Call `func` for each `pset` in `params`. Populate a DataFrame with rows</span>
@@ -1562,21 +1646,15 @@ document.write(`
 <span class="sd">        column ``_logs``, file ``&lt;calc_dir&gt;/&lt;pset_id&gt;/logs.txt``, or both. If</span>
 <span class="sd">        ``None`` then do nothing (default). Useful for capturing per-pset log</span>
 <span class="sd">        text, e.g. ``print()`` calls in `func` will be captured.</span>
+<span class="sd">    fill_value</span>
+<span class="sd">        NA value used for missing values in the database DataFrame. ``np.nan``</span>
+<span class="sd">        causes problems (`pandas` casts types even when ``dtype=object``), so</span>
+<span class="sd">        we stick to ``pd.NA``.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    df</span>
 <span class="sd">        The database build from `params`.</span>
-
-<span class="sd">    Notes</span>
-<span class="sd">    -----</span>
-<span class="sd">    prefix/postfix default behavior: The package-wide default is defined in</span>
-<span class="sd">    :func:`_get_col_filter`. All affected functions can change their runtime</span>
-<span class="sd">    behavior via setting `skip_prefix_cols` and `skip_prefix_cols`, when used</span>
-<span class="sd">    individually. Here this affects :func:`pset_hash` and</span>
-<span class="sd">    :func:`filter_params_dup_hash`. However we do *not* offer the option to set</span>
-<span class="sd">    those in order not complexify the API too much. This may change as our</span>
-<span class="sd">    requirements evolve.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># Don&#39;t in-place alter dicts in params we get as input.</span>
@@ -1608,7 +1686,7 @@ document.write(`
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">database_fn</span><span class="p">):</span>
             <span class="n">df</span> <span class="o">=</span> <span class="n">df_read</span><span class="p">(</span><span class="n">database_fn</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="nb">object</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">pset_seq_old</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
@@ -1632,8 +1710,14 @@ document.write(`
     <span class="k">for</span> <span class="n">pset</span> <span class="ow">in</span> <span class="n">params</span><span class="p">:</span>
         <span class="n">pset</span><span class="p">[</span><span class="s2">&quot;_pset_hash&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pset_hash</span><span class="p">(</span><span class="n">pset</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">skip_dups</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">params</span> <span class="o">=</span> <span class="n">filter_params_dup_hash</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">_pset_hash</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">df_update_pset_cols</span><span class="p">(</span>
+            <span class="n">df</span><span class="p">,</span>
+            <span class="n">pset_cols</span><span class="o">=</span><span class="nb">set</span><span class="p">(</span><span class="n">itertools</span><span class="o">.</span><span class="n">chain</span><span class="o">.</span><span class="n">from_iterable</span><span class="p">(</span><span class="n">params</span><span class="p">)),</span>
+            <span class="n">fill_value</span><span class="o">=</span><span class="n">fill_value</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">skip_dups</span><span class="p">:</span>
+            <span class="n">params</span> <span class="o">=</span> <span class="n">filter_params_dup_hash</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">_pset_hash</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
 
     <span class="n">run_id</span> <span class="o">=</span> <span class="n">get_uuid</span><span class="p">(</span><span class="n">existing</span><span class="o">=</span><span class="n">df</span><span class="o">.</span><span class="n">_run_id</span><span class="o">.</span><span class="n">values</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="p">[])</span>
     <span class="n">pset_ids</span> <span class="o">=</span> <span class="n">get_many_uuids</span><span class="p">(</span>
@@ -1672,7 +1756,26 @@ document.write(`
             <span class="n">futures</span> <span class="o">=</span> <span class="n">dask_client</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
             <span class="n">results</span> <span class="o">=</span> <span class="n">dask_client</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="n">futures</span><span class="p">)</span>
 
-    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">((</span><span class="n">df</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">results</span><span class="p">)),</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span>
+        <span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">object</span><span class="p">)),</span>
+        <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># pd.concat() can convert pd.NA back to NaN, fix that. If the element is</span>
+    <span class="c1"># not &quot;scalar&quot;, then give up and don&#39;t touch it.</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">apply_func</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+        <span class="n">isna_result</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">isna</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">isna_result</span><span class="p">,</span> <span class="s2">&quot;__len__&quot;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">x</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">fill_value</span> <span class="k">if</span> <span class="n">isna_result</span> <span class="k">else</span> <span class="n">x</span>
+
+    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">apply_func</span><span class="p">)</span>
+
+    <span class="c1"># apply() changes dtype=object back to native types again, revert to object</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">object</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">save</span><span class="p">:</span>
         <span class="n">df_write</span><span class="p">(</span><span class="n">database_fn</span><span class="p">,</span> <span class="n">df</span><span class="p">)</span>

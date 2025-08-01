@@ -26,10 +26,13 @@ psweep
    _get_col_filter
    capture_logs_wrapper
    check_calc_dir
+   df_extract_params
    df_filter_conds
    df_print
    df_read
    df_to_json
+   df_update_pset_cols
+   df_update_pset_hash
    df_write
    file_read
    file_write
@@ -51,6 +54,8 @@ psweep
    is_seq
    itr
    itr2params
+   json_read
+   json_write
    logspace
    makedirs
    merge_dicts

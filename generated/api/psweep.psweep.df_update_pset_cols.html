@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>psweep.psweep.itr &#8212; psweep</title>
+    <title>psweep.psweep.df_update_pset_cols &#8212; psweep</title>
   
   
   
@@ -57,11 +57,11 @@
     <script async="async" src="../../_static/sphinx-thebe.js?v=c100c467"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'generated/api/psweep.psweep.itr';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'generated/api/psweep.psweep.df_update_pset_cols';</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="psweep.psweep.itr2params" href="psweep.psweep.itr2params.html" />
-    <link rel="prev" title="psweep.psweep.is_seq" href="psweep.psweep.is_seq.html" />
+    <link rel="next" title="psweep.psweep.df_update_pset_hash" href="psweep.psweep.df_update_pset_hash.html" />
+    <link rel="prev" title="psweep.psweep.df_to_json" href="psweep.psweep.df_to_json.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -204,7 +204,7 @@
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.df_print.html">psweep.psweep.df_print</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.df_read.html">psweep.psweep.df_read</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.df_to_json.html">psweep.psweep.df_to_json</a></li>
-<li class="toctree-l3"><a class="reference internal" href="psweep.psweep.df_update_pset_cols.html">psweep.psweep.df_update_pset_cols</a></li>
+<li class="toctree-l3 current active"><a class="current reference internal" href="#">psweep.psweep.df_update_pset_cols</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.df_update_pset_hash.html">psweep.psweep.df_update_pset_hash</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.df_write.html">psweep.psweep.df_write</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.file_read.html">psweep.psweep.file_read</a></li>
@@ -225,7 +225,7 @@
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.in_git_repo.html">psweep.psweep.in_git_repo</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.intspace.html">psweep.psweep.intspace</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.is_seq.html">psweep.psweep.is_seq</a></li>
-<li class="toctree-l3 current active"><a class="current reference internal" href="#">psweep.psweep.itr</a></li>
+<li class="toctree-l3"><a class="reference internal" href="psweep.psweep.itr.html">psweep.psweep.itr</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.itr2params.html">psweep.psweep.itr2params</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.json_read.html">psweep.psweep.json_read</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.json_write.html">psweep.psweep.json_write</a></li>
@@ -314,7 +314,7 @@
       
       
       
-      <li><a href="../../_sources/generated/api/psweep.psweep.itr.rst" target="_blank"
+      <li><a href="../../_sources/generated/api/psweep.psweep.df_update_pset_cols.rst" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -398,7 +398,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>psweep.psweep.itr</h1>
+    <h1>psweep.psweep.df_update_pset_cols</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -408,7 +408,7 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#psweep.psweep.itr"><code class="docutils literal notranslate"><span class="pre">itr()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#psweep.psweep.df_update_pset_cols"><code class="docutils literal notranslate"><span class="pre">df_update_pset_cols()</span></code></a></li>
 </ul>
             </nav>
         </div>
@@ -420,17 +420,16 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="psweep-psweep-itr">
-<h1>psweep.psweep.itr<a class="headerlink" href="#psweep-psweep-itr" title="Link to this heading">#</a></h1>
+  <section id="psweep-psweep-df-update-pset-cols">
+<h1>psweep.psweep.df_update_pset_cols<a class="headerlink" href="#psweep-psweep-df-update-pset-cols" title="Link to this heading">#</a></h1>
 <dl class="py function">
-<dt class="sig sig-object py" id="psweep.psweep.itr">
-<span class="sig-prename descclassname"><span class="pre">psweep.psweep.</span></span><span class="sig-name descname"><span class="pre">itr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/psweep/psweep.html#itr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psweep.psweep.itr" title="Link to this definition">#</a></dt>
-<dd><p>Wrap <cite>func</cite> to allow passing args not as sequence.</p>
-<p>Assuming <code class="docutils literal notranslate"><span class="pre">func()</span></code> requires a sequence as input: <code class="docutils literal notranslate"><span class="pre">func([a,b,c])</span></code>, allow
-passing <code class="docutils literal notranslate"><span class="pre">func(a,b,c)</span></code>.</p>
+<dt class="sig sig-object py" id="psweep.psweep.df_update_pset_cols">
+<span class="sig-prename descclassname"><span class="pre">psweep.psweep.</span></span><span class="sig-name descname"><span class="pre">df_update_pset_cols</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pset_cols</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fill_value=&lt;NA&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">copy=False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/psweep/psweep.html#df_update_pset_cols"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psweep.psweep.df_update_pset_cols" title="Link to this definition">#</a></dt>
+<dd><p>Make sure that <cite>df</cite> has at least <cite>pset_cols</cite> columns. If not, add
+missing columns, fill with <cite>fill_value</cite>. Always refresh <code class="docutils literal notranslate"><span class="pre">_pset_hash</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Callable</span></code></span></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
@@ -468,20 +467,20 @@ passing <code class="docutils literal notranslate"><span class="pre">func(a,b,c)
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="psweep.psweep.is_seq.html"
+       href="psweep.psweep.df_to_json.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">psweep.psweep.is_seq</p>
+        <p class="prev-next-title">psweep.psweep.df_to_json</p>
       </div>
     </a>
     <a class="right-next"
-       href="psweep.psweep.itr2params.html"
+       href="psweep.psweep.df_update_pset_hash.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">psweep.psweep.itr2params</p>
+        <p class="prev-next-title">psweep.psweep.df_update_pset_hash</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -501,7 +500,7 @@ passing <code class="docutils literal notranslate"><span class="pre">func(a,b,c)
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#psweep.psweep.itr"><code class="docutils literal notranslate"><span class="pre">itr()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#psweep.psweep.df_update_pset_cols"><code class="docutils literal notranslate"><span class="pre">df_update_pset_cols()</span></code></a></li>
 </ul>
   </nav></div>
 

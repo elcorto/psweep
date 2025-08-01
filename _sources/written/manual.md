@@ -1695,9 +1695,17 @@ dependencies as DAGs, one way to handle (simple linear) task dependencies is by
 running things in order manually, say `10prepare.py`, `20production.py`,
 `30eval.py`, where the first two can use `psweep` to compute stuff, update the
 database and store intermediate data on disk, which the next script would pick
-up. The "workflow" is to run all scripts in order. This is super low tech,
-simple, but of course also a bit brittle. For more challenging dependencies and
-more reproducibility, look into using one of the workflow frameworks above.
+up. The "workflow" is to run all scripts in order.
+
+A more advanced version of this approach is `examples/tree_study.py`, where we
+show how to handle tree-like task dependencies with `psweep` tooling. The use
+case is a multi-step study, where parameter sweeps depend on each other:
+the sweep in step N depends on results of sweep N-1 and we read results
+from the previous sweep's database.
+
+This is still super low tech, simple, but of course also a bit brittle. For
+more challenging dependencies and more reproducibility, look into using one of
+the workflow frameworks above.
 
 
 [git-lfs]: https://git-lfs.github.com

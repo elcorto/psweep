@@ -32,7 +32,7 @@
     <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
     <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
   
@@ -199,10 +199,13 @@
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep._get_col_filter.html">psweep.psweep._get_col_filter</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.capture_logs_wrapper.html">psweep.psweep.capture_logs_wrapper</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.check_calc_dir.html">psweep.psweep.check_calc_dir</a></li>
+<li class="toctree-l3"><a class="reference internal" href="psweep.psweep.df_extract_params.html">psweep.psweep.df_extract_params</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.df_filter_conds.html">psweep.psweep.df_filter_conds</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.df_print.html">psweep.psweep.df_print</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.df_read.html">psweep.psweep.df_read</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.df_to_json.html">psweep.psweep.df_to_json</a></li>
+<li class="toctree-l3"><a class="reference internal" href="psweep.psweep.df_update_pset_cols.html">psweep.psweep.df_update_pset_cols</a></li>
+<li class="toctree-l3"><a class="reference internal" href="psweep.psweep.df_update_pset_hash.html">psweep.psweep.df_update_pset_hash</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.df_write.html">psweep.psweep.df_write</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.file_read.html">psweep.psweep.file_read</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.file_write.html">psweep.psweep.file_write</a></li>
@@ -224,6 +227,8 @@
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.is_seq.html">psweep.psweep.is_seq</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.itr.html">psweep.psweep.itr</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.itr2params.html">psweep.psweep.itr2params</a></li>
+<li class="toctree-l3"><a class="reference internal" href="psweep.psweep.json_read.html">psweep.psweep.json_read</a></li>
+<li class="toctree-l3"><a class="reference internal" href="psweep.psweep.json_write.html">psweep.psweep.json_write</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.logspace.html">psweep.psweep.logspace</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.makedirs.html">psweep.psweep.makedirs</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.merge_dicts.html">psweep.psweep.merge_dicts</a></li>
@@ -419,7 +424,7 @@ document.write(`
 <h1>psweep.psweep.run<a class="headerlink" href="#psweep-psweep-run" title="Link to this heading">#</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="psweep.psweep.run">
-<span class="sig-prename descclassname"><span class="pre">psweep.psweep.</span></span><span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">poolsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dask_client</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tmpsave</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calc_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'calc'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">simulate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">database_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">database_basename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'database.pk'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backup</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">git</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_dups</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">capture_logs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/psweep/psweep.html#run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psweep.psweep.run" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">psweep.psweep.</span></span><span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">poolsize=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dask_client=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tmpsave=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calc_dir='calc'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">simulate=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">database_dir=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">database_basename='database.pk'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backup=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">git=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_dups=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">capture_logs=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fill_value=&lt;NA&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/psweep/psweep.html#run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psweep.psweep.run" title="Link to this definition">#</a></dt>
 <dd><p>Call <cite>func</cite> for each <cite>pset</cite> in <cite>params</cite>. Populate a DataFrame with rows
 from each call <code class="docutils literal notranslate"><span class="pre">func(pset)</span></code>.</p>
 <dl class="field-list simple">
@@ -469,6 +474,9 @@ Redirect stdout and stderr generated in <code class="docutils literal notranslat
 column <code class="docutils literal notranslate"><span class="pre">_logs</span></code>, file <code class="docutils literal notranslate"><span class="pre">&lt;calc_dir&gt;/&lt;pset_id&gt;/logs.txt</span></code>, or both. If
 <code class="docutils literal notranslate"><span class="pre">None</span></code> then do nothing (default). Useful for capturing per-pset log
 text, e.g. <code class="docutils literal notranslate"><span class="pre">print()</span></code> calls in <cite>func</cite> will be captured.</p></li>
+<li><p><strong>fill_value</strong> – NA value used for missing values in the database DataFrame. <code class="docutils literal notranslate"><span class="pre">np.nan</span></code>
+causes problems (<cite>pandas</cite> casts types even when <code class="docutils literal notranslate"><span class="pre">dtype=object</span></code>), so
+we stick to <code class="docutils literal notranslate"><span class="pre">pd.NA</span></code>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -478,14 +486,6 @@ text, e.g. <code class="docutils literal notranslate"><span class="pre">print()<
 <dd class="field-odd"><p><em>df</em> – The database build from <cite>params</cite>.</p>
 </dd>
 </dl>
-<p class="rubric">Notes</p>
-<p>prefix/postfix default behavior: The package-wide default is defined in
-<a class="reference internal" href="psweep.psweep._get_col_filter.html#psweep.psweep._get_col_filter" title="psweep.psweep._get_col_filter"><code class="xref py py-func docutils literal notranslate"><span class="pre">_get_col_filter()</span></code></a>. All affected functions can change their runtime
-behavior via setting <cite>skip_prefix_cols</cite> and <cite>skip_prefix_cols</cite>, when used
-individually. Here this affects <a class="reference internal" href="psweep.psweep.pset_hash.html#psweep.psweep.pset_hash" title="psweep.psweep.pset_hash"><code class="xref py py-func docutils literal notranslate"><span class="pre">pset_hash()</span></code></a> and
-<a class="reference internal" href="psweep.psweep.filter_params_dup_hash.html#psweep.psweep.filter_params_dup_hash" title="psweep.psweep.filter_params_dup_hash"><code class="xref py py-func docutils literal notranslate"><span class="pre">filter_params_dup_hash()</span></code></a>. However we do <em>not</em> offer the option to set
-those in order not complexify the API too much. This may change as our
-requirements evolve.</p>
 </dd></dl>
 
 </section>

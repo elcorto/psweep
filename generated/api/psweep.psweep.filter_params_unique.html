@@ -32,7 +32,7 @@
     <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
     <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
   
@@ -199,10 +199,13 @@
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep._get_col_filter.html">psweep.psweep._get_col_filter</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.capture_logs_wrapper.html">psweep.psweep.capture_logs_wrapper</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.check_calc_dir.html">psweep.psweep.check_calc_dir</a></li>
+<li class="toctree-l3"><a class="reference internal" href="psweep.psweep.df_extract_params.html">psweep.psweep.df_extract_params</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.df_filter_conds.html">psweep.psweep.df_filter_conds</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.df_print.html">psweep.psweep.df_print</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.df_read.html">psweep.psweep.df_read</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.df_to_json.html">psweep.psweep.df_to_json</a></li>
+<li class="toctree-l3"><a class="reference internal" href="psweep.psweep.df_update_pset_cols.html">psweep.psweep.df_update_pset_cols</a></li>
+<li class="toctree-l3"><a class="reference internal" href="psweep.psweep.df_update_pset_hash.html">psweep.psweep.df_update_pset_hash</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.df_write.html">psweep.psweep.df_write</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.file_read.html">psweep.psweep.file_read</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.file_write.html">psweep.psweep.file_write</a></li>
@@ -224,6 +227,8 @@
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.is_seq.html">psweep.psweep.is_seq</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.itr.html">psweep.psweep.itr</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.itr2params.html">psweep.psweep.itr2params</a></li>
+<li class="toctree-l3"><a class="reference internal" href="psweep.psweep.json_read.html">psweep.psweep.json_read</a></li>
+<li class="toctree-l3"><a class="reference internal" href="psweep.psweep.json_write.html">psweep.psweep.json_write</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.logspace.html">psweep.psweep.logspace</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.makedirs.html">psweep.psweep.makedirs</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.merge_dicts.html">psweep.psweep.merge_dicts</a></li>
@@ -419,18 +424,12 @@ document.write(`
 <h1>psweep.psweep.filter_params_unique<a class="headerlink" href="#psweep-psweep-filter-params-unique" title="Link to this heading">#</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="psweep.psweep.filter_params_unique">
-<span class="sig-prename descclassname"><span class="pre">psweep.psweep.</span></span><span class="sig-name descname"><span class="pre">filter_params_unique</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">params</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwds</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/psweep/psweep.html#filter_params_unique"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psweep.psweep.filter_params_unique" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">psweep.psweep.</span></span><span class="sig-name descname"><span class="pre">filter_params_unique</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/psweep/psweep.html#filter_params_unique"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psweep.psweep.filter_params_unique" title="Link to this definition">#</a></dt>
 <dd><p>Reduce params to unique psets.</p>
 <p>Use <code class="docutils literal notranslate"><span class="pre">pset[&quot;_pset_hash&quot;]</span></code> if present, else calculate hash on the fly.</p>
-<p>We implement the convention to ignore prefix fields (book-keeping) and
-postfix fields (results). You can pass <cite>skip_prefix_cols</cite> /
-<cite>skip_postfix_cols</cite> to change that (see <a class="reference internal" href="psweep.psweep._get_col_filter.html#psweep.psweep._get_col_filter" title="psweep.psweep._get_col_filter"><code class="xref py py-func docutils literal notranslate"><span class="pre">_get_col_filter()</span></code></a>).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>params</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>]</span>)</p></li>
-<li><p><strong>kwds</strong> – passed to <a class="reference internal" href="psweep.psweep.pset_hash.html#psweep.psweep.pset_hash" title="psweep.psweep.pset_hash"><code class="xref py py-func docutils literal notranslate"><span class="pre">pset_hash()</span></code></a></p></li>
-</ul>
+<dd class="field-odd"><p><strong>params</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>]</span>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>]</span></p>
