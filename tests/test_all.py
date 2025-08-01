@@ -1313,7 +1313,7 @@ def test_df_extract_params(na_val):
                 np.float32(1.23),
                 np.float64(1.23),
                 np.int64(123),
-                np.complex128(1.0, 3.0),
+                complex(1.0, 3.0),
             ],
         ),
         ps.plist(
