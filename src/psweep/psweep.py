@@ -726,6 +726,17 @@ def df_extract_params(df: pd.DataFrame) -> Sequence[dict]:
     return params
 
 
+def df_extract_pset(df: pd.DataFrame, pset_id: str) -> dict:
+    """Extract a single pset dict for `pset_id` from `df`."""
+    df_sel = df.loc[
+        df._pset_id == pset_id, filter_cols(df.columns, kind="pset")
+    ]
+    assert len(df_sel) == 1, (
+        "Selection is not unique, you have duplicate pset_ids!"
+    )
+    return df_sel.iloc[0].to_dict()
+
+
 def filter_cols(cols: Sequence[str], kind: str = "pset") -> Sequence[str]:
     if kind == "pset":
         filt = _get_col_filter(skip_prefix_cols=True, skip_postfix_cols=True)
