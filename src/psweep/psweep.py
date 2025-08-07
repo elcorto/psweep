@@ -734,7 +734,10 @@ def df_extract_pset(df: pd.DataFrame, pset_id: str) -> dict:
     assert len(df_sel) == 1, (
         "Selection is not unique, you have duplicate pset_ids!"
     )
-    return df_sel.iloc[0].to_dict()
+    # Series.to_dict() casts pd.NA to None. The trick below preserves types (at
+    # least NA).
+    series = df_sel.iloc[0]
+    return dict(zip(series.keys(), series.to_list()))
 
 
 def filter_cols(cols: Sequence[str], kind: str = "pset") -> Sequence[str]:
