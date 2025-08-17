@@ -688,7 +688,9 @@ def df_update_pset_cols(
     return df_update_pset_hash(df_out, copy=False)
 
 
-def df_extract_params(df: pd.DataFrame) -> Sequence[dict]:
+def df_extract_params(
+    df: pd.DataFrame, py_types: bool = False
+) -> Sequence[dict]:
     """Extract `params` (list of psets) from `df`.
 
     Limit columns to ``kind="pset"`` (see :func:`filter_cols`). This will
@@ -718,15 +720,21 @@ def df_extract_params(df: pd.DataFrame) -> Sequence[dict]:
      {'a': 3, 'b': 77},
      {'a': 3, 'b': 88}]
     """
-    params = []
-    for row in df[filter_cols(df.columns, kind="pset")].itertuples():
-        row_dct = row._asdict()
-        row_dct.pop("Index")
-        params.append(row_dct)
+    df_sel = df[filter_cols(df.columns, kind="pset")]
+    if py_types:
+        return [ser.to_dict() for (_, ser) in df_sel.iterrows()]
+    else:
+        params = []
+        for row in df_sel.itertuples():
+            row_dct = row._asdict()
+            row_dct.pop("Index")
+            params.append(row_dct)
     return params
 
 
-def df_extract_pset(df: pd.DataFrame, pset_id: str) -> dict:
+def df_extract_pset(
+    df: pd.DataFrame, pset_id: str, py_types: bool = False
+) -> dict:
     """Extract a single pset dict for `pset_id` from `df`."""
     df_sel = df.loc[
         df._pset_id == pset_id, filter_cols(df.columns, kind="pset")
@@ -734,10 +742,13 @@ def df_extract_pset(df: pd.DataFrame, pset_id: str) -> dict:
     assert len(df_sel) == 1, (
         "Selection is not unique, you have duplicate pset_ids!"
     )
-    # Series.to_dict() casts pd.NA to None. The trick below preserves types (at
-    # least NA).
-    series = df_sel.iloc[0]
-    return dict(zip(series.keys(), series.to_list()))
+    ser = df_sel.iloc[0]
+    if py_types:
+        return ser.to_dict()
+    else:
+        # Series.to_dict() casts pd.NA to None. The trick below preserves types
+        # (at least NA).
+        return dict(zip(ser.keys(), ser.to_list()))
 
 
 def filter_cols(cols: Sequence[str], kind: str = "pset") -> Sequence[str]:
