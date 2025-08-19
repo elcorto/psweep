@@ -751,6 +751,23 @@ def df_extract_pset(
         return dict(zip(ser.keys(), ser.to_list()))
 
 
+def df_ensure_dtypes(df, fill_value=pd.NA):
+    # pd.concat() can convert pd.NA back to NaN, fix that. If the element is
+    # not "scalar", then give up and don't touch it.
+    def apply_func(x):
+        isna_result = pd.isna(x)
+        if hasattr(isna_result, "__len__"):
+            return x
+        else:
+            return fill_value if isna_result else x
+
+    for col in df.columns:
+        df[col] = df[col].apply(apply_func)
+
+    # apply() changes dtype=object back to native types again, revert to object
+    return df.astype(object)
+
+
 def filter_cols(cols: Sequence[str], kind: str = "pset") -> Sequence[str]:
     if kind == "pset":
         filt = _get_col_filter(skip_prefix_cols=True, skip_postfix_cols=True)
@@ -1193,6 +1210,17 @@ def run(
     # Don't in-place alter dicts in params we get as input.
     params = copy.deepcopy(params)
 
+    # Wash params thru type machinery to ensure that types are the same as the
+    # ones we will have in the DataFrame later on. Else _pset_hash can be
+    # wrong (e.g. if columns contain NA-type values which are not
+    # `fill_value`).
+    params = df_extract_params(
+        df_ensure_dtypes(
+            pd.DataFrame(params, dtype=object), fill_value=fill_value
+        ),
+        py_types=False,
+    )
+
     database_dir = calc_dir if database_dir is None else database_dir
 
     git_enter(git)
@@ -1217,7 +1245,7 @@ def run(
 
     if df is None:
         if os.path.exists(database_fn):
-            df = df_read(database_fn)
+            df = df_read(database_fn).astype(object)
         else:
             df = pd.DataFrame(dtype=object)
 
@@ -1289,26 +1317,14 @@ def run(
             futures = dask_client.map(func, params)
             results = dask_client.gather(futures)
 
-    df = pd.concat(
-        (df, pd.DataFrame(results, dtype=object)),
-        sort=False,
-        ignore_index=True,
+    df = df_ensure_dtypes(
+        pd.concat(
+            (df, pd.DataFrame(results, dtype=object)),
+            sort=False,
+            ignore_index=True,
+        ),
+        fill_value=fill_value,
     )
-
-    # pd.concat() can convert pd.NA back to NaN, fix that. If the element is
-    # not "scalar", then give up and don't touch it.
-    def apply_func(x):
-        isna_result = pd.isna(x)
-        if hasattr(isna_result, "__len__"):
-            return x
-        else:
-            return fill_value if isna_result else x
-
-    for col in df.columns:
-        df[col] = df[col].apply(apply_func)
-
-    # apply() changes dtype=object back to native types again, revert to object
-    df = df.astype(object)
 
     if save:
         df_write(database_fn, df)

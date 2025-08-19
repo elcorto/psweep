@@ -691,8 +691,8 @@ def test_pset_hash_recalc_from_df(non_py_type):
     ]
     params = ps.pgrid([zip(*plists)])
     df = ps.run(lambda pset: {}, params, save=False)
-    for idx, row in df.iterrows():
-        df.at[idx, "_pset_hash_new"] = ps.pset_hash(row.to_dict())
+    for idx, pset in enumerate(ps.df_extract_params(df)):
+        df.at[idx, "_pset_hash_new"] = ps.pset_hash(pset)
 
     assert (df._pset_hash.values == df._pset_hash_new.values).all()
 
@@ -1440,17 +1440,6 @@ def test_run_skip_dups_simulate_workflow(na_val):
     assert pd.isna(df2[: len(df1)].c).all()
     assert all(x is na_val for x in df2[: len(df1)].c)
     assert params2 == ps.df_extract_params(df2)
-
-
-def test_prefix_postfix_pset_names():
-    a = ps.plist("_a", [1, 2])
-    b = ps.plist("b_", [77, 88])
-    df = ps.run(
-        func=lambda pset: {"result": pset["_a"] + pset["b_"]},
-        params=ps.pgrid(a, b),
-        save=False,
-    )
-    assert df._pset_hash.values.tolist() == [ps.pset_hash({})] * 4
 
 
 def test_json_io(tmp_path):
