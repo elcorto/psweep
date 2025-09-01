@@ -673,9 +673,9 @@ def test_pset_hash_skip_cols():
     "non_py_type",
     [
         2,
-        pytest.param(np.int64(2), marks=pytest.mark.xfail),
-        pytest.param(np.uint64(2), marks=pytest.mark.xfail),
-        pytest.param(np.float64(2.0), marks=pytest.mark.xfail),
+        np.int64(2),
+        np.uint64(2),
+        np.float64(2.0),
     ],
 )
 def test_pset_hash_recalc_from_df(non_py_type):
@@ -1292,17 +1292,15 @@ def test_df_update_pset_cols(fill_value):
     )
 
 
-# Using pd.NA works. None and np.nan make pandas cast stuff, even though we
-# have dtype=object and try hard to prevent it from doing that.
 @pytest.mark.parametrize(
     "na_val",
     [
         pd.NA,
-        pytest.param(None, marks=pytest.mark.xfail),
-        pytest.param(np.nan, marks=pytest.mark.xfail),
+        None,
+        np.nan,
     ],
 )
-def test_df_extract_params(na_val):
+def test_df_extract_stuff(na_val):
     params = ps.pgrid(
         ps.plist(
             "a",
@@ -1319,8 +1317,8 @@ def test_df_extract_params(na_val):
         ps.plist(
             "b",
             [
-                ##None,
-                ##np.nan,
+                None,
+                np.nan,
                 pd.NA,
                 np.sin,
                 "xx",
@@ -1349,9 +1347,15 @@ def test_df_extract_params(na_val):
         ),
     )
     df = ps.run(func=lambda pset: {}, params=params, save=False)
-    for idx, pset in enumerate(ps.df_extract_params(df)):
+    params_extracted = ps.df_extract_params(df)
+    pset_ids = df._pset_id.values
+    for idx, pset in enumerate(params_extracted):
         assert df.loc[idx, "_pset_hash"] == ps.pset_hash(pset), (
             f"{df.dtypes=}\n{pset=}"
+        )
+        # While we're here, test df_extract_params vs. df_extract_pset.
+        assert df.loc[idx, "_pset_hash"] == ps.pset_hash(
+            ps.df_extract_pset(df, pset_ids[idx])
         )
 
 
