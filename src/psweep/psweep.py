@@ -24,6 +24,7 @@ import pandas as pd
 import yaml
 import jinja2
 
+
 pj = os.path.join
 
 # defaults, globals
@@ -31,6 +32,8 @@ PANDAS_DEFAULT_ORIENT = "records"
 PANDAS_TIME_UNIT = "s"
 PSET_HASH_ALG = "sha1"
 GIT_ADD_ALL = "git add -A -v"
+CALC_DIR = "calc"
+DATABASE_BASENAME = "database.pk"
 
 # Make DeprecationWarning visible to users by default.
 warnings.simplefilter("default")
@@ -1137,6 +1140,24 @@ def capture_logs_wrapper(
         raise ValueError(f"Illegal value {capture_logs=}")
 
 
+def _simulate_helper(*, calc_dir, database_dir, database_basename):
+    calc_dir_sim = calc_dir + ".simulate"
+    database_dir_sim = database_dir + ".simulate"
+    for dr in [calc_dir_sim, database_dir_sim]:
+        if os.path.exists(dr):
+            shutil.rmtree(dr)
+        makedirs(dr)
+    old_db = pj(database_dir, database_basename)
+    if os.path.exists(old_db):
+        shutil.copy(old_db, pj(database_dir_sim, database_basename))
+    else:
+        warnings.warn(
+            f"simulate: {old_db} not found, will create new db in "
+            f"{database_dir_sim}"
+        )
+    return calc_dir_sim, database_dir_sim
+
+
 def run(
     func: Callable,
     params: Sequence[dict],
@@ -1146,10 +1167,10 @@ def run(
     save: bool = True,
     tmpsave: bool = False,
     verbose: bool | Sequence[str] = False,
-    calc_dir: str = "calc",
+    calc_dir: str = CALC_DIR,
     simulate: bool = False,
     database_dir: str = None,
-    database_basename: str = "database.pk",
+    database_basename: str = DATABASE_BASENAME,
     backup: bool = False,
     git: bool = False,
     skip_dups: bool = False,
@@ -1241,27 +1262,16 @@ def run(
         py_types=False,
     )
 
-    database_dir = calc_dir if database_dir is None else database_dir
-
     git_enter(git)
 
+    database_dir = calc_dir if database_dir is None else database_dir
     if simulate:
-        calc_dir_sim = calc_dir + ".simulate"
-        if os.path.exists(calc_dir_sim):
-            shutil.rmtree(calc_dir_sim)
-        makedirs(calc_dir_sim)
-        old_db = pj(database_dir, database_basename)
-        if os.path.exists(old_db):
-            shutil.copy(old_db, pj(calc_dir_sim, database_basename))
-        else:
-            warnings.warn(
-                f"simulate: {old_db} not found, will create new db in "
-                f"{calc_dir_sim}"
-            )
-        database_fn = pj(calc_dir_sim, database_basename)
-        calc_dir = calc_dir_sim
-    else:
-        database_fn = pj(database_dir, database_basename)
+        calc_dir, database_dir = _simulate_helper(
+            calc_dir=calc_dir,
+            database_dir=database_dir,
+            database_basename=database_basename,
+        )
+    database_fn = pj(database_dir, database_basename)
 
     if df is None:
         if os.path.exists(database_fn):
@@ -1425,12 +1435,6 @@ def gather_machines(machine_templ_dir):
     ]
 
 
-# If we ever add a "simulate" kwd here: don't pass that thru to run() b/c
-# there this prevents func() from being executed, but that's what we always
-# want here since it writes only input files. Instead, just set calc_dir =
-# calc_dir_sim and copy the database as in run() and go. Don't copy the
-# run_*.sh scripts b/c they are generated afresh anyway.
-#
 def prep_batch(
     params: Sequence[dict],
     *,
@@ -1466,7 +1470,22 @@ def prep_batch(
     """
     git_enter(git)
 
-    calc_dir = kwds.get("calc_dir", "calc")
+    # Same defaults as in run()
+    calc_dir = kwds.pop("calc_dir", CALC_DIR)
+    database_dir = kwds.pop("database_dir", calc_dir)
+    database_basename = kwds.pop("database_basename", DATABASE_BASENAME)
+
+    # Catch simulate flag, don't pass that thru to run() b/c there this
+    # prevents func() from being executed, but that's what we always want here
+    # since it writes only input files. Instead, just set calc_dir =
+    # calc_dir_sim (same for database_dir), copy the database as in run() and
+    # go. Don't copy the run_*.sh scripts b/c they are generated afresh anyway.
+    if kwds.pop("simulate", False):
+        calc_dir, database_dir = _simulate_helper(
+            calc_dir=calc_dir,
+            database_dir=database_dir,
+            database_basename=database_basename,
+        )
 
     calc_templates = gather_calc_templates(calc_templ_dir)
     machines = gather_machines(machine_templ_dir)
@@ -1486,6 +1505,10 @@ def prep_batch(
         func,
         params,
         git=False,
+        simulate=False,
+        calc_dir=calc_dir,
+        database_dir=database_dir,
+        database_basename=database_basename,
         **kwds,
     )
 

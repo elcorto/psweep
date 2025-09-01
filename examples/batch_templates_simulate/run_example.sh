@@ -1,0 +1,22 @@
+#!/bin/sh
+
+set -eux
+
+./clean.sh
+
+# Write files based on templates. See psweep.prep_batch().
+./10input.py
+
+# In this example, we execute the "batch jobs" locally (run_local.sh). In a
+# real use case we would rsync (or psweep-push) calc/ to a remore machine, ssh,
+# submit jobs there (run_cluster.sh), rsync (or psweep-pull) results back.
+cd calc
+sh run_local.sh
+cd ..
+./20eval.py
+
+# Second run, now only simulate
+./15input.py
+
+psweep-db2table calc/database_eval.pk param_a param_b mean_ _run_seq _pset_seq
+psweep-db2table calc.simulate/database.pk param_a param_b _run_seq _pset_seq
