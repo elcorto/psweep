@@ -1442,6 +1442,17 @@ def test_run_skip_dups_simulate_workflow(na_val):
     assert params2 == ps.df_extract_params(df2)
 
 
+def test_prefix_postfix_pset_names():
+    a = ps.plist("_a", [1, 2])
+    b = ps.plist("b_", [77, 88])
+    df = ps.run(
+        func=lambda pset: {"result": pset["_a"] + pset["b_"]},
+        params=ps.pgrid(a, b),
+        save=False,
+    )
+    assert df._pset_hash.values.tolist() == [ps.pset_hash({})] * 4
+
+
 def test_json_io(tmp_path):
     dct = dict(a=1, b="b", c=dict(d=23.4, f=dict(g=None)))
     fn = tmp_path / "foo.json"

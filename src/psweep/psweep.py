@@ -653,13 +653,9 @@ def df_filter_conds(
 
 def df_update_pset_hash(df: pd.DataFrame, copy: bool = False) -> pd.DataFrame:
     """Add or update ``_pset_hash`` column."""
-    # itertuples preserves type, while iterrows doesn't (see iterrows
-    # docstring).
     df_out = df.copy() if copy else df
     hsh = []
-    for row in df.itertuples():
-        row_dct = row._asdict()
-        row_dct.pop("Index")
+    for row_dct in df_extract_dicts(df):
         hsh.append(pset_hash(row_dct))
     df_out["_pset_hash"] = hsh
     return df_out
@@ -686,6 +682,37 @@ def df_update_pset_cols(
         for col in new_pset_cols - old_pset_cols:
             df_out[col] = fill_value
     return df_update_pset_hash(df_out, copy=False)
+
+
+def df_extract_dicts(
+    df: pd.DataFrame, py_types: bool = False
+) -> Sequence[dict]:
+    if py_types:
+        return [ser.to_dict() for (_, ser) in df.iterrows()]
+    else:
+        # itertuples() preserves type, while iterrows() doesn't (see iterrows()
+        # docstring). But the default (itertuples(..., name='Pandas')) returns
+        # namedtuples -- the worst data structure ever invented -- which can't
+        # handle field names starting with "_", it will just rename them!
+        #
+        #    >>> df
+        #       _a  b_
+        #    0   1  77
+        #    1   1  88
+        #    2   2  77
+        #    3   2  88
+        #
+        #    >>> list(df.itertuples(index=False))
+        #    [Pandas(_0=1, b_=77),
+        #     Pandas(_0=1, b_=88),
+        #     Pandas(_0=2, b_=77),
+        #     Pandas(_0=2, b_=88)]
+        #
+        # With name=None we get plain types and zip() the column names back in.
+        return [
+            dict(zip(df.columns, row))
+            for row in df.itertuples(index=False, name=None)
+        ]
 
 
 def df_extract_params(
@@ -720,16 +747,9 @@ def df_extract_params(
      {'a': 3, 'b': 77},
      {'a': 3, 'b': 88}]
     """
-    df_sel = df[filter_cols(df.columns, kind="pset")]
-    if py_types:
-        return [ser.to_dict() for (_, ser) in df_sel.iterrows()]
-    else:
-        params = []
-        for row in df_sel.itertuples():
-            row_dct = row._asdict()
-            row_dct.pop("Index")
-            params.append(row_dct)
-    return params
+    return df_extract_dicts(
+        df[filter_cols(df.columns, kind="pset")], py_types=py_types
+    )
 
 
 def df_extract_pset(
@@ -1214,7 +1234,7 @@ def run(
     # ones we will have in the DataFrame later on. Else _pset_hash can be
     # wrong (e.g. if columns contain NA-type values which are not
     # `fill_value`).
-    params = df_extract_params(
+    params = df_extract_dicts(
         df_ensure_dtypes(
             pd.DataFrame(params, dtype=object), fill_value=fill_value
         ),
