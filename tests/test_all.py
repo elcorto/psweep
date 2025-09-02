@@ -918,6 +918,53 @@ def test_prep_batch():
             assert f"# run_seq=1 pset_seq={n_param}" in txt
             assert f"# run_seq=1 pset_seq={2 * n_param - 1}" in txt
 
+        assert len(df) == 2 * n_param
+
+        # run 2: simulate
+        df_sim = ps.prep_batch(
+            params,
+            calc_dir=f"{tmpdir}/calc",
+            calc_templ_dir=f"{template_dir}/calc",
+            machine_templ_dir=f"{template_dir}/machines",
+            write_pset=True,
+            simulate=True,
+        )
+
+        print(system(f"tree {tmpdir}"))
+        assert os.path.exists(f"{tmpdir}/calc.simulate/database.pk")
+        assert os.path.exists(f"{tmpdir}/calc.simulate/run_local.sh")
+        assert os.path.exists(f"{tmpdir}/calc.simulate/run_cluster.sh")
+
+        for txt in [
+            ps.file_read(f"{tmpdir}/calc.simulate/run_cluster.sh"),
+            ps.file_read(f"{tmpdir}/calc.simulate/run_local.sh"),
+        ]:
+            assert "# run_seq=0 pset_seq=0" in txt
+            assert f"# run_seq=0 pset_seq={n_param - 1}" in txt
+            assert f"# run_seq=1 pset_seq={n_param}" in txt
+            assert f"# run_seq=1 pset_seq={2 * n_param - 1}" in txt
+            assert f"# run_seq=2 pset_seq={2 * n_param}" in txt
+            assert f"# run_seq=2 pset_seq={3 * n_param - 1}" in txt
+
+        df_read = ps.df_read(f"{tmpdir}/calc/database.pk")
+        df_sim_read = ps.df_read(f"{tmpdir}/calc.simulate/database.pk")
+        assert df_sim.equals(df_sim_read)
+        assert df.equals(df_read)
+        assert len(df_sim) == 3 * n_param
+        assert df_sim[: len(df)].equals(df)
+        for pset_id in df_sim[df_sim._run_seq == 2]._pset_id.values:
+            for name in [
+                "run.py",
+                "pset.pk",
+                "jobscript_local",
+                "jobscript_cluster",
+            ]:
+                assert os.path.exists(
+                    f"{tmpdir}/calc.simulate/{pset_id}/{name}"
+                )
+        for pset_id in df_sim[df_sim._run_seq < 2]._pset_id.values:
+            assert not os.path.exists(f"{tmpdir}/calc.simulate/{pset_id}")
+
 
 # We can't use
 #
