@@ -1140,22 +1140,20 @@ def capture_logs_wrapper(
         raise ValueError(f"Illegal value {capture_logs=}")
 
 
-def _simulate_helper(*, calc_dir, database_dir, database_basename):
+def _simulate_helper(*, calc_dir, database_basename):
     calc_dir_sim = calc_dir + ".simulate"
-    database_dir_sim = database_dir + ".simulate"
-    for dr in [calc_dir_sim, database_dir_sim]:
-        if os.path.exists(dr):
-            shutil.rmtree(dr)
-        makedirs(dr)
-    old_db = pj(database_dir, database_basename)
+    if os.path.exists(calc_dir_sim):
+        shutil.rmtree(calc_dir_sim)
+    makedirs(calc_dir_sim)
+    old_db = pj(calc_dir, database_basename)
     if os.path.exists(old_db):
-        shutil.copy(old_db, pj(database_dir_sim, database_basename))
+        shutil.copy(old_db, pj(calc_dir_sim, database_basename))
     else:
         warnings.warn(
             f"simulate: {old_db} not found, will create new db in "
-            f"{database_dir_sim}"
+            f"{calc_dir_sim}"
         )
-    return calc_dir_sim, database_dir_sim
+    return calc_dir_sim
 
 
 def run(
@@ -1169,7 +1167,6 @@ def run(
     verbose: bool | Sequence[str] = False,
     calc_dir: str = CALC_DIR,
     simulate: bool = False,
-    database_dir: str = None,
     database_basename: str = DATABASE_BASENAME,
     backup: bool = False,
     git: bool = False,
@@ -1198,9 +1195,9 @@ def run(
     dask_client
         A dask client. Use this or ``poolsize``.
     save
-        save final ``DataFrame`` to ``<database_dir>/<database_basename>``
-        (pickle format only), default: "calc/database.pk", see also
-        `database_dir`, `calc_dir` and `database_basename`
+        save final ``DataFrame`` to ``<calc_dir>/<database_basename>`` (pickle
+        format only), default: "calc/database.pk", see also `calc_dir` and
+        `database_basename`
     tmpsave
         save the result dict from each ``pset.update(func(pset))`` from each
         `pset` to ``<calc_dir>/tmpsave/<run_id>/<pset_id>.pk`` (pickle format
@@ -1217,10 +1214,8 @@ def run(
         run everything in ``<calc_dir>.simulate``, don't call `func`, i.e. save
         what the run would create, but without the results from `func`,
         useful to check if `params` are correct before starting a production run
-    database_dir
-        Path for the database. Default is ``<calc_dir>``.
     database_basename
-        ``<database_dir>/<database_basename>``, default: "database.pk"
+        ``<calc_dir>/<database_basename>``, default: "database.pk"
     backup
         Make backup of ``<calc_dir>`` to ``<calc_dir>.bak_<timestamp>_run_id_<run_id>``
         where ``<run_id>`` is the latest ``_run_id`` present in ``df``
@@ -1264,14 +1259,12 @@ def run(
 
     git_enter(git)
 
-    database_dir = calc_dir if database_dir is None else database_dir
     if simulate:
-        calc_dir, database_dir = _simulate_helper(
+        calc_dir = _simulate_helper(
             calc_dir=calc_dir,
-            database_dir=database_dir,
             database_basename=database_basename,
         )
-    database_fn = pj(database_dir, database_basename)
+    database_fn = pj(calc_dir, database_basename)
 
     if df is None:
         if os.path.exists(database_fn):
@@ -1472,18 +1465,16 @@ def prep_batch(
 
     # Same defaults as in run()
     calc_dir = kwds.pop("calc_dir", CALC_DIR)
-    database_dir = kwds.pop("database_dir", calc_dir)
     database_basename = kwds.pop("database_basename", DATABASE_BASENAME)
 
     # Catch simulate flag, don't pass that thru to run() b/c there this
     # prevents func() from being executed, but that's what we always want here
     # since it writes only input files. Instead, just set calc_dir =
-    # calc_dir_sim (same for database_dir), copy the database as in run() and
-    # go. Don't copy the run_*.sh scripts b/c they are generated afresh anyway.
+    # calc_dir_sim, copy the database as in run() and go. Don't copy the
+    # run_*.sh scripts b/c they are generated afresh anyway.
     if kwds.pop("simulate", False):
-        calc_dir, database_dir = _simulate_helper(
+        calc_dir = _simulate_helper(
             calc_dir=calc_dir,
-            database_dir=database_dir,
             database_basename=database_basename,
         )
 
@@ -1507,7 +1498,6 @@ def prep_batch(
         git=False,
         simulate=False,
         calc_dir=calc_dir,
-        database_dir=database_dir,
         database_basename=database_basename,
         **kwds,
     )

@@ -875,12 +875,11 @@ def test_prep_batch():
             calc_dir=f"{tmpdir}/calc",
             calc_templ_dir=f"{template_dir}/calc",
             machine_templ_dir=f"{template_dir}/machines",
-            database_dir=f"{tmpdir}/db",
             write_pset=True,
         )
         print(system(f"tree {tmpdir}"))
 
-        assert os.path.exists(f"{tmpdir}/db/database.pk")
+        assert os.path.exists(f"{tmpdir}/calc/database.pk")
         assert os.path.exists(f"{tmpdir}/calc/run_local.sh")
         assert os.path.exists(f"{tmpdir}/calc/run_cluster.sh")
 
@@ -907,7 +906,6 @@ def test_prep_batch():
             calc_dir=f"{tmpdir}/calc",
             calc_templ_dir=f"{template_dir}/calc",
             machine_templ_dir=f"{template_dir}/machines",
-            database_dir=f"{tmpdir}/db",
             write_pset=True,
         )
 
