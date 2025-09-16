@@ -1171,7 +1171,7 @@ def capture_logs_wrapper(
         raise ValueError(f"Illegal value {capture_logs=}")
 
 
-def _simulate_helper(*, calc_dir, database_basename):
+def _setup_simulate_dir(*, calc_dir, database_basename):
     calc_dir_sim = calc_dir + ".simulate"
     if os.path.exists(calc_dir_sim):
         shutil.rmtree(calc_dir_sim)
@@ -1291,7 +1291,7 @@ def run(
     git_enter(git)
 
     if simulate:
-        calc_dir = _simulate_helper(
+        calc_dir = _setup_simulate_dir(
             calc_dir=calc_dir,
             database_basename=database_basename,
         )
@@ -1504,7 +1504,7 @@ def prep_batch(
     # calc_dir_sim, copy the database as in run() and go. Don't copy the
     # run_*.sh scripts b/c they are generated afresh anyway.
     if kwds.pop("simulate", False):
-        calc_dir = _simulate_helper(
+        calc_dir = _setup_simulate_dir(
             calc_dir=calc_dir,
             database_basename=database_basename,
         )
