@@ -690,6 +690,17 @@ def df_update_pset_cols(
 def df_extract_dicts(
     df: pd.DataFrame, py_types: bool = False
 ) -> Sequence[dict]:
+    """
+    Convert `df`'s rows to dicts.
+
+    Parameters
+    ----------
+    df
+    py_types
+        If True, let Pandas (``Series.to_dict()``) decide types. It tries
+        to return Python native types (e.g. it converts ``pd.NA`` to ``None``.)
+        Else, try to preserve types as they are in `df`.
+    """
     if py_types:
         return [ser.to_dict() for (_, ser) in df.iterrows()]
     else:
@@ -723,10 +734,16 @@ def df_extract_params(
 ) -> Sequence[dict]:
     """Extract `params` (list of psets) from `df`.
 
-    Limit columns to ``kind="pset"`` (see :func:`filter_cols`). This will
-    reproduce the `params` fed to :func:`run` when following the prefix/postfix
-    convention (see :func:`_get_col_filter`), meaning that the pset hashes will
-    be the same.
+    Same as :func:`df_extract_dicts`, but limit columns to ``kind="pset"`` (see
+    :func:`filter_cols`). This will reproduce the `params` fed to :func:`run`
+    when following the prefix/postfix convention (see :func:`_get_col_filter`),
+    meaning that the pset hashes will be the same.
+
+    Parameters
+    ----------
+    df
+    py_types
+        See :func:`df_extract_dicts`
 
     Examples
     --------
@@ -758,7 +775,15 @@ def df_extract_params(
 def df_extract_pset(
     df: pd.DataFrame, pset_id: str, py_types: bool = False
 ) -> dict:
-    """Extract a single pset dict for `pset_id` from `df`."""
+    """Extract a single pset dict for `pset_id` from `df`.
+
+    Parameters
+    ----------
+    df
+    pset_id
+    py_types
+        See :func:`df_extract_dicts`
+    """
     df_sel = df.loc[
         df._pset_id == pset_id, filter_cols(df.columns, kind="pset")
     ]
@@ -775,6 +800,12 @@ def df_extract_pset(
 
 
 def df_ensure_dtypes(df, fill_value=pd.NA):
+    """Make sure that `df`'s dtype is ``object``. Convert any ``pd.isna()``
+    values to `fill_value`.
+
+    This is part of our attempt to prevent pandas from doing type inference and
+    conversion.
+    """
     # pd.concat() can convert pd.NA back to NaN, fix that. If the element is
     # not "scalar", then give up and don't touch it.
     def apply_func(x):
