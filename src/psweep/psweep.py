@@ -34,6 +34,7 @@ PSET_HASH_ALG = "sha1"
 GIT_ADD_ALL = "git add -A -v"
 CALC_DIR = "calc"
 DATABASE_BASENAME = "database.pk"
+FILL_VALUE = pd.NA
 
 # Make DeprecationWarning visible to users by default.
 warnings.simplefilter("default")
@@ -667,7 +668,7 @@ def df_update_pset_hash(df: pd.DataFrame, copy: bool = False) -> pd.DataFrame:
 def df_update_pset_cols(
     df: pd.DataFrame,
     pset_cols: Sequence["str"] | set[str],
-    fill_value=pd.NA,
+    fill_value=FILL_VALUE,
     copy: bool = False,
 ) -> pd.DataFrame:
     """
@@ -799,13 +800,14 @@ def df_extract_pset(
         return dict(zip(ser.keys(), ser.to_list()))
 
 
-def df_ensure_dtypes(df, fill_value=pd.NA):
+def df_ensure_dtypes(df, fill_value=FILL_VALUE):
     """Make sure that `df`'s dtype is ``object``. Convert any ``pd.isna()``
     values to `fill_value`.
 
     This is part of our attempt to prevent pandas from doing type inference and
     conversion.
     """
+
     # pd.concat() can convert pd.NA back to NaN, fix that. If the element is
     # not "scalar", then give up and don't touch it.
     def apply_func(x):
@@ -1203,7 +1205,7 @@ def run(
     git: bool = False,
     skip_dups: bool = False,
     capture_logs: str = None,
-    fill_value=pd.NA,
+    fill_value=FILL_VALUE,
 ) -> pd.DataFrame:
     """
     Call `func` for each `pset` in `params`. Populate a DataFrame with rows
@@ -1264,9 +1266,7 @@ def run(
         ``None`` then do nothing (default). Useful for capturing per-pset log
         text, e.g. ``print()`` calls in `func` will be captured.
     fill_value
-        NA value used for missing values in the database DataFrame. ``np.nan``
-        causes problems (`pandas` casts types even when ``dtype=object``), so
-        we stick to ``pd.NA``.
+        NA value used for missing values in the database DataFrame.
 
     Returns
     -------
