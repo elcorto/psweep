@@ -521,8 +521,8 @@ underscore in {func}`~psweep.psweep.pset_hash` (and all functions that use it, i
 should you ever want to re-calculate the hash, as in
 
 ```py
->>> for idx, row in df.iterrows():
-...    df.at[idx, "_pset_hash_new"] = ps.pset_hash(row.to_dict())
+>>> for idx, row_dct in enumerate(ps.df_extract_dicts(df)):
+...     df.at[idx, "_pset_hash_new"] = ps.pset_hash(row_dct)
 
 >>> df
    a                                _pset_hash                              _pset_id  ...   result_                            _pset_hash_new
@@ -536,8 +536,11 @@ then the hash goes only over the `a` field, ignoring `_pset_id`, any other
 prefix field, as well as `result_`. Thus, `_pset_hash` and `_pset_hash_new`
 must be the same.
 
-We may provide tooling for that in the future. See also
-https://github.com/elcorto/psweep/issues/15 .
+Note that you can do the above using
+{func}`~psweep.psweep.df_update_pset_hash`, which updates the `_pset_hash`
+field. We do this automatically in {func}`~psweep.psweep.run` so that when
+params come in that add new pset variables (extend a study case), the hashes
+are kept up-to-date.
 
 If you don't use any functionality based on pset hashes, such as filtering
 duplicate `pset`s, then this doesn't affect you at all. For example you
