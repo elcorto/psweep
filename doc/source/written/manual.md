@@ -1025,7 +1025,7 @@ We have support for managing calculations on remote systems such
 as HPC clusters with a batch system like SLURM.
 
 You can use `dask` tooling or a template-based workflow. Both have their
-pros and cons (no free lunch!), but try `dask` first.
+pros and cons (no free lunch!).
 
 ### `dask`
 
@@ -1239,9 +1239,6 @@ workloads. See the [Pros and Cons](s:template-pro-con) section below.
 
 ```
 
-The central function to use is {func}`~psweep.psweep.prep_batch`. See `examples/batch_templates`
-for a full example.
-
 The workflow is based on **template files**. They are processed using
 [jinja](https://github.com/pallets/jinja) to replace each `{{foo}}` or `{{ foo }}`
 by a value contained in a pset, so `{{param_a}}`,
@@ -1260,8 +1257,20 @@ you need to escape the `$` with `$$foo`, else they will be treated as
 placeholders.
 ```
 
-We piggy-back on the {func}`~psweep.psweep.run` workflow from above to, instead of running jobs
-with it, just **create batch scripts using template files**.
+We piggy-back on the {func}`~psweep.psweep.run` workflow from above to, instead
+of running jobs with it, create batch scripts using template files. We
+replace {func}`~psweep.psweep.run` by {func}`~psweep.psweep.prep_batch` to
+process `params`, so call `ps.prep_batch(params)` instead of `ps.run(func,
+params)`. The rest of the setup code that creates `params` stays the same.
+
+See `examples/batch_templates` for a full example.
+
+Except for `func`, you can pass all keywords that {func}`~psweep.psweep.run`
+accepts also to {func}`~psweep.psweep.prep_batch`, in particular `skip_dups`
+when extending a study, as well as `backup` and/or `simulate`. The latter will
+also create a dir `calc.simulate` and copy over the database. Keywords that
+deal with executing `func` such as `poolsize`, `dask_client` or `capture_logs`
+are not relevant here, though.
 
 You can use the proposed workflow below directly on the remote machine (need to
 install `psweep` there) or run it locally and use a copy-to-cluster workflow.
@@ -1272,7 +1281,7 @@ control over every part of the workflow. We just automate the boring stuff.
 
 * define `params` to be varied as shown above (probably in a script, say
   `input.py`)
-* in that script, call `ps.prep_batch(params)` (instead of `run(..., params)`);
+* in that script, call `ps.prep_batch(params)` (instead of `ps.run(func, params)`);
   this performs these steps for you
   * use `templates/calc/*`: scripts that you want to run in each batch job
   * use `templates/machines/<mycluster>/jobscript`: batch job script
@@ -1319,7 +1328,6 @@ Post-processing is (almost) as before:
   * **additionally**: write a new `calc/run_<mycluster>.sh` with old submit
     commands still in there, but commented out
 
-
 #### Templates layout and written files
 
 An example template dir, based on ``examples/batch_templates``:
@@ -1342,7 +1350,7 @@ template file is treated as a simple text file, be it a Python script, a shell
 script, a config file or anything else. Above we use a small Python script
 `run.py` for demonstration purposes and communicate `pset` content (parameters
 to vary) by replacing placeholders in there. See [this
-section](s:template-pro-con) for other ways to improve this in the Python
+section](s:template-tips) for other ways to improve this in the Python
 script case.
 
 ##### calc templates
@@ -1429,37 +1437,8 @@ particular, make sure to create `.gitignore` first, else we'll track `calc/` as
 well, which you may safely do when data in `calc` is small. Else use `git-lfs`,
 for example.
 
-(s:template-pro-con)=
-#### Pros and Cons
-
-```{admonition} Pros
-:class: hint
-* Works for all workloads, also ones with no Python interface; for instance you
-  can sweep over SLURM settings easily (number of cores, memory, GPU yes or
-  no, ...).
-* No `dask_control` process. Once you submitt jobs and assuming that each job
-  has a time limit that is large enough, jobs may wait in the queue for days.
-  The workflow leverages the more non-interactive nature of HPC systems.
-  You can once in a while run a post-processing script and collect
-  results that are already written (e.g. `<calc_dir>/<pset_id>/result.pk`) and
-  start to analyse this (partial) data.
-* Uses only batch system tooling, so essentially shell scripts. If you copy
-  (`rsync`!) generated files to and from the HPC machine, you don't even need to
-  install `psweep` there.
-```
-
-```{admonition} Cons
-:class: attention
-
-* More manual multi-step workflow comparted to local and `dask` where we can
-  just do `df=ps.run(...)` and have results in `df`.
-* Always one batch job per `pset`.
-* The workflow is suited for more experienced HPC users. You may need to work
-  a bit more directly with your batch system (`squeue`, `scancel`, ... in case
-  of SLURM). Also some shell scripting skills are useful.
-
-More details, tips and tricks below.
-```
+(s:template-tips)=
+#### Tips and tricks
 
 The template workflow will create one batch job per `pset`. If the workload in
 `run.py` is small, then this creates some overhead. Use this only if you have
@@ -1503,7 +1482,12 @@ mpirun -np 8 bzzrrr input_file
 For Python workloads (the one we have in
 `examples/batch_templates/templates/calc/run.py`), using placeholders like
 `{{param_a}}` is actually a bit of an anti-pattern, since we would ideally like to
-pass the `pset` to the workload using Python. With templates, we can use
+pass the `pset` to the workload using Python. With templates, we have two ways
+of dealing with that.
+
+##### Write pset content to disk
+
+First we can use
 `prep_batch(..., write_pset=True)` which writes
 `<calc_dir>/<pset_id>/pset.pk`. In `run.py` you can then do
 
@@ -1537,17 +1521,82 @@ df_eval = pd.DataFrame(dicts)
 ps.df_write("db/database_eval.pk", df_eval)
 ```
 
-This is not ideal since we communicate by writing (potentially
-many) small files, namely `run.py`, `pset.pk`, `result.pk`
-`jobscript_<cluster>` for each `<calc_dir>/<pset_id>/` dir. Also, in the
-example above, `run.py` would be the exact same file for each job.
+##### Read pset content from the database
 
-So we recommend to use the `dask` workflow if you can and use templates as a
-fallback solution, for instance if
+
+```py
+import psweep as ps
+
+def func(pset):
+    ... here be code ...
+    return result
+
+# Even better (less code):
+##from my_utils_module import func
+
+# Read pset from the database. We only pass in pset_id via template
+# replacement.
+pset = ps.df_extract_pset(ps.df_read("../database.pk"), "{{_pset_id}}")
+
+# write <calc_dir>/<pset_id>/result.pk
+ps.pickle_write("result.pk", func(pset))
+```
+
+See also `examples/batch_templates_read_from_db`.
+
+This saves writing `pset.pk`, but still, both approaches are not ideal
+since we communicate by writing (potentially many) small files, namely
+`run.py`, `pset.pk` (when using `write_pset=True)`, `result.pk`
+`jobscript_<cluster>` for each `<calc_dir>/<pset_id>/` dir. Also, when using
+`write_pset=True`, `run.py` would be the exact same file for each job.
+
+On the other hand, the templates workflow is the most simple and low-tech
+solution, esp. if you are already familiar with HPC systems, whereas `dask` +
+`dask_jobqueue` has a bit of a learning curve.
+
+So we recommend using templates if
 
 * `dask_jobqueue` doesn't have something that matches your compute infrastructure
 * your workload doesn't have a Python interface / it is cumbersome to create a
-  Python function that runs your workload
+  Python function that runs your workload (for example your `run.py` needs to
+  run in a docker / apptainer container and you need to run shell setup code in
+  your SLURM script and inside the container before calling `python run.py`)
+* you have a moderate number of jobs (say 100 .. 1000) and each one contains a
+  huge workload (runs for hours or days, say)
+
+(s:template-pro-con)=
+#### Pros and Cons
+
+```{admonition} Pros
+:class: hint
+* Works for all workloads, also ones with no Python interface; for instance you
+  can sweep over SLURM settings easily (number of cores, memory, GPU yes or
+  no, ...).
+* No `dask_control` process. Once you submitt jobs and assuming that each job
+  has a time limit that is large enough, jobs may wait in the queue for days.
+  The workflow leverages the more non-interactive nature of HPC systems.
+  You can once in a while run a post-processing script and collect
+  results that are already written (e.g. `<calc_dir>/<pset_id>/result.pk`) and
+  start to analyse this (partial) data.
+* Uses only batch system tooling, so essentially shell scripts. If you copy
+  (`rsync`!) generated files to and from the HPC machine, you don't even need to
+  install `psweep` there.
+* Easy debugging, since all files of one job sit in the job's
+  `<calc_dir>/<pset_id>/`. For example you can copy this dir, make a change to
+  a file, `sbatch jobscript_<cluster>` again to repeat just that job.
+```
+
+```{admonition} Cons
+:class: attention
+
+* More manual multi-step workflow comparted to local and `dask` where we can
+  just do `df=ps.run(...)` and have results in `df`.
+* Always one batch job per `pset`.
+* The workflow is suited for more experienced HPC users. You may need to work
+  a bit more directly with your batch system (`squeue`, `scancel`, ... in case
+  of SLURM). Also some shell scripting skills are useful.
+```
+
 
 ## Special topics
 
