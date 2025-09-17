@@ -658,10 +658,8 @@ def df_filter_conds(
 def df_update_pset_hash(df: pd.DataFrame, copy: bool = False) -> pd.DataFrame:
     """Add or update ``_pset_hash`` column."""
     df_out = df.copy() if copy else df
-    hsh = []
-    for row_dct in df_extract_dicts(df):
-        hsh.append(pset_hash(row_dct))
-    df_out["_pset_hash"] = hsh
+    for idx, row_dct in enumerate(df_extract_dicts(df)):
+        df_out.at[idx, "_pset_hash"] = pset_hash(row_dct)
     return df_out
 
 
