@@ -1315,7 +1315,7 @@ def test_filter_cols():
         assert ps.filter_cols(cols, kind) == ["bar_"]
 
 
-@pytest.mark.parametrize("fill_value", [np.nan, pd.NA])
+@pytest.mark.parametrize("fill_value", [np.nan, pd.NA, None])
 def test_df_update_pset_cols(fill_value):
     df = pd.DataFrame(dict(a=[1, 2.34], b=["xx", "yy"]), dtype=object)
 
