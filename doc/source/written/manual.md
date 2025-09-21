@@ -1202,9 +1202,8 @@ See `examples/batch_dask/run_psweep_jax_gpu.py`.
 * Assigning different resources (GPUs or not, large or small memory) to different
   dask workers is hard or even not possible with `dask_jobqueue` since the
   design assumes that you create one `FooCluster` with fixed resource
-  specifications. See these discussions for more:
+  specifications. See this discussion for more:
   https://github.com/dask/dask-jobqueue/issues/378
-  https://github.com/dask/dask-jobqueue/issues/378.
 * HPC cluster time limits might be a problem if some jobs are waiting in the
   queue for a long time and meanwhile the `dask_control` batch job gets
   terminated due to its time limit. The latter should be set to the longest
