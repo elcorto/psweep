@@ -16,6 +16,8 @@ psweep
 .. autosummary::
    :toctree:
 
+   CALC_DIR
+   DATABASE_BASENAME
    FileTemplate
    GIT_ADD_ALL
    Machine
@@ -24,9 +26,13 @@ psweep
    PSET_HASH_ALG
    PsweepHashError
    _get_col_filter
+   _setup_simulate_dir
    capture_logs_wrapper
    check_calc_dir
+   df_ensure_dtypes
+   df_extract_dicts
    df_extract_params
+   df_extract_pset
    df_filter_conds
    df_print
    df_read

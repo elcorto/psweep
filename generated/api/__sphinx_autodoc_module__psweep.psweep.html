@@ -60,7 +60,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'generated/api/__sphinx_autodoc_module__psweep.psweep';</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="psweep.psweep.FileTemplate" href="psweep.psweep.FileTemplate.html" />
+    <link rel="next" title="psweep.psweep.CALC_DIR" href="psweep.psweep.CALC_DIR.html" />
     <link rel="prev" title="psweep.cli.check_calc_dir" href="psweep.cli.check_calc_dir.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -189,6 +189,8 @@
 </ul>
 </details></li>
 <li class="toctree-l2 current active has-children"><a class="current reference internal" href="#">psweep</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="psweep.psweep.CALC_DIR.html">psweep.psweep.CALC_DIR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="psweep.psweep.DATABASE_BASENAME.html">psweep.psweep.DATABASE_BASENAME</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.FileTemplate.html">psweep.psweep.FileTemplate</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.GIT_ADD_ALL.html">psweep.psweep.GIT_ADD_ALL</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.Machine.html">psweep.psweep.Machine</a></li>
@@ -197,9 +199,13 @@
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.PSET_HASH_ALG.html">psweep.psweep.PSET_HASH_ALG</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.PsweepHashError.html">psweep.psweep.PsweepHashError</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep._get_col_filter.html">psweep.psweep._get_col_filter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="psweep.psweep._setup_simulate_dir.html">psweep.psweep._setup_simulate_dir</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.capture_logs_wrapper.html">psweep.psweep.capture_logs_wrapper</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.check_calc_dir.html">psweep.psweep.check_calc_dir</a></li>
+<li class="toctree-l3"><a class="reference internal" href="psweep.psweep.df_ensure_dtypes.html">psweep.psweep.df_ensure_dtypes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="psweep.psweep.df_extract_dicts.html">psweep.psweep.df_extract_dicts</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.df_extract_params.html">psweep.psweep.df_extract_params</a></li>
+<li class="toctree-l3"><a class="reference internal" href="psweep.psweep.df_extract_pset.html">psweep.psweep.df_extract_pset</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.df_filter_conds.html">psweep.psweep.df_filter_conds</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.df_print.html">psweep.psweep.df_print</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.df_read.html">psweep.psweep.df_read</a></li>
@@ -414,6 +420,12 @@ document.write(`
 <h1>psweep<a class="headerlink" href="#psweep" title="Link to this heading">#</a></h1>
 <span class="target" id="module-psweep.psweep"></span><div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
 <tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="psweep.psweep.CALC_DIR.html#psweep.psweep.CALC_DIR" title="psweep.psweep.CALC_DIR"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CALC_DIR</span></code></a></p></td>
+<td><p>str(object='') -&gt; str str(bytes_or_buffer[, encoding[, errors]]) -&gt; str</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="psweep.psweep.DATABASE_BASENAME.html#psweep.psweep.DATABASE_BASENAME" title="psweep.psweep.DATABASE_BASENAME"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DATABASE_BASENAME</span></code></a></p></td>
+<td><p>str(object='') -&gt; str str(bytes_or_buffer[, encoding[, errors]]) -&gt; str</p></td>
+</tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="psweep.psweep.FileTemplate.html#psweep.psweep.FileTemplate" title="psweep.psweep.FileTemplate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FileTemplate</span></code></a>(filename[, target_suffix])</p></td>
 <td><p></p></td>
 </tr>
@@ -438,14 +450,26 @@ document.write(`
 <tr class="row-even"><td><p><a class="reference internal" href="psweep.psweep._get_col_filter.html#psweep.psweep._get_col_filter" title="psweep.psweep._get_col_filter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_get_col_filter</span></code></a>([skip_prefix_cols, ...])</p></td>
 <td><p>Implement the package-wide prefix/postfix default convention.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="psweep.psweep.capture_logs_wrapper.html#psweep.psweep.capture_logs_wrapper" title="psweep.psweep.capture_logs_wrapper"><code class="xref py py-obj docutils literal notranslate"><span class="pre">capture_logs_wrapper</span></code></a>(pset, func, capture_logs)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="psweep.psweep._setup_simulate_dir.html#psweep.psweep._setup_simulate_dir" title="psweep.psweep._setup_simulate_dir"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_setup_simulate_dir</span></code></a>(*, calc_dir, ...)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="psweep.psweep.capture_logs_wrapper.html#psweep.psweep.capture_logs_wrapper" title="psweep.psweep.capture_logs_wrapper"><code class="xref py py-obj docutils literal notranslate"><span class="pre">capture_logs_wrapper</span></code></a>(pset, func, capture_logs)</p></td>
 <td><p>Capture and redirect stdout and stderr produced in func().</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="psweep.psweep.check_calc_dir.html#psweep.psweep.check_calc_dir" title="psweep.psweep.check_calc_dir"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_calc_dir</span></code></a>(calc_dir, df)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="psweep.psweep.check_calc_dir.html#psweep.psweep.check_calc_dir" title="psweep.psweep.check_calc_dir"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_calc_dir</span></code></a>(calc_dir, df)</p></td>
 <td><p>Check calc dir for consistency with database.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="psweep.psweep.df_extract_params.html#psweep.psweep.df_extract_params" title="psweep.psweep.df_extract_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df_extract_params</span></code></a>(df)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="psweep.psweep.df_ensure_dtypes.html#psweep.psweep.df_ensure_dtypes" title="psweep.psweep.df_ensure_dtypes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df_ensure_dtypes</span></code></a>(df[, fill_value])</p></td>
+<td><p>Make sure that <cite>df</cite>'s dtype is <code class="docutils literal notranslate"><span class="pre">object</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="psweep.psweep.df_extract_dicts.html#psweep.psweep.df_extract_dicts" title="psweep.psweep.df_extract_dicts"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df_extract_dicts</span></code></a>(df[, py_types])</p></td>
+<td><p>Convert <cite>df</cite>'s rows to dicts.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="psweep.psweep.df_extract_params.html#psweep.psweep.df_extract_params" title="psweep.psweep.df_extract_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df_extract_params</span></code></a>(df[, py_types])</p></td>
 <td><p>Extract <cite>params</cite> (list of psets) from <cite>df</cite>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="psweep.psweep.df_extract_pset.html#psweep.psweep.df_extract_pset" title="psweep.psweep.df_extract_pset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df_extract_pset</span></code></a>(df, pset_id[, py_types])</p></td>
+<td><p>Extract a single pset dict for <cite>pset_id</cite> from <cite>df</cite>.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="psweep.psweep.df_filter_conds.html#psweep.psweep.df_filter_conds" title="psweep.psweep.df_filter_conds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">df_filter_conds</span></code></a>(df, conds[, op])</p></td>
 <td><p>Filter DataFrame using bool arrays/Series/DataFrames in <cite>conds</cite>.</p></td>
@@ -615,11 +639,11 @@ document.write(`
       </div>
     </a>
     <a class="right-next"
-       href="psweep.psweep.FileTemplate.html"
+       href="psweep.psweep.CALC_DIR.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">psweep.psweep.FileTemplate</p>
+        <p class="prev-next-title">psweep.psweep.CALC_DIR</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

@@ -189,6 +189,8 @@
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../generated/api/__sphinx_autodoc_module__psweep.psweep.html">psweep</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../generated/api/psweep.psweep.CALC_DIR.html">psweep.psweep.CALC_DIR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../generated/api/psweep.psweep.DATABASE_BASENAME.html">psweep.psweep.DATABASE_BASENAME</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../generated/api/psweep.psweep.FileTemplate.html">psweep.psweep.FileTemplate</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../generated/api/psweep.psweep.GIT_ADD_ALL.html">psweep.psweep.GIT_ADD_ALL</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../generated/api/psweep.psweep.Machine.html">psweep.psweep.Machine</a></li>
@@ -197,9 +199,13 @@
 <li class="toctree-l3"><a class="reference internal" href="../generated/api/psweep.psweep.PSET_HASH_ALG.html">psweep.psweep.PSET_HASH_ALG</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../generated/api/psweep.psweep.PsweepHashError.html">psweep.psweep.PsweepHashError</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../generated/api/psweep.psweep._get_col_filter.html">psweep.psweep._get_col_filter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../generated/api/psweep.psweep._setup_simulate_dir.html">psweep.psweep._setup_simulate_dir</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../generated/api/psweep.psweep.capture_logs_wrapper.html">psweep.psweep.capture_logs_wrapper</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../generated/api/psweep.psweep.check_calc_dir.html">psweep.psweep.check_calc_dir</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../generated/api/psweep.psweep.df_ensure_dtypes.html">psweep.psweep.df_ensure_dtypes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../generated/api/psweep.psweep.df_extract_dicts.html">psweep.psweep.df_extract_dicts</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../generated/api/psweep.psweep.df_extract_params.html">psweep.psweep.df_extract_params</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../generated/api/psweep.psweep.df_extract_pset.html">psweep.psweep.df_extract_pset</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../generated/api/psweep.psweep.df_filter_conds.html">psweep.psweep.df_filter_conds</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../generated/api/psweep.psweep.df_print.html">psweep.psweep.df_print</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../generated/api/psweep.psweep.df_read.html">psweep.psweep.df_read</a></li>
@@ -459,6 +465,11 @@ document.write(`
 </ul>
 </li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#git-support">git support</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tips-and-tricks">Tips and tricks</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#write-pset-content-to-disk">Write pset content to disk</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#read-pset-content-from-the-database">Read pset content from the database</a></li>
+</ul>
+</li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#s-template-pro-con">Pros and Cons</a></li>
 </ul>
 </li>
@@ -923,8 +934,8 @@ only add calculations for new <code class="docutils literal notranslate"><span c
 underscore in <a class="reference internal" href="../generated/api/psweep.psweep.pset_hash.html#psweep.psweep.pset_hash" title="psweep.psweep.pset_hash"><code class="xref py py-func docutils literal notranslate"><span class="pre">pset_hash()</span></code></a> (and all functions that use it, in particular
 <a class="reference internal" href="../generated/api/psweep.psweep.run.html#psweep.psweep.run" title="psweep.psweep.run"><code class="xref py py-func docutils literal notranslate"><span class="pre">run()</span></code></a>) to ensure that the hash includes only <code class="docutils literal notranslate"><span class="pre">pset</span></code> variables. For example
 should you ever want to re-calculate the hash, as in</p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
-<span class="gp">... </span>   <span class="n">df</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="s2">&quot;_pset_hash_new&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">pset_hash</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">to_dict</span><span class="p">())</span>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">row_dct</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">ps</span><span class="o">.</span><span class="n">df_extract_dicts</span><span class="p">(</span><span class="n">df</span><span class="p">)):</span>
+<span class="gp">... </span>    <span class="n">df</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="s2">&quot;_pset_hash_new&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">pset_hash</span><span class="p">(</span><span class="n">row_dct</span><span class="p">)</span>
 
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span>
 <span class="go">   a                                _pset_hash                              _pset_id  ...   result_                            _pset_hash_new</span>
@@ -937,8 +948,11 @@ should you ever want to re-calculate the hash, as in</p>
 <p>then the hash goes only over the <code class="docutils literal notranslate"><span class="pre">a</span></code> field, ignoring <code class="docutils literal notranslate"><span class="pre">_pset_id</span></code>, any other
 prefix field, as well as <code class="docutils literal notranslate"><span class="pre">result_</span></code>. Thus, <code class="docutils literal notranslate"><span class="pre">_pset_hash</span></code> and <code class="docutils literal notranslate"><span class="pre">_pset_hash_new</span></code>
 must be the same.</p>
-<p>We may provide tooling for that in the future. See also
-<a class="github reference external" href="https://github.com/elcorto/psweep/issues/15">elcorto/psweep#15</a> .</p>
+<p>Note that you can do the above using
+<a class="reference internal" href="../generated/api/psweep.psweep.df_update_pset_hash.html#psweep.psweep.df_update_pset_hash" title="psweep.psweep.df_update_pset_hash"><code class="xref py py-func docutils literal notranslate"><span class="pre">df_update_pset_hash()</span></code></a>, which updates the <code class="docutils literal notranslate"><span class="pre">_pset_hash</span></code>
+field. We do this automatically in <a class="reference internal" href="../generated/api/psweep.psweep.run.html#psweep.psweep.run" title="psweep.psweep.run"><code class="xref py py-func docutils literal notranslate"><span class="pre">run()</span></code></a> so that when
+params come in that add new pset variables (extend a study case), the hashes
+are kept up-to-date.</p>
 <p>If you don’t use any functionality based on pset hashes, such as filtering
 duplicate <code class="docutils literal notranslate"><span class="pre">pset</span></code>s, then this doesn’t affect you at all. For example you
 can have prefix or postfix names in your params.</p>
@@ -1349,7 +1363,7 @@ discussion</a>). But you can also use
 <p>We have support for managing calculations on remote systems such
 as HPC clusters with a batch system like SLURM.</p>
 <p>You can use <code class="docutils literal notranslate"><span class="pre">dask</span></code> tooling or a template-based workflow. Both have their
-pros and cons (no free lunch!), but try <code class="docutils literal notranslate"><span class="pre">dask</span></code> first.</p>
+pros and cons (no free lunch!).</p>
 <section id="dask">
 <h3><code class="docutils literal notranslate"><span class="pre">dask</span></code><a class="headerlink" href="#dask" title="Link to this heading">#</a></h3>
 <p>Overview of <code class="docutils literal notranslate"><span class="pre">dask</span></code>’s architecture (from <a class="reference external" href="https://docs.dask.org/en/stable/deploying.html">the <code class="docutils literal notranslate"><span class="pre">dask</span></code>
@@ -1570,9 +1584,8 @@ the dask dashboard and more.</p>
 <li><p>Assigning different resources (GPUs or not, large or small memory) to different
 dask workers is hard or even not possible with <code class="docutils literal notranslate"><span class="pre">dask_jobqueue</span></code> since the
 design assumes that you create one <code class="docutils literal notranslate"><span class="pre">FooCluster</span></code> with fixed resource
-specifications. See these discussions for more:
-<a class="github reference external" href="https://github.com/dask/dask-jobqueue/issues/378">dask/dask-jobqueue#378</a>
-<a class="github reference external" href="https://github.com/dask/dask-jobqueue/issues/378">dask/dask-jobqueue#378</a>.</p></li>
+specifications. See this discussion for more:
+<a class="github reference external" href="https://github.com/dask/dask-jobqueue/issues/378">dask/dask-jobqueue#378</a></p></li>
 <li><p>HPC cluster time limits might be a problem if some jobs are waiting in the
 queue for a long time and meanwhile the <code class="docutils literal notranslate"><span class="pre">dask_control</span></code> batch job gets
 terminated due to its time limit. The latter should be set to the longest
@@ -1606,8 +1619,6 @@ revolves around maximal user control of each step of the workflow.</p>
 <p>This workflow, while being the most general, might not be ideal for all
 workloads. See the <a class="reference internal" href="#s-template-pro-con"><span class="std std-ref">Pros and Cons</span></a> section below.</p>
 </div>
-<p>The central function to use is <a class="reference internal" href="../generated/api/psweep.psweep.prep_batch.html#psweep.psweep.prep_batch" title="psweep.psweep.prep_batch"><code class="xref py py-func docutils literal notranslate"><span class="pre">prep_batch()</span></code></a>. See <code class="docutils literal notranslate"><span class="pre">examples/batch_templates</span></code>
-for a full example.</p>
 <p>The workflow is based on <strong>template files</strong>. They are processed using
 <a class="reference external" href="https://github.com/pallets/jinja">jinja</a> to replace each <code class="docutils literal notranslate"><span class="pre">{{foo}}</span></code> or <code class="docutils literal notranslate"><span class="pre">{{</span> <span class="pre">foo</span> <span class="pre">}}</span></code>
 by a value contained in a pset, so <code class="docutils literal notranslate"><span class="pre">{{param_a}}</span></code>,
@@ -1624,8 +1635,17 @@ is <code class="docutils literal notranslate"><span class="pre">template_mode=&q
 you need to escape the <code class="docutils literal notranslate"><span class="pre">$</span></code> with <code class="docutils literal notranslate"><span class="pre">$$foo</span></code>, else they will be treated as
 placeholders.</p>
 </div>
-<p>We piggy-back on the <a class="reference internal" href="../generated/api/psweep.psweep.run.html#psweep.psweep.run" title="psweep.psweep.run"><code class="xref py py-func docutils literal notranslate"><span class="pre">run()</span></code></a> workflow from above to, instead of running jobs
-with it, just <strong>create batch scripts using template files</strong>.</p>
+<p>We piggy-back on the <a class="reference internal" href="../generated/api/psweep.psweep.run.html#psweep.psweep.run" title="psweep.psweep.run"><code class="xref py py-func docutils literal notranslate"><span class="pre">run()</span></code></a> workflow from above to, instead
+of running jobs with it, create batch scripts using template files. We
+replace <a class="reference internal" href="../generated/api/psweep.psweep.run.html#psweep.psweep.run" title="psweep.psweep.run"><code class="xref py py-func docutils literal notranslate"><span class="pre">run()</span></code></a> by <a class="reference internal" href="../generated/api/psweep.psweep.prep_batch.html#psweep.psweep.prep_batch" title="psweep.psweep.prep_batch"><code class="xref py py-func docutils literal notranslate"><span class="pre">prep_batch()</span></code></a> to
+process <code class="docutils literal notranslate"><span class="pre">params</span></code>, so call <code class="docutils literal notranslate"><span class="pre">ps.prep_batch(params)</span></code> instead of <code class="docutils literal notranslate"><span class="pre">ps.run(func,</span> <span class="pre">params)</span></code>. The rest of the setup code that creates <code class="docutils literal notranslate"><span class="pre">params</span></code> stays the same.</p>
+<p>See <code class="docutils literal notranslate"><span class="pre">examples/batch_templates</span></code> for a full example.</p>
+<p>Except for <code class="docutils literal notranslate"><span class="pre">func</span></code>, you can pass all keywords that <a class="reference internal" href="../generated/api/psweep.psweep.run.html#psweep.psweep.run" title="psweep.psweep.run"><code class="xref py py-func docutils literal notranslate"><span class="pre">run()</span></code></a>
+accepts also to <a class="reference internal" href="../generated/api/psweep.psweep.prep_batch.html#psweep.psweep.prep_batch" title="psweep.psweep.prep_batch"><code class="xref py py-func docutils literal notranslate"><span class="pre">prep_batch()</span></code></a>, in particular <code class="docutils literal notranslate"><span class="pre">skip_dups</span></code>
+when extending a study, as well as <code class="docutils literal notranslate"><span class="pre">backup</span></code> and/or <code class="docutils literal notranslate"><span class="pre">simulate</span></code>. The latter will
+also create a dir <code class="docutils literal notranslate"><span class="pre">calc.simulate</span></code> and copy over the database. Keywords that
+deal with executing <code class="docutils literal notranslate"><span class="pre">func</span></code> such as <code class="docutils literal notranslate"><span class="pre">poolsize</span></code>, <code class="docutils literal notranslate"><span class="pre">dask_client</span></code> or <code class="docutils literal notranslate"><span class="pre">capture_logs</span></code>
+are not relevant here, though.</p>
 <p>You can use the proposed workflow below directly on the remote machine (need to
 install <code class="docutils literal notranslate"><span class="pre">psweep</span></code> there) or run it locally and use a copy-to-cluster workflow.
 Since we actually don’t start jobs or talk to the batch system, you have full
@@ -1635,7 +1655,7 @@ control over every part of the workflow. We just automate the boring stuff.</p>
 <ul class="simple">
 <li><p>define <code class="docutils literal notranslate"><span class="pre">params</span></code> to be varied as shown above (probably in a script, say
 <code class="docutils literal notranslate"><span class="pre">input.py</span></code>)</p></li>
-<li><p>in that script, call <code class="docutils literal notranslate"><span class="pre">ps.prep_batch(params)</span></code> (instead of <code class="docutils literal notranslate"><span class="pre">run(...,</span> <span class="pre">params)</span></code>);
+<li><p>in that script, call <code class="docutils literal notranslate"><span class="pre">ps.prep_batch(params)</span></code> (instead of <code class="docutils literal notranslate"><span class="pre">ps.run(func,</span> <span class="pre">params)</span></code>);
 this performs these steps for you</p>
 <ul>
 <li><p>use <code class="docutils literal notranslate"><span class="pre">templates/calc/*</span></code>: scripts that you want to run in each batch job</p></li>
@@ -1712,7 +1732,7 @@ commands still in there, but commented out</p></li>
 template file is treated as a simple text file, be it a Python script, a shell
 script, a config file or anything else. Above we use a small Python script
 <code class="docutils literal notranslate"><span class="pre">run.py</span></code> for demonstration purposes and communicate <code class="docutils literal notranslate"><span class="pre">pset</span></code> content (parameters
-to vary) by replacing placeholders in there. See <a class="reference internal" href="#s-template-pro-con"><span class="std std-ref">this
+to vary) by replacing placeholders in there. See <a class="reference internal" href="#s-template-tips"><span class="std std-ref">this
 section</span></a> for other ways to improve this in the Python
 script case.</p>
 <section id="calc-templates">
@@ -1789,37 +1809,8 @@ particular, make sure to create <code class="docutils literal notranslate"><span
 well, which you may safely do when data in <code class="docutils literal notranslate"><span class="pre">calc</span></code> is small. Else use <code class="docutils literal notranslate"><span class="pre">git-lfs</span></code>,
 for example.</p>
 </section>
-<section id="s-template-pro-con">
-<span id="id1"></span><h4>Pros and Cons<a class="headerlink" href="#s-template-pro-con" title="Link to this heading">#</a></h4>
-<div class="hint admonition">
-<p class="admonition-title">Pros</p>
-<ul class="simple">
-<li><p>Works for all workloads, also ones with no Python interface; for instance you
-can sweep over SLURM settings easily (number of cores, memory, GPU yes or
-no, …).</p></li>
-<li><p>No <code class="docutils literal notranslate"><span class="pre">dask_control</span></code> process. Once you submitt jobs and assuming that each job
-has a time limit that is large enough, jobs may wait in the queue for days.
-The workflow leverages the more non-interactive nature of HPC systems.
-You can once in a while run a post-processing script and collect
-results that are already written (e.g. <code class="docutils literal notranslate"><span class="pre">&lt;calc_dir&gt;/&lt;pset_id&gt;/result.pk</span></code>) and
-start to analyse this (partial) data.</p></li>
-<li><p>Uses only batch system tooling, so essentially shell scripts. If you copy
-(<code class="docutils literal notranslate"><span class="pre">rsync</span></code>!) generated files to and from the HPC machine, you don’t even need to
-install <code class="docutils literal notranslate"><span class="pre">psweep</span></code> there.</p></li>
-</ul>
-</div>
-<div class="attention admonition">
-<p class="admonition-title">Cons</p>
-<ul class="simple">
-<li><p>More manual multi-step workflow comparted to local and <code class="docutils literal notranslate"><span class="pre">dask</span></code> where we can
-just do <code class="docutils literal notranslate"><span class="pre">df=ps.run(...)</span></code> and have results in <code class="docutils literal notranslate"><span class="pre">df</span></code>.</p></li>
-<li><p>Always one batch job per <code class="docutils literal notranslate"><span class="pre">pset</span></code>.</p></li>
-<li><p>The workflow is suited for more experienced HPC users. You may need to work
-a bit more directly with your batch system (<code class="docutils literal notranslate"><span class="pre">squeue</span></code>, <code class="docutils literal notranslate"><span class="pre">scancel</span></code>, … in case
-of SLURM). Also some shell scripting skills are useful.</p></li>
-</ul>
-<p>More details, tips and tricks below.</p>
-</div>
+<section id="tips-and-tricks">
+<span id="s-template-tips"></span><h4>Tips and tricks<a class="headerlink" href="#tips-and-tricks" title="Link to this heading">#</a></h4>
 <p>The template workflow will create one batch job per <code class="docutils literal notranslate"><span class="pre">pset</span></code>. If the workload in
 <code class="docutils literal notranslate"><span class="pre">run.py</span></code> is small, then this creates some overhead. Use this only if you have
 sizable workloads. For many small lightweight workloads, better start one batch
@@ -1854,7 +1845,11 @@ mpirun<span class="w"> </span>-np<span class="w"> </span><span class="m">8</span
 <p>For Python workloads (the one we have in
 <code class="docutils literal notranslate"><span class="pre">examples/batch_templates/templates/calc/run.py</span></code>), using placeholders like
 <code class="docutils literal notranslate"><span class="pre">{{param_a}}</span></code> is actually a bit of an anti-pattern, since we would ideally like to
-pass the <code class="docutils literal notranslate"><span class="pre">pset</span></code> to the workload using Python. With templates, we can use
+pass the <code class="docutils literal notranslate"><span class="pre">pset</span></code> to the workload using Python. With templates, we have two ways
+of dealing with that.</p>
+<section id="write-pset-content-to-disk">
+<h5>Write pset content to disk<a class="headerlink" href="#write-pset-content-to-disk" title="Link to this heading">#</a></h5>
+<p>First we can use
 <code class="docutils literal notranslate"><span class="pre">prep_batch(...,</span> <span class="pre">write_pset=True)</span></code> which writes
 <code class="docutils literal notranslate"><span class="pre">&lt;calc_dir&gt;/&lt;pset_id&gt;/pset.pk</span></code>. In <code class="docutils literal notranslate"><span class="pre">run.py</span></code> you can then do</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">psweep</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ps</span>
@@ -1884,17 +1879,80 @@ so a row in the DataFrame.</p>
 <span class="n">ps</span><span class="o">.</span><span class="n">df_write</span><span class="p">(</span><span class="s2">&quot;db/database_eval.pk&quot;</span><span class="p">,</span> <span class="n">df_eval</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>This is not ideal since we communicate by writing (potentially
-many) small files, namely <code class="docutils literal notranslate"><span class="pre">run.py</span></code>, <code class="docutils literal notranslate"><span class="pre">pset.pk</span></code>, <code class="docutils literal notranslate"><span class="pre">result.pk</span></code>
-<code class="docutils literal notranslate"><span class="pre">jobscript_&lt;cluster&gt;</span></code> for each <code class="docutils literal notranslate"><span class="pre">&lt;calc_dir&gt;/&lt;pset_id&gt;/</span></code> dir. Also, in the
-example above, <code class="docutils literal notranslate"><span class="pre">run.py</span></code> would be the exact same file for each job.</p>
-<p>So we recommend to use the <code class="docutils literal notranslate"><span class="pre">dask</span></code> workflow if you can and use templates as a
-fallback solution, for instance if</p>
+</section>
+<section id="read-pset-content-from-the-database">
+<h5>Read pset content from the database<a class="headerlink" href="#read-pset-content-from-the-database" title="Link to this heading">#</a></h5>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">psweep</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ps</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">func</span><span class="p">(</span><span class="n">pset</span><span class="p">):</span>
+    <span class="o">...</span> <span class="n">here</span> <span class="n">be</span> <span class="n">code</span> <span class="o">...</span>
+    <span class="k">return</span> <span class="n">result</span>
+
+<span class="c1"># Even better (less code):</span>
+<span class="c1">##from my_utils_module import func</span>
+
+<span class="c1"># Read pset from the database. We only pass in pset_id via template</span>
+<span class="c1"># replacement.</span>
+<span class="n">pset</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">df_extract_pset</span><span class="p">(</span><span class="n">ps</span><span class="o">.</span><span class="n">df_read</span><span class="p">(</span><span class="s2">&quot;../database.pk&quot;</span><span class="p">),</span> <span class="s2">&quot;{{_pset_id}}&quot;</span><span class="p">)</span>
+
+<span class="c1"># write &lt;calc_dir&gt;/&lt;pset_id&gt;/result.pk</span>
+<span class="n">ps</span><span class="o">.</span><span class="n">pickle_write</span><span class="p">(</span><span class="s2">&quot;result.pk&quot;</span><span class="p">,</span> <span class="n">func</span><span class="p">(</span><span class="n">pset</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>See also <code class="docutils literal notranslate"><span class="pre">examples/batch_templates_read_from_db</span></code>.</p>
+<p>This saves writing <code class="docutils literal notranslate"><span class="pre">pset.pk</span></code>, but still, both approaches are not ideal
+since we communicate by writing (potentially many) small files, namely
+<code class="docutils literal notranslate"><span class="pre">run.py</span></code>, <code class="docutils literal notranslate"><span class="pre">pset.pk</span></code> (when using <code class="docutils literal notranslate"><span class="pre">write_pset=True)</span></code>, <code class="docutils literal notranslate"><span class="pre">result.pk</span></code>
+<code class="docutils literal notranslate"><span class="pre">jobscript_&lt;cluster&gt;</span></code> for each <code class="docutils literal notranslate"><span class="pre">&lt;calc_dir&gt;/&lt;pset_id&gt;/</span></code> dir. Also, when using
+<code class="docutils literal notranslate"><span class="pre">write_pset=True</span></code>, <code class="docutils literal notranslate"><span class="pre">run.py</span></code> would be the exact same file for each job.</p>
+<p>On the other hand, the templates workflow is the most simple and low-tech
+solution, esp. if you are already familiar with HPC systems, whereas <code class="docutils literal notranslate"><span class="pre">dask</span></code> +
+<code class="docutils literal notranslate"><span class="pre">dask_jobqueue</span></code> has a bit of a learning curve.</p>
+<p>So we recommend using templates if</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">dask_jobqueue</span></code> doesn’t have something that matches your compute infrastructure</p></li>
 <li><p>your workload doesn’t have a Python interface / it is cumbersome to create a
-Python function that runs your workload</p></li>
+Python function that runs your workload (for example your <code class="docutils literal notranslate"><span class="pre">run.py</span></code> needs to
+run in a docker / apptainer container and you need to run shell setup code in
+your SLURM script and inside the container before calling <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">run.py</span></code>)</p></li>
+<li><p>you have a moderate number of jobs (say 100 .. 1000) and each one contains a
+huge workload (runs for hours or days, say)</p></li>
 </ul>
+</section>
+</section>
+<section id="s-template-pro-con">
+<span id="id1"></span><h4>Pros and Cons<a class="headerlink" href="#s-template-pro-con" title="Link to this heading">#</a></h4>
+<div class="hint admonition">
+<p class="admonition-title">Pros</p>
+<ul class="simple">
+<li><p>Works for all workloads, also ones with no Python interface; for instance you
+can sweep over SLURM settings easily (number of cores, memory, GPU yes or
+no, …).</p></li>
+<li><p>No <code class="docutils literal notranslate"><span class="pre">dask_control</span></code> process. Once you submitt jobs and assuming that each job
+has a time limit that is large enough, jobs may wait in the queue for days.
+The workflow leverages the more non-interactive nature of HPC systems.
+You can once in a while run a post-processing script and collect
+results that are already written (e.g. <code class="docutils literal notranslate"><span class="pre">&lt;calc_dir&gt;/&lt;pset_id&gt;/result.pk</span></code>) and
+start to analyse this (partial) data.</p></li>
+<li><p>Uses only batch system tooling, so essentially shell scripts. If you copy
+(<code class="docutils literal notranslate"><span class="pre">rsync</span></code>!) generated files to and from the HPC machine, you don’t even need to
+install <code class="docutils literal notranslate"><span class="pre">psweep</span></code> there.</p></li>
+<li><p>Easy debugging, since all files of one job sit in the job’s
+<code class="docutils literal notranslate"><span class="pre">&lt;calc_dir&gt;/&lt;pset_id&gt;/</span></code>. For example you can copy this dir, make a change to
+a file, <code class="docutils literal notranslate"><span class="pre">sbatch</span> <span class="pre">jobscript_&lt;cluster&gt;</span></code> again to repeat just that job.</p></li>
+</ul>
+</div>
+<div class="attention admonition">
+<p class="admonition-title">Cons</p>
+<ul class="simple">
+<li><p>More manual multi-step workflow comparted to local and <code class="docutils literal notranslate"><span class="pre">dask</span></code> where we can
+just do <code class="docutils literal notranslate"><span class="pre">df=ps.run(...)</span></code> and have results in <code class="docutils literal notranslate"><span class="pre">df</span></code>.</p></li>
+<li><p>Always one batch job per <code class="docutils literal notranslate"><span class="pre">pset</span></code>.</p></li>
+<li><p>The workflow is suited for more experienced HPC users. You may need to work
+a bit more directly with your batch system (<code class="docutils literal notranslate"><span class="pre">squeue</span></code>, <code class="docutils literal notranslate"><span class="pre">scancel</span></code>, … in case
+of SLURM). Also some shell scripting skills are useful.</p></li>
+</ul>
+</div>
 </section>
 </section>
 </section>
@@ -2244,6 +2302,11 @@ the workflow frameworks above.</p>
 </ul>
 </li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#git-support">git support</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tips-and-tricks">Tips and tricks</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#write-pset-content-to-disk">Write pset content to disk</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#read-pset-content-from-the-database">Read pset content from the database</a></li>
+</ul>
+</li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#s-template-pro-con">Pros and Cons</a></li>
 </ul>
 </li>

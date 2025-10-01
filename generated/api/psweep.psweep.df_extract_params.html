@@ -60,8 +60,8 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'generated/api/psweep.psweep.df_extract_params';</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="psweep.psweep.df_filter_conds" href="psweep.psweep.df_filter_conds.html" />
-    <link rel="prev" title="psweep.psweep.check_calc_dir" href="psweep.psweep.check_calc_dir.html" />
+    <link rel="next" title="psweep.psweep.df_extract_pset" href="psweep.psweep.df_extract_pset.html" />
+    <link rel="prev" title="psweep.psweep.df_extract_dicts" href="psweep.psweep.df_extract_dicts.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -189,6 +189,8 @@
 </ul>
 </details></li>
 <li class="toctree-l2 current active has-children"><a class="reference internal" href="__sphinx_autodoc_module__psweep.psweep.html">psweep</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="psweep.psweep.CALC_DIR.html">psweep.psweep.CALC_DIR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="psweep.psweep.DATABASE_BASENAME.html">psweep.psweep.DATABASE_BASENAME</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.FileTemplate.html">psweep.psweep.FileTemplate</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.GIT_ADD_ALL.html">psweep.psweep.GIT_ADD_ALL</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.Machine.html">psweep.psweep.Machine</a></li>
@@ -197,9 +199,13 @@
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.PSET_HASH_ALG.html">psweep.psweep.PSET_HASH_ALG</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.PsweepHashError.html">psweep.psweep.PsweepHashError</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep._get_col_filter.html">psweep.psweep._get_col_filter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="psweep.psweep._setup_simulate_dir.html">psweep.psweep._setup_simulate_dir</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.capture_logs_wrapper.html">psweep.psweep.capture_logs_wrapper</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.check_calc_dir.html">psweep.psweep.check_calc_dir</a></li>
+<li class="toctree-l3"><a class="reference internal" href="psweep.psweep.df_ensure_dtypes.html">psweep.psweep.df_ensure_dtypes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="psweep.psweep.df_extract_dicts.html">psweep.psweep.df_extract_dicts</a></li>
 <li class="toctree-l3 current active"><a class="current reference internal" href="#">psweep.psweep.df_extract_params</a></li>
+<li class="toctree-l3"><a class="reference internal" href="psweep.psweep.df_extract_pset.html">psweep.psweep.df_extract_pset</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.df_filter_conds.html">psweep.psweep.df_filter_conds</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.df_print.html">psweep.psweep.df_print</a></li>
 <li class="toctree-l3"><a class="reference internal" href="psweep.psweep.df_read.html">psweep.psweep.df_read</a></li>
@@ -424,15 +430,21 @@ document.write(`
 <h1>psweep.psweep.df_extract_params<a class="headerlink" href="#psweep-psweep-df-extract-params" title="Link to this heading">#</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="psweep.psweep.df_extract_params">
-<span class="sig-prename descclassname"><span class="pre">psweep.psweep.</span></span><span class="sig-name descname"><span class="pre">df_extract_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/psweep/psweep.html#df_extract_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psweep.psweep.df_extract_params" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">psweep.psweep.</span></span><span class="sig-name descname"><span class="pre">df_extract_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">py_types</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/psweep/psweep.html#df_extract_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psweep.psweep.df_extract_params" title="Link to this definition">#</a></dt>
 <dd><p>Extract <cite>params</cite> (list of psets) from <cite>df</cite>.</p>
-<p>Limit columns to <code class="docutils literal notranslate"><span class="pre">kind=&quot;pset&quot;</span></code> (see <a class="reference internal" href="psweep.psweep.filter_cols.html#psweep.psweep.filter_cols" title="psweep.psweep.filter_cols"><code class="xref py py-func docutils literal notranslate"><span class="pre">filter_cols()</span></code></a>). This will
-reproduce the <cite>params</cite> fed to <a class="reference internal" href="psweep.psweep.run.html#psweep.psweep.run" title="psweep.psweep.run"><code class="xref py py-func docutils literal notranslate"><span class="pre">run()</span></code></a> when following the prefix/postfix
-convention (see <a class="reference internal" href="psweep.psweep._get_col_filter.html#psweep.psweep._get_col_filter" title="psweep.psweep._get_col_filter"><code class="xref py py-func docutils literal notranslate"><span class="pre">_get_col_filter()</span></code></a>), meaning that the pset hashes will
-be the same.</p>
+<p>Same as <a class="reference internal" href="psweep.psweep.df_extract_dicts.html#psweep.psweep.df_extract_dicts" title="psweep.psweep.df_extract_dicts"><code class="xref py py-func docutils literal notranslate"><span class="pre">df_extract_dicts()</span></code></a>, but limit columns to <code class="docutils literal notranslate"><span class="pre">kind=&quot;pset&quot;</span></code> (see
+<a class="reference internal" href="psweep.psweep.filter_cols.html#psweep.psweep.filter_cols" title="psweep.psweep.filter_cols"><code class="xref py py-func docutils literal notranslate"><span class="pre">filter_cols()</span></code></a>). This will reproduce the <cite>params</cite> fed to <a class="reference internal" href="psweep.psweep.run.html#psweep.psweep.run" title="psweep.psweep.run"><code class="xref py py-func docutils literal notranslate"><span class="pre">run()</span></code></a>
+when following the prefix/postfix convention (see <a class="reference internal" href="psweep.psweep._get_col_filter.html#psweep.psweep._get_col_filter" title="psweep.psweep._get_col_filter"><code class="xref py py-func docutils literal notranslate"><span class="pre">_get_col_filter()</span></code></a>),
+meaning that the pset hashes will be the same.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>]</span></p>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span>)</p></li>
+<li><p><strong>py_types</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – See <a class="reference internal" href="psweep.psweep.df_extract_dicts.html#psweep.psweep.df_extract_dicts" title="psweep.psweep.df_extract_dicts"><code class="xref py py-func docutils literal notranslate"><span class="pre">df_extract_dicts()</span></code></a></p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>]</span></p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -493,20 +505,20 @@ be the same.</p>
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="psweep.psweep.check_calc_dir.html"
+       href="psweep.psweep.df_extract_dicts.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">psweep.psweep.check_calc_dir</p>
+        <p class="prev-next-title">psweep.psweep.df_extract_dicts</p>
       </div>
     </a>
     <a class="right-next"
-       href="psweep.psweep.df_filter_conds.html"
+       href="psweep.psweep.df_extract_pset.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">psweep.psweep.df_filter_conds</p>
+        <p class="prev-next-title">psweep.psweep.df_extract_pset</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

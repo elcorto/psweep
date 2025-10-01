@@ -188,6 +188,8 @@
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../generated/api/__sphinx_autodoc_module__psweep.psweep.html">psweep</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.CALC_DIR.html">psweep.psweep.CALC_DIR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.DATABASE_BASENAME.html">psweep.psweep.DATABASE_BASENAME</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.FileTemplate.html">psweep.psweep.FileTemplate</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.GIT_ADD_ALL.html">psweep.psweep.GIT_ADD_ALL</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.Machine.html">psweep.psweep.Machine</a></li>
@@ -196,9 +198,13 @@
 <li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.PSET_HASH_ALG.html">psweep.psweep.PSET_HASH_ALG</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.PsweepHashError.html">psweep.psweep.PsweepHashError</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep._get_col_filter.html">psweep.psweep._get_col_filter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep._setup_simulate_dir.html">psweep.psweep._setup_simulate_dir</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.capture_logs_wrapper.html">psweep.psweep.capture_logs_wrapper</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.check_calc_dir.html">psweep.psweep.check_calc_dir</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.df_ensure_dtypes.html">psweep.psweep.df_ensure_dtypes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.df_extract_dicts.html">psweep.psweep.df_extract_dicts</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.df_extract_params.html">psweep.psweep.df_extract_params</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.df_extract_pset.html">psweep.psweep.df_extract_pset</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.df_filter_conds.html">psweep.psweep.df_filter_conds</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.df_print.html">psweep.psweep.df_print</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/api/psweep.psweep.df_read.html">psweep.psweep.df_read</a></li>
@@ -388,6 +394,7 @@ document.write(`
 <span class="kn">import</span><span class="w"> </span><span class="nn">yaml</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">jinja2</span>
 
+
 <span class="n">pj</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span>
 
 <span class="c1"># defaults, globals</span>
@@ -395,6 +402,9 @@ document.write(`
 <span class="n">PANDAS_TIME_UNIT</span> <span class="o">=</span> <span class="s2">&quot;s&quot;</span>
 <span class="n">PSET_HASH_ALG</span> <span class="o">=</span> <span class="s2">&quot;sha1&quot;</span>
 <span class="n">GIT_ADD_ALL</span> <span class="o">=</span> <span class="s2">&quot;git add -A -v&quot;</span>
+<span class="n">CALC_DIR</span> <span class="o">=</span> <span class="s2">&quot;calc&quot;</span>
+<span class="n">DATABASE_BASENAME</span> <span class="o">=</span> <span class="s2">&quot;database.pk&quot;</span>
+<span class="n">FILL_VALUE</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">NA</span>
 
 <span class="c1"># Make DeprecationWarning visible to users by default.</span>
 <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">&quot;default&quot;</span><span class="p">)</span>
@@ -1106,15 +1116,9 @@ document.write(`
 <a class="viewcode-back" href="../../generated/api/psweep.psweep.df_update_pset_hash.html#psweep.psweep.df_update_pset_hash">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">df_update_pset_hash</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">copy</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Add or update ``_pset_hash`` column.&quot;&quot;&quot;</span>
-    <span class="c1"># itertuples preserves type, while iterrows doesn&#39;t (see iterrows</span>
-    <span class="c1"># docstring).</span>
     <span class="n">df_out</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span> <span class="k">if</span> <span class="n">copy</span> <span class="k">else</span> <span class="n">df</span>
-    <span class="n">hsh</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">itertuples</span><span class="p">():</span>
-        <span class="n">row_dct</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">_asdict</span><span class="p">()</span>
-        <span class="n">row_dct</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;Index&quot;</span><span class="p">)</span>
-        <span class="n">hsh</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pset_hash</span><span class="p">(</span><span class="n">row_dct</span><span class="p">))</span>
-    <span class="n">df_out</span><span class="p">[</span><span class="s2">&quot;_pset_hash&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">hsh</span>
+    <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">row_dct</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">df_extract_dicts</span><span class="p">(</span><span class="n">df</span><span class="p">)):</span>
+        <span class="n">df_out</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="s2">&quot;_pset_hash&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pset_hash</span><span class="p">(</span><span class="n">row_dct</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">df_out</span></div>
 
 
@@ -1124,7 +1128,7 @@ document.write(`
 <span class="k">def</span><span class="w"> </span><span class="nf">df_update_pset_cols</span><span class="p">(</span>
     <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
     <span class="n">pset_cols</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="s2">&quot;str&quot;</span><span class="p">]</span> <span class="o">|</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
-    <span class="n">fill_value</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">NA</span><span class="p">,</span>
+    <span class="n">fill_value</span><span class="o">=</span><span class="n">FILL_VALUE</span><span class="p">,</span>
     <span class="n">copy</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -1145,15 +1149,68 @@ document.write(`
 
 
 
+<div class="viewcode-block" id="df_extract_dicts">
+<a class="viewcode-back" href="../../generated/api/psweep.psweep.df_extract_dicts.html#psweep.psweep.df_extract_dicts">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">df_extract_dicts</span><span class="p">(</span>
+    <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">py_types</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convert `df`&#39;s rows to dicts.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    df</span>
+<span class="sd">    py_types</span>
+<span class="sd">        If True, let Pandas (``Series.to_dict()``) decide types. It tries</span>
+<span class="sd">        to return Python native types (e.g. it converts ``pd.NA`` to ``None``.)</span>
+<span class="sd">        Else, try to preserve types as they are in `df`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">py_types</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">ser</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span> <span class="k">for</span> <span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">ser</span><span class="p">)</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">()]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># itertuples() preserves type, while iterrows() doesn&#39;t (see iterrows()</span>
+        <span class="c1"># docstring). But the default (itertuples(..., name=&#39;Pandas&#39;)) returns</span>
+        <span class="c1"># namedtuples -- the worst data structure ever invented -- which can&#39;t</span>
+        <span class="c1"># handle field names starting with &quot;_&quot;, it will just rename them!</span>
+        <span class="c1">#</span>
+        <span class="c1">#    &gt;&gt;&gt; df</span>
+        <span class="c1">#       _a  b_</span>
+        <span class="c1">#    0   1  77</span>
+        <span class="c1">#    1   1  88</span>
+        <span class="c1">#    2   2  77</span>
+        <span class="c1">#    3   2  88</span>
+        <span class="c1">#</span>
+        <span class="c1">#    &gt;&gt;&gt; list(df.itertuples(index=False))</span>
+        <span class="c1">#    [Pandas(_0=1, b_=77),</span>
+        <span class="c1">#     Pandas(_0=1, b_=88),</span>
+        <span class="c1">#     Pandas(_0=2, b_=77),</span>
+        <span class="c1">#     Pandas(_0=2, b_=88)]</span>
+        <span class="c1">#</span>
+        <span class="c1"># With name=None we get plain types and zip() the column names back in.</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span> <span class="n">row</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">itertuples</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+        <span class="p">]</span></div>
+
+
+
 <div class="viewcode-block" id="df_extract_params">
 <a class="viewcode-back" href="../../generated/api/psweep.psweep.df_extract_params.html#psweep.psweep.df_extract_params">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">df_extract_params</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">df_extract_params</span><span class="p">(</span>
+    <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">py_types</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract `params` (list of psets) from `df`.</span>
 
-<span class="sd">    Limit columns to ``kind=&quot;pset&quot;`` (see :func:`filter_cols`). This will</span>
-<span class="sd">    reproduce the `params` fed to :func:`run` when following the prefix/postfix</span>
-<span class="sd">    convention (see :func:`_get_col_filter`), meaning that the pset hashes will</span>
-<span class="sd">    be the same.</span>
+<span class="sd">    Same as :func:`df_extract_dicts`, but limit columns to ``kind=&quot;pset&quot;`` (see</span>
+<span class="sd">    :func:`filter_cols`). This will reproduce the `params` fed to :func:`run`</span>
+<span class="sd">    when following the prefix/postfix convention (see :func:`_get_col_filter`),</span>
+<span class="sd">    meaning that the pset hashes will be the same.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    df</span>
+<span class="sd">    py_types</span>
+<span class="sd">        See :func:`df_extract_dicts`</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
@@ -1177,12 +1234,66 @@ document.write(`
 <span class="sd">     {&#39;a&#39;: 3, &#39;b&#39;: 77},</span>
 <span class="sd">     {&#39;a&#39;: 3, &#39;b&#39;: 88}]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">params</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">df</span><span class="p">[</span><span class="n">filter_cols</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;pset&quot;</span><span class="p">)]</span><span class="o">.</span><span class="n">itertuples</span><span class="p">():</span>
-        <span class="n">row_dct</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">_asdict</span><span class="p">()</span>
-        <span class="n">row_dct</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;Index&quot;</span><span class="p">)</span>
-        <span class="n">params</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row_dct</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">params</span></div>
+    <span class="k">return</span> <span class="n">df_extract_dicts</span><span class="p">(</span>
+        <span class="n">df</span><span class="p">[</span><span class="n">filter_cols</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;pset&quot;</span><span class="p">)],</span> <span class="n">py_types</span><span class="o">=</span><span class="n">py_types</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="df_extract_pset">
+<a class="viewcode-back" href="../../generated/api/psweep.psweep.df_extract_pset.html#psweep.psweep.df_extract_pset">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">df_extract_pset</span><span class="p">(</span>
+    <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">pset_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">py_types</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract a single pset dict for `pset_id` from `df`.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    df</span>
+<span class="sd">    pset_id</span>
+<span class="sd">    py_types</span>
+<span class="sd">        See :func:`df_extract_dicts`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">df_sel</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">_pset_id</span> <span class="o">==</span> <span class="n">pset_id</span><span class="p">,</span> <span class="n">filter_cols</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;pset&quot;</span><span class="p">)</span>
+    <span class="p">]</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">df_sel</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="p">(</span>
+        <span class="s2">&quot;Selection is not unique, you have duplicate pset_ids!&quot;</span>
+    <span class="p">)</span>
+    <span class="n">ser</span> <span class="o">=</span> <span class="n">df_sel</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">py_types</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">ser</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Series.to_dict() casts pd.NA to None. The trick below preserves types</span>
+        <span class="c1"># (at least NA).</span>
+        <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">ser</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="n">ser</span><span class="o">.</span><span class="n">to_list</span><span class="p">()))</span></div>
+
+
+
+<div class="viewcode-block" id="df_ensure_dtypes">
+<a class="viewcode-back" href="../../generated/api/psweep.psweep.df_ensure_dtypes.html#psweep.psweep.df_ensure_dtypes">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">df_ensure_dtypes</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="n">FILL_VALUE</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Make sure that `df`&#39;s dtype is ``object``. Convert any ``pd.isna()``</span>
+<span class="sd">    values to `fill_value`.</span>
+
+<span class="sd">    This is part of our attempt to prevent pandas from doing type inference and</span>
+<span class="sd">    conversion.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># pd.concat() can convert pd.NA back to NaN, fix that. If the element is</span>
+    <span class="c1"># not &quot;scalar&quot;, then give up and don&#39;t touch it.</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">apply_func</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+        <span class="n">isna_result</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">isna</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">isna_result</span><span class="p">,</span> <span class="s2">&quot;__len__&quot;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">x</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">fill_value</span> <span class="k">if</span> <span class="n">isna_result</span> <span class="k">else</span> <span class="n">x</span>
+
+    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">apply_func</span><span class="p">)</span>
+
+    <span class="c1"># apply() changes dtype=object back to native types again, revert to object</span>
+    <span class="k">return</span> <span class="n">df</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">object</span><span class="p">)</span></div>
 
 
 
@@ -1565,6 +1676,25 @@ document.write(`
 
 
 
+<div class="viewcode-block" id="_setup_simulate_dir">
+<a class="viewcode-back" href="../../generated/api/psweep.psweep._setup_simulate_dir.html#psweep.psweep._setup_simulate_dir">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_setup_simulate_dir</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">calc_dir</span><span class="p">,</span> <span class="n">database_basename</span><span class="p">):</span>
+    <span class="n">calc_dir_sim</span> <span class="o">=</span> <span class="n">calc_dir</span> <span class="o">+</span> <span class="s2">&quot;.simulate&quot;</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">calc_dir_sim</span><span class="p">):</span>
+        <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">calc_dir_sim</span><span class="p">)</span>
+    <span class="n">makedirs</span><span class="p">(</span><span class="n">calc_dir_sim</span><span class="p">)</span>
+    <span class="n">old_db</span> <span class="o">=</span> <span class="n">pj</span><span class="p">(</span><span class="n">calc_dir</span><span class="p">,</span> <span class="n">database_basename</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">old_db</span><span class="p">):</span>
+        <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">old_db</span><span class="p">,</span> <span class="n">pj</span><span class="p">(</span><span class="n">calc_dir_sim</span><span class="p">,</span> <span class="n">database_basename</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;simulate: </span><span class="si">{</span><span class="n">old_db</span><span class="si">}</span><span class="s2"> not found, will create new db in &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">calc_dir_sim</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">calc_dir_sim</span></div>
+
+
+
 <div class="viewcode-block" id="run">
 <a class="viewcode-back" href="../../generated/api/psweep.psweep.run.html#psweep.psweep.run">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span>
@@ -1576,15 +1706,14 @@ document.write(`
     <span class="n">save</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">tmpsave</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-    <span class="n">calc_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;calc&quot;</span><span class="p">,</span>
+    <span class="n">calc_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">CALC_DIR</span><span class="p">,</span>
     <span class="n">simulate</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-    <span class="n">database_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">database_basename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;database.pk&quot;</span><span class="p">,</span>
+    <span class="n">database_basename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DATABASE_BASENAME</span><span class="p">,</span>
     <span class="n">backup</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">git</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">skip_dups</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">capture_logs</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">fill_value</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">NA</span><span class="p">,</span>
+    <span class="n">fill_value</span><span class="o">=</span><span class="n">FILL_VALUE</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Call `func` for each `pset` in `params`. Populate a DataFrame with rows</span>
@@ -1607,9 +1736,9 @@ document.write(`
 <span class="sd">    dask_client</span>
 <span class="sd">        A dask client. Use this or ``poolsize``.</span>
 <span class="sd">    save</span>
-<span class="sd">        save final ``DataFrame`` to ``&lt;database_dir&gt;/&lt;database_basename&gt;``</span>
-<span class="sd">        (pickle format only), default: &quot;calc/database.pk&quot;, see also</span>
-<span class="sd">        `database_dir`, `calc_dir` and `database_basename`</span>
+<span class="sd">        save final ``DataFrame`` to ``&lt;calc_dir&gt;/&lt;database_basename&gt;`` (pickle</span>
+<span class="sd">        format only), default: &quot;calc/database.pk&quot;, see also `calc_dir` and</span>
+<span class="sd">        `database_basename`</span>
 <span class="sd">    tmpsave</span>
 <span class="sd">        save the result dict from each ``pset.update(func(pset))`` from each</span>
 <span class="sd">        `pset` to ``&lt;calc_dir&gt;/tmpsave/&lt;run_id&gt;/&lt;pset_id&gt;.pk`` (pickle format</span>
@@ -1626,10 +1755,8 @@ document.write(`
 <span class="sd">        run everything in ``&lt;calc_dir&gt;.simulate``, don&#39;t call `func`, i.e. save</span>
 <span class="sd">        what the run would create, but without the results from `func`,</span>
 <span class="sd">        useful to check if `params` are correct before starting a production run</span>
-<span class="sd">    database_dir</span>
-<span class="sd">        Path for the database. Default is ``&lt;calc_dir&gt;``.</span>
 <span class="sd">    database_basename</span>
-<span class="sd">        ``&lt;database_dir&gt;/&lt;database_basename&gt;``, default: &quot;database.pk&quot;</span>
+<span class="sd">        ``&lt;calc_dir&gt;/&lt;database_basename&gt;``, default: &quot;database.pk&quot;</span>
 <span class="sd">    backup</span>
 <span class="sd">        Make backup of ``&lt;calc_dir&gt;`` to ``&lt;calc_dir&gt;.bak_&lt;timestamp&gt;_run_id_&lt;run_id&gt;``</span>
 <span class="sd">        where ``&lt;run_id&gt;`` is the latest ``_run_id`` present in ``df``</span>
@@ -1647,9 +1774,7 @@ document.write(`
 <span class="sd">        ``None`` then do nothing (default). Useful for capturing per-pset log</span>
 <span class="sd">        text, e.g. ``print()`` calls in `func` will be captured.</span>
 <span class="sd">    fill_value</span>
-<span class="sd">        NA value used for missing values in the database DataFrame. ``np.nan``</span>
-<span class="sd">        causes problems (`pandas` casts types even when ``dtype=object``), so</span>
-<span class="sd">        we stick to ``pd.NA``.</span>
+<span class="sd">        NA value used for missing values in the database DataFrame.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -1660,31 +1785,29 @@ document.write(`
     <span class="c1"># Don&#39;t in-place alter dicts in params we get as input.</span>
     <span class="n">params</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
 
-    <span class="n">database_dir</span> <span class="o">=</span> <span class="n">calc_dir</span> <span class="k">if</span> <span class="n">database_dir</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">database_dir</span>
+    <span class="c1"># Wash params thru type machinery to ensure that types are the same as the</span>
+    <span class="c1"># ones we will have in the DataFrame later on. Else _pset_hash can be</span>
+    <span class="c1"># wrong (e.g. if columns contain NA-type values which are not</span>
+    <span class="c1"># `fill_value`).</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="n">df_extract_dicts</span><span class="p">(</span>
+        <span class="n">df_ensure_dtypes</span><span class="p">(</span>
+            <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">object</span><span class="p">),</span> <span class="n">fill_value</span><span class="o">=</span><span class="n">fill_value</span>
+        <span class="p">),</span>
+        <span class="n">py_types</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span>
 
     <span class="n">git_enter</span><span class="p">(</span><span class="n">git</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">simulate</span><span class="p">:</span>
-        <span class="n">calc_dir_sim</span> <span class="o">=</span> <span class="n">calc_dir</span> <span class="o">+</span> <span class="s2">&quot;.simulate&quot;</span>
-        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">calc_dir_sim</span><span class="p">):</span>
-            <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">calc_dir_sim</span><span class="p">)</span>
-        <span class="n">makedirs</span><span class="p">(</span><span class="n">calc_dir_sim</span><span class="p">)</span>
-        <span class="n">old_db</span> <span class="o">=</span> <span class="n">pj</span><span class="p">(</span><span class="n">database_dir</span><span class="p">,</span> <span class="n">database_basename</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">old_db</span><span class="p">):</span>
-            <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">old_db</span><span class="p">,</span> <span class="n">pj</span><span class="p">(</span><span class="n">calc_dir_sim</span><span class="p">,</span> <span class="n">database_basename</span><span class="p">))</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;simulate: </span><span class="si">{</span><span class="n">old_db</span><span class="si">}</span><span class="s2"> not found, will create new db in &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">calc_dir_sim</span><span class="si">}</span><span class="s2">&quot;</span>
-            <span class="p">)</span>
-        <span class="n">database_fn</span> <span class="o">=</span> <span class="n">pj</span><span class="p">(</span><span class="n">calc_dir_sim</span><span class="p">,</span> <span class="n">database_basename</span><span class="p">)</span>
-        <span class="n">calc_dir</span> <span class="o">=</span> <span class="n">calc_dir_sim</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">database_fn</span> <span class="o">=</span> <span class="n">pj</span><span class="p">(</span><span class="n">database_dir</span><span class="p">,</span> <span class="n">database_basename</span><span class="p">)</span>
+        <span class="n">calc_dir</span> <span class="o">=</span> <span class="n">_setup_simulate_dir</span><span class="p">(</span>
+            <span class="n">calc_dir</span><span class="o">=</span><span class="n">calc_dir</span><span class="p">,</span>
+            <span class="n">database_basename</span><span class="o">=</span><span class="n">database_basename</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="n">database_fn</span> <span class="o">=</span> <span class="n">pj</span><span class="p">(</span><span class="n">calc_dir</span><span class="p">,</span> <span class="n">database_basename</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">df</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">database_fn</span><span class="p">):</span>
-            <span class="n">df</span> <span class="o">=</span> <span class="n">df_read</span><span class="p">(</span><span class="n">database_fn</span><span class="p">)</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="n">df_read</span><span class="p">(</span><span class="n">database_fn</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">object</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="nb">object</span><span class="p">)</span>
 
@@ -1756,26 +1879,14 @@ document.write(`
             <span class="n">futures</span> <span class="o">=</span> <span class="n">dask_client</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
             <span class="n">results</span> <span class="o">=</span> <span class="n">dask_client</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="n">futures</span><span class="p">)</span>
 
-    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span>
-        <span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">object</span><span class="p">)),</span>
-        <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df_ensure_dtypes</span><span class="p">(</span>
+        <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span>
+            <span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">object</span><span class="p">)),</span>
+            <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="n">fill_value</span><span class="o">=</span><span class="n">fill_value</span><span class="p">,</span>
     <span class="p">)</span>
-
-    <span class="c1"># pd.concat() can convert pd.NA back to NaN, fix that. If the element is</span>
-    <span class="c1"># not &quot;scalar&quot;, then give up and don&#39;t touch it.</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">apply_func</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-        <span class="n">isna_result</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">isna</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">isna_result</span><span class="p">,</span> <span class="s2">&quot;__len__&quot;</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">x</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">fill_value</span> <span class="k">if</span> <span class="n">isna_result</span> <span class="k">else</span> <span class="n">x</span>
-
-    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-        <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">apply_func</span><span class="p">)</span>
-
-    <span class="c1"># apply() changes dtype=object back to native types again, revert to object</span>
-    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">object</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">save</span><span class="p">:</span>
         <span class="n">df_write</span><span class="p">(</span><span class="n">database_fn</span><span class="p">,</span> <span class="n">df</span><span class="p">)</span>
@@ -1875,12 +1986,6 @@ document.write(`
 
 
 
-<span class="c1"># If we ever add a &quot;simulate&quot; kwd here: don&#39;t pass that thru to run() b/c</span>
-<span class="c1"># there this prevents func() from being executed, but that&#39;s what we always</span>
-<span class="c1"># want here since it writes only input files. Instead, just set calc_dir =</span>
-<span class="c1"># calc_dir_sim and copy the database as in run() and go. Don&#39;t copy the</span>
-<span class="c1"># run_*.sh scripts b/c they are generated afresh anyway.</span>
-<span class="c1">#</span>
 <div class="viewcode-block" id="prep_batch">
 <a class="viewcode-back" href="../../generated/api/psweep.psweep.prep_batch.html#psweep.psweep.prep_batch">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">prep_batch</span><span class="p">(</span>
@@ -1918,7 +2023,20 @@ document.write(`
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">git_enter</span><span class="p">(</span><span class="n">git</span><span class="p">)</span>
 
-    <span class="n">calc_dir</span> <span class="o">=</span> <span class="n">kwds</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;calc_dir&quot;</span><span class="p">,</span> <span class="s2">&quot;calc&quot;</span><span class="p">)</span>
+    <span class="c1"># Same defaults as in run()</span>
+    <span class="n">calc_dir</span> <span class="o">=</span> <span class="n">kwds</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;calc_dir&quot;</span><span class="p">,</span> <span class="n">CALC_DIR</span><span class="p">)</span>
+    <span class="n">database_basename</span> <span class="o">=</span> <span class="n">kwds</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;database_basename&quot;</span><span class="p">,</span> <span class="n">DATABASE_BASENAME</span><span class="p">)</span>
+
+    <span class="c1"># Catch simulate flag, don&#39;t pass that thru to run() b/c there this</span>
+    <span class="c1"># prevents func() from being executed, but that&#39;s what we always want here</span>
+    <span class="c1"># since it writes only input files. Instead, just set calc_dir =</span>
+    <span class="c1"># calc_dir_sim, copy the database as in run() and go. Don&#39;t copy the</span>
+    <span class="c1"># run_*.sh scripts b/c they are generated afresh anyway.</span>
+    <span class="k">if</span> <span class="n">kwds</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;simulate&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+        <span class="n">calc_dir</span> <span class="o">=</span> <span class="n">_setup_simulate_dir</span><span class="p">(</span>
+            <span class="n">calc_dir</span><span class="o">=</span><span class="n">calc_dir</span><span class="p">,</span>
+            <span class="n">database_basename</span><span class="o">=</span><span class="n">database_basename</span><span class="p">,</span>
+        <span class="p">)</span>
 
     <span class="n">calc_templates</span> <span class="o">=</span> <span class="n">gather_calc_templates</span><span class="p">(</span><span class="n">calc_templ_dir</span><span class="p">)</span>
     <span class="n">machines</span> <span class="o">=</span> <span class="n">gather_machines</span><span class="p">(</span><span class="n">machine_templ_dir</span><span class="p">)</span>
@@ -1938,6 +2056,9 @@ document.write(`
         <span class="n">func</span><span class="p">,</span>
         <span class="n">params</span><span class="p">,</span>
         <span class="n">git</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">simulate</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">calc_dir</span><span class="o">=</span><span class="n">calc_dir</span><span class="p">,</span>
+        <span class="n">database_basename</span><span class="o">=</span><span class="n">database_basename</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwds</span><span class="p">,</span>
     <span class="p">)</span>
 
