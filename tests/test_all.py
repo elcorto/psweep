@@ -430,6 +430,9 @@ def test_merge_dicts():
     m = ps.merge_dicts(a, b, c)
     assert m == {"a": 3}
 
+    with pytest.raises(AssertionError):
+        ps.merge_dicts(a, b, allow_dup_keys=False)
+
 
 def test_scripts():
     with tempfile.TemporaryDirectory() as tmpdir:
@@ -739,6 +742,16 @@ def test_param_build():
     acdref = ps.itr2params(product(zip(a, c), d))
     assert acdref == ps.pgrid([zip(a, c), d])
     assert acdref == ps.pgrid(zip(a, c), d)
+
+    # No duplicate keys allowed
+    params_ab = ps.pgrid(a, b)
+    params_bc = ps.pgrid(b, c)
+    with pytest.raises(AssertionError):
+        ps.pgrid(a, a)
+    with pytest.raises(AssertionError):
+        ps.pgrid(params_ab, params_ab)
+    with pytest.raises(AssertionError):
+        ps.pgrid(params_ab, params_bc)
 
 
 def test_itr():
