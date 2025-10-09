@@ -850,13 +850,33 @@ def plist(name: str, seq: Sequence[Any]):
 
 
 @itr
-def merge_dicts(args: Sequence[dict]):
+def merge_dicts(args: Sequence[dict], *, allow_dup_keys=True) -> dict:
     """Start with an empty dict and update with each arg dict
-    left-to-right."""
-    dct = {}
+    left-to-right.
+
+    Parameters
+    ----------
+    args
+        dicts to merge
+    allow_dup_keys
+        Whether to allow later dicts to overwrite entries of former ones.
+    """
     assert is_seq(args), f"input {args=} is no sequence"
-    for entry in args:
+    # Convert consumable iterables like generator expressions to list so that
+    # we don't consume them in the tests below. If we do, the actual merge loop
+    # won't do anything.
+    l_args = list(args)
+    for entry in l_args:
         assert isinstance(entry, dict), f"{entry=} is no dict"
+    if not allow_dup_keys:
+        for set1, set2 in itertools.pairwise(
+            set(dct.keys()) for dct in l_args
+        ):
+            assert len(union := set1 & set2) == 0, (
+                f"dict keys {set1} and {set2} overlap: {union}"
+            )
+    dct = {}
+    for entry in l_args:
         dct.update(entry)
     return dct
 
@@ -894,8 +914,20 @@ def itr2params(loops: Iterator[Any]):
     >>> ps.itr2params(itertools.product(zip(a,b),c))
     [{'a': 1, 'b': 77, 'c': 'const'},
      {'a': 2, 'b': 88, 'c': 'const'}]
+
+    Notes
+    -----
+    When merging dicts, we don't allow dicts to have same keys, as in
+
+    >>> [{'a': 1, 'b': 23}, {'a': 77, 'c': 'const'}]
+
+    since this would lead to unexpected results, for example when people use
+    :func:`pgrid()` to merge together params of previous studies to create
+    params for a new study.
     """
-    ret = [merge_dicts(flatten(entry)) for entry in loops]
+    ret = [
+        merge_dicts(flatten(entry), allow_dup_keys=False) for entry in loops
+    ]
     lens = list(map(len, ret))
     assert len(np.unique(lens)) == 1, (
         f"not all psets have same length {lens=}\n  {ret=}"
@@ -914,18 +946,6 @@ def pgrid(plists: Sequence[Sequence[dict]]) -> Sequence[dict]:
         List of :func:`plist()` results. If more than one, you can also provide
         plists as args, so ``pgrid(a,b,c)`` instead of ``pgrid([a,b,c])``.
 
-    Notes
-    -----
-    For a single plist arg, you have to use ``pgrid([a])``. ``pgrid(a)`` won't
-    work. However, this edge case (passing one plist to pgrid) is not super
-    useful, since
-
-    >>> a=ps.plist("a", [1,2,3])
-    >>> a
-    [{'a': 1}, {'a': 2}, {'a': 3}]
-    >>> ps.pgrid([a])
-    [{'a': 1}, {'a': 2}, {'a': 3}]
-
     Examples
     --------
     >>> a = ps.plist('a', [1,2])
@@ -941,6 +961,27 @@ def pgrid(plists: Sequence[Sequence[dict]]) -> Sequence[dict]:
     >>> ps.pgrid(zip(a,b),c)
     [{'a': 1, 'b': 77, 'c': 'const'},
      {'a': 2, 'b': 88, 'c': 'const'}]
+
+    Notes
+    -----
+    * For a single plist arg, you have to use ``pgrid([a])``. ``pgrid(a)``
+      won't work. However, this edge case (passing one plist to pgrid) is not
+      super useful, since
+
+      >>> a=ps.plist("a", [1,2,3])
+      >>> a
+      [{'a': 1}, {'a': 2}, {'a': 3}]
+      >>> ps.pgrid([a])
+      [{'a': 1}, {'a': 2}, {'a': 3}]
+
+    * When merging dicts in :func:`itr2params()`, we don't allow dicts to have
+      same keys, as in
+
+      >>> [{'a': 1, 'b': 23}, {'a': 77, 'c': 'const'}]
+
+      since this would lead to unexpected results, for example when people use
+      :func:`pgrid()` to merge together params of previous studies to create
+      params for a new study.
     """
     assert is_seq(plists), f"input {plists=} is no sequence"
     return itr2params(itertools.product(*plists))
@@ -1064,10 +1105,10 @@ def stargrid(
         for dct in plist:
             if vary_labels is not None:
                 label = {vary_label_col: vary_labels[ii]}
-                _dct = merge_dicts(dct, label)
+                _dct = merge_dicts(dct, label, allow_dup_keys=True)
             else:
                 _dct = dct
-            params.append(merge_dicts(const, _dct))
+            params.append(merge_dicts(const, _dct, allow_dup_keys=True))
 
     if skip_dups:
         try:
