@@ -743,20 +743,23 @@ def test_param_build():
 
 def test_itr():
     @ps.itr
-    def func(args):
-        return [a for a in args]
+    def func(args, *, some_kwd=1):
+        if some_kwd is None:
+            return [a for a in args]
+        else:
+            return [a + some_kwd for a in args]
 
     def gen(inp):
         for x in inp:
             yield x
 
-    assert [1] == func(1)
-    assert [1] == func([1])
-    assert [[1]] == func([[1]])
-    assert [1, 2] == func(1, 2)
-    assert [1, 2] == func([1, 2])
-    assert [[1, 2]] == func([[1, 2]])
-    assert [1, 2] == func(gen([1, 2]))
+    assert [2] == func(1)
+    assert [2] == func([1])
+    assert [[1]] == func([[1]], some_kwd=None)
+    assert [2, 3] == func(1, 2)
+    assert [2, 3] == func([1, 2])
+    assert [[1, 2]] == func([[1, 2]], some_kwd=None)
+    assert [2, 3] == func(gen([1, 2]))
 
 
 def test_filter_params_unique():

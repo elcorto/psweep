@@ -90,14 +90,14 @@ def itr(func: Callable) -> Callable:
     """
 
     @wraps(func)
-    def wrapper(*args):
+    def wrapper(*args, **kwds):
         # (arg1,)
         if len(args) == 1:
             arg = args[0]
-            return func(arg if is_seq(arg) else [arg])
+            return func(arg if is_seq(arg) else [arg], **kwds)
         # (arg1,...,argN)
         else:
-            return func(args)
+            return func(args, **kwds)
 
     return wrapper
 
