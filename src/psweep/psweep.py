@@ -1359,7 +1359,8 @@ def run(
                 dst=dst, calc_dir=calc_dir
             )
         )
-        shutil.copytree(calc_dir, dst)
+        # Copy dir, keep links as links.
+        shutil.copytree(calc_dir, dst, symlinks=True)
 
     for pset in params:
         pset["_pset_hash"] = pset_hash(pset)
