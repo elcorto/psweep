@@ -451,8 +451,10 @@ def test_backup():
         dr = pj(pset["_calc_dir"], pset["_pset_id"])
         ps.makedirs(dr)
         fn = pj(dr, "foo")
+        link = pj(dr, "link_to_foo")
         with open(fn, "w") as fd:
             fd.write(pset["_pset_id"])
+        os.symlink(fn, link)
         return {"result_": pset["a"] * 10}
 
     with tempfile.TemporaryDirectory() as tmpdir:
@@ -486,6 +488,7 @@ def test_backup():
             assert os.path.exists(tgt)
             with open(tgt) as fd:
                 fd.read().strip() == pset_id
+            assert os.path.islink(pj(backup_dir, pset_id, "link_to_foo"))
         assert os.path.exists(pj(backup_dir, "database.pk"))
 
 
