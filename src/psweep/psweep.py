@@ -873,7 +873,7 @@ def merge_dicts(args: Sequence[dict], *, allow_dup_keys=True) -> dict:
             set(dct.keys()) for dct in l_args
         ):
             assert len(union := set1 & set2) == 0, (
-                f"dict keys {set1} and {set2} overlap: {union}"
+                f"dict keys overlap: {union}"
             )
     dct = {}
     for entry in l_args:
