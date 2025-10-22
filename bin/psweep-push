@@ -3,10 +3,18 @@
 set -eu
 
 host=$1
+shift
+ext_opts=$@
 basedir=$(pwd | sed -re "s|$HOME/||")
 
-rsync_opts="-avz"
-[ -e excl_push ] && rsync_opts="$rsync_opts --exclude-from=excl_push"
+rsync_opts="-rptgoD -vP $ext_opts"
+
+for excl_fn in excl_push rsync.exclude; do
+    [ -e $excl_fn ] && rsync_opts="$rsync_opts --exclude-from=$excl_fn"
+done
+for rules_fn in rsync.rules rsync.filter; do
+    [ -e $rules_fn ] && rsync_opts="$rsync_opts --filter='merge $rules_fn'"
+done
 
 ssh $host "mkdir -pv $basedir"
 rsync $rsync_opts ./calc $host:$basedir/
