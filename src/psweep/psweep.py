@@ -823,6 +823,18 @@ def df_ensure_dtypes(df, fill_value=FILL_VALUE):
 
 
 def filter_cols(cols: Sequence[str], kind: str = "pset") -> Sequence[str]:
+    """Filter database field names ("columns") by type.
+
+    Here we use the default package-wide naming convention (see
+    :func:`_get_col_filter`).
+
+    Parameters
+    ----------
+    kind
+        * pre, prefix: things like ``_pset_id``
+        * post, postfix: results like ``result_``
+        * pset: neither of the above, params like ``a``, ``b``
+    """
     if kind == "pset":
         filt = _get_col_filter(skip_prefix_cols=True, skip_postfix_cols=True)
     elif kind in ["pre", "prefix"]:
