@@ -20,6 +20,7 @@ import numpy as np
 import pytest
 import joblib
 import jinja2
+
 ##from packaging.version import parse as parse_version
 
 import psweep as ps
@@ -1421,6 +1422,19 @@ def test_df_extract_stuff(na_val):
         assert df.loc[idx, "_pset_hash"] == ps.pset_hash(
             ps.df_extract_pset(df, pset_ids[idx])
         )
+
+    # df_extract_row() vs. df_extract_dicts(). Testing py_types here is a hack
+    # since we can't add it to the parametrize above since that would re-run
+    # the whole test function. But we do it here so as to benefit from the type
+    # check madness.
+    for py_types in [True, False]:
+        dicts = ps.df_extract_dicts(df, py_types=py_types)
+        for pset_id in pset_ids:
+            found = list(filter(lambda dct: dct["_pset_id"] == pset_id, dicts))
+            assert len(found) == 1
+            assert found[0] == ps.df_extract_row(
+                df, pset_id, py_types=py_types
+            )
 
 
 def test_run_skip_dups_add_row_by_hand():

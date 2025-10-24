@@ -771,10 +771,50 @@ def df_extract_params(
     )
 
 
+def df_extract_row(
+    df: pd.DataFrame, pset_id: str, kind: str = None, py_types: bool = False
+) -> dict:
+    """Extract a single row dict for `pset_id` from `df`.
+
+    When `kind` is given, limit columns to this (see :func:`filter_cols`).
+
+    Parameters
+    ----------
+    df
+    pset_id
+    py_types
+        See :func:`df_extract_dicts`
+    kind
+        See :func:`filter_cols`
+    """
+    # This is probably faster than filtering the output of df_extract_dicts()
+    # for the matching pset_id (untested).
+    df_sel = df.loc[df._pset_id == pset_id]
+
+    if kind is not None:
+        df_sel = df_sel[filter_cols(df.columns, kind=kind)]
+
+    assert len(df_sel) == 1, (
+        "Selection is not unique, you have duplicate pset_ids!"
+    )
+
+    ser = df_sel.iloc[0]
+    if py_types:
+        return ser.to_dict()
+    else:
+        # Series.to_dict() casts pd.NA to None. The trick below preserves types
+        # (at least NA).
+        return dict(zip(ser.keys(), ser.to_list()))
+
+
 def df_extract_pset(
     df: pd.DataFrame, pset_id: str, py_types: bool = False
 ) -> dict:
     """Extract a single pset dict for `pset_id` from `df`.
+
+    This is a convenience function doing just
+
+    >>> df_extract_row(df, pset_id=pset_id, py_types=py_types, kind="pset")
 
     Parameters
     ----------
@@ -783,19 +823,7 @@ def df_extract_pset(
     py_types
         See :func:`df_extract_dicts`
     """
-    df_sel = df.loc[
-        df._pset_id == pset_id, filter_cols(df.columns, kind="pset")
-    ]
-    assert len(df_sel) == 1, (
-        "Selection is not unique, you have duplicate pset_ids!"
-    )
-    ser = df_sel.iloc[0]
-    if py_types:
-        return ser.to_dict()
-    else:
-        # Series.to_dict() casts pd.NA to None. The trick below preserves types
-        # (at least NA).
-        return dict(zip(ser.keys(), ser.to_list()))
+    return df_extract_row(df, pset_id=pset_id, py_types=py_types, kind="pset")
 
 
 def df_ensure_dtypes(df, fill_value=FILL_VALUE):
