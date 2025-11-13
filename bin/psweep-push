@@ -7,7 +7,8 @@ shift
 ext_opts=$@
 basedir=$(pwd | sed -re "s|$HOME/||")
 
-rsync_opts="-rptgoD -vP $ext_opts"
+default_rsync_opts="-rptgoD -vP"
+rsync_opts="$default_rsync_opts $ext_opts"
 
 for excl_fn in excl_push rsync.exclude; do
     [ -e $excl_fn ] && rsync_opts="$rsync_opts --exclude-from=$excl_fn"
@@ -16,5 +17,8 @@ for rules_fn in rsync.rules rsync.filter; do
     [ -e $rules_fn ] && rsync_opts="$rsync_opts --filter='merge $rules_fn'"
 done
 
-ssh $host "mkdir -pv $basedir"
-rsync $rsync_opts ./calc $host:$basedir/
+# "mkdir -p" works for remote's $basedir/calc being either a dir or a link
+ssh $host "mkdir -pv $basedir/calc"
+cmd="rsync $rsync_opts calc/ $host:$basedir/calc/"
+echo "executing: $cmd"
+eval "$cmd"
