@@ -2,6 +2,7 @@
 
 set -eu
 
+default_rsync_opts="-rptgoD -vP"
 usage(){
     local prog=$(basename $0)
     cat << eof
@@ -12,21 +13,22 @@ rsync data from a remote host using the same path names, so
 
   mybox$ pwd
   /home/user42/path/to/my_study
-  mybox$ ls /home/user42/path/to/my_study
+  mybox$ ls
   calc 10input.py 20eval.py
-  mybox$ cd ~/path/to/my_study
   mybox$ psweep-pull hpc.machine.edu
 
 will rsync
 
-  hpc.machine.edu:/home/hpcuser123/path/to/my_study/calc -> /home/user42/path/to/my_study/calc
+  hpc.machine.edu:/home/hpcuser23/path/to/my_study/calc -> /home/user42/path/to/my_study/calc
 
 We remove \$HOME so all paths are relative to /home/<user> on each machine.
 
-The default rsync options are -rptgoD -vP. The first set of opts is
+The default rsync options are $default_rsync_opts. The first set of opts is
 -a/--archive, *excluding* -l/--links (copy symlinks as symlinks), which means
-we ignore links by default. If you pass further arguments after <host>, they
-will be treated as extra rsync opts and added to the default.
+we ignore links by default. This is b/c links which point to absolute paths on
+the remote machine are often meaningless on the local one. If you pass further
+arguments after <host>, they will be treated as extra rsync opts and added to
+the default.
 
 Sometimes want to use -l/--links (copy links as links) or -L/--copy-links
 (transform symlink into referent file/dir). Then we can do
@@ -38,12 +40,12 @@ Also, it is always a good idea to pass -n/--dry-run as first test.
 
   $ psweep-pull hpc.machine.edu -n
 
-If we find rules files excl_pull or rsync.exclude, we add
---exclude-from=<file>. If we find rsync.rules or rsync.filter, we add
+If we find rules files 'excl_pull' or 'rsync.exclude', we add
+--exclude-from=<file>. If we find 'rsync.rules' or 'rsync.filter', we add
 --filter='merge <file>'. If your rules files have a different name, then do
 
-  $ psweep-pull hpc.machine.edu --exclude-from=...
-  $ psweep-pull hpc.machine.edu --filter=...
+  $ psweep-pull hpc.machine.edu --exclude-from=<file>
+  $ psweep-pull hpc.machine.edu --filter='merge <file>'
 eof
 }
 
@@ -61,7 +63,7 @@ shift
 ext_opts=$@
 basedir=$(pwd | sed -re "s|$HOME/||")
 
-rsync_opts="-rptgoD -vP $ext_opts"
+rsync_opts="$default_rsync_opts $ext_opts"
 
 for excl_fn in excl_pull rsync.exclude; do
     [ -e $excl_fn ] && rsync_opts="$rsync_opts --exclude-from=$excl_fn"
@@ -70,4 +72,6 @@ for rules_fn in rsync.rules rsync.filter; do
     [ -e $rules_fn ] && rsync_opts="$rsync_opts --filter='merge $rules_fn'"
 done
 
-rsync $rsync_opts $host:$basedir/calc ./
+cmd="rsync $rsync_opts $host:$basedir/calc ./"
+echo "executing: $cmd"
+eval "$cmd"
