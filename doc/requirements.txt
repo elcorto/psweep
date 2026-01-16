@@ -1,7 +1,12 @@
 # Because of https://github.com/elcorto/psweep/issues/12 we can't have this in
 # pyproject.toml.
 
+# See
+# https://github.com/elcorto/psweep/pull/41
+# https://github.com/elcorto/psweep/pull/42
 jupyter-book < 2
+
+
 sphinx-autodoc-typehints
 
 # For doc/generate-doc.sh

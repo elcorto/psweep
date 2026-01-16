@@ -5,6 +5,11 @@ updates:
   directory: "/"
   schedule:
     interval: "weekly"
+  ignore:
+    # See doc/requirements.txt for why
+    - dependency-name: "jupyter-book"
+      update-types: ["version-update:semver-major"]
+
 - package-ecosystem: "github-actions"
   directory: "/"
   schedule:
