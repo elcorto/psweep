@@ -4,7 +4,7 @@
 # See
 # https://github.com/elcorto/psweep/pull/41
 # https://github.com/elcorto/psweep/pull/42
-jupyter-book < 2
+jupyter-book < 3
 
 
 sphinx-autodoc-typehints
