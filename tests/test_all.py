@@ -1540,3 +1540,15 @@ def test_json_io(tmp_path):
     fn = tmp_path / "foo.json"
     ps.json_write(fn, dct)
     assert ps.json_read(fn) == dct
+
+
+def test_flatten_dict():
+    dct = dict(a=1, b=dict(c=2, d={23: 42}))
+    assert ps.flatten_dict(dct) == dict([("a", 1), ("b_c", 2), ("b_d_23", 42)])
+    assert ps.flatten_dict(dct, join_str="+") == dict(
+        [
+            ("a", 1),
+            ("b+c", 2),
+            ("b+d+23", 42),
+        ]
+    )
