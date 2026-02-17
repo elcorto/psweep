@@ -127,6 +127,30 @@ def flatten(seq):
                 yield subitem
 
 
+def flatten_dict(dct: dict, join_str: str = "_") -> dict:
+    """Flatten nested dict.
+
+    Will string-convert keys and join using `join_str`.
+
+    Examples
+    --------
+    >>> ps.flatten_dict(dict(a=1, b=dict(c=2, d={23: 42})))
+    {'a': 1, 'b_c': 2, 'b_d_23': 42}
+    """
+
+    def _fd(dct: dict, join_str: str = "_", key=None):
+        for kk, vv in dct.items():
+            joined_key = (
+                kk if key is None else join_str.join((str(key), str(kk)))
+            )
+            if isinstance(vv, dict):
+                yield from _fd(vv, join_str=join_str, key=joined_key)
+            else:
+                yield joined_key, vv
+
+    return dict(_fd(dct, join_str))
+
+
 def file_write(fn: str, txt: str, mode="w"):
     makedirs(os.path.dirname(fn))
     with open(fn, mode=mode) as fd:
