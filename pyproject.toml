@@ -48,7 +48,9 @@ dev = [
 # See doc/requirements.txt
 #
 ##doc = [
-##    "jupyter-book",
+##    "sphinx",
+##    "myst-parser",
+##    "sphinx-book-theme",
 ##    "sphinx-autodoc-typehints",
 ##
 ##    # For doc/generate-doc.sh

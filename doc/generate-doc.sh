@@ -3,18 +3,19 @@
 set -eu
 
 err(){
+    # shellcheck disable=SC2145
     echo "error: $@"
     exit 1
 }
 
-# We assume this layout, using JupyterBook in source/
+# We assume this Sphinx layout.
 #
 #   /path/to/package_name
 #   ├── doc                     <-- here
 #   │   ├── generate-doc.sh
 #   │   └── source
-#   │       ├── _config.yml
-#   │       ├── _toc.yml
+#   │       ├── conf.py
+#   │       ├── index.md
 #   │       ├── some_docs.md
 #   │       ...
 #   ├── setup.py
@@ -31,10 +32,9 @@ package_name=$(basename $package_dir)
 autodoc_extra_opts=
 
 autodoc=sphinx-autodoc
-which $autodoc > /dev/null 2>&1 || err "executable $autodoc not found"
+command -v "$autodoc" > /dev/null 2>&1 || err "executable $autodoc not found"
 
-# Ensure a clean generated tree. "make clean" using Sphinx' Makefile only
-# removes build/. The cleanup below works for Sphinx and JupyterBook.
+# Ensure a clean generated tree.
 rm -rf $(find $package_dir -name "*.pyc" -o -name "__pycache__")
 rm -rf build/ source/_build source/generated/ source/_autosummary
 
@@ -42,8 +42,4 @@ rm -rf build/ source/_build source/generated/ source/_autosummary
 $autodoc $autodoc_extra_opts -s source -a generated/api \
     -X 'test[s]*\.test_' $package_name
 
-# Sphinx
-## make html
-
-# JupyterBook
-jb build --all source
+sphinx-build -M html source build
