@@ -7,14 +7,11 @@ __pycache__/
 build/
 dist/
 
-# plain Sphinx
-doc/build
-
-# JupyterBook
-doc/source/_build
+# Sphinx
+doc/build/
 
 # API docs from https://github.com/elcorto/sphinx-autodoc
-doc/source/generated
+doc/source/generated/
 
 
 # vim: ft=conf

@@ -5,9 +5,6 @@ updates:
   directory: "/"
   schedule:
     interval: "weekly"
-  ignore:
-    # Prevent any updates to jupyter-book (see doc/requirements.txt for why)
-    - dependency-name: "jupyter-book"
 
 - package-ecosystem: "github-actions"
   directory: "/"

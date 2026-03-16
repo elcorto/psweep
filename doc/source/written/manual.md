@@ -1,5 +1,7 @@
 # Manual
 
+## About
+
 This package helps you to set up and run parameter studies.
 
 Mostly, you'll start with a script and a for-loop and ask "why do I

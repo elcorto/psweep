@@ -1,11 +1,20 @@
-**psweep**
-
 Welcome to the `psweep` docs. We hope that you'll soon loop like us!
 
-```{tableofcontents}
+```{toctree}
+:maxdepth: 2
+
+written/manual
 ```
 
-**Install**
+# API
+
+```{toctree}
+:maxdepth: 1
+
+generated/api/index
+```
+
+# Install
 
 ```sh
 $ pip install psweep
@@ -34,14 +43,14 @@ $ pip install -e ".[dask]"
 
 See also <https://github.com/elcorto/samplepkg>.
 
-**Tests**
+# Tests
 
 ```sh
 # Run in parallel, e.g. use 4 cores
 $ pytest -vx -n4
 ```
 
-**Legal**
+# Legal
 
 The package and all its docs are created by Steve Schmerler under BSD 3-Clause
 license. The psweep logo is created using https://www.textstudio.co.
