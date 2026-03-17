@@ -45,14 +45,13 @@ dev = [
 ]
 
 
-# See doc/requirements.txt
-#
-##doc = [
-##    "sphinx",
-##    "myst-parser",
-##    "sphinx-book-theme",
-##    "sphinx-autodoc-typehints",
-##]
+doc = [
+    "sphinx",
+    "myst-parser",
+    "sphinx-book-theme",
+    "sphinx-autodoc-typehints",
+]
+
 
 dask = [
     "dask",

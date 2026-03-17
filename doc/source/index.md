@@ -32,6 +32,12 @@ To install testing tools, use
 $ pip install -e ".[test]"
 ```
 
+To install docs tools, use
+
+```sh
+$ pip install -e ".[doc]"
+```
+
 To also install `dask` tools which we support (`dask.distributed` Client) but
 are not hard dependencies, use
 
