@@ -28,18 +28,26 @@ package_dir=$(readlink -f ../)
 # package_name
 package_name=$(basename $package_dir)
 
-##autodoc_extra_opts="--write-doc"
-autodoc_extra_opts=
+apidoc=sphinx-apidoc
+command -v "$apidoc" > /dev/null 2>&1 || err "executable $apidoc not found"
 
-autodoc=sphinx-autodoc
-command -v "$autodoc" > /dev/null 2>&1 || err "executable $autodoc not found"
+# Closer to our previous generated API docs than the sphinx-apidoc defaults.
+apidoc_member_opts="members,show-inheritance,inherited-members"
 
 # Ensure a clean generated tree.
 rm -rf $(find $package_dir -name "*.pyc" -o -name "__pycache__")
-rm -rf build/ source/_build source/generated/ source/_autosummary
+rm -rf build/ source/_build source/generated/
 
-# generate API doc rst files
-$autodoc $autodoc_extra_opts -s source -a generated/api \
-    -X 'test[s]*\.test_' $package_name
+# Generate API doc rst files.
+SPHINX_APIDOC_OPTIONS=$apidoc_member_opts \
+    $apidoc \
+    -f \
+    --remove-old \
+    -e \
+    --doc-project "API Reference" \
+    --module-first \
+    --tocfile index \
+    -o source/generated/api \
+    ../src/$package_name
 
 sphinx-build -M html source build

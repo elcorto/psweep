@@ -10,7 +10,7 @@ dist/
 # Sphinx
 doc/build/
 
-# API docs from https://github.com/elcorto/sphinx-autodoc
+# Generated API docs
 doc/source/generated/
 
 
