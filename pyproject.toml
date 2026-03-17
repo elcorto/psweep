@@ -52,9 +52,6 @@ dev = [
 ##    "myst-parser",
 ##    "sphinx-book-theme",
 ##    "sphinx-autodoc-typehints",
-##
-##    # For doc/generate-doc.sh
-##    "sphinx-autodoc @ git+https://github.com/elcorto/sphinx-autodoc",
 ##]
 
 dask = [

@@ -5,7 +5,6 @@ copyright = "2026, Steve Schmerler"
 extensions = [
     "myst_parser",
     "sphinx.ext.autodoc",
-    "sphinx.ext.autosummary",
     "sphinx.ext.napoleon",
     "sphinx.ext.viewcode",
     "sphinx_autodoc_typehints",
@@ -20,7 +19,6 @@ root_doc = "index"
 templates_path = []
 exclude_patterns = []
 
-autosummary_generate = True
 add_module_names = True
 napoleon_numpy_docstring = True
 napoleon_google_docstring = False
