@@ -83,3 +83,25 @@ jobs:
 
           # Run parallel tests (-n flag). Detect all $(pwd)/tests/test_*.py
           pytest -n4
+
+  # Single aggregation job over lint + test matrix. Add only "tests-pass" as a
+  # required status check in GitHub repository settings (Settings -> Rules ->
+  # Rulesets) for branch and tag protection. This way the ruleset does not need
+  # to be updated when the test matrix changes (e.g. adding a new Python
+  # version).
+  #
+  # Currently configured: Tag Ruleset targeting tag pattern "*.*.*", with
+  # "tests-pass" added under "Require status checks to pass".
+  #
+  # This enforces that we can only push a tag (e.g. after bumpversion) when
+  # tests have passed. This guards against publishing broken releases (which
+  # we do in the github UI https://github.com/elcorto/psweep/releases -> Draft
+  # a new release).
+  tests-pass:
+    if: always()
+    needs: [lint, tests]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: re-actors/alls-green@release/v1
+        with:
+          jobs: ${{ toJSON(needs) }}
