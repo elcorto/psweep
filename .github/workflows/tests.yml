@@ -32,16 +32,15 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
           cache: pip
-          cache-dependency-path: |
-            pyproject.toml
-            .pre-commit-config.yaml
+          cache-dependency-path: pyproject.toml
 
-      - name: install ruff
+      - name: get ruff version
+        id: ruff-version
         run: |
-          # Install the ruff version from .pre-commit-config.yaml here. Using
-          # https://pre-commit.ci/ because of [1] is not fun since dependabot
-          # and pre-commit.ci don't update at the same time, so ruff versions
-          # are always out of sync.
+          # Read the ruff version from .pre-commit-config.yaml so it stays the
+          # single source of truth. Using https://pre-commit.ci/ is not fun
+          # because of [1]: dependabot and pre-commit.ci don't update at the
+          # same time, so ruff versions are always out of sync.
           #
           # [1] https://github.com/dependabot/dependabot-core/issues/1524
           ruff_version=$(grep -E -A1 'astral-sh/ruff-pre-commit' \
@@ -50,21 +49,23 @@ jobs:
               echo "error parsing ruff version, no match"
               exit 1
           fi
-          pip install "ruff==$ruff_version"
+          echo "version=$ruff_version" >> "$GITHUB_OUTPUT"
+
+      - name: lint
+        uses: astral-sh/ruff-action@v3
+        with:
+          version: ${{ steps.ruff-version.outputs.version }}
+
+      - name: format check
+        uses: astral-sh/ruff-action@v3
+        with:
+          version: ${{ steps.ruff-version.outputs.version }}
+          args: "format --check"
 
       - name: install deps
         run: |
-          # Super low tech, no need for tox just yet.
-          # Thanks: https://til.simonwillison.net/github-actions/running-tests-against-multiple-verisons-of-dependencies
           pip install "numpy ${{ matrix.numpy_version }}"
           pip install -e ".[test,dask]"
-
-      - name: lint
-        run: |
-          # Check for lint rules.
-          ruff check .
-          # Check if files need to be formatted. Exit non-zero if the case.
-          ruff format --check .
 
       - name: run tests
         run: |
