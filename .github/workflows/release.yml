@@ -64,7 +64,7 @@ jobs:
         run: python -m twine check --strict dist/*
 
       - name: upload distributions
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ${{ env.DIST_ARTIFACT_NAME }}
           path: dist/
