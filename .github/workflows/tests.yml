@@ -12,26 +12,13 @@ permissions:
   contents: read
 
 jobs:
-  tests:
-    strategy:
-      fail-fast: true
-      matrix:
-        python-version: ["3.10", "3.11", "3.12", "3.13"]
-        numpy_version: ["< 2", ">= 2"]
-
+  lint:
     runs-on: ubuntu-latest
 
     steps:
 
       - name: checkout
         uses: actions/checkout@v6
-
-      - name: pysetup
-        uses: actions/setup-python@v6
-        with:
-          python-version: ${{ matrix.python-version }}
-          cache: pip
-          cache-dependency-path: pyproject.toml
 
       - name: get ruff version
         id: ruff-version
@@ -60,6 +47,28 @@ jobs:
         with:
           version: ${{ steps.ruff-version.outputs.version }}
           args: "format --check"
+
+  tests:
+    needs: lint
+    strategy:
+      fail-fast: true
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+        numpy_version: ["< 2", ">= 2"]
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: checkout
+        uses: actions/checkout@v6
+
+      - name: pysetup
+        uses: actions/setup-python@v6
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: pyproject.toml
 
       - name: install deps
         run: |
