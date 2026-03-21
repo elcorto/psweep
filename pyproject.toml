@@ -38,10 +38,10 @@ test = [
     ##"packaging",
 ]
 
-# For installing the correct ruff version in CI, see
-# .github/workflows/tests.yml .
 dev = [
     "pre-commit",
+    # Ruff version for CI is read from .pre-commit-config.yaml.
+    # See .github/workflows/tests.yml.
 ]
 
 
