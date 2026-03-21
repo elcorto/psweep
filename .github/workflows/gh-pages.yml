@@ -21,11 +21,15 @@ jobs:
 
       - name: checkout
         uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
 
       - name: pysetup
         uses: actions/setup-python@v6
         with:
           python-version: "3.12"
+          cache: pip
+          cache-dependency-path: pyproject.toml
 
       - name: setup pages
         uses: actions/configure-pages@v5
