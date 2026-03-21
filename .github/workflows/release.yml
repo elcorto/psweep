@@ -1,0 +1,133 @@
+name: release
+
+# Triggered when manually creating a release
+# (https://github.com/elcorto/psweep/releases). At this point we have a tagged
+# commit in main with tests passed (since we have the tests.yml:tests-pass
+# job).
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+
+env:
+  PYTHON_VERSION: "3.12"
+  DIST_ARTIFACT_NAME: python-package-distributions
+
+jobs:
+  build:
+    name: build distributions
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: pysetup
+        uses: actions/setup-python@v6
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: check tag version
+        env:
+          GIT_TAG: ${{ github.ref_name }}
+        run: |
+          python - <<'PY'
+          import os
+          import tomllib
+          from pathlib import Path
+
+          version = tomllib.loads(Path("pyproject.toml").read_text())["project"][
+              "version"
+          ]
+          tag = os.environ["GIT_TAG"]
+          if tag != version:
+              raise SystemExit(
+                  f"tag {tag!r} does not match project.version {version!r}"
+              )
+          print(f"tag matches project.version: {tag}")
+          PY
+
+      - name: install build tools
+        run: python -m pip install --upgrade build twine
+
+      - name: build distributions
+        run: python -m build
+
+      - name: check distribution metadata
+        run: python -m twine check --strict dist/*
+
+      - name: upload distributions
+        uses: actions/upload-artifact@v7
+        with:
+          name: ${{ env.DIST_ARTIFACT_NAME }}
+          path: dist/
+          if-no-files-found: error
+
+  test-built-package:
+    name: test built package
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v6
+
+      - name: pysetup
+        uses: actions/setup-python@v6
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: download distributions
+        uses: actions/download-artifact@v8
+        with:
+          name: ${{ env.DIST_ARTIFACT_NAME }}
+          path: dist/
+
+      - name: install built wheel and test deps
+        run: |
+          wheel_path=$(python - <<'PY'
+          from pathlib import Path
+
+          print(next(Path("dist").glob("*.whl")).resolve())
+          PY
+          )
+          python -m pip install "psweep[test,dask] @ file://${wheel_path}"
+
+      - name: run tests
+        run: |
+          # CI runners have no configured git. Need that for git support tests.
+          git config --global user.name "Gaylord Focker"
+          git config --global user.email "gl@focker.com"
+
+          pytest -n4
+
+  publish-pypi:
+    name: publish to pypi
+    needs:
+      - build
+      - test-built-package
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/psweep
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: download distributions
+        uses: actions/download-artifact@v8
+        with:
+          name: ${{ env.DIST_ARTIFACT_NAME }}
+          path: dist/
+
+      - name: publish distributions to pypi
+        uses: pypa/gh-action-pypi-publish@release/v1
