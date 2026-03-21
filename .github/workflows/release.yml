@@ -19,15 +19,16 @@ jobs:
   build:
     name: build distributions
     runs-on: ubuntu-latest
+    timeout-minutes: 15
 
     steps:
       - name: checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
         with:
           persist-credentials: false
 
       - name: pysetup
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ env.PYTHON_VERSION }}
           cache: pip
@@ -63,7 +64,7 @@ jobs:
         run: python -m twine check --strict dist/*
 
       - name: upload distributions
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ env.DIST_ARTIFACT_NAME }}
           path: dist/
@@ -73,20 +74,21 @@ jobs:
     name: test built package
     needs: build
     runs-on: ubuntu-latest
+    timeout-minutes: 30
 
     steps:
       - name: checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
 
       - name: pysetup
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ env.PYTHON_VERSION }}
           cache: pip
           cache-dependency-path: pyproject.toml
 
       - name: download distributions
-        uses: actions/download-artifact@v8
+        uses: actions/download-artifact@v4
         with:
           name: ${{ env.DIST_ARTIFACT_NAME }}
           path: dist/
@@ -121,10 +123,11 @@ jobs:
     permissions:
       contents: read
       id-token: write
+    timeout-minutes: 15
 
     steps:
       - name: download distributions
-        uses: actions/download-artifact@v8
+        uses: actions/download-artifact@v4
         with:
           name: ${{ env.DIST_ARTIFACT_NAME }}
           path: dist/
