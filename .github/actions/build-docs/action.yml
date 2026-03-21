@@ -1,0 +1,20 @@
+name: Build docs
+description: Install doc dependencies and build HTML documentation
+
+runs:
+  using: composite
+  steps:
+
+    - name: pysetup
+      uses: actions/setup-python@v6
+      with:
+        python-version: "3.12"
+        cache: pip
+        cache-dependency-path: pyproject.toml
+
+    - name: build
+      shell: bash
+      run: |
+        pip install -e ".[doc]"
+        cd doc
+        sh generate-doc.sh

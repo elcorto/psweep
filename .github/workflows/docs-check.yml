@@ -17,18 +17,8 @@ jobs:
       - name: checkout
         uses: actions/checkout@v6
 
-      - name: pysetup
-        uses: actions/setup-python@v6
-        with:
-          python-version: "3.12"
-          cache: pip
-          cache-dependency-path: pyproject.toml
-
-      - name: build
-        run: |
-          pip install -e ".[doc]"
-          cd doc
-          sh generate-doc.sh
+      - name: build docs
+        uses: ./.github/actions/build-docs
 
       - name: upload artifact
         uses: actions/upload-artifact@v4
