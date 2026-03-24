@@ -27,3 +27,15 @@ jobs:
           name: docs-html
           path: doc/build/html
           if-no-files-found: error
+
+  # Same as tests.yml::tests-pass, but for docs. Only used as a PR status
+  # check. A repo-level tag ruleset uses gh-pages.yml::docs-pass instead.
+  docs-pass:
+    if: always()
+    needs: [build]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: re-actors/alls-green@release/v1
+        with:
+          jobs: ${{ toJSON(needs) }}

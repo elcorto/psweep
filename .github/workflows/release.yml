@@ -2,8 +2,8 @@ name: release
 
 # Triggered when manually creating a release
 # (https://github.com/elcorto/psweep/releases). At this point we have a tagged
-# commit in main with tests passed (since we have the tests.yml:tests-pass
-# job).
+# commit in main with tests passed (since we have the tests.yml::tests-pass
+# job). Docs are checked separately by gh-pages.yml::docs-pass.
 on:
   release:
     types: [published]
@@ -70,52 +70,10 @@ jobs:
           path: dist/
           if-no-files-found: error
 
-  test-built-package:
-    name: test built package
-    needs: build
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
-
-    steps:
-      - name: checkout
-        uses: actions/checkout@v6
-
-      - name: pysetup
-        uses: actions/setup-python@v6
-        with:
-          python-version: ${{ env.PYTHON_VERSION }}
-          cache: pip
-          cache-dependency-path: pyproject.toml
-
-      - name: download distributions
-        uses: actions/download-artifact@v8
-        with:
-          name: ${{ env.DIST_ARTIFACT_NAME }}
-          path: dist/
-
-      - name: install built wheel and test deps
-        run: |
-          wheel_path=$(python - <<'PY'
-          from pathlib import Path
-
-          print(next(Path("dist").glob("*.whl")).resolve())
-          PY
-          )
-          python -m pip install "psweep[test,dask] @ file://${wheel_path}"
-
-      - name: run tests
-        run: |
-          # CI runners have no configured git. Need that for git support tests.
-          git config --global user.name "Gaylord Focker"
-          git config --global user.email "gl@focker.com"
-
-          pytest -n4
-
   publish-pypi:
     name: publish to pypi
     needs:
       - build
-      - test-built-package
     runs-on: ubuntu-latest
     environment:
       name: pypi
