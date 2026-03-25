@@ -8,7 +8,7 @@ err(){
     exit 1
 }
 
-# We assume this Sphinx layout.
+# We assume this layout.
 #
 #   /path/to/package_name
 #   ├── doc                     <-- here
@@ -18,14 +18,13 @@ err(){
 #   │       ├── index.md
 #   │       ├── some_docs.md
 #   │       ...
-#   ├── setup.py
-#   ├── src/package_name/
+#   ├── pyproject.toml
+#   ├── src/package_name/foo.py
 #   ...
 
 # /path/to/package_name
 package_dir=$(readlink -f ../)
 
-# package_name
 package_name=$(basename $package_dir)
 
 apidoc=sphinx-apidoc
@@ -36,7 +35,7 @@ apidoc_member_opts="members,show-inheritance,inherited-members"
 
 # Ensure a clean generated tree.
 rm -rf $(find $package_dir -name "*.pyc" -o -name "__pycache__")
-rm -rf build/ source/_build source/generated/
+rm -rf build/ source/generated/
 
 # Generate API doc rst files.
 SPHINX_APIDOC_OPTIONS=$apidoc_member_opts \
