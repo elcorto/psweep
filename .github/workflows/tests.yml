@@ -19,7 +19,7 @@ jobs:
     steps:
 
       - name: checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: get ruff version
         id: ruff-version
@@ -63,7 +63,7 @@ jobs:
     steps:
 
       - name: checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: pysetup
         uses: actions/setup-python@v6
